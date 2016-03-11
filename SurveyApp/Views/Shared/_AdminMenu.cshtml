@@ -1,0 +1,14 @@
+﻿ 
+@*@Html.ActionLink(dr["Title"].ToString(), "Survey",null, new { id = dr["ID"].ToString() },ew with {.class = "tab" })*@
+@{
+    var c = ViewContext.RouteData.Values["Controller"].ToString();
+}
+<div class="list-group small">
+    @Html.ActionLink("Dashboard", "Index", "Home", new object { }, new { @class = "list-group-item" + (c == "Home" ? " active" : "") }) 
+    @Html.ActionLink("Survey Manager", "Index", "Survey", new object { }, new { @class = "list-group-item" + (c == "Survey" ? " active" : "") }) 
+    @Html.ActionLink("Parent/Teacher Manager", "Index", "ParentTeacher", new object { }, new { @class = "list-group-item" + (c == "ParentTeacher" ? " active" : "") }) 
+    @Html.ActionLink("Child Manager", "Index", "Child", new object { }, new { @class = "list-group-item" + (c == "Child" ? " active" : "") }) 
+    @Html.ActionLink("School Manager", "Index", "School", new object { }, new { @class = "list-group-item" + (c == "School" ? " active" : "") }) 
+    @Html.ActionLink("Study Manager", "Index", "Study", new object { }, new { @class = "list-group-item" + (c == "Study" ? " active" : "") }) 
+    @Html.ActionLink("Schedule Manager", "Index", "Schedule", new object { }, new { @class = "list-group-item" + (c == "Schedule" ? " active" : "") })  
+</div>

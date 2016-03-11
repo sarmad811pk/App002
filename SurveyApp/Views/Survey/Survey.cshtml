@@ -1,0 +1,297 @@
+﻿@model int?
+@{
+   
+    System.Data.DataSet dsSurvey = SurveyApp.DataHelper.SurveyGetByID(Model ?? 1);
+    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1);
+    var qGroup = "";
+    ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString() + " - Preview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+<style type="text/css">
+    .questions{font-size:12px;}
+    .questions h1._title {font-weight:normal; margin: 0px; padding: 0px; font-size: 14px; line-height:1.3; padding: 10px; border-bottom: solid 1px #f1f1f1; margin-bottom: 10px; position: absolute; top: 0px; right: 0px; left: 0px; background: #BDD5FB; }
+    input[type=radio],input[type=checkbox]{margin-right:4px;}
+    .questions ._center label{display:block;white-space:nowrap;text-align:center;font-size:12px;}
+    .questions ._center input{display:block;margin:5px auto;}
+    .questions ._vcenter { padding-top: 10px; padding-bottom: 5px !important; }
+    .questions ._bold {font-weight:bold;padding-bottom:5px;}
+ 
+    .questions .showwhen { background-color: #fcfcfc; }
+    .questions .q { position: relative; }
+    .questions .q:hover { background: #EBF2FD !important; }
+
+</style>
+
+
+<h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString()</h2>
+<p style="font-size:16px;">
+    @dsSurvey.Tables[0].Rows[0]["TagLine"].ToString()
+</p>
+<div class="form-group">
+<div class='questions list-group'>
+@foreach (System.Data.DataRow q in dsQuestions.Tables[0].Rows)
+{
+    var Nclass = q["Nclass"].ToString();
+    var Qclass = q["Qclass"].ToString() + " _bold";
+    var Aclass = q["Aclass"].ToString();
+    
+    if (q["PID"].ToString() == string.Empty)
+    {
+       
+        <div id="@Html.Raw("q"+q["ID"].ToString())" class="q @Nclass list-group-item">
+
+            @if (@q["QuestionGroup"].ToString().Trim() != "")
+            {
+                <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim())</h1>
+                <div style="visibility: hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim())</div>
+            }
+             
+            <div class="@Qclass">@q["Question"] <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
+            @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(),Aclass))
+            <input type="hidden" value="" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
+                 
+        </div>
+    }
+    else
+    {
+        <div style="display:none;" id="@Html.Raw("q"+q["ID"].ToString())" class="q @Nclass showwhen list-group-item" pid="@Html.Raw("q"+q["PID"].ToString())" pans="@Html.Raw(q["PAnswerLike"].ToString())">
+            @if (@q["QuestionGroup"].ToString().Trim() != "")
+            {
+                <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim())</h1>
+                <div style="visibility:hidden;min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim())</div>
+            }
+             
+                <div class="@Qclass">@q["Question"] <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
+                @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass))
+                <input type="hidden" value="" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
+             
+        </div>
+    }
+}
+</div>
+    </div>
+<div style="margin:20px ;"> &nbsp;
+    <table style="width:100%;table-layout:fixed;border-collapse:collapse;display:none;">
+        <tr>
+            <td style="width:155px;padding:0px;">
+                <input type="submit" value="Submit Survey" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;" onclick="$('#b1').closest('li').css('background', '#FCD6DF').css('border-right','solid 5px #cc0000;');$(document).scrollTop(100);" />
+            </td>
+            <td style="padding: 0px;"></td>
+        </tr>
+
+    </table>
+
+</div>
+<div style="position:fixed;bottom:0px;left:0px;right:0px; display:none;">
+    <span style="padding: 2px; font-size: 10px;background:rgba(255,255,255,.5);">80% Complete</span>
+    <div style="background:white;height:5px;"><div style="border-bottom: solid 5px #008080; width: 80%"></div></div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            syncStrips();
+            $("input[type=radio], input[type=checkbox]").bind("click", function () {
+
+                qid = $(this).attr("qid");
+                if ($(this).prop("type") == "radio" || $(this).prop("type") == "checkbox") {
+                    var group = $(this).closest(".q").find("input:checked");
+
+                    $("#hdn" + qid).val("");
+                    group.each(function () {
+                        $("#hdn" + qid).val($("#hdn" + qid).val() + "|" + this.value).trigger('change');
+                    });
+                    if (group.length == 0) {
+                        $("#hdn" + qid).trigger('change');
+                    }
+                    if ($("#hdn" + qid).val().length > 0) { $("#hdn" + qid).val($("#hdn" + qid).val().substr(1)) }
+                }
+            });
+            $("select").change(function () {
+                $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
+            });
+
+            $("input[type=hidden]").change(function () {
+
+                var ans = this.value.length > 0 ? this.value.substr(1) : "";
+                var qid = $(this).attr("qid");
+                if (ans == "") { $("[pid=q" + qid + "]").slideUp(); }
+                $("[pid=q" + qid + "]").each(function () {
+                    if (hasAnswer(ans, $(this).attr("pans"))) {
+                        $(this).slideDown("fast", function () { syncStrips();});
+                    }
+                    else {
+                        $(this).slideUp("fast", function () { //to hide childs if any
+                            var childid = $(this).attr("id");syncStrips();
+                            
+                            if (childid.trim() != '') {
+                                $("[pid="+childid+"]").slideUp("fast", function () { //to hide childs if any
+                            var childid = $(this).attr("id");syncStrips();
+                            
+                            if (childid.trim() != '') {
+                                $("[pid="+childid+"]").slideUp("fast", function () { //to hide childs if any
+                            var childid = $(this).attr("id");syncStrips();
+                            
+                            if (childid.trim() != '') {
+                                $("[pid="+childid+"]").slideUp();
+                            }
+                        });
+                            }
+                        });
+                            }
+                        });
+                    }
+                });
+            });
+  $(".__slider").slider({
+     range: "min",
+      value: 0,
+      min: 0,
+      max: 700, 
+      slide: function( event, ui ) {
+          var items=parseInt($(this).attr("length"));
+          var qid=$(this).attr("qid");
+ 
+          $('label[for^="q'+ qid +'_"]').css("color","#cccccc");
+          for(var i=0;i<=items;i++){
+              var step=700/(items+1);
+              if(ui.value <= (i+1) * step && ui.value > (i) * step){
+                  $('label[for="q'+ qid +'_'+i+'"]').css("color","#000000");
+              }
+ 
+          }
+          if(ui.value==0){
+          
+          $('label[for^="q'+ qid +'_"]').css("color","#333333");
+          }
+      }
+    });           
+});
+ 
+        function syncStrips() {
+            $(".q").css("background", "");
+            $(".q:visible:odd").css("background", "#f9f9f9");
+        }
+        function hasAnswer(ans1, ans2) {
+            var a1 = ans1.split('|');
+            var a2 = ans2.split('|');
+            var a3 = concatArraysUniqueWithSort(a1, a2);
+            return (a3.length < a1.length + a2.length);
+
+        }
+        var concatArraysUniqueWithSort = function (thisArray, otherArray) {
+            var newArray = thisArray.concat(otherArray).sort(function (a, b) {
+                return a > b ? 1 : a < b ? -1 : 0;
+            });
+
+            return newArray.filter(function (item, index) {
+                return newArray.indexOf(item) === index;
+            });
+        };
+        function enableDate(elm, id_date) {
+            if (elm.checked) {
+                $("#" + id_date).removeAttr("disabled", "disabled");
+            }
+            else {
+                $("#" + id_date).val('');
+                $("#" + id_date).attr("disabled", "disabled");
+            }
+        }
+        function enabletextDate(elm, id_date) {
+            if (elm.value.trim() !='' ) {
+                $("#" + id_date).removeAttr("disabled", "disabled");
+            }
+            else {
+                $("#" + id_date).attr("disabled", "disabled");
+            }
+        }
+    </script>}
+
+@functions{
+    protected string Option(int qid, string a, string type, string cssclass)
+    {
+
+        var tradio = "<div class='#c#'><input type='radio'  qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'><label for='q#q#_#i#'>#si#</label></div>";
+        var tslider = "<div class='#c#'><label for='q#q#_#i#'>#si#</label></div>";
+        var tcheckbox = "<div class='#c#'><input type='checkbox' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'><label for='q#q#_#i#'>#si#</label></div>";
+        var ttext = "<div class='#c#'><input class='form-control' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
+        var tmultitext = "<div class='#c#'><textarea class='form-control' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></textarea></div>";
+ 
+        var tdate = "<div class='#c#'><input class='form-control' type='date' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
+        var tmed = @"<div class='#c# form-inline'>"+
+                    "<input class='form-control col-sm-2' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "<input class='form-control col-sm-2' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "<input class='form-control col-sm-2' placeholder='Frequency' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "<input class='form-control col-sm-2' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "<input class='form-control col-sm-2' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "</div>";           
+         var tsch = @"<div class='#c# form-inline'>"+
+                    "<input class='form-control col-sm-3' placeholder='Count of Sessions/Week' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "<input class='form-control col-sm-3' placeholder='Time/Session' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "<input class='form-control col-sm-3' placeholder='Start (mn-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "<input class='form-control col-sm-3' placeholder='End (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>"+
+                    "</div>";
+         var tcheckdate = "<div class='#c#  form-inline'><input type='checkbox' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='col-sm-1' style='margin-top:10px;' onclick='enableDate(this,\"q#q#_1\")'><div class='col-sm-10'><input disabled='disabled' class='form-control' type='date' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div></div>";
+         var ttextdate = "<div class='#c#  form-inline'>" +
+                          "<input type='text' placeholder='Details' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='form-control' style='width:68%;' onkeyup='enabletextDate(this,\"q#q#_1\")'>"+
+                          "<input type='date' disabled='disabled' qid='#q#' name='q#q#' id='q#q#_1' value='#si#' class='form-control'></div>";
+        string temp = @"";
+        string[] s = a.Split('|');
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (type == "radio")
+            {
+                temp += tradio.Replace("#c#",cssclass).Replace("#q#",qid.ToString()).Replace("#i#",i.ToString()).Replace("#si#",s[i]);
+            }
+            else if (type == "checkbox")
+            {
+                temp += tcheckbox.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]); 
+            }
+            else if (type == "text")
+            {
+                temp += ttext.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+            }
+            else if (type == "multitext")
+            {
+                temp += tmultitext.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]); ;
+            }
+            else if (type == "select")
+            {
+                if (i == 0) { temp += "<div class='" + cssclass + "'><select class='form-control' qid='" + qid + "' name='q" + qid + "' id='q" + qid + "_" + i + "' ><option value=''></option>"; }
+                temp += "<option value='" + s[i] + "'>" + s[i] + "</option>";
+                if (i == s.Length - 1) { temp += "</select></div>"; }
+            }
+            else if (type == "date")
+            {
+                temp += tdate.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]); 
+            }
+            else if (type == "med")
+            {
+                temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+            }
+            else if (type == "sch")
+            {
+                temp += tsch.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+            }
+            else if (type == "checkdate")
+            {
+                temp += tcheckdate.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+            }
+            else if (type == "textdate")
+            {
+                temp += ttextdate.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+            }
+            else if (type == "slider")
+            {
+                temp += tslider.Replace("#c#", cssclass + " slider").Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+                if (i == s.Length - 1) { temp += ("<div id='slider#q#' qid='#q#' length='#i#' class='col-sm-" + (i == 5 ? "12" : "10") + " __slider'></div>").Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()); }
+            }
+            else
+            {
+                temp += ttext.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+            }
+        }
+        temp += "";
+        return temp;
+    }
+}

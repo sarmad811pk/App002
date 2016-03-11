@@ -1,0 +1,27 @@
+﻿@model System.Data.DataSet
+@{
+    ViewBag.Title = "Survey Manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var ds = Model;
+}
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h2>Survey Manager</h2> 
+            </hgroup>
+            <p style="font-size:16px;"> 
+                Find the list of surveys below and click for details.
+            </p>
+        </div>
+    </section>
+}
+<div class="list-group">
+    @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+    {
+       <a href="@Url.Action("Survey", "Survey", new { surveyID = dr["ID"].ToString() })" class="list-group-item">
+    <strong>Preview:</strong> @dr["Title"].ToString()</a>  
+        
+    }
+</div>

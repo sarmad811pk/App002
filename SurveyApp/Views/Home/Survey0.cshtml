@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "Abbreviated Sensory Profile";
+    string rdo = @"<div class='radioGroup'>
+<div><input type='radio' name='a1' id='a1' value='Always'><label for='a1'>Always</label> </div>
+<div><input type='radio' name='a1' id='a2' value='Frequently'><label for='a2'>Frequently</label></div>
+<div><input type='radio' name='a1' id='a3' value='Occasionally'><label for='a3'>Occasionally</label></div>
+<div><input type='radio' name='a1' id='a4' value='Seldom'><label for='a4'>Seldom</label></div>
+<div><input type='radio' name='a1' id='a5' value='Never'><label for='a5'>Never</label></div>
+</div>";
+    string chk = @"<div class='checkGroup'>
+<div><input type='checkbox' name='a1' id='a1' value='Salty'><label for='a1'>Salty</label> </div>
+<div><input type='checkbox' name='a1' id='a2' value='Better'><label for='a2'>Better</label></div>
+<div><input type='checkbox' name='a1' id='a3' value='Sweet'><label for='a3'>Sweet</label></div>
+<div><input type='checkbox' name='a1' id='a4' value='Spicy'><label for='a4'>Spicy</label></div>
+<div><input type='checkbox' name='a1' id='a5' value='Sour'><label for='a5'>Sour</label></div>
+</div>";
+       
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h2>@ViewBag.Title</h2> 
+            </hgroup>
+            <p style="font-size:16px;"> 
+                This survey tells us more about how <strong>John</strong> responds to sensory simulation.
+            </p>
+        </div>
+    </section>
+}
+<style type="text/css">
+    ol.questions { padding-left:0px;margin-left:0px;list-style:none; }
+    ol.questions li { background: #ffffff; padding: 10px; border-right: solid 5px #00AEEF; }
+    ol.questions li h5{color:#333333;font-weight:normal;padding-top:0px;}
+    ol.questions li:hover { background: #f9f9f9; border-right: solid 5px #cccccc; }
+    
+    .checkGroup,.radioGroup { padding: 0px 20px 0px 20px; }
+    .checkGroup label, .checkGroup input[type="checkbox"], .checkGroup div,
+    .radioGroup label, .radioGroup input[type="radio"], .radioGroup div { display: inline-block; }
+
+    .checkGroup div, .radioGroup div { min-width: 150px; width: 18%; }
+    .checkGroup label, .checkGroup input[type="checkbox"],
+    .radioGroup label, .radioGroup input[type="radio"] { vertical-align: top; }
+    .checkGroup label, .radioGroup label { padding-left: 5px; }
+    ol.questions li.showwhen { padding-left: 30px; background: #f1f1f1; border-right: solid 5px #9CDCF9; }
+    
+</style>
+<h3 style="font-weight:normal;">Tactile Sensitivity</h3>
+<ol class="questions">
+    <li>
+        <h5>Compared to others his age, <strong>John</strong> expresses excessive amount of distress during grooming (e.g., Washing Face, Cutting Hair, Cutting fingernails)</h5>
+            @Html.Raw(rdo.Replace("'a","'a"))
+    </li>
+
+    <li>
+        <h5>Compared to others his age, <strong>John</strong> insists on wearing only certain types of clothing (e.g., only polyester never ribbed cotton) in a way that interfares with daily routines</h5>
+        @Html.Raw(rdo.Replace("'a","'b"))
+    </li>
+
+    <li>
+        <h5>Compared to others his age, <strong>John</strong> reacts nagetively to touch (e.g., Finching, moving away, aggression)</h5>
+        @Html.Raw(rdo.Replace("'a","'c"))
+    </li>
+</ol>
+<h3 style="font-weight:normal;">Auditory Sensitivity</h3>
+<ol class="questions">
+    <li>
+        <h5>Compared to others his age, <strong>John</strong> expresses excessive distress when he hears sounds (e.g., covers ears when people laugh, runs away when blender is on)</h5>
+            @Html.Raw(rdo.Replace("'a","'d"))
+    </li>
+</ol>
+<h3 style="font-weight:normal;">Visual Sensitivity</h3>
+<ol class="questions">
+    <li>
+        <h5>Compared to others his age, <strong>John</strong> is bothered by bright lights after others have adapted to the light</h5>
+            @Html.Raw(rdo.Replace("'a","'e"))
+    </li>
+        <li>
+        <h5><strong>John</strong> scrutinizes objects from a very close distance when hs vision is tested to be okay</h5>
+            @Html.Raw(rdo.Replace("'a","'f"))
+    </li>
+        <li>
+        <h5><strong>John</strong> looks at objects out of the corner of his eyes for extended periods of time</h5>
+            @Html.Raw(rdo.Replace("'a","'g"))
+    </li>
+</ol>
+<h3 style="font-weight:normal;">Taste/Smell Sensitivity</h3>
+<ol class="questions">
+    <li>
+        <h5>Compared to others his age, <strong>John</strong> excessively avoids tastes or food smell that are typically a part of children's diets or your family's diet</h5>
+            @Html.Raw(rdo.Replace("'a","'h"))
+    </li>
+        <li>
+        <h5><strong>John</strong> only eats certain tastes that seem unusual for his age and/or interfares with daily eating routines</h5>
+            @Html.Raw(rdo.Replace("'a","'i"))
+    </li>
+    <li style="display:none;" id="aacheckbox" class="showwhen" radiogroupid="i5" radiogroupname="i1">
+        <h5>What taste does <strong>John</strong> prefer?</h5>
+            @Html.Raw(chk.Replace("'a","'aa"))
+    </li>
+    <li>
+        <h5><strong>John</strong> limits himself to foods of perticular texture (e.g., only crunchy foods)</h5>
+            @Html.Raw(rdo.Replace("'a","'k"))
+    </li>
+</ol>
+<h3 style="font-weight:normal;">Underresponsiveness</h3>
+<ol class="questions">
+    <li>
+        <h5>Compared to children his age, <strong>John</strong> does not seem to notice when he is hurt</h5>
+            @Html.Raw(rdo.Replace("'a","'d"))
+    </li>
+</ol>
+<div style="margin-top:20px;">
+    <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
+        <tr>
+            <td style="width:155px;padding:0px;"><input type="submit" value="Submit Survey" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;"onclick="$('#b1').closest('li').css('background', '#FCD6DF').css('border-right','solid 5px #cc0000;');$(document).scrollTop(100);" />
+    </td>
+        <td style="padding: 0px;">80% Complete
+            <div style="background:white;height:5px;"><div style="border-bottom: solid 5px #00D900; width: 80%"></div></div>
+           
+
+        </td>
+        </tr>
+
+    </table>
+    
+    </div>
+@section scripts{ 
+<script type="text/javascript">
+    $(function () {
+        $(".showwhen").each(function () {
+            var elmid = $("#" + $(this).attr("radiogroupid"));
+            var elmname = $(this).attr("radiogroupname");
+            $("input[name=" + elmname + "]").attr("showwhen", this.id);
+            $("input[name=" + elmname + "]").bind("click", function () { $("#" + $(this).attr("showwhen")).slideUp(); });
+            elmid.unbind("click");
+            elmid.bind("click", function () {
+                if(this.checked){
+                    $("#" + $(this).attr("showwhen")).slideDown();
+                }
+            });
+            
+
+        });
+    });
+    
+</script>}
