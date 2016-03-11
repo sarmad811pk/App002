@@ -22,6 +22,7 @@ namespace SurveyApp
             //System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<SurveyApp.Models.SchoolContext>());
 
             ////if (!WebSecurity.Initialized)
+
             ////{
             //    WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Users", "UserId", "UserName", autoCreateTables: true);
             ////}
