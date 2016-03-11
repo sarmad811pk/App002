@@ -11,6 +11,7 @@ namespace SurveyApp
 {
     public class DataHelper
     {
+        //comment
         public static DataSet ExecuteCommandAsDataSet(SqlCommand Command) 
         {
             DataSet ds = new DataSet();
