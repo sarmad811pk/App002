@@ -14,7 +14,7 @@ using SurveyApp.Models;
 namespace SurveyApp.Controllers
 {
     [Authorize]
-    [InitializeSimpleMembership]
+    //[InitializeSimpleMembership]
     public class AccountController : Controller
     {
         //

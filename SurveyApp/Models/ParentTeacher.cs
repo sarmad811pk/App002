@@ -8,21 +8,16 @@ using System.Web;
 
 namespace SurveyApp.Models
 {
-    [Table("ParentTeacher")]
     public class ParentTeacher
     {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public int? SchoolId { get; set; }
+        public string SchoolName { get; set; }
 
-        [Required(ErrorMessage = "Please provide full name")]
-        public string Name { get; set; }
-
-        [Required(ErrorMessage = "Please select a role")]        
+        [Required(ErrorMessage = "Please select a role", AllowEmptyStrings = false)]
         public int Role { get; set; }
-
-        [Required(ErrorMessage = "Please select a school")]
-        public int SchoolId { get; set; }
+        [Required(ErrorMessage = "Please provide name")]        
+        public string Name { get; set; }
     }
 
     public class ParentTeacherContext : DbContext

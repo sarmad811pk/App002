@@ -21,14 +21,27 @@ namespace SurveyApp.Controllers
 
         public ActionResult SchoolAddEdit(int? ID)
         {
-            var db = new SchoolContext();
-            School school = db.Schools.Find(ID);
-            return View(school);
+            if (ID == null)
+            {
+                School school = new School();
+                school.SchoolId = 0;
+                return View(school);
+            }
+            else
+            {
+                var db = new SchoolContext();
+                School school = db.Schools.Find(ID);
+                return View(school);
+            }
         }
 
         [HttpPost]
         public ActionResult SchoolAddEdit(School model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             using (var db = new SchoolContext())
             {
                 School school = null;

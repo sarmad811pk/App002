@@ -2,16 +2,18 @@
     background-color: #e2e2e2;
     margin: 0;
     padding: 0;
+    height: 100% !important;
 }
 
-body {
-    background-color: #fff;
+body {    
     border-top: solid 10px #000;
     color: #333;
     font-size: .85em;
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
     margin: 0;
     padding: 0;
+    height: 100% !important;
+    background-color: #fff;
 }
 
 a {
@@ -102,7 +104,7 @@ h5, h6 {
     background-color: #f1f1f1;
     clear: both;
     padding: 0px 10px;
-    overflow: hidden;
+    overflow: hidden;    
 }
 
     .main-content {
@@ -119,11 +121,15 @@ header .content-wrapper {
     padding-top: 20px; 
 }
 
+header{
+    background-color: #FFF !important;
+}
+
 footer {
     clear: both;
     font-size: .8em;
     /* height: 100px; */
-    position: absolute;
+    position: relative !important;
     bottom: 0px;
 }
 
@@ -801,17 +807,18 @@ a.redCross:hover, a.redCross:visited{
     text-decoration: none !important;
     background-color: transparent !important;
 }
-div.checklist{
-    width: 388px;
+div.checklist{    
+    width:100%;
     background-color: #FFF;
-    border: solid 1px #CCC;
-    overflow-y: auto;
-    height: 100px;
+    border: solid 1px #CCC;        
     border-radius: 4px;
     -webkit-border-radius: 4px;
     display: inline-block;
 }
 div.checklist div{
-    border-bottom: solid 1px #AAA;
+    border-bottom: solid 1px #CCC;
     padding: 6px 0px 0px 10px;
+}
+div.checklist div:last-child{
+    border-bottom: none;
 }

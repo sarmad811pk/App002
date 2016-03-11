@@ -65,17 +65,17 @@
         <ol>
             <li>
                 @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName,new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", autocomplete = "off" })
                 @Html.ValidationMessageFor(m => m.UserName)
             </li>
             <li>
                 @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", autocomplete = "off" })
                 @Html.ValidationMessageFor(m => m.Password)
             </li>
             <li>
                 @Html.CheckBoxFor(m => m.RememberMe)
-                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox", autocomplete = "off" })
             </li>
         </ol>
         <input type="submit" value="Log in" class="btn btn-primary" />

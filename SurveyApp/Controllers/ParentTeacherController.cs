@@ -15,34 +15,65 @@ namespace SurveyApp.Controllers
     {
         //
         // GET: /ParentTeacher/
-        public static RegisterModel RegisterModel;
-        public static School SchoolModel;
+        public static RegisterModel RegisterModel;        
 
         public ActionResult Index()
         {
             return View();
         }
-        public ActionResult ParentTeacherAddEdit(ParentTeacher parentTeacherModel, RegisterModel registerModel, School schoolModel, FormCollection collection, int? ID)
+
+        public ActionResult ParentTeacherAddEdit(int? ID)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(parentTeacherModel);
-            //}
+            return View(ID);
+        }
+
+        [HttpPost]
+        public ActionResult ParentTeacherAddEdit(ParentTeacher parentTeacherModel, RegisterModel registerModel, FormCollection collection, int? ID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(parentTeacherModel);
+            }
+                        
+            if (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher 
+                && (parentTeacherModel.SchoolId == null || parentTeacherModel.SchoolId == 0)
+                && String.IsNullOrEmpty(parentTeacherModel.SchoolName))
+            {
+                ModelState.AddModelError("", "Please select a school for the teacher.");
+                return View(parentTeacherModel);
+            }
+
+            int studyCount = 0;
+            foreach (var key in collection.Keys)
+            {
+                if (key.ToString().Contains("StudyId_"))
+                {
+                    studyCount++;
+                }
+            }
+            if (studyCount == 0)
+            {
+                ModelState.AddModelError("", "Please select at least one study.");
+                return View(parentTeacherModel);
+            }
+            
 
             int ptId = 0, schoolId = 0;
             try
             {
-
-                //save school info                
-                using (var sContext = new SchoolContext())
+                //save school info
+                if (!parentTeacherModel.SchoolId.HasValue && !String.IsNullOrEmpty(parentTeacherModel.SchoolName))
                 {
-                    School objSchool = null;
-                    objSchool = new School { Name = schoolModel.Name };
-                    sContext.Schools.Add(objSchool);
-                    sContext.SaveChanges();
+                    using (var sContext = new SchoolContext())
+                    {
+                        School objSchool = null;
+                        objSchool = new School { Name = parentTeacherModel.SchoolName };
+                        sContext.Schools.Add(objSchool);
+                        sContext.SaveChanges();
 
-                    schoolId = sContext.Schools.Max(item => item.SchoolId);
-                }                
+                        schoolId = sContext.Schools.Max(item => item.SchoolId);
+                    } 
+                }                               
 
                 //save account info                
                 try
@@ -57,23 +88,26 @@ namespace SurveyApp.Controllers
                 }
 
                 //save parent teacher school relationship info
-                using (var ptScContext = new PParentTeacher_SchoolContext())
+                if (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher)
                 {
-                    ParentTeacher_School objPTS = new ParentTeacher_School();
-                    objPTS.ParentTeacherId = ptId;
-                    objPTS.SchoolId = parentTeacherModel.SchoolId;
+                    using (var ptScContext = new PParentTeacher_SchoolContext())
+                    {
+                        ParentTeacher_School objPTS = new ParentTeacher_School();
+                        objPTS.ParentTeacherId = ptId;
+                        objPTS.SchoolId = parentTeacherModel.SchoolId.HasValue == true ? parentTeacherModel.SchoolId.Value : schoolId;
 
-                    ptScContext.ParentTeacher_Schools.Add(objPTS);
-                    ptScContext.SaveChanges();
-                }
+                        ptScContext.ParentTeacher_Schools.Add(objPTS);
+                        ptScContext.SaveChanges();
+                    }
+                }                
 
-                //save parent teacher study relationship info
+                //save parent teacher study relationship info                
                 using (var ptsContext = new ParentTeacher_StudyContext())
                 {
                     foreach (Study objStudy in Study.StudyGetAll())
                     {
                         if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id]))
-                        {
+                        {                            
                             ParentTeacher_Study objPTS = new ParentTeacher_Study();
                             objPTS.ParentTeacherId = ptId;
                             objPTS.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
@@ -85,6 +119,7 @@ namespace SurveyApp.Controllers
                     ptsContext.SaveChanges();
                 }
 
+                return RedirectToAction("Index", "ParentTeacher");
                 
             }
             catch(Exception ex){
