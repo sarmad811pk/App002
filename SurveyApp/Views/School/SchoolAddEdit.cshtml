@@ -17,6 +17,7 @@
 @using (Html.BeginForm("SchoolAddEdit", "School", FormMethod.Post, new { style = "width:600px;" }))
 {
     @Html.ValidationSummary()
+    @Html.HiddenFor(m => m.SchoolId, new { name = "hdnSchoolId", value = Request.QueryString["Id"] })
     <div class="form-group">
         <label class="control-label col-sm-3">School Name</label>
         <div class="col-sm-9">            

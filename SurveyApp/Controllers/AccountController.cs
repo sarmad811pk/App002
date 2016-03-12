@@ -10,6 +10,7 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using SurveyApp.Filters;
 using SurveyApp.Models;
+using System.Web.UI;
 
 namespace SurveyApp.Controllers
 {
@@ -23,6 +24,11 @@ namespace SurveyApp.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }

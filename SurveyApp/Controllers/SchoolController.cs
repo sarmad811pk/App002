@@ -21,7 +21,7 @@ namespace SurveyApp.Controllers
 
         public ActionResult SchoolAddEdit(int? ID)
         {
-            if (ID == null)
+            if (ID.HasValue == false)
             {
                 School school = new School();
                 school.SchoolId = 0;

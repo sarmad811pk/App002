@@ -51,8 +51,8 @@
                 <legend>Registration Form</legend>
                 <ol>
                     <li>
-                        @Html.LabelFor(m => m.UserName, new { autocomplete = "off" })
-                        @Html.TextBoxFor(m => m.UserName)
+                        @Html.LabelFor(m => m.UserName)
+                        @Html.TextBoxFor(m => m.UserName, new { autocomplete = "off" })
                     </li>
                     <li>
                         @Html.LabelFor(m => m.Password)
