@@ -10,14 +10,29 @@
 <style>
     ._panel { background: #fafafa; border: solid 1px #cccccc; padding: 10px; border-radius: 6px; }
 </style>
+<script type="text/javascript">
+    $(function () {
+        $("#ddlSchools").append($("<option></option>").val(-1).html("Other (select to add a new school)"));
+        $("#ddlSchools").on("change", function (e) {
+            if ($(this).val() == -1) {
+                $("#addSchool").slideDown();
+            }
+            else {
+                $("#txtSchoolName").val("");
+                $("#addSchool").slideUp();
+            }
+        })
+    });
+</script>
 <br />
 
-@using (Html.BeginForm("ParentTeacherAddEdit", "ParentTeacher", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm("ParentTeacherAddEdit", "ParentTeacher", FormMethod.Post, new { @class = "form-horizontal", style = "width: 600px;" }))
 {
+    @Html.ValidationSummary();
 
             <div class="form-group">
-        <label class="control-label col-sm-2" for="teacher">Study:</label>
-        <div class="col-sm-10">
+        <label class="control-label col-sm-3" for="teacher">Study:</label>
+        <div class="col-sm-9">
             <div class="checklist">
                 @foreach (Study std in Study.StudyGetAll())
                 {
@@ -29,65 +44,62 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2">Parent/Teacher Name</label>
-        <div class="col-sm-4">            
-            @Html.TextBoxFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.FullName, new { @class = "form-control", id = "parent", placeholder = "Parent/Teacher Name" })
+        <label class="control-label col-sm-3">Name</label>
+        <div class="col-sm-9">            
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "parent", placeholder = "Parent/Teacher Name" })
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2" for="gender">Role:</label>
-        <div class="col-sm-4">            
+        <label class="control-label col-sm-3" for="gender">Role:</label>
+        <div class="col-sm-9">            
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Role, "1", new { name = "optradio", onclick = "$('.divSchool').hide();" })Parent</label></div>
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Role, "2", new { name = "optradio", onclick = "$('.divSchool').show();" })Teacher</label></div>
         </div>
     </div>
     <div class="form-group divSchool" style="display:none;">
-        <label class="control-label col-sm-2" for="school">School:</label>
-        <div class="col-sm-4">
-            @Html.DropDownListFor(m => m.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), new { id = "school", @class = "form-control" })
-            <a href="javascript:void(0);" class="btn btn-link" onclick="$('#addSchool').slideDown();">Add School</a>
-        </div>    
-        <div id="addSchool" class="_panel col-sm-12" style="display:none;">
+        <label class="control-label col-sm-3" for="school">School:</label>
+        <div class="col-sm-9">
+            @Html.DropDownListFor(m => m.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })            
+        </div> 
+    </div>
+    <div id="addSchool" class="_panel col-sm-12" style="display: none; margin-bottom: 5px;">
         <div class="form-group">
-            <label class="control-label col-sm-2">School Name</label>
-            <div class="col-sm-4">
-                @Html.HiddenFor(m => SurveyApp.Controllers.ParentTeacherController.SchoolModel.SchoolId, new { id = "SchoolId", value = Request.QueryString["ID"] })
-                @Html.TextBoxFor(m => SurveyApp.Controllers.ParentTeacherController.SchoolModel.Name, null, new { id = "txtName", @class = "form-control", placeholder = "School Name" })
+            <label class="control-label col-sm-3">School Name</label>
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.SchoolName, null, new { id = "txtSchoolName", @class = "form-control", placeholder = "School Name" })
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label col-sm-2"> </label>
-            <div class="col-sm-offset-2 col-sm-4">
-                <button type="submit" class="btn btn-default" style="display:none;">Add School</button>
+            <label class="control-label col-sm-3"> </label>
+            <div class="col-sm-offset-3 col-sm-9">
                 <button type="button" class="btn btn-default" onclick="$('#addSchool').slideUp();">Cancel</button>
             </div>
         </div>
     </div>
-    </div>
-    
+
     <div class="form-group">
-        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.UserName, new { @class = "fcontrol-label col-sm-2" })
-        <div class="col-sm-4">            
-            @Html.TextBoxFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email" })
+        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.UserName, new { @class = "control-label col-sm-3" })
+        <div class="col-sm-9">            
+            @Html.TextBoxFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.Password, new { @class = "fcontrol-label col-sm-2" })
-        <div class="col-sm-4">            
-            @Html.PasswordFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password" })
+        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.Password, new { @class = "control-label col-sm-3" })
+        <div class="col-sm-9">            
+            @Html.PasswordFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = "off" })
         </div>
     </div>
-    <div class="form-group ">
-        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.ConfirmPassword, new { @class = "fcontrol-label col-sm-2" })
-        <div class="col-sm-4">            
-            @Html.PasswordFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password" })
+    <div class="form-group">
+        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.ConfirmPassword, new { @class = "control-label col-sm-3" })
+        <div class="col-sm-9">            
+            @Html.PasswordFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = "off" })
         </div>
     </div>
 
   
     <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-4">
+        <div class="col-sm-offset-3 col-sm-4">
             <button type="submit" class="btn btn-default">Save Information</button>
         </div>
     </div>

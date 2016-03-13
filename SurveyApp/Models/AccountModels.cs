@@ -78,7 +78,7 @@ namespace SurveyApp.Models
     {
         [Required]
         [Display(Name = "User name")]
-        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "User Name is not valid")]
+        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "User Name is not valid")]        
         public string UserName { get; set; }
 
         [Required]

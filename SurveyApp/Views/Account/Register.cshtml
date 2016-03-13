@@ -52,15 +52,15 @@
                 <ol>
                     <li>
                         @Html.LabelFor(m => m.UserName)
-                        @Html.TextBoxFor(m => m.UserName)
+                        @Html.TextBoxFor(m => m.UserName, new { autocomplete = "off" })
                     </li>
                     <li>
                         @Html.LabelFor(m => m.Password)
-                        @Html.PasswordFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password, new { autocomplete = "off" })
                     </li>
                     <li>
                         @Html.LabelFor(m => m.ConfirmPassword)
-                        @Html.PasswordFor(m => m.ConfirmPassword)
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { autocomplete = "off" })
                     </li>
                 </ol>
                 <input type="submit" value="Register" />

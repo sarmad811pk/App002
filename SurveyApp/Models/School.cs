@@ -24,7 +24,7 @@ namespace SurveyApp.Models
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int SchoolId { get; set; }
-        [Required(ErrorMessage = "Please provide school name")]
+        [Required(ErrorMessage = "Please provide school name", AllowEmptyStrings = false)]
         public string Name { get; set; }
 
         public static List<School> SchoolGetAll()

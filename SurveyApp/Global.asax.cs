@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SurveyApp.Filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,11 +22,10 @@ namespace SurveyApp
 
             //System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<SurveyApp.Models.SchoolContext>());
 
-            ////if (!WebSecurity.Initialized) sarmad comment
-
-            ////{
-            //    WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Users", "UserId", "UserName", autoCreateTables: true);
-            ////}
+            if (!WebSecurity.Initialized)
+            {
+                WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+            }
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
