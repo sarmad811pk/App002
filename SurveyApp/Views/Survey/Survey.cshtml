@@ -20,7 +20,7 @@
     .questions .showwhen { background-color: #fcfcfc; }
     .questions .q { position: relative; }
     .questions .q:hover { background: #EBF2FD !important; }
-
+    .questions .q.notFilled { border: solid 1px #FFA2A2;background-color: #FFF2F2 !important; }
 </style>
 
 
@@ -72,10 +72,10 @@
 </div>
     </div>
 <div style="margin:20px ;"> &nbsp;
-    <table style="width:100%;table-layout:fixed;border-collapse:collapse;display:none;">
+    <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
         <tr>
             <td style="width:155px;padding:0px;">
-                <input type="submit" value="Submit Survey" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;" onclick="$('#b1').closest('li').css('background', '#FCD6DF').css('border-right','solid 5px #cc0000;');$(document).scrollTop(100);" />
+                <input type="submit" value="Submit Survey" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;" onclick="submitSurvey();" />
             </td>
             <td style="padding: 0px;"></td>
         </tr>
@@ -83,10 +83,11 @@
     </table>
 
 </div>
-<div style="position:fixed;bottom:0px;left:0px;right:0px; display:none;">
-    <span style="padding: 2px; font-size: 10px;background:rgba(255,255,255,.5);">80% Complete</span>
-    <div style="background:white;height:5px;"><div style="border-bottom: solid 5px #008080; width: 80%"></div></div>
+<div id="divCompletion" style="bottom:0px;left:0px;right:0px;">
+    <span style="padding: 2px; font-size: 10px;background:rgba(255,255,255,.5);">0% Complete</span>
+    <div style="background:white;height:5px;"><div style="border-bottom: solid 5px #008080; width: 0%" class="colored"></div></div>
 </div>
+
 @section scripts{
     <script type="text/javascript">
         $(function () {
@@ -104,10 +105,14 @@
                     if (group.length == 0) {
                         $("#hdn" + qid).trigger('change');
                     }
-                    if ($("#hdn" + qid).val().length > 0) { $("#hdn" + qid).val($("#hdn" + qid).val().substr(1)) }
+                    if ($("#hdn" + qid).val().length > 0) { $("#hdn" + qid).val($("#hdn" + qid).val().substr(1)); $("#hdn" + qid).closest(".q").removeClass("notFilled"); }
                 }
             });
             $("select").change(function () {
+                $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
+            });
+
+            $("textarea").keydown(function () {
                 $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
             });
 
@@ -142,6 +147,8 @@
                         });
                     }
                 });
+
+                setCompletionDiv();
             });
   $(".__slider").slider({
      range: "min",
@@ -205,7 +212,39 @@
                 $("#" + id_date).attr("disabled", "disabled");
             }
         }
-    </script>}
+
+        function setCompletionDiv(){
+            var noQ = 0, nofQ = 0;
+            $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
+                if($(obj).val() != ""){
+                    nofQ++;                    
+                }
+                noQ++;
+            });
+
+            var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0)) + "%";
+            $("#divCompletion").find("span").text(percentage + " Complete");
+            $("#divCompletion").find(".colored").css("width", percentage);
+        }
+
+        function submitSurvey(){
+            $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
+                if($(obj).val() != ""){                    
+                    $(obj).closest(".q").removeClass("notFilled");
+                }
+                else{
+                    $(obj).closest(".q").addClass("notFilled");
+                }                
+            });
+            setCompletionDiv();
+            
+            $('#b1').closest('li').css('background', '#FCD6DF').css('border-right','solid 5px #cc0000;');
+            $(document).scrollTop(100);
+
+            return false;
+        }
+    </script>
+}
 
 @functions{
     protected string Option(int qid, string a, string type, string cssclass)
