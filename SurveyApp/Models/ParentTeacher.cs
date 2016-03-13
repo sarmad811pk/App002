@@ -75,4 +75,10 @@ namespace SurveyApp.Models
         Parent = 1,
         Teacher = 2
     }
+
+    public class ParentTeacher_Register
+    {
+        public ParentTeacher vw_ParentTeacher { get; set; }
+        public RegisterModel vw_Register { get; set; }
+    }
 }

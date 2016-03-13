@@ -18,6 +18,9 @@ namespace SurveyApp.Models
         }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
+        //public DbSet<webpages_UsersInRoles> UsersInRoles { get; set; }
+        //public (SimpleRoleProvider)Roles.Provider Roless { get; set; }
+        //public DbSet<Roles> Roles { get; set; }
         //public DbSet<School> Schools { get; set; }
     }
 
@@ -104,4 +107,23 @@ namespace SurveyApp.Models
         public string ProviderDisplayName { get; set; }
         public string ProviderUserId { get; set; }
     }
+
+    //[Table("webpages_UsersInRoles")]
+    //public class webpages_UsersInRoles
+    //{
+    //    [Key]
+    //    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+    //    public int UserId { get; set; }
+    //    public int RoleId { get; set; }        
+    //}
+
+    //[Table("webpages_Roles")]
+    //public class webpages_Roles
+    //{
+    //    [Key]
+    //    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]        
+    //    public int RoleId { get; set; }
+    //    public string RoleName { get; set; }
+    //}
+    
 }

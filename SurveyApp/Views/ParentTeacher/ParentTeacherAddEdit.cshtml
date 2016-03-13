@@ -1,9 +1,30 @@
 ﻿@using SurveyApp.Models;
+@using System.Data;
 @{
     ViewBag.Title = "Parent/Teacher Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
+        
+    dtStudies = ViewData["Studies"] != null ? (DataTable)ViewData["Studies"] : null;
+    
 }
-@model SurveyApp.Models.ParentTeacher
+@model SurveyApp.Models.ParentTeacher_Register
+
+@functions{
+    DataTable dtStudies;
+    public string getStudyStatus(int studyId)
+    {
+        foreach (DataRow dr in dtStudies.Rows)
+        {
+            if (Convert.ToInt32(dr["StudyId"]) == studyId)
+            {
+                return "checked='checked'";
+            }
+        }
+
+        return "";
+    }   
+    
+}
 
 <h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;Parent/Teacher Information Editor</h2>
 
@@ -21,7 +42,14 @@
                 $("#txtSchoolName").val("");
                 $("#addSchool").slideUp();
             }
-        })
+        });
+
+        $(".roles").find("input[type='radio']").each(function (index, obj) {
+            if ($(obj)[0].checked == true) {
+                $(obj)[0].click();
+                return true;
+            }
+        });
     });
 </script>
 <br />
@@ -35,8 +63,8 @@
         <div class="col-sm-9">
             <div class="checklist">
                 @foreach (Study std in Study.StudyGetAll())
-                {
-                    <div><label><input type="checkbox" name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
+                {                    
+                    <div><label><input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
                 }
                 @*@Html.ListBoxFor(m => m.stds, new MultiSelectList(Study.StudyGetAll(), "Id", "Name"))*@
             </div>
@@ -46,27 +74,27 @@
     <div class="form-group">
         <label class="control-label col-sm-3">Name</label>
         <div class="col-sm-9">            
-            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", id = "parent", placeholder = "Parent/Teacher Name" })
+            @Html.TextBoxFor(m => m.vw_ParentTeacher.Name, new { @class = "form-control", id = "parent", placeholder = "Parent/Teacher Name" })
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-3" for="gender">Role:</label>
-        <div class="col-sm-9">            
-            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Role, "1", new { name = "optradio", onclick = "$('.divSchool').hide();" })Parent</label></div>
-            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Role, "2", new { name = "optradio", onclick = "$('.divSchool').show();" })Teacher</label></div>
+        <div class="col-sm-9 roles">            
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, "1", new { name = "optradio", onclick = "$('.divSchool').hide();" })Parent</label></div>
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, "2", new { name = "optradio", onclick = "$('.divSchool').show();" })Teacher</label></div>
         </div>
     </div>
     <div class="form-group divSchool" style="display:none;">
         <label class="control-label col-sm-3" for="school">School:</label>
         <div class="col-sm-9">
-            @Html.DropDownListFor(m => m.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })            
+            @Html.DropDownListFor(m => m.vw_ParentTeacher.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })            
         </div> 
     </div>
     <div id="addSchool" class="_panel col-sm-12" style="display: none; margin-bottom: 5px;">
         <div class="form-group">
             <label class="control-label col-sm-3">School Name</label>
             <div class="col-sm-9">
-                @Html.TextBoxFor(m => m.SchoolName, null, new { id = "txtSchoolName", @class = "form-control", placeholder = "School Name" })
+                @Html.TextBoxFor(m => m.vw_ParentTeacher.SchoolName, null, new { id = "txtSchoolName", @class = "form-control", placeholder = "School Name" })
             </div>
         </div>
         <div class="form-group">
@@ -78,22 +106,22 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.UserName, new { @class = "control-label col-sm-3" })
+        @Html.LabelFor(m => m.vw_Register.UserName, new { @class = "control-label col-sm-3" })
         <div class="col-sm-9">            
-            @Html.TextBoxFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off" })
+            @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off", disabled = Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0 ? "disabled" : "" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.Password, new { @class = "control-label col-sm-3" })
+        @Html.LabelFor(m => m.vw_Register.Password, new { @class = "control-label col-sm-3" })
         <div class="col-sm-9">            
-            @Html.PasswordFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = "off" })
+            @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = "off", disabled = Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0 ? "disabled" : "" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.ConfirmPassword, new { @class = "control-label col-sm-3" })
+        @Html.LabelFor(m => m.vw_Register.ConfirmPassword, new { @class = "control-label col-sm-3" })
         <div class="col-sm-9">            
-            @Html.PasswordFor(m => SurveyApp.Controllers.ParentTeacherController.RegisterModel.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = "off" })
+            @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = "off", disabled = Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0 ? "disabled" : "" })
         </div>
     </div>
 

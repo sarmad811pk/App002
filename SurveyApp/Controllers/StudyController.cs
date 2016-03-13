@@ -38,7 +38,7 @@ namespace SurveyApp.Controllers
                 Study study = new Study();
                 study.Id = 0;
                 return View(study);
-            }            
+            }
         }
 
         [HttpPost]
