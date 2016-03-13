@@ -83,8 +83,8 @@
     </table>
 
 </div>
-<div id="divCompletion" style="bottom:0px;left:0px;right:0px;">
-    <span style="padding: 2px; font-size: 10px;background:rgba(255,255,255,.5);">0% Complete</span>
+<div id="divCompletion" style="bottom: 0px; left: 0px; right: 0px; position: fixed; margin-left: 338px;">
+    <span style="padding: 2px; font-size: 10px; background-color: rgb(0, 128, 128); color: #FFF; ">0% Complete</span>
     <div style="background:white;height:5px;"><div style="border-bottom: solid 5px #008080; width: 0%" class="colored"></div></div>
 </div>
 
@@ -112,8 +112,12 @@
                 $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
             });
 
-            $("textarea").keydown(function () {
-                $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
+            $("textarea, input[type=text]").keydown(function () {
+                $("#hdn" + $(this).attr("qid")).val(this.value).trigger('change');
+            });
+
+            $("input[type=date]").change(function () {
+                $("#hdn" + $(this).attr("qid")).val(this.value).trigger('change');
             });
 
             $("input[type=hidden]").change(function () {
@@ -167,9 +171,12 @@
               }
  
           }
-          if(ui.value==0){
           
-          $('label[for^="q'+ qid +'_"]').css("color","#333333");
+          if(ui.value==0){          
+            $('label[for^="q'+ qid +'_"]').css("color","#333333");
+          }
+          else{
+              $("#hdn" + $(this).attr("qid")).val(ui.value).trigger('change');
           }
       }
     });           
