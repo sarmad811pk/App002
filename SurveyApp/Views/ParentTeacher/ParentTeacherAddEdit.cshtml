@@ -13,13 +13,15 @@
     DataTable dtStudies;
     public string getStudyStatus(int studyId)
     {
-        foreach (DataRow dr in dtStudies.Rows)
-        {
-            if (Convert.ToInt32(dr["StudyId"]) == studyId)
-            {
-                return "checked='checked'";
-            }
-        }
+		if(dtStudies != null){
+			foreach (DataRow dr in dtStudies.Rows)
+			{
+				if (Convert.ToInt32(dr["StudyId"]) == studyId)
+				{
+					return "checked='checked'";
+				}
+			}
+		}
 
         return "";
     }   
@@ -50,7 +52,17 @@
                 return true;
             }
         });
+		
+		@if(Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0){
+		    Html.Raw("disableRegisters();");
+		}
     });
+
+    function disableRegisters() {
+        $("#txtUserName").attr("disabled", "disabled");
+        $("#txtPassword").attr("disabled", "disabled");
+        $("#txtConfirmPassword").attr("disabled", "disabled");
+    }
 </script>
 <br />
 
@@ -108,20 +120,20 @@
     <div class="form-group">
         @Html.LabelFor(m => m.vw_Register.UserName, new { @class = "control-label col-sm-3" })
         <div class="col-sm-9">            
-            @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off", disabled = Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0 ? "disabled" : "" })
+            @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off" })
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(m => m.vw_Register.Password, new { @class = "control-label col-sm-3" })
         <div class="col-sm-9">            
-            @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = "off", disabled = Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0 ? "disabled" : "" })
+            @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = "off" })
         </div>
     </div>
     <div class="form-group">
         @Html.LabelFor(m => m.vw_Register.ConfirmPassword, new { @class = "control-label col-sm-3" })
         <div class="col-sm-9">            
-            @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = "off", disabled = Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0 ? "disabled" : "" })
+            @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = "off" })
         </div>
     </div>
 
