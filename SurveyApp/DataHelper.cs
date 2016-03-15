@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web;
+using System.Data.Entity;
+using System.Linq;
 
 namespace SurveyApp
 {
@@ -135,7 +137,7 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
-        public static DataSet Child_TeacherGetAll(int? childId)
+        public static DataSet Child_TeacherGetAll(int? childId = null)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -144,6 +146,18 @@ namespace SurveyApp
             cmd.Parameters["@ChildID"].Value = childId.HasValue ? childId : null;
 
             cmd.CommandText = "Child_TeacherGetAll";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
+        public static DataSet Child_Study_TeacherGetAll(int childId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            cmd.Parameters["@ChildID"].Value = childId;
+
+            cmd.CommandText = "Child_Study_TeacherGetAll";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
@@ -158,6 +172,27 @@ namespace SurveyApp
             cmd.CommandText = "UserProfile_GetUserByID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static List<SurveyApp.Models.UserProfile> Parent_GetAll()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "Parent_GetAll";
+            DataTable dt = DataHelper.ExecuteCommandAsDataTable(cmd);
+            
+            var convertedList = (from rw in dt.AsEnumerable()
+                                 select new SurveyApp.Models.UserProfile()
+                                 {
+                                     UserId = Convert.ToInt32(rw["UserId"]),
+                                     UserName = rw["UserName"].ToString(),
+                                     FullName = Convert.ToString(rw["FullName"])
+                                 }).ToList();
+
+            return convertedList;
+
+        }
+
         
     }
 }

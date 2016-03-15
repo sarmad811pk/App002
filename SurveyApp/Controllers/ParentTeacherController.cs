@@ -66,7 +66,7 @@ namespace SurveyApp.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(parentTeacherModel);
+                return View(parentTeacher_RegisterModel);
             }
                         
             if (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher 
@@ -74,7 +74,7 @@ namespace SurveyApp.Controllers
                 && String.IsNullOrEmpty(parentTeacherModel.SchoolName))
             {
                 ModelState.AddModelError("", "Please select a school for the teacher.");
-                return View(parentTeacherModel);
+                return View(parentTeacher_RegisterModel);
             }
 
             int studyCount = 0;
@@ -88,7 +88,7 @@ namespace SurveyApp.Controllers
             if (studyCount == 0)
             {
                 ModelState.AddModelError("", "Please select at least one study.");
-                return View(parentTeacherModel);
+                return View(parentTeacher_RegisterModel);
             }
             
 
@@ -119,7 +119,7 @@ namespace SurveyApp.Controllers
                 catch (MembershipCreateUserException e)
                 {
                     ModelState.AddModelError("", AccountController.ErrorCodeToString(e.StatusCode));
-                    return View(parentTeacherModel);
+                    return View(parentTeacher_RegisterModel);
                 }
 
                 //save parent teacher school relationship info
@@ -158,12 +158,12 @@ namespace SurveyApp.Controllers
                 
             }
             catch(Exception ex){
-            
+                ModelState.AddModelError("", ex.Message);
             }
 
 
 
-            return View(parentTeacherModel);
+            return View(parentTeacher_RegisterModel);
         }
         
     }

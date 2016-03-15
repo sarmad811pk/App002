@@ -822,3 +822,8 @@ div.checklist div{
 div.checklist div:last-child{
     border-bottom: none;
 }
+
+/* VALIDATION */
+.inerror {
+        background-color: #FFE9E9 !important;
+    }

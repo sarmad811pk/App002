@@ -1,4 +1,5 @@
-﻿using SurveyApp.Models;
+﻿using Newtonsoft.Json;
+using SurveyApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -68,6 +69,31 @@ namespace SurveyApp.Controllers
 
             return RedirectToAction("Index", "School");
             
+        }
+
+        public ActionResult addSchool(string objSchool)
+        {
+            int newId = 0;
+            string msg = "";
+            try
+            {
+                School schoolModel = JsonConvert.DeserializeObject<School>(objSchool);
+                using (var dbContext = new SchoolContext())
+                {
+                    School school = null;
+                    school = new School { Name = schoolModel.Name };
+                    dbContext.Schools.Add(school);                               
+                    dbContext.SaveChanges();
+
+                    newId = dbContext.Schools.Max(item => item.SchoolId);
+                }
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+            }
+
+            return Json(new { success = newId > 0 ? true : false, schoolId = newId, msg = msg });
         }
     }
 }

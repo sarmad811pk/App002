@@ -17,14 +17,22 @@ namespace SurveyApp.Models
         [Required(ErrorMessage = "Please provide name")]
         public string Name { get; set; }
 
+        //[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Please select date of birth", AllowEmptyStrings = false)]
         public DateTime dob { get; set; }
 
         [Required(ErrorMessage = "Please select gender", AllowEmptyStrings = false)]
         public int Gender { get; set; }
 
-        public int? SchoolId { get; set; }
-        public int? ParentId { get; set; }
+        [Required(ErrorMessage = "Please select school", AllowEmptyStrings = false)]
+        public int SchoolId { get; set; }
+
+        [Required(ErrorMessage = "Please select parent for the child", AllowEmptyStrings = false)]
+        public int ParentId { get; set; }
+
+        [Required(ErrorMessage = "Please select status of enrollment", AllowEmptyStrings = false)]
+        public int StatusId { get; set; }
+        
     }
 
     public class ChildContext : DbContext
@@ -90,5 +98,23 @@ namespace SurveyApp.Models
         }
 
         public DbSet<Child_Teacher> Child_Teachers { get; set; }
+    }
+
+    public class EnrollmentStatus
+    {
+        public int Id { get; set; }
+        public string Status { get; set; }
+
+        public static List<EnrollmentStatus> EnrollmentStatus_GetAll()
+        {
+            List<EnrollmentStatus> lstEnroll = new List<EnrollmentStatus>();
+
+            lstEnroll.Add(new EnrollmentStatus() { Id = 1, Status = "Enrolled" });
+            lstEnroll.Add(new EnrollmentStatus() { Id = 2, Status = "Lost Followup" });
+            lstEnroll.Add(new EnrollmentStatus() { Id = 3, Status = "With Drew Consent" });
+            lstEnroll.Add(new EnrollmentStatus() { Id = 4, Status = "No Longer at School" });
+
+            return lstEnroll;
+        }
     }
 }
