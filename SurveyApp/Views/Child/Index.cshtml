@@ -1,6 +1,9 @@
-﻿@{
+﻿@using System.Data;
+@{
     ViewBag.Title = "Child Managemant";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataSet dsChildren = SurveyApp.DataHelper.ChildGetAll();
 }
 
 <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Child Management</h2>
@@ -20,62 +23,26 @@
         <th>Teacher(s)</th>
         <th>Study(s)</th>
         <th>Status</th>
+          <th style="width: 50px;">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = 1 })';">
-        <td>John Fame</td>
-        <td>12/31/2001</td>
-        <td>Oak International</td>
-        <td>Fame Lambar</td>
-        <td>Amber S., Jack R.</td>
-        <td>Study A, Study C</td>
-        <td class="text-success">Enrolled</td>
-      </tr>
-      <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = 1 })';">
-        <td>Katie Will</td>
-        <td>12/31/2009</td>
-        <td>Oak International</td>
-        <td>William Lambar</td>
-        <td>Amber S., Jack R., Anees, Michal</td>
-        <td>Study A, Study C</td>
-        <td class="text-danger">Lost Followup</td>
-      </tr>
-      <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = 1 })';">
-        <td>Oma Ellet</td>
-        <td>12/31/2011</td>
-        <td>Some School System</td>
-        <td>Dessy Lambar</td>
-        <td>Amber S., Jack R.</td>
-        <td>Study A, Study C</td>
-        <td class="text-success">Enrolled</td>
-      </tr>
-      <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = 1 })';">
-        <td>Katie Will</td>
-        <td>12/31/2009</td>
-        <td>Oak International</td>
-        <td>William Lambar</td>
-        <td>Amber S., Jack R., Anees, Michal</td>
-        <td>Study A, Study C</td>
-        <td class="text-danger">Lost Followup</td>
-      </tr>
-      <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = 1 })';">
-        <td>Oma Ellet</td>
-        <td>12/31/2011</td>
-        <td>Some School System</td>
-        <td>Dessy Lambar</td>
-        <td>Amber S., Jack R.</td>
-        <td>Study A, Study C</td>
-        <td class="text-success">Enrolled</td>
-      </tr>
-      <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = 1 })';">
-        <td>John Fame</td>
-        <td>12/31/2001</td>
-        <td>Oak International</td>
-        <td>Fame Lambar</td>
-        <td>Amber S., Jack R.</td>
-        <td>Study A, Study C</td>
-        <td class="text-success">Enrolled</td>
-      </tr>
+        @if (dsChildren != null && dsChildren.Tables.Count > 0 && dsChildren.Tables[0] != null && dsChildren.Tables[0].Rows.Count > 0)
+        {
+            foreach (DataRow dr in dsChildren.Tables[0].Rows)
+            { 
+                <tr onclick="location.href = '@(Url.Action("ChildAddEdit", "Child") + "?id=" + dr["Id"].ToString())';">
+                    <td>@dr["Name"]</td>
+                    <td>@dr["dob"]</td>
+                    <td>@dr["School"]</td>
+                    <td>@dr["Parent"]</td>
+                    <td>@dr["Teacher"]</td>
+                    <td>@dr["Study"]</td>
+                    <td class="text-success">@dr["StatusId"]</td>
+                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"></a></td>
+                </tr>
+            }
+        }
+      
     </tbody>
   </table>

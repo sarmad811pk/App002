@@ -59,8 +59,7 @@ namespace SurveyApp.Controllers
                 {
                     using (var studyContext = new StudyContext())
                     {
-                        Study std = new Study { Id = Convert.ToInt32(id) };
-                        studyContext.Studies.Attach(std);
+                        Study std = studyContext.Studies.Find(Convert.ToInt32(id));                        
                         studyContext.Studies.Remove(std);
                         studyContext.SaveChanges();
                     }
@@ -70,8 +69,7 @@ namespace SurveyApp.Controllers
                 {
                     using (var schoolContext = new SchoolContext())
                     {
-                        School sch = new School { SchoolId = Convert.ToInt32(id) };
-                        schoolContext.Schools.Attach(sch);
+                        School sch = schoolContext.Schools.Find(Convert.ToInt32(id));                        
                         schoolContext.Schools.Remove(sch);
                         schoolContext.SaveChanges();
                     }
@@ -81,10 +79,19 @@ namespace SurveyApp.Controllers
                 {
                     using (var scheduleContext = new ScheduleContext())
                     {
-                        Schedule sch = new Schedule { Id = Convert.ToInt32(id) };
-                        scheduleContext.Schedules.Attach(sch);
+                        Schedule sch = scheduleContext.Schedules.Find(Convert.ToInt32(id));                        
                         scheduleContext.Schedules.Remove(sch);
                         scheduleContext.SaveChanges();
+                    }
+                    isSuccessful = true;
+                }
+                else if (type == "child")
+                {
+                    using (var childContext = new ChildContext())
+                    {
+                        Child objChild = childContext.Children.Find(Convert.ToInt32(id));                        
+                        childContext.Children.Remove(objChild);
+                        childContext.SaveChanges();
                     }
                     isSuccessful = true;
                 }
@@ -117,8 +124,7 @@ namespace SurveyApp.Controllers
                             {
                                 Roles.RemoveUserFromRoles(objUser.UserName, roles);
                             }
-
-                            uContext.UserProfiles.Attach(objUser);
+                            
                             uContext.UserProfiles.Remove(objUser);
                             uContext.SaveChanges();
 

@@ -7,7 +7,7 @@
 }
 
 
-<h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Parent/Teacher Management</h2>
+<h2 class="col-sm-11" style="margin: 0px;padding: 0px;">User Management</h2>
 <div class="col-sm-1">
 @Html.ActionLink("Add", "ParentTeacherAddEdit", "ParentTeacher", new object { }, new { @class = "btn btn-default" }) 
     </div>
@@ -32,7 +32,7 @@
         {
             foreach (DataRow dr in dsUsers.Tables[0].Rows)
             {
-                <tr onclick="location.href = '@(Url.Action("ParentTeacherAddEdit", "ParentTeacher") + "?id=" + dr["UserId"].ToString())';">
+                <tr onclick="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "alert('You are not authorized to edit Administrator account');return false;" : "")location.href = '@(Url.Action("ParentTeacherAddEdit", "ParentTeacher") + "?id=" + dr["UserId"].ToString())';">
                     <td>@dr["FullName"]</td>
                     <td>@dr["SchoolName"]</td>
                     <td>@dr["RoleName"]</td>
@@ -42,7 +42,7 @@
                     <td class="text-success"></td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" style="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "display:none;" : "")" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["UserId"], 'user', '@(dr["FullName"] == DBNull.Value ? dr["UserName"].ToString() : dr["FullName"].ToString())');"></a></td>
                 </tr>
-            }              
+            }
         }
     </tbody>
   </table>

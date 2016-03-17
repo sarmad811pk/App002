@@ -1,7 +1,8 @@
-﻿@{
+﻿@using System.Data;
+@{
     ViewBag.Title = "Study Management";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var ds = Model;
+    DataSet dsStudies = SurveyApp.DataHelper.StudyGetAll();
 }
 
 
@@ -26,14 +27,14 @@
       </tr>
     </thead>
     <tbody>
-    @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+    @foreach (System.Data.DataRow dr in dsStudies.Tables[0].Rows)
     {
         <tr onclick="location.href = '@Url.Action("StudyAddEdit", "Study")' + '?Id=@(dr["Id"])';">
         <td class="name">@dr["Name"]</td>
-        <td>5</td>
-        <td>100</td>
-        <td>12</td>
-        <td>100</td>
+        <td>@dr["Surveys"]</td>
+        <td>@dr["Children"]</td>
+        <td>@dr["Teachers"]</td>
+        <td>@dr["Parents"]</td>
         <td>40%</td>
         <td class="@(Convert.ToInt32(dr["Status"]) == 2 ? "text-danger" : "text-success")">@(Convert.ToInt32(dr["Status"]) == 1 ? "Active" : (Convert.ToInt32(dr["Status"]) == 2 ? "InActive" : (Convert.ToInt32(dr["Status"]) == 3 ? "Incomplete" : "-")))</td>
         <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'study', '@dr["Name"]');"></a></td>

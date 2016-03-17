@@ -211,5 +211,14 @@ namespace SurveyApp
             cmd.CommandText = "UserManagement_GetUsers";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static DataSet ChildGetAll()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "Child_GetAll";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
     }
 }
