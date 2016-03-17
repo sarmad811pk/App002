@@ -7,7 +7,7 @@
 
     var result = false;
     $.ajax({
-        url: "/Home/deleteListItem",
+        url: "../Home/deleteListItem",
         data: "{'id': '" + id + "', 'type' : '" + type + "' }",
         type: 'POST',
         contentType: "application/json; charset=utf-8",
