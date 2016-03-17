@@ -1,6 +1,9 @@
-﻿@{
+﻿@using System.Data;
+@{
     ViewBag.Title = "Parent/Teacher Management";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataSet dsUsers = SurveyApp.DataHelper.UserManagementGetUsers();
 }
 
 
@@ -21,50 +24,25 @@
         <th>Children</th>
         <th>Last Login</th>
         <th>Last Reminder</th>
-        <th>Action</th>
+        <th style="width: 50px;">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr onclick="location.href = '@Url.Action("ParentTeacherAddEdit", "ParentTeacher", new { id = 1 })';">
-        <td>Jack R.</td>
-        <td>Oak International</td>
-        <td>Teacher</td>
-        <td>jack@yahoo.com</td>
-        <td>5</td>
-        <td class="text-success">01/18/2016</td>
-        <td class="text-success">01/10/2016</td>
-        <td><a href="#" class="btn-sm btn-info">Send Reminder</a></td>
-      </tr>
-       <tr onclick="location.href = '@Url.Action("ParentTeacherAddEdit", "ParentTeacher", new { id = 1 })';">
-        <td>Fame Lamber</td>
-        <td>-</td>
-        <td>Parent</td>
-        <td>fame@yahoo.com</td>
-        <td>John Fame</td>
-        <td class="text-danger">01/18/2014</td>
-        <td class="text-success">01/10/2016</td>
-        <td><a href="#" class="btn-sm btn-info">Send Reminder</a></td>
-      </tr>      
-        <tr onclick="location.href = '@Url.Action("ParentTeacherAddEdit", "ParentTeacher", new { id = 1 })';">
-        <td>Anees Rona</td>
-        <td>Oak International</td>
-        <td>Teacher</td>
-        <td>anees@yahoo.com</td>
-        <td>5</td>
-        <td class="text-success">01/18/2016</td>
-        <td class="text-success">01/10/2016</td>
-        <td><a href="#" class="btn-sm btn-info">Send Reminder</a></td>
-      </tr>
-       <tr onclick="location.href = '@Url.Action("ParentTeacherAddEdit", "ParentTeacher", new { id = 1 })';">
-        <td>Jade Lamber</td>
-        <td>-</td>
-        <td>Parent</td>
-        <td>jade@yahoo.com</td>
-        <td>John Fame</td>
-        <td class="text-danger">01/18/2014</td>
-        <td class="text-success">01/10/2016</td>
-        <td><a href="#" class="btn-sm btn-info">Send Reminder</a></td>
-      </tr>
-
+        @if (dsUsers != null && dsUsers.Tables.Count > 0 && dsUsers.Tables[0] != null && dsUsers.Tables[0].Rows.Count > 0)
+        {
+            foreach (DataRow dr in dsUsers.Tables[0].Rows)
+            {
+                <tr onclick="location.href = '@(Url.Action("ParentTeacherAddEdit", "ParentTeacher") + "?id=" + dr["UserId"].ToString())';">
+                    <td>@dr["FullName"]</td>
+                    <td>@dr["SchoolName"]</td>
+                    <td>@dr["RoleName"]</td>
+                    <td>@dr["UserName"]</td>
+                    <td>@dr["Children"]</td>
+                    <td class="text-success">@dr["LastLoginDate"]</td>
+                    <td class="text-success"></td>
+                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" style="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "display:none;" : "")" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["UserId"], 'user', '@(dr["FullName"] == DBNull.Value ? dr["UserName"].ToString() : dr["FullName"].ToString())');"></a></td>
+                </tr>
+            }              
+        }
     </tbody>
   </table>

@@ -36,6 +36,7 @@ namespace SurveyApp.Controllers
             
             if (ID.HasValue)
             {
+                parentTeacherModel.Id = ID.Value;
                 DataSet ds = DataHelper.UserProfileGetUserByID(ID.Value);
                 if (ds != null && ds.Tables[0] != null && ds.Tables[0].Rows.Count > 0)
                 {
@@ -44,11 +45,11 @@ namespace SurveyApp.Controllers
                     registerModel.UserName = ds.Tables[0].Rows[0]["UserName"].ToString();
                     registerModel.Password = ds.Tables[0].Rows[0]["Password"].ToString();
                     registerModel.ConfirmPassword = ds.Tables[0].Rows[0]["Password"].ToString();
+                    parentTeacherModel.Role = ds.Tables[0].Rows[0]["RoleId"] != DBNull.Value ? Convert.ToInt32(ds.Tables[0].Rows[0]["RoleId"]) : -1;
                 }
                 if (ds != null && ds.Tables[1] != null && ds.Tables[1].Rows.Count > 0)
                 {
-                    parentTeacherModel.SchoolId = ds.Tables[1].Rows[0]["SchoolId"] != DBNull.Value ? Convert.ToInt32(ds.Tables[1].Rows[0]["SchoolId"]) : -1;
-                    parentTeacherModel.Role = ds.Tables[0].Rows[0]["RoleId"] != DBNull.Value ? Convert.ToInt32(ds.Tables[0].Rows[0]["RoleId"]) : -1;
+                    parentTeacherModel.SchoolId = ds.Tables[1].Rows[0]["SchoolId"] != DBNull.Value ? Convert.ToInt32(ds.Tables[1].Rows[0]["SchoolId"]) : -1;                    
                 }
                 ViewData["Studies"] = ds != null && ds.Tables[2].Rows.Count > 0 ? ds.Tables[2] : null;
 
@@ -96,25 +97,45 @@ namespace SurveyApp.Controllers
             try
             {
                 //save school info
-                if (!parentTeacherModel.SchoolId.HasValue && !String.IsNullOrEmpty(parentTeacherModel.SchoolName))
+                if (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher)
                 {
-                    using (var sContext = new SchoolContext())
+                    if (!parentTeacherModel.SchoolId.HasValue && !String.IsNullOrEmpty(parentTeacherModel.SchoolName))
                     {
-                        School objSchool = null;
-                        objSchool = new School { Name = parentTeacherModel.SchoolName };
-                        sContext.Schools.Add(objSchool);
-                        sContext.SaveChanges();
+                        using (var sContext = new SchoolContext())
+                        {
+                            School objSchool = null;
+                            objSchool = new School { Name = parentTeacherModel.SchoolName };
+                            sContext.Schools.Add(objSchool);
+                            sContext.SaveChanges();
 
-                        schoolId = sContext.Schools.Max(item => item.SchoolId);
-                    } 
-                }                               
+                            schoolId = sContext.Schools.Max(item => item.SchoolId);
+                        }
+                    }
+                }                            
 
                 //save account info                
                 try
                 {
-                    registerModel.FullName = parentTeacherModel.Name;
-                    AccountController.CreateAccount(registerModel, (parentTeacherModel.Role == (int)SurveyAppRoles.Parent ? "Parent" : (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher ? "Teacher" : "")));
-                    ptId = WebSecurity.GetUserId(registerModel.UserName);
+                    string roleName = (parentTeacherModel.Role == (int)SurveyAppRoles.Parent ? "Parent" : (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher ? "Teacher" : ""));
+                    if (parentTeacherModel.Id > 0)
+                    {
+                        Roles.RemoveUserFromRole(registerModel.UserName, Roles.GetRolesForUser(registerModel.UserName)[0]);
+                        Roles.AddUserToRole(registerModel.UserName, roleName);
+
+                        using (var uContext = new UsersContext())
+                        {
+                            UserProfile objUP = uContext.UserProfiles.Find(parentTeacherModel.Id);
+                            objUP.FullName = parentTeacherModel.Name;
+                            uContext.SaveChanges();
+                        }
+                        ptId = parentTeacherModel.Id;
+                    }
+                    else
+                    {                        
+                        registerModel.FullName = parentTeacherModel.Name;
+                        AccountController.CreateAccount(registerModel, roleName);
+                        ptId = WebSecurity.GetUserId(registerModel.UserName);                        
+                    }                    
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -123,9 +144,15 @@ namespace SurveyApp.Controllers
                 }
 
                 //save parent teacher school relationship info
-                if (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher)
+                
+                using (var ptScContext = new PParentTeacher_SchoolContext())
                 {
-                    using (var ptScContext = new PParentTeacher_SchoolContext())
+                    if ((parentTeacherModel.SchoolId.HasValue == true || schoolId > 0) && parentTeacherModel.Id > 0)
+                    {
+                        ptScContext.ParentTeacher_Schools.RemoveRange(ptScContext.ParentTeacher_Schools.Where(pts => pts.ParentTeacherId == parentTeacherModel.Id));
+                        ptScContext.SaveChanges();
+                    }
+                    if (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher)
                     {
                         ParentTeacher_School objPTS = new ParentTeacher_School();
                         objPTS.ParentTeacherId = ptId;
@@ -134,11 +161,16 @@ namespace SurveyApp.Controllers
                         ptScContext.ParentTeacher_Schools.Add(objPTS);
                         ptScContext.SaveChanges();
                     }
-                }                
+                }
 
                 //save parent teacher study relationship info                
                 using (var ptsContext = new ParentTeacher_StudyContext())
                 {
+                    if (parentTeacherModel.Id > 0 && studyCount > 0)
+                    {
+                        ptsContext.ParentTeacher_Studys.RemoveRange(ptsContext.ParentTeacher_Studys.Where(pts => pts.ParentTeacherId == parentTeacherModel.Id));
+                        ptsContext.SaveChanges();
+                    }
                     foreach (Study objStudy in Study.StudyGetAll())
                     {
                         if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id]))
@@ -160,8 +192,6 @@ namespace SurveyApp.Controllers
             catch(Exception ex){
                 ModelState.AddModelError("", ex.Message);
             }
-
-
 
             return View(parentTeacher_RegisterModel);
         }

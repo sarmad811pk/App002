@@ -53,15 +53,18 @@
             }
         });
 		
-		@if(Request.QueryString["ID"] != null && Convert.ToInt32(Request.QueryString["ID"]) > 0){
-		    Html.Raw("disableRegisters();");
+        var id = $("#hdnParentTeacherId").val();
+		if(id != ""){
+		    disableRegisters();
 		}
     });
 
     function disableRegisters() {
-        $("#txtUserName").attr("disabled", "disabled");
-        $("#txtPassword").attr("disabled", "disabled");
-        $("#txtConfirmPassword").attr("disabled", "disabled");
+        $("#txtUserName").attr("readonly", "readonly");
+        $("#txtPassword").val("*********");
+        $("#txtPassword").attr("readonly", "readonly");
+        $("#txtConfirmPassword").val("*********");
+        $("#txtConfirmPassword").attr("readonly", "readonly");
     }
 </script>
 <br />

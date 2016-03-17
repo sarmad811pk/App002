@@ -193,6 +193,23 @@ namespace SurveyApp
 
         }
 
-        
+        public static DataSet UserManagementGetUsers(int? UserID = null)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            if (UserID.HasValue)
+            {
+                cmd.Parameters["@UserID"].Value = UserID.Value;
+            }
+            else
+            {
+                cmd.Parameters["@UserID"].Value = DBNull.Value;
+            }
+
+            cmd.CommandText = "UserManagement_GetUsers";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
     }
 }
