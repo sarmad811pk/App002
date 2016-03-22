@@ -16,8 +16,12 @@ namespace SurveyApp.Controllers
 
         public ActionResult Index()
         {
-            DataSet dsSchedules = DataHelper.ScheduleGetAll();
-            return View(dsSchedules);
+            return View();
+        }
+
+        public ActionResult ScheduleAddEdit()
+        {
+            return View();
         }
 
         public ActionResult saveSchedule(string objSchedule)
