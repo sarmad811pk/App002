@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Survey Manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int id = Convert.ToInt32(TempData["ID"]);
+    var ds = SurveyApp.DataHelper.SurveyGetAll();
+
+    System.Data.DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
+}
+<style type="text/css">
+    .col-centered {
+        float: none;
+        margin: 0 auto;
+    }
+</style>
+
+
+@section featured {
+    <section class="featured col-centered">
+        <div class="content-wrapper centered">
+            <hgroup class="title">
+                <h2>User Dashboard</h2>
+            </hgroup>
+            <p style="font-size:16px;">
+                Complete the following Survey
+            </p>
+        </div>
+    </section>
+}
+<div class="panel-group">
+
+    @if (dschild.Tables[0].Rows.Count > 0)
+    {
+
+
+        foreach (System.Data.DataRow drch in dschild.Tables[0].Rows)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#@drch["ID"].ToString()">
+                            @drch["Name"].ToString()
+                        </a>
+                    </h4>
+                </div>
+                <div id="@drch["ID"].ToString()" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+                        {
+                            <a href="@Url.Action("Question", "UserQuestion", new { surveyID = dr["ID"].ToString() })" class="list-group-item">
+                                <strong>Preview:</strong> @dr["Title"].ToString();
+                            </a>
+
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <strong>Info!</strong>No child is assosisated with this user.
+        </div>
+    }
+</div>

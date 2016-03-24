@@ -193,6 +193,44 @@ namespace SurveyApp
 
         }
 
-        
+        public static int SaveuserQuestions(int UserID,int questionid,string answerid,string score)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = UserID;
+            
+            cmd.Parameters.Add("@QuestionID", SqlDbType.Int);
+            cmd.Parameters["@QuestionID"].Value = questionid;
+
+           
+
+            cmd.Parameters.Add("@PAnswer", SqlDbType.NVarChar);
+            cmd.Parameters["@PAnswer"].Value = answerid;
+
+            cmd.Parameters.Add("@Score", SqlDbType.Int);
+            cmd.Parameters["@Score"].Value = score!=""? score:"NULL";
+
+
+            cmd.CommandText = "SaveUserQuestions";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+
+
+
+        }
+
+
+        public static DataSet GetChildbyUserID(int Id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ID", SqlDbType.Int);
+            cmd.Parameters["@ID"].Value = Id;
+
+            cmd.CommandText = "Getchild_ByUserID";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
     }
 }

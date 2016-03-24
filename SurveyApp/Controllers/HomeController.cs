@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
+
 
 namespace SurveyApp.Controllers
 {
@@ -12,27 +14,24 @@ namespace SurveyApp.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+     
+            if (roles[0]=="Parent")
+            {
+                return RedirectToAction("Index", "UserQuestion");
+            }
 
             return View();
         }
-        public ActionResult Survey(int ID)
-        {
-            return View(ID);
-        }
-        public ActionResult Survey0() {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
-            return View();
-        
-        }
-        public ActionResult Survey1()
+
+        public ActionResult UserQuestion()
         {
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
             return View();
-
         }
+       
         public ActionResult About()
         {
             ViewBag.Message = "Your app description page.";
