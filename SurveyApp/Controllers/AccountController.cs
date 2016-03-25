@@ -25,7 +25,7 @@ namespace SurveyApp.Controllers
         public ActionResult Login(string returnUrl)
         {
             if (Request.IsAuthenticated)
-            {
+            {                
                 return RedirectToAction("Index", "Home");
             }
 
@@ -43,6 +43,17 @@ namespace SurveyApp.Controllers
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {
+                using (var acContext = new ActivityLogContext())
+                {
+                    ActivityLog objALog = new ActivityLog();
+                    objALog.Activity = "Login";
+                    objALog.Date = DateTime.Now;
+                    objALog.Information = Request.Url.ToString();
+                    objALog.UserId = WebSecurity.GetUserId(model.UserName);
+
+                    acContext.Activities.Add(objALog);
+                    acContext.SaveChanges();
+                }
                 return RedirectToLocal(returnUrl);
             }
 
@@ -58,8 +69,19 @@ namespace SurveyApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            WebSecurity.Logout();
+            using (var acContext = new ActivityLogContext())
+            {
+                ActivityLog objALog = new ActivityLog();
+                objALog.Activity = "LogOff";
+                objALog.Date = DateTime.Now;
+                objALog.Information = Request.Url.ToString();
+                objALog.UserId = WebSecurity.CurrentUserId;
 
+                acContext.Activities.Add(objALog);
+                acContext.SaveChanges();
+            }
+
+            WebSecurity.Logout();            
             return RedirectToAction("Login", "Account");
         }
 

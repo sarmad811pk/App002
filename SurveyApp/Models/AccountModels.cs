@@ -108,6 +108,28 @@ namespace SurveyApp.Models
         public string ProviderUserId { get; set; }
     }
 
+    [Table("ActivityLog")]
+    public class ActivityLog
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string Activity { get; set; }
+        public DateTime Date { get; set; }
+        public string Information { get; set; }
+    }
+
+    public class ActivityLogContext : DbContext
+    {
+        public ActivityLogContext()
+            : base("DefaultConnection")
+        {
+        }
+
+        public DbSet<ActivityLog> Activities { get; set; }
+    }
+
     //[Table("webpages_UsersInRoles")]
     //public class webpages_UsersInRoles
     //{

@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "ScheduleAddEdit";
+}
+
+<h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;Schedule Information Editor</h2>
+
+<style>
+    ._panel {
+        background: #fafafa;
+        border: solid 1px #cccccc;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .msg.green {
+        color: #00cc00;
+        margin: 0px 0px 6px 0px;
+    }
+
+    .msg.red {
+        color: #cc0000;
+        margin: 0px 0px 6px 0px;
+    }
+</style>
+<br />
+
+@using (Html.BeginForm("ScheduleAddEdit", "Schedule", FormMethod.Post, new { id = "frmAddSchedule", @class = "form-horizontal", style = "width: 700px;" }))
+{
+    @Html.ValidationSummary();
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">Title:</label>
+        <div class="col-sm-9">
+            <input type="date" class="form-control" />
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">Frequency:</label>
+        <div class="col-sm-9">
+            <div class="radio-inline"><label><input type="radio" />Once</label></div>
+            <div class="radio-inline"><label><input type="radio" />Repeat</label></div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">Active On:</label>
+        <div class="col-sm-9">
+            <div class="radio-inline"><label><input type="radio" />Enrolment</label></div>
+            <div class="radio-inline"><label><input type="radio" />Sepecify</label></div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">Available Until:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" />
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">Reminder Frequncey:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" />
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3" for="email">Last Reminder:</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" />
+        </div>
+    </div>
+
+}

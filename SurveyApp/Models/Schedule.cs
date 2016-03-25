@@ -29,6 +29,7 @@ namespace SurveyApp.Models
         public int AssignmentRemider { get; set; }
         public int CompletionRemider { get; set; }
         public int OccurenceId { get; set; }
+        public int ActiveOn { get; set; }
     }
 
     [Table("Occurence")]
