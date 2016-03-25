@@ -2,6 +2,8 @@
 using SurveyApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -15,6 +17,11 @@ namespace SurveyApp.Controllers
     {
         //
         // GET: /ParentTeacher/
+        public ParentTeacherController()
+        {         
+            Database.SetInitializer<StudyContext>(null);        
+        }
+
         public static RegisterModel RegisterModel;        
 
         public ActionResult Index()
@@ -24,12 +31,39 @@ namespace SurveyApp.Controllers
 
         public ActionResult ParentTeacherAddEdit(int? ID)
         {
-            return View(ID);
+            ParentTeacher parentTeacherModel = new ParentTeacher();
+            RegisterModel registerModel = new RegisterModel();
+            
+            if (ID.HasValue)
+            {
+                DataSet ds = DataHelper.UserProfileGetUserByID(ID.Value);
+                if (ds != null && ds.Tables[0] != null && ds.Tables[0].Rows.Count > 0)
+                {
+                    registerModel.FullName = ds.Tables[0].Rows[0]["FullName"].ToString();
+                    parentTeacherModel.Name = ds.Tables[0].Rows[0]["FullName"].ToString();
+                    registerModel.UserName = ds.Tables[0].Rows[0]["UserName"].ToString();
+                    registerModel.Password = ds.Tables[0].Rows[0]["Password"].ToString();
+                    registerModel.ConfirmPassword = ds.Tables[0].Rows[0]["Password"].ToString();
+                }
+                if (ds != null && ds.Tables[1] != null && ds.Tables[1].Rows.Count > 0)
+                {
+                    parentTeacherModel.SchoolId = ds.Tables[1].Rows[0]["SchoolId"] != DBNull.Value ? Convert.ToInt32(ds.Tables[1].Rows[0]["SchoolId"]) : -1;
+                    parentTeacherModel.Role = ds.Tables[0].Rows[0]["RoleId"] != DBNull.Value ? Convert.ToInt32(ds.Tables[0].Rows[0]["RoleId"]) : -1;
+                }
+                ViewData["Studies"] = ds != null && ds.Tables[2].Rows.Count > 0 ? ds.Tables[2] : null;
+
+            }
+                         
+            return View(new ParentTeacher_Register() { vw_ParentTeacher = parentTeacherModel, vw_Register = registerModel });
+                     
         }
 
         [HttpPost]
-        public ActionResult ParentTeacherAddEdit(ParentTeacher parentTeacherModel, RegisterModel registerModel, FormCollection collection, int? ID)
+        public ActionResult ParentTeacherAddEdit(ParentTeacher_Register parentTeacher_RegisterModel, FormCollection collection, int? ID)
         {
+            ParentTeacher parentTeacherModel = parentTeacher_RegisterModel.vw_ParentTeacher;
+            RegisterModel registerModel = parentTeacher_RegisterModel.vw_Register;
+
             if (!ModelState.IsValid)
             {
                 return View(parentTeacherModel);
@@ -78,6 +112,7 @@ namespace SurveyApp.Controllers
                 //save account info                
                 try
                 {
+                    registerModel.FullName = parentTeacherModel.Name;
                     AccountController.CreateAccount(registerModel, (parentTeacherModel.Role == (int)SurveyAppRoles.Parent ? "Parent" : (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher ? "Teacher" : "")));
                     ptId = WebSecurity.GetUserId(registerModel.UserName);
                 }
