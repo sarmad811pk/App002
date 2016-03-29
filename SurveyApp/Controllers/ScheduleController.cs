@@ -52,6 +52,15 @@ namespace SurveyApp.Controllers
                 return View(mSchedule);
             }
 
+            if (mSchedule.Frequency == 2)
+            {
+                if (mSchedule.DaysToRepeat == null || mSchedule.DaysToRepeat <= 0)
+                {
+                    ModelState.AddModelError("", "Please enter number of days for frequency.");
+                    return View(mSchedule);
+                }
+            }
+
             if (mSchedule.ActiveOn <= 0)
             {
                 ModelState.AddModelError("", "Please select activation type.");
@@ -59,7 +68,7 @@ namespace SurveyApp.Controllers
             }
 
             if (mSchedule.ActiveOn == 2 && mSchedule.Month <= 0 && mSchedule.Day <= 0 && mSchedule.Weekday <= 0) {
-                ModelState.AddModelError("", "Please select at least one month for activation.");
+                ModelState.AddModelError("", "Please specify period.");
                 return View(mSchedule);
             }
             #endregion

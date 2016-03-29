@@ -67,7 +67,16 @@ namespace SurveyApp.Controllers
                         sssContext.SSSs.RemoveRange(sssContext.SSSs.Where(sss => sss.StudyId == Convert.ToInt32(id)));
                         sssContext.SaveChanges();
                     }
-
+                    using (var ptsContext = new ParentTeacher_StudyContext())
+                    {
+                        ptsContext.ParentTeacher_Studys.RemoveRange(ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == Convert.ToInt32(id)));
+                        ptsContext.SaveChanges();
+                    }
+                    using (var csContext = new Child_StudyContext())
+                    {
+                        csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.StudyId == Convert.ToInt32(id)));
+                        csContext.SaveChanges();
+                    }
                     using (var studyContext = new StudyContext())
                     {
                         Study std = studyContext.Studies.Find(Convert.ToInt32(id));                        
@@ -114,6 +123,7 @@ namespace SurveyApp.Controllers
                         csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.ChildId == Convert.ToInt32(id)));
                         csContext.SaveChanges();
                     }
+
                     using (var childContext = new ChildContext())
                     {
                         Child objChild = childContext.Children.Find(Convert.ToInt32(id));                        
@@ -138,6 +148,11 @@ namespace SurveyApp.Controllers
                                     {
                                         ptScContext.ParentTeacher_Schools.RemoveRange(ptScContext.ParentTeacher_Schools.Where(pts => pts.ParentTeacherId == objUser.UserId));
                                         ptScContext.SaveChanges();
+                                    }
+                                    using (var ctContext = new Child_TeacherContext())
+                                    {
+                                        ctContext.Child_Teachers.RemoveRange(ctContext.Child_Teachers.Where(cts => cts.TeacherId == objUser.UserId));
+                                        ctContext.SaveChanges();
                                     }
                                 }
                                 using (var ptsContext = new ParentTeacher_StudyContext())
