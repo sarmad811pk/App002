@@ -5,6 +5,53 @@
     var dsSchedules = SurveyApp.DataHelper.ScheduleGetAll();
 }
 
+@functions{
+    public string getFrequency(object freq, object daysToRepeat) {
+        if (freq == null)
+        {
+            return "";
+        }
+
+        int frequency = Convert.ToInt32(freq);
+        if (frequency == 1)
+        {
+            return "Once";
+        }
+        else{
+            return "Repeating after " + Convert.ToInt32(daysToRepeat) + " day(s)";
+        }
+    }
+
+    public string getActivationType(object act, object day, object month, object weekday)
+    {
+        if (act == null)
+        {
+            return "";
+        }
+
+        int activation = Convert.ToInt32(act);
+        if (activation == 1)
+        {
+            return "Enrolment";
+        }
+        else
+        {
+            if (weekday != null && Convert.ToInt32(weekday) > 0)
+            {
+                return "Activates every " + SurveyApp.Models.ScheduleWeekday.getWeekdayName(Convert.ToInt32(weekday));
+            }
+            else
+            {
+                string months = "";
+                foreach (string monthId in month.ToString().Split(','))
+                {
+                    months += " " + SurveyApp.Models.ScheduleMonth.getMonthNameShort(Convert.ToInt32(monthId)) + ",";
+                }
+                return "Activates every " + Convert.ToInt32(day) + " of" + months.TrimEnd(',');
+            }
+        }
+    }
+}
 
 <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Schedule Management</h2>
 <div class="col-sm-1">
@@ -21,10 +68,9 @@
             <th>Title</th>
             <th>Frequency</th>
             <th>Active On</th>
-            <th>Available Untill</th>
+            <th>Available Until</th>
             <th>Reminder Frequency</th>            
-            <th>Last Reminder</th>
-            <th>Action</th>
+            <th>Last Reminder</th>            
             <th style="width: 50px;">Action</th>
         </tr>
     </thead>
@@ -34,14 +80,13 @@
             foreach (DataRow dr in dsSchedules.Tables[0].Rows)
             {
                 <tr onclick="location.href = '@(Url.Action("ScheduleAddEdit", "Schedule") + "?id=" + dr["Id"].ToString())';">
-                    <td>@dr["Name"]</td>
-                    <td>@dr["dob"]</td>
-                    <td>@dr["School"]</td>
-                    <td>@dr["Parent"]</td>
-                    <td>@dr["Teacher"]</td>
-                    <td>@dr["Study"]</td>
-                    <td class="text-success">@dr["StatusId"]</td>
-                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"></a></td>
+                    <td>@dr["Title"]</td>
+                    <td>@getFrequency(dr["Frequency"], dr["DaysToRepeat"])</td>
+                    <td>@getActivationType(dr["ActiveOn"], dr["Day"], dr["Month"], dr["Weekday"])</td>
+                    <td>@dr["AvailableUntil"] day(s)</td>
+                    <td>Every @dr["ReminderFrequency"] day(s)</td>
+                    <td>-@dr["LastReminder"] day(s) from last day</td>                    
+                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'schedule', '@dr["Title"]');"></a></td>
                 </tr>
             }
         }
