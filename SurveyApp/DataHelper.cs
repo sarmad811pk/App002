@@ -207,7 +207,6 @@ namespace SurveyApp
             {
                 cmd.Parameters["@UserID"].Value = DBNull.Value;
             }
-
             cmd.CommandText = "UserManagement_GetUsers";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
@@ -218,6 +217,54 @@ namespace SurveyApp
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.CommandText = "Child_GetAll";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        public static int SaveuserQuestions(int UserID,int questionid,string answerid,string  score, string childid)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = UserID;
+            
+            cmd.Parameters.Add("@QuestionID", SqlDbType.Int);
+            cmd.Parameters["@QuestionID"].Value = questionid;
+
+           
+        
+            cmd.Parameters.Add("@PAnswer", SqlDbType.NVarChar);
+            cmd.Parameters["@PAnswer"].Value = answerid;
+
+            cmd.Parameters.Add("@Score", SqlDbType.Int);
+            if (score != "")
+            {
+                cmd.Parameters["@Score"].Value = Convert.ToInt32(score);
+            }
+            else
+            {
+                cmd.Parameters["@Score"].Value = DBNull.Value;
+            }
+
+            cmd.Parameters.Add("@ChildId", SqlDbType.Int);
+            cmd.Parameters["@ChildId"].Value = Convert.ToInt32(childid);
+
+            cmd.CommandText = "SaveUserQuestions";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+
+
+
+        }
+
+
+        public static DataSet GetChildbyUserID(int Id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ID", SqlDbType.Int);
+            cmd.Parameters["@ID"].Value = Id;
+
+            cmd.CommandText = "Getchild_ByUserID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 

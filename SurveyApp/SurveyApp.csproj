@@ -202,6 +202,7 @@
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\StudyController.cs" />
     <Compile Include="Controllers\SurveyController.cs" />
+    <Compile Include="Controllers\UserQuestionController.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -345,12 +346,10 @@
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Survey0.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Home\Survey1.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Survey\Survey.cshtml" />
     <Content Include="Views\Settings\SurveyEditor.cshtml" />
@@ -366,6 +365,8 @@
     <Content Include="Views\School\SchoolAddEdit.cshtml" />
     <Content Include="Views\Study\StudyAddEdit.cshtml" />
     <Content Include="Views\Schedule\ScheduleAddEdit.cshtml" />
+    <Content Include="Views\UserQuestion\Index.cshtml" />
+    <Content Include="Views\UserQuestion\Question.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

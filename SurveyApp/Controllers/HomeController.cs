@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using WebMatrix.WebData;
 
+
 namespace SurveyApp.Controllers
 {
     [Authorize]
@@ -14,27 +15,24 @@ namespace SurveyApp.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
 
-            return View();
-        }
-        public ActionResult Survey(int ID)
+            if (roles[0]=="Parent")
         {
-            return View(ID);
+                return RedirectToAction("Index", "UserQuestion");
         }
-        public ActionResult Survey0() {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
             return View();
+        }
+
         
-        }
-        public ActionResult Survey1()
+        public ActionResult UserQuestion()
         {
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
 
             return View();
-
         }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your app description page.";
@@ -128,8 +126,8 @@ namespace SurveyApp.Controllers
                             uContext.UserProfiles.Remove(objUser);
                             uContext.SaveChanges();
 
-                            isSuccessful = true;
-                        }
+                    isSuccessful = true;
+                }
                         else
                         {
                             isSuccessful = false;

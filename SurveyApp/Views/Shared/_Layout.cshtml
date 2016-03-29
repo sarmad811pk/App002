@@ -52,6 +52,7 @@
                 @{Html.RenderPartial("~/Views/Shared/_AdminMenu.cshtml");}
             </div>
         }
+       
     <div class="col-sm-10" @(!Roles.IsUserInRole("Administrator")?"style='margin:0px auto 0px aut;'":"")>
             @RenderSection("featured", required: false)
             <section class="content-wrapper main-content clear-fix">
