@@ -91,13 +91,16 @@ namespace SurveyApp.Controllers
                 ModelState.AddModelError("", "Please select at least one study.");
                 return View(parentTeacher_RegisterModel);
             }
-            
+
+            DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
+            int teacherRoleId = (int)dtRoles.Select("RoleName = 'Teacher'")[0]["RoleId"];
+            int parentRoleId = (int)dtRoles.Select("RoleName = 'Parent'")[0]["RoleId"];
 
             int ptId = 0, schoolId = 0;
             try
             {
                 //save school info
-                if (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher)
+                if (parentTeacherModel.Role == teacherRoleId)
                 {
                     if (!parentTeacherModel.SchoolId.HasValue && !String.IsNullOrEmpty(parentTeacherModel.SchoolName))
                     {
@@ -115,11 +118,15 @@ namespace SurveyApp.Controllers
 
                 //save account info                
                 try
-                {
-                    string roleName = (parentTeacherModel.Role == (int)SurveyAppRoles.Parent ? "Parent" : (parentTeacherModel.Role == (int)SurveyAppRoles.Teacher ? "Teacher" : ""));
+                {                    
+                    string roleName = (parentTeacherModel.Role == parentRoleId ? "Parent" : (parentTeacherModel.Role == teacherRoleId ? "Teacher" : ""));
                     if (parentTeacherModel.Id > 0)
                     {
-                        Roles.RemoveUserFromRole(registerModel.UserName, Roles.GetRolesForUser(registerModel.UserName)[0]);
+                        string[] roles = Roles.GetRolesForUser(registerModel.UserName);
+                        if (roles.Length > 0)
+                        {
+                            Roles.RemoveUserFromRole(registerModel.UserName, roles[0]);
+                        }                        
                         Roles.AddUserToRole(registerModel.UserName, roleName);
 
                         using (var uContext = new UsersContext())

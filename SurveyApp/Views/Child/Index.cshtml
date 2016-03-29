@@ -33,7 +33,7 @@
             { 
                 <tr onclick="location.href = '@(Url.Action("ChildAddEdit", "Child") + "?id=" + dr["Id"].ToString())';">
                     <td>@dr["Name"]</td>
-                    <td>@dr["dob"]</td>
+                    <td>@(dr["dob"] != DBNull.Value ? Convert.ToDateTime(dr["dob"]).ToString("MM/dd/yyyy") : "")</td>
                     <td>@dr["School"]</td>
                     <td>@dr["Parent"]</td>
                     <td>@dr["Teacher"]</td>

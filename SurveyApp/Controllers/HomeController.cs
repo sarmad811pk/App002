@@ -14,13 +14,20 @@ namespace SurveyApp.Controllers
     public class HomeController : Controller
     {
         public ActionResult Index()
-        {
-            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+        {            
+            try
+            {
+                string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+                if (roles[0] == "Parent")
+                {
+                    return RedirectToAction("Index", "UserQuestion");
+                }
 
-            if (roles[0]=="Parent")
-        {
-                return RedirectToAction("Index", "UserQuestion");
-        }
+            }
+            catch(Exception ex){
+                WebSecurity.Logout(); 
+                return RedirectToAction("Login", "Account");
+            }
 
             return View();
         }
@@ -55,6 +62,12 @@ namespace SurveyApp.Controllers
             {
                 if (type == "study")
                 {
+                    using (var sssContext = new Study_Survey_ScheduleContext())
+                    {
+                        sssContext.SSSs.RemoveRange(sssContext.SSSs.Where(sss => sss.StudyId == Convert.ToInt32(id)));
+                        sssContext.SaveChanges();
+                    }
+
                     using (var studyContext = new StudyContext())
                     {
                         Study std = studyContext.Studies.Find(Convert.ToInt32(id));                        
@@ -65,6 +78,12 @@ namespace SurveyApp.Controllers
                 }
                 else if (type == "school")
                 {
+                    using (var ptSContext = new PParentTeacher_SchoolContext())
+                    {
+                        ptSContext.ParentTeacher_Schools.RemoveRange(ptSContext.ParentTeacher_Schools.Where(pts => pts.SchoolId == Convert.ToInt32(id)));
+                        ptSContext.SaveChanges();
+                    }
+
                     using (var schoolContext = new SchoolContext())
                     {
                         School sch = schoolContext.Schools.Find(Convert.ToInt32(id));                        
@@ -85,6 +104,16 @@ namespace SurveyApp.Controllers
                 }
                 else if (type == "child")
                 {
+                    using (var ctContext = new Child_TeacherContext())
+                    {
+                        ctContext.Child_Teachers.RemoveRange(ctContext.Child_Teachers.Where(cts => cts.ChildId == Convert.ToInt32(id)));
+                        ctContext.SaveChanges();
+                    }
+                    using (var csContext = new Child_StudyContext())
+                    {
+                        csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.ChildId == Convert.ToInt32(id)));
+                        csContext.SaveChanges();
+                    }
                     using (var childContext = new ChildContext())
                     {
                         Child objChild = childContext.Children.Find(Convert.ToInt32(id));                        

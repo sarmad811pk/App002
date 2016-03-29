@@ -31,7 +31,7 @@ namespace SurveyApp.Models
         [Required(ErrorMessage = "Please select activation type")]
         public int ActiveOn { get; set; }
         public int? Day { get; set; }
-        public string Month { get; set; }
+        public int? Month { get; set; }
         public int? Weekday { get; set; }
         [Required(ErrorMessage = "Please enter no. of days for schedule availability")]
         public int AvailableUntil { get; set; }

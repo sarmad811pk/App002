@@ -86,7 +86,7 @@
     <div class="form-group">
         <label class="control-label col-sm-3" for="pwd">Date of Birth:</label>
         <div class="col-sm-9">
-            @Html.TextBoxFor(m => m.dob, new { type = "date", placeholder = "Enter DOB", @class = "form-control", max = @DateTime.Now.ToString(@"yyyy-MM-dd") })
+            @Html.TextBoxFor(m => m.dob, "{0:MM/dd/yyyy}", new { type = "text", placeholder = "Enter DOB", @class = "form-control datepicker", max = @DateTime.Now.ToString(@"MM/dd/yyyy") })
             
         </div>
         <div style="display:none;">, "{0:yyyy-MM-dd}"</div>
@@ -236,6 +236,7 @@
     $(function () {
         $("#frmAddChild").find("input[type=text], input[type=password], select").on("change", function () { resetErrorStatus(this); });
         $("#frmAddChild").find("input[type=text], input[type=password]").on("keyup", function () { resetErrorStatus(this); });
+        $(".datepicker").datepicker();
     });
 
     function resetErrorStatus(elem) {
