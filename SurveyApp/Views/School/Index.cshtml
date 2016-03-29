@@ -1,8 +1,8 @@
-﻿@model System.Data.DataSet
+﻿@using System.Data;
 @{
     ViewBag.Title = "School Management";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var ds = Model;
+    DataSet ds = SurveyApp.DataHelper.SchoolGetAll();
 }
 
 

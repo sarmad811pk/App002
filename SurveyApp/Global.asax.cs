@@ -20,8 +20,8 @@ namespace SurveyApp
         {
             AreaRegistration.RegisterAllAreas();
 
-            //System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<SurveyApp.Models.SchoolContext>());
-            
+            //hhSystem.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<SurveyApp.Models.SchoolContext>());
+
             if (!WebSecurity.Initialized)
             {
                 WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);

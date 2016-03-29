@@ -193,6 +193,32 @@ namespace SurveyApp
 
         }
 
+        public static DataSet UserManagementGetUsers(int? UserID = null)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            if (UserID.HasValue)
+            {
+                cmd.Parameters["@UserID"].Value = UserID.Value;
+            }
+            else
+            {
+                cmd.Parameters["@UserID"].Value = DBNull.Value;
+            }
+            cmd.CommandText = "UserManagement_GetUsers";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
+        public static DataSet ChildGetAll()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "Child_GetAll";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         public static int SaveuserQuestions(int UserID,int questionid,string answerid,string  score, string childid)
         {
             SqlCommand cmd = new SqlCommand();
@@ -205,7 +231,7 @@ namespace SurveyApp
             cmd.Parameters["@QuestionID"].Value = questionid;
 
            
-
+        
             cmd.Parameters.Add("@PAnswer", SqlDbType.NVarChar);
             cmd.Parameters["@PAnswer"].Value = answerid;
 

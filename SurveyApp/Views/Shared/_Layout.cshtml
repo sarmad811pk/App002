@@ -18,6 +18,7 @@
         .form-group { margin-bottom: 5px; }
         .btn-link  { color: #23527c; text-decoration: underline; background-color: transparent; }
     </style>
+    @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "");    
 </head>
 <body>
     <header>

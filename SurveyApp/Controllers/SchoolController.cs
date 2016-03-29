@@ -15,9 +15,8 @@ namespace SurveyApp.Controllers
         // GET: /School/
 
         public ActionResult Index()
-        {
-            DataSet dsSchools = DataHelper.SchoolGetAll();
-            return View(dsSchools);
+        {            
+            return View();
         }
 
         public ActionResult SchoolAddEdit(int? ID)

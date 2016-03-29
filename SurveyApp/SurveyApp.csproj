@@ -364,6 +364,7 @@
     <Content Include="Views\ParentTeacher\ParentTeacherAddEdit.cshtml" />
     <Content Include="Views\School\SchoolAddEdit.cshtml" />
     <Content Include="Views\Study\StudyAddEdit.cshtml" />
+    <Content Include="Views\Schedule\ScheduleAddEdit.cshtml" />
     <Content Include="Views\UserQuestion\Index.cshtml" />
     <Content Include="Views\UserQuestion\Question.cshtml" />
   </ItemGroup>

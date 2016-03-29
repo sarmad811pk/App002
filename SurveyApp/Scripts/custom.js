@@ -7,14 +7,20 @@
 
     var result = false;
     $.ajax({
-        url: "/Home/deleteListItem",
+        url: "../Home/deleteListItem",
         data: "{'id': '" + id + "', 'type' : '" + type + "' }",
         type: 'POST',
         contentType: "application/json; charset=utf-8",
         async: false,
         success: function (data) {
-            $(elem).closest("tr").remove();
-            result = true;
+            if (data.success == true) {
+                $(elem).closest("tr").remove();
+                result = true;
+            }
+            else {
+                alert("Unable to perform the action, please try again or contact our support team.");
+                result = false;
+            }
         },
         error: function(errss){
             result = false;

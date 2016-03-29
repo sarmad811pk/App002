@@ -1,0 +1,176 @@
+﻿@using SurveyApp.Models;
+@{
+    ViewBag.Title = "ScheduleAddEdit";
+    months = ViewData["Months"] != null ? ViewData["Months"].ToString() : "";
+    string script= "";
+}
+
+@model SurveyApp.Models.Schedule
+
+@functions{
+    string months;
+    public string getMonthStatus(int monthId)
+    {
+        if (months != "")
+        {
+            foreach (string id in months.Split(','))
+            {
+                if (Convert.ToInt32(id) == monthId)
+                {
+                    return "checked='checked'";
+                }
+            }
+        }
+
+        return "";
+    }
+}
+
+<h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;Schedule Information Editor</h2>
+
+<style>
+    ._panel {
+        background: #fafafa;
+        border: solid 1px #cccccc;
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .msg.green {
+        color: #00cc00;
+        margin: 0px 0px 6px 0px;
+    }
+
+    .msg.red {
+        color: #cc0000;
+        margin: 0px 0px 6px 0px;
+    }
+    .specify {        
+        padding: 10px 10px 10px 10px;        
+    }
+    .specify table td{
+        vertical-align: top;
+    }
+    
+</style>
+<br />
+
+@using (Html.BeginForm("ScheduleAddEdit", "Schedule", FormMethod.Post, new { id = "frmAddSchedule", @class = "form-horizontal", style = "width: 700px;" }))
+{
+    @Html.ValidationSummary();
+    @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Request.QueryString["id"] })
+    <div class="form-group">
+        <label class="control-label col-sm-3">Title:</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.Title, new { placeholder = "Enter Title", @class = "form-control" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3">Frequency:</label>
+        <div class="col-sm-9">
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "1", new { name = "optradio", onclick = "$('#divDays').hide();" })Once</label></div>
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "2", new { name = "optradio", onclick = "$('#divDays').show();" })Repeat</label></div>
+        </div>
+    </div>
+
+    <div id="divDays" class="_panel form-group" style="display:none;">
+        <div class="form-group">
+            <label class="control-label col-sm-3">Enter Days To Repeat:</label>
+            <div class="col-sm-9">
+                @Html.TextBoxFor(m => m.DaysToRepeat, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-3">Active On:</label>
+        <div class="col-sm-9">
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.ActiveOn, "1", new { name = "optradio", onclick = "$('#divSpecify').hide();" })Enrolment</label></div>
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.ActiveOn, "2", new { name = "optradio", onclick = "$('#divSpecify').show();" })Sepecify</label></div>
+        </div>
+    </div>
+
+    <div id="divSpecify" class="form-group _panel" style="display:none;">
+        <label class="control-label col-sm-3">Specify Period:</label>
+        <div class="col-sm-9">
+            <div class="specify">
+                <table cellpadding="0" cellspacing="0" style="width:100%;">
+                    <tr>
+                        <td><label>Days</label></td>
+                        <td style="text-align:center;"><b>OR</b></td>
+                        <td><label>Weekdays</label></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="monthly">                                
+                                @Html.DropDownListFor(m => m.Day, new SelectList(ScheduleDay.GetScheduleDays(), "Id", "Value"), "Select Day", new { id = "ddlDays", @class = "form-control" })
+                                <label>Month</label>
+                                <div class="checklist" style="">
+                                    @foreach (ScheduleMonth objScheduleMonth in ScheduleMonth.GetScheduleMonths())
+                                    {
+                                        <div><label><input type="checkbox" @getMonthStatus(objScheduleMonth.Id) name="ScheduleMonth_@objScheduleMonth.Id" value="@objScheduleMonth.Id" /> @objScheduleMonth.Month</label></div>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                        <td style="text-align:center;"><div style="border-right: solid 1px #BBB; padding-right: 10px; height: 463px; display: inline-block;"></div></td>
+                        <td>
+                            <div class="weekly">
+                                @Html.DropDownListFor(m => m.Weekday, new SelectList(ScheduleWeekday.GetScheduleWeekdays(), "Id", "Weekday"), "Select Weekday", new { id = "ddlWeekdays", @class = "form-control" })
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-3">Available Until:</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.AvailableUntil, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3">Reminder Frequncey:</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.ReminderFrequency, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="control-label col-sm-3">Last Reminder:</label>
+        <div class="col-sm-9">
+            @Html.TextBoxFor(m => m.LastReminder, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-4">
+            <button type="submit" class="btn btn-default">Save Information</button>
+        </div>
+    </div>
+
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#frmAddSchedule").find("input[type='radio']").each(function (index, obj) {
+            if ($(obj)[0].checked == true) {
+                $(obj)[0].click();
+                return true;
+            }
+        });
+
+        
+        @if (String.IsNullOrEmpty(Request.QueryString["id"]))
+        {
+            script = "$(\"#frmAddSchedule\").find(\"input[type=text]\").val(\"\")";
+        }
+        @Html.Raw(script);
+    });
+</script>

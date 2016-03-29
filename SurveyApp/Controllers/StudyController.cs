@@ -20,9 +20,8 @@ namespace SurveyApp.Controllers
         }
 
         public ActionResult Index()
-        {
-            DataSet dsStudies = DataHelper.StudyGetAll();
-            return View(dsStudies);
+        {            
+            return View();
         }
 
         public ActionResult StudyAddEdit(int? id)
