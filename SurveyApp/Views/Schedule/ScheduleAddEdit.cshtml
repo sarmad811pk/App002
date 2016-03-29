@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "ScheduleAddEdit";
     months = ViewData["Months"] != null ? ViewData["Months"].ToString() : "";
+    string script= "";
 }
 
 @model SurveyApp.Models.Schedule
@@ -164,5 +165,12 @@
                 return true;
             }
         });
+
+        
+        @if (String.IsNullOrEmpty(Request.QueryString["id"]))
+        {
+            script = "$(\"#frmAddSchedule\").find(\"input[type=text]\").val(\"\")";
+        }
+        @Html.Raw(script);
     });
 </script>
