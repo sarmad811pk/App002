@@ -53,24 +53,31 @@
     }
 }
 
-<h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Schedule Management</h2>
-<div class="col-sm-1">
-    @Html.ActionLink("Add Schedule", "ScheduleAddEdit", "Schedule", new object { }, new { @class = "btn btn-default" })
+<script type="text/javascript">
+    $(function () {
+        $("#tblSchedules").DataTable();
+    });
+</script>
+<div>
+    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Schedule Management</h2>
+    @Html.ActionLink("Add Schedule", "ScheduleAddEdit", "Schedule", new object { }, new { @class = "btn btn-default", style = "float:right;" })
 </div>
+<div style="clear:both;"></div>
+<br />
 <style>
     .table-hover tbody tr {
         cursor: pointer;
     }
 </style>
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover" id="tblSchedules">
     <thead>
         <tr>
             <th>Title</th>
             <th>Frequency</th>
             <th>Active On</th>
             <th>Available Until</th>
-            <th>Reminder Frequency</th>            
-            <th>Last Reminder</th>            
+            <th>Reminder Frequency</th>
+            <th>Last Reminder</th>
             <th style="width: 50px;">Action</th>
         </tr>
     </thead>
@@ -85,7 +92,7 @@
                     <td>@getActivationType(dr["ActiveOn"], dr["Day"], dr["Month"], dr["Weekday"])</td>
                     <td>@dr["AvailableUntil"] day(s)</td>
                     <td>Every @dr["ReminderFrequency"] day(s)</td>
-                    <td>-@dr["LastReminder"] day(s) from last day</td>                    
+                    <td>-@dr["LastReminder"] day(s) from last day</td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'schedule', '@dr["Title"]');"></a></td>
                 </tr>
             }

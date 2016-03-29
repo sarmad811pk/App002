@@ -6,25 +6,33 @@
     DataSet dsUsers = SurveyApp.DataHelper.UserManagementGetUsers();
 }
 
+<script type="text/javascript">
+    $(function () {
+        $("#tblUsers").DataTable();
+    });    
+</script>
 
-<h2 class="col-sm-11" style="margin: 0px;padding: 0px;">User Management</h2>
-<div class="col-sm-1">
-@Html.ActionLink("Add", "ParentTeacherAddEdit", "ParentTeacher", new object { }, new { @class = "btn btn-default" }) 
-    </div>
+
+<div>
+    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">User Management</h2>
+    @Html.ActionLink("Add User", "ParentTeacherAddEdit", "ParentTeacher", new object { }, new { @class = "btn btn-default", style = "float:right;" }) 
+</div>
+<div style="clear:both;"></div>
+<br />
 <style>
     .table-hover tbody tr{cursor:pointer;}
 </style>
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover" id="tblUsers">
     <thead>
-      <tr>
-        <th>Name</th>
-        <th>School</th>
-        <th>Role</th>
-        <th>Email</th>
-        <th>Children</th>
-        <th>Last Login</th>        
-        <th style="width: 50px;">Action</th>
-      </tr>
+        <tr>
+            <th>Name</th>
+            <th>School</th>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Children</th>
+            <th>Last Login</th>
+            <th style="width: 50px;">Action</th>
+        </tr>
     </thead>
     <tbody>
         @if (dsUsers != null && dsUsers.Tables.Count > 0 && dsUsers.Tables[0] != null && dsUsers.Tables[0].Rows.Count > 0)
@@ -37,10 +45,10 @@
                     <td>@dr["RoleName"]</td>
                     <td>@dr["UserName"]</td>
                     <td>@dr["Children"]</td>
-                    <td class="text-success">@dr["LastLoginDate"]</td>                    
+                    <td class="text-success">@dr["LastLoginDate"]</td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" style="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "display:none;" : "")" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["UserId"], 'user', '@(dr["FullName"] == DBNull.Value ? dr["UserName"].ToString() : dr["FullName"].ToString())');"></a></td>
                 </tr>
             }
         }
     </tbody>
-  </table>
+</table>
