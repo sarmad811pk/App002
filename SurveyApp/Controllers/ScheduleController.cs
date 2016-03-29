@@ -58,18 +58,20 @@ namespace SurveyApp.Controllers
                 return View(mSchedule);
             }
 
-            int monthCount = 0;
-            foreach (var key in collection.Keys)
-            {
-                if (key.ToString().Contains("ScheduleMonth_"))
+            if (mSchedule.ActiveOn == 2) { 
+                int monthCount = 0;
+                foreach (var key in collection.Keys)
                 {
-                    monthCount++;
+                    if (key.ToString().Contains("ScheduleMonth_"))
+                    {
+                        monthCount++;
+                    }
                 }
-            }
-            if (monthCount == 0)
-            {
-                ModelState.AddModelError("", "Please select at least one month for activation.");
-                return View(mSchedule);
+                if (monthCount == 0)
+                {
+                    ModelState.AddModelError("", "Please select at least one month for activation.");
+                    return View(mSchedule);
+                }
             }
             #endregion
 
@@ -91,11 +93,14 @@ namespace SurveyApp.Controllers
                     objSchedule.LastReminder = mSchedule.LastReminder;
 
                     string months = "";
-                    foreach (ScheduleMonth objSM in ScheduleMonth.GetScheduleMonths())
+                    if (mSchedule.ActiveOn == 2)
                     {
-                        if (!String.IsNullOrEmpty(collection["ScheduleMonth_" + objSM.Id]))
+                        foreach (ScheduleMonth objSM in ScheduleMonth.GetScheduleMonths())
                         {
-                            months += objSM.Id + ",";
+                            if (!String.IsNullOrEmpty(collection["ScheduleMonth_" + objSM.Id]))
+                            {
+                                months += objSM.Id + ",";
+                            }
                         }
                     }
                     objSchedule.Month = months.TrimEnd(',');
@@ -107,7 +112,7 @@ namespace SurveyApp.Controllers
                     if (mSchedule.Id <= 0)
                     {
                         cSchedule.Schedules.Add(objSchedule);
-                    }                    
+                    }
                     cSchedule.SaveChanges();
                 }
             }

@@ -220,5 +220,14 @@ namespace SurveyApp
             cmd.CommandText = "Child_GetAll";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static DataSet RolesGetAll()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "Roles_GetAll";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
     }
 }
