@@ -46,7 +46,7 @@
                     <div class="panel-body">
                         @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
                         {
-                            <a href="@Url.Action("Question", "UserQuestion", new { surveyID = dr["ID"].ToString() })" class="list-group-item">
+                            <a href="@Url.Action("Question", "UserQuestion", new { surveyID = dr["ID"].ToString(), ChildId = drch["ID"].ToString(), ChildName = drch["Name"].ToString() })" class="list-group-item">
                                 <strong>Preview:</strong> @dr["Title"].ToString();
                             </a>
 

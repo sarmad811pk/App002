@@ -193,7 +193,7 @@ namespace SurveyApp
 
         }
 
-        public static int SaveuserQuestions(int UserID,int questionid,string answerid,string score)
+        public static int SaveuserQuestions(int UserID,int questionid,string answerid,string  score, string childid)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -210,8 +210,17 @@ namespace SurveyApp
             cmd.Parameters["@PAnswer"].Value = answerid;
 
             cmd.Parameters.Add("@Score", SqlDbType.Int);
-            cmd.Parameters["@Score"].Value = score!=""? score:"NULL";
+            if (score != "")
+            {
+                cmd.Parameters["@Score"].Value = Convert.ToInt32(score);
+            }
+            else
+            {
+                cmd.Parameters["@Score"].Value = DBNull.Value;
+            }
 
+            cmd.Parameters.Add("@ChildId", SqlDbType.Int);
+            cmd.Parameters["@ChildId"].Value = Convert.ToInt32(childid);
 
             cmd.CommandText = "SaveUserQuestions";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);

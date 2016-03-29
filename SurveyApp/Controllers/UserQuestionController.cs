@@ -23,14 +23,19 @@ namespace SurveyApp.Controllers
 
         public ActionResult Question(int? surveyID)
         {
+            
             return View(surveyID);
         }
 
+     
         [HttpPost]
-        public void SaveUserQuestion(string QuestionID, string AnswerID,string score)
+        public void SaveUserQuestion(string QuestionID, string AnswerID, string score, string childid)
         {
+        
             var userID = WebSecurity.CurrentUserId;
-            int rsl = SurveyApp.DataHelper.SaveuserQuestions(userID, Convert.ToInt32(QuestionID), AnswerID, score);
+
+
+            int rsl = SurveyApp.DataHelper.SaveuserQuestions(userID, Convert.ToInt32(QuestionID), AnswerID, score, childid);
             
         }  
     }
