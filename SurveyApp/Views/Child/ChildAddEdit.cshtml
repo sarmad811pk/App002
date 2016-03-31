@@ -4,8 +4,12 @@
     ViewBag.Title = "Child Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    dtStudies = ViewData["Studies"] != null ? (DataTable)ViewData["Studies"] : null;
-    dtTeachers = ViewData["Teachers"] != null ? (DataTable)ViewData["Teachers"] : null;
+    if (Model.Id > 0)
+    {
+        DataSet ds = SurveyApp.DataHelper.Child_Study_TeacherGetAll(Model.Id);
+        dtStudies = ds != null && ds.Tables[0].Rows.Count > 0 ? ds.Tables[0] : null;
+        dtTeachers = ds != null && ds.Tables[1].Rows.Count > 0 ? ds.Tables[1] : null;
+    }
 }
 @model SurveyApp.Models.Child
 
@@ -63,7 +67,7 @@
 @using (Html.BeginForm("ChildAddEdit", "Child", FormMethod.Post, new { id = "frmAddChild", @class = "form-horizontal", style = "width: 600px;" }))
 {
     @Html.ValidationSummary();
-    @Html.HiddenFor(m => m.Id, new { name = "hdnChildId", value = Request.QueryString["id"] })
+    @Html.HiddenFor(m => m.Id, new { name = "hdnChildId", value = Model.Id })
     <div class="form-group">
         <label class="control-label col-sm-3" for="teacher">Study:</label>
         <div class="col-sm-9">

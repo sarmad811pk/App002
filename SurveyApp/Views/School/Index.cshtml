@@ -31,11 +31,11 @@
     <tbody>
         @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
         {
-            <tr onclick="location.href = '@Url.Action("SchoolAddEdit", "School")' + '?Id=@(dr["SchoolId"])';">
+            <tr onclick="location.href = '@Url.Action("SchoolAddEdit", "School", new { id = dr["SchoolId"] })';">
                 <td class="name">@dr["Name"]</td>
                 <td>@dr["Children"]</td>
                 <td>@dr["Teachers"]</td>
-                <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["SchoolId"], 'school', '@dr["Name"]');"></a></td>
+                <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["SchoolId"], 'school', '@dr["Name"]', function(){ location.href = location.href; });"></a></td>
             </tr>
         }
     </tbody>

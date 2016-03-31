@@ -39,7 +39,7 @@
         {
             foreach (DataRow dr in dsUsers.Tables[0].Rows)
             {
-                <tr onclick="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "alert('You are not authorized to edit Administrator account');return false;" : "")location.href = '@(Url.Action("ParentTeacherAddEdit", "ParentTeacher") + "?id=" + dr["UserId"].ToString())';">
+                <tr onclick="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "alert('You are not authorized to edit Administrator account');return false;" : "")location.href = '@Url.Action("ParentTeacherAddEdit", "ParentTeacher", new { id = dr["UserId"] })';">
                     <td>@dr["FullName"]</td>
                     <td>@dr["SchoolName"]</td>
                     <td>@dr["RoleName"]</td>

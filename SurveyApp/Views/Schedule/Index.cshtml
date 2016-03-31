@@ -86,7 +86,7 @@
         {
             foreach (DataRow dr in dsSchedules.Tables[0].Rows)
             {
-                <tr onclick="location.href = '@(Url.Action("ScheduleAddEdit", "Schedule") + "?id=" + dr["Id"].ToString())';">
+                <tr onclick="location.href = '@Url.Action("ScheduleAddEdit", "Schedule", new { id = dr["Id"] })';">
                     <td>@dr["Title"]</td>
                     <td>@getFrequency(dr["Frequency"], dr["DaysToRepeat"])</td>
                     <td>@getActivationType(dr["ActiveOn"], dr["Day"], dr["Month"], dr["Weekday"])</td>

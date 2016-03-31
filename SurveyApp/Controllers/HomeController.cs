@@ -57,30 +57,31 @@ namespace SurveyApp.Controllers
         public ActionResult deleteListItem(string id, string type)
         {
             bool isSuccessful = false;
-            if (String.IsNullOrEmpty(id))
+            if (String.IsNullOrEmpty(id) == false)
             {
+                int idToBeDeleted = Convert.ToInt32(id);
                 try
                 {
                     if (type == "study")
                     {
                         using (var sssContext = new Study_Survey_ScheduleContext())
                         {
-                            sssContext.SSSs.RemoveRange(sssContext.SSSs.Where(sss => sss.StudyId == Convert.ToInt32(id)));
+                            sssContext.SSSs.RemoveRange(sssContext.SSSs.Where(sss => sss.StudyId == idToBeDeleted));
                             sssContext.SaveChanges();
                         }
                         using (var ptsContext = new ParentTeacher_StudyContext())
                         {
-                            ptsContext.ParentTeacher_Studys.RemoveRange(ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == Convert.ToInt32(id)));
+                            ptsContext.ParentTeacher_Studys.RemoveRange(ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == idToBeDeleted));
                             ptsContext.SaveChanges();
                         }
                         using (var csContext = new Child_StudyContext())
                         {
-                            csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.StudyId == Convert.ToInt32(id)));
+                            csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.StudyId == idToBeDeleted));
                             csContext.SaveChanges();
                         }
                         using (var studyContext = new StudyContext())
                         {
-                            Study std = studyContext.Studies.Find(Convert.ToInt32(id));
+                            Study std = studyContext.Studies.SingleOrDefault(s => s.Id == idToBeDeleted);
                             studyContext.Studies.Remove(std);
                             studyContext.SaveChanges();
                         }
@@ -90,13 +91,13 @@ namespace SurveyApp.Controllers
                     {
                         using (var ptSContext = new PParentTeacher_SchoolContext())
                         {
-                            ptSContext.ParentTeacher_Schools.RemoveRange(ptSContext.ParentTeacher_Schools.Where(pts => pts.SchoolId == Convert.ToInt32(id)));
+                            ptSContext.ParentTeacher_Schools.RemoveRange(ptSContext.ParentTeacher_Schools.Where(pts => pts.SchoolId == idToBeDeleted));
                             ptSContext.SaveChanges();
                         }
 
                         using (var schoolContext = new SchoolContext())
                         {
-                            School sch = schoolContext.Schools.Find(Convert.ToInt32(id));
+                            School sch = schoolContext.Schools.SingleOrDefault(s => s.SchoolId == idToBeDeleted); //Find(idToBeDeleted);
                             schoolContext.Schools.Remove(sch);
                             schoolContext.SaveChanges();
                         }
@@ -106,7 +107,7 @@ namespace SurveyApp.Controllers
                     {
                         using (var scheduleContext = new ScheduleContext())
                         {
-                            Schedule sch = scheduleContext.Schedules.Find(Convert.ToInt32(id));
+                            Schedule sch = scheduleContext.Schedules.SingleOrDefault(s => s.Id == idToBeDeleted);
                             scheduleContext.Schedules.Remove(sch);
                             scheduleContext.SaveChanges();
                         }
@@ -116,18 +117,18 @@ namespace SurveyApp.Controllers
                     {
                         using (var ctContext = new Child_TeacherContext())
                         {
-                            ctContext.Child_Teachers.RemoveRange(ctContext.Child_Teachers.Where(cts => cts.ChildId == Convert.ToInt32(id)));
+                            ctContext.Child_Teachers.RemoveRange(ctContext.Child_Teachers.Where(cts => cts.ChildId == idToBeDeleted));
                             ctContext.SaveChanges();
                         }
                         using (var csContext = new Child_StudyContext())
                         {
-                            csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.ChildId == Convert.ToInt32(id)));
+                            csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.ChildId == idToBeDeleted));
                             csContext.SaveChanges();
                         }
 
                         using (var childContext = new ChildContext())
                         {
-                            Child objChild = childContext.Children.Find(Convert.ToInt32(id));
+                            Child objChild = childContext.Children.SingleOrDefault(c => c.Id == idToBeDeleted);
                             childContext.Children.Remove(objChild);
                             childContext.SaveChanges();
                         }
@@ -135,7 +136,7 @@ namespace SurveyApp.Controllers
                     }
                     else if (type == "user")
                     {
-                        isSuccessful = RemoveUser(Convert.ToInt32(id));
+                        isSuccessful = RemoveUser(idToBeDeleted);
                     }
                 }
                 catch (Exception ex)

@@ -3,27 +3,33 @@
 @{
     ViewBag.Title = "Parent/Teacher Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
-        
-    dtStudies = ViewData["Studies"] != null ? (DataTable)ViewData["Studies"] : null;
+
+    lstPTS = new List<ParentTeacher_Study>();
+    if(Model.vw_ParentTeacher.Id > 0){
+        using (var ptsContext = new ParentTeacher_StudyContext())
+        {
+            lstPTS = ptsContext.ParentTeacher_Studys.ToList();
+        }
+    }
     DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
     
 }
 @model SurveyApp.Models.ParentTeacher_Register
 
 @functions{
-    DataTable dtStudies;
+    List<ParentTeacher_Study> lstPTS;
     public string getStudyStatus(int studyId)
     {
-		if(dtStudies != null){
-			foreach (DataRow dr in dtStudies.Rows)
+        if (lstPTS.Count > 0)
+        {
+            foreach (ParentTeacher_Study objPTS in lstPTS)
 			{
-				if (Convert.ToInt32(dr["StudyId"]) == studyId)
+				if (objPTS.StudyId == studyId)
 				{
 					return "checked='checked'";
 				}
 			}
 		}
-
         return "";
     }   
     
@@ -126,7 +132,7 @@
     <div id="divUserInfo" style="position: absolute;">
         <div style="width: 600px; height: 510px;">
             @Html.ValidationSummary()
-            @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Request.QueryString["id"] })
+            @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Model.vw_ParentTeacher.Id })
             <div class="form-group">
                 <label class="control-label col-sm-3" for="teacher">Study:</label>
                 <div class="col-sm-9">
@@ -184,7 +190,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3"> </label>
                 <div class="col-sm-9" style=" text-align: right;">
-                    @if (String.IsNullOrEmpty(Request.QueryString["id"]) == false)
+                    @if (Model.vw_ParentTeacher.Id > 0)
                     {
                         <a href="javascript:void(0);" class="btn btn-link" onclick="showAccountInfo();">Edit Account Information</a>
                     }                    
@@ -201,14 +207,14 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.vw_Register.Password, new { @class = "control-label col-sm-3" })
                 <div class="col-sm-9">
-                    @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, 10) : "" })
+                    @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, Model.vw_Register.Password.Length) : "" })
                 </div>
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(m => m.vw_Register.ConfirmPassword, new { @class = "control-label col-sm-3" })
                 <div class="col-sm-9">
-                    @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, 10) : "" })
+                    @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, Model.vw_Register.Password.Length) : "" })
                 </div>
             </div>
 
@@ -308,8 +314,8 @@
 
     function showAccountInfo() {
         $("#txtEUserName").val($("#txtUserName").val());
-        $("#txtEPassword").val("");
-        $("#txtEConfirmPassword").val("");
+        $("#txtEPassword").val($("#txtPassword").val());
+        $("#txtEConfirmPassword").val($("#txtConfirmPassword").val());
         $(".progress-bar").css("width", "0%");
         $(".password-verdict").text("");
 
@@ -338,11 +344,15 @@
     }
 
     function updateAccount() {
-        var userName = "", newUserName = "", password = "", confirmPassword = "";
+        var userName = "", newUserName = "", password = "", confirmPassword = "", oldPassword = "", updatePassword = false;
         userName = $("#txtUserName").val();
         newUserName = $("#txtEUserName").val();
+
         password = $("#txtEPassword").val();
         confirmPassword = $("#txtEConfirmPassword").val();
+
+        oldPassword = $("#txtPassword").val();
+
         $("#divErrors").hide();
         $("#divErrors ul").empty();
 
@@ -361,26 +371,30 @@
             $("#divErrors").show();
             return false;
         }
-
         if (password != confirmPassword) {
             $("#divErrors ul").append("<li>Both password do not match</li>");
             $("#divErrors").show();
             return false;
         }
+        
+        if (oldPassword != password) {
+            updatePassword = true;
+        }
 
         $.ajax({
-            url: "../Account/AccountEdit",
-            data: "{'userName': '" + userName + "', 'newUserName': '" + newUserName + "', 'password' : '" + password + "' }",
+            url: "@Url.Action("AccountEdit", "Account")",
+            data: "{'userName': '" + userName + "', 'newUserName': '" + newUserName + "', 'password' : '" + password + "', 'updatePassword' : '" + updatePassword + "' }",
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             async: false,
             success: function (data) {
                 if (data.success == true) {
-                    $("txtUserName").val(newUserName);
+                    $("#txtUserName").val(newUserName);
                     showUserInfo();
                 }
                 else {
-
+                    $("#divErrors ul").append("<li>We are unable to process your request at this time, please try again or contact our support team.</li>");
+                    $("#divErrors").show();
                 }
             },
             error: function (errors) {

@@ -31,10 +31,6 @@ namespace SurveyApp.Controllers
             {
                 var cContext = new ChildContext();
                 objChild = cContext.Children.Find(id);
-
-                DataSet ds = DataHelper.Child_Study_TeacherGetAll(id.Value);
-                ViewData["Studies"] = ds != null && ds.Tables[0].Rows.Count > 0 ? ds.Tables[0] : null;
-                ViewData["Teachers"] = ds != null && ds.Tables[1].Rows.Count > 0 ? ds.Tables[1] : null;                
             }
 
             return View(objChild);

@@ -52,7 +52,7 @@
 @using (Html.BeginForm("ScheduleAddEdit", "Schedule", FormMethod.Post, new { id = "frmAddSchedule", @class = "form-horizontal", style = "width: 700px;" }))
 {
     @Html.ValidationSummary();
-    @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Request.QueryString["id"] })
+    @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Model.Id })
     <div class="form-group">
         <label class="control-label col-sm-3">Title:</label>
         <div class="col-sm-9">
@@ -149,7 +149,7 @@
             }
         });
         
-        @if (String.IsNullOrEmpty(Request.QueryString["id"]))
+        @if (Model.Id <= 0)
         {
             script = "$(\"#frmAddSchedule\").find(\"input[type=text]\").val(\"\")";
         }

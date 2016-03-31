@@ -1,4 +1,4 @@
-﻿function deleteListItem(elem, id, type, name) {
+﻿function deleteListItem(elem, id, type, name, callback) {
     if (window.confirm("Do you really want to remove \"" + name + "\"?") == false) {
         $(elem).blur();
         return false;
@@ -15,7 +15,10 @@
         success: function (data) {
             if (data.success == true) {
                 $(elem).closest("tr").remove();
-                result = true;
+                result = true;                
+                if (callback != null && callback != undefined && callback != "undefined") {
+                    callback();
+                }                
             }
             else {
                 alert("Unable to perform the action, please try again or contact our support team.");

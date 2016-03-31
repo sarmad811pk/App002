@@ -38,7 +38,7 @@
         {
             foreach (DataRow dr in dsChildren.Tables[0].Rows)
             {
-                <tr onclick="location.href = '@(Url.Action("ChildAddEdit", "Child") + "?id=" + dr["Id"].ToString())';">
+                <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = dr["Id"] })';">
                     <td>@dr["Name"]</td>
                     <td>@(dr["dob"] != DBNull.Value ? Convert.ToDateTime(dr["dob"]).ToString("MM/dd/yyyy") : "")</td>
                     <td>@dr["School"]</td>

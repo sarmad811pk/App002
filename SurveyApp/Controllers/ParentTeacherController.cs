@@ -51,8 +51,6 @@ namespace SurveyApp.Controllers
                 {
                     parentTeacherModel.SchoolId = ds.Tables[1].Rows[0]["SchoolId"] != DBNull.Value ? Convert.ToInt32(ds.Tables[1].Rows[0]["SchoolId"]) : -1;                    
                 }
-                ViewData["Studies"] = ds != null && ds.Tables[2].Rows.Count > 0 ? ds.Tables[2] : null;
-
             }
                          
             return View(new ParentTeacher_Register() { vw_ParentTeacher = parentTeacherModel, vw_Register = registerModel });
