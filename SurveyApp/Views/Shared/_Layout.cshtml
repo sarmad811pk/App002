@@ -22,6 +22,12 @@
         .form-group { margin-bottom: 5px; }
         .btn-link  { color: #23527c; text-decoration: underline; background-color: transparent; }
     </style>
+    <script type="text/javascript">
+        $(function () {
+            $(document).ajaxStart(function () { $(".loading").show(); });
+            $(document).ajaxStop(function () { $(".loading").hide(); });
+        });        
+    </script>
     @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "");    
 </head>
 <body>
@@ -64,8 +70,6 @@
 
                 @RenderBody()
                 <br /><br />
-                <br /><br />
-                <br /><br />
             </section>
         </div>
            
@@ -80,5 +84,6 @@
 
     @RenderSection("scripts", required: false)
 
+    <div class="loading" style="display: none;"><div>Please Wait...</div></div>
 </body>
 </html>

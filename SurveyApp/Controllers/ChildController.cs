@@ -112,6 +112,13 @@ namespace SurveyApp.Controllers
                     
                 }
 
+                //deviations
+                using (var cCSS = new Child_Study_ScheduleContext())
+                {
+                    cCSS.Children_Studies_Schedules.RemoveRange(cCSS.Children_Studies_Schedules.Where(c => c.ChildId == cId/* && c.StudyId == objStudy.Id && c.ScheduleId == (int)dr["ScheduleID"]*/));
+                    cCSS.SaveChanges();
+                }
+
                 //save child study relationship info                
                 using (var cContext = new Child_StudyContext())
                 {
@@ -131,11 +138,47 @@ namespace SurveyApp.Controllers
 
                             cContext.Child_Studies.Add(objCS);
                         }
+
+                        cContext.SaveChanges();
+                        
+                        //save deviations
+                        DataSet dsScheduleDeviations = DataHelper.ScheduleDeviationGetSchedules(objStudy.Id);
+                        if(dsScheduleDeviations != null && dsScheduleDeviations.Tables[0].Rows.Count > 0)
+                        {
+                            using (var cCSS = new Child_Study_ScheduleContext())
+                            {
+                                foreach (DataRow dr in dsScheduleDeviations.Tables[0].Rows)
+                                {
+                                    int activeOn = String.IsNullOrEmpty(collection["ActiveOn_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()]) == false ? Convert.ToInt32(collection["ActiveOn_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()]) : 0;
+                                    if (activeOn > 0)
+                                    {
+                                        Child_Study_Schedule objCSS = new Child_Study_Schedule();
+
+                                        objCSS.ChildId = cId;
+                                        objCSS.StudyId = objStudy.Id;
+                                        objCSS.ScheduleId = (int)dr["ScheduleID"];
+                                        objCSS.ActiveOn = activeOn;
+
+                                        if(activeOn == 2)
+                                        {
+                                            string day = collection["ddlDays_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                            objCSS.Day = String.IsNullOrEmpty(day) ? 0 : Convert.ToInt32(day);
+
+                                            string month = collection["ddlMonths_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                            objCSS.Month = String.IsNullOrEmpty(month) ? 0 : Convert.ToInt32(month);
+
+                                            string weekday = collection["ddlWeekdays_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                            objCSS.Weekday = String.IsNullOrEmpty(weekday) ? 0 : Convert.ToInt32(weekday);
+                                        }
+
+                                        cCSS.Children_Studies_Schedules.Add(objCSS);
+                                        cCSS.SaveChanges();
+                                    }
+                                }
+                            }
+                        }
                     }
-
-                    cContext.SaveChanges();
                 }
-
 
                 //save child teacher relationship info                
                 using (var ctContext = new Child_TeacherContext())
