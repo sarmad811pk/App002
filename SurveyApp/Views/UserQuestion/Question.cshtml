@@ -1,8 +1,8 @@
 ﻿@model int?
 @{
-
+    var chiildid = Request.QueryString["ChildId"];
     System.Data.DataSet dsSurvey = SurveyApp.DataHelper.SurveyGetByID(Model ?? 1);
-    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1);
+    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid));
     var qGroup = "";
     ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString() + " - Preview";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,7 +21,7 @@
             font-size: 14px;
             line-height: 1.3;
             padding: 10px;
-            border-bottom: solid 1px #f1f1f1;f
+            border-bottom: solid 1px #f1f1f1;
             margin-bottom: 10px;
             position: absolute;
             top: 0px;
@@ -75,18 +75,46 @@
 </style>
 
 
+<div class="alert alert-success" id="success-alert" hidden="hidden">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Success! </strong>
+   Survey is submitted successfully
+</div>
+
 <h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString().Replace("[Child]",childname)</h2>
 <p style="font-size:16px;">
     @dsSurvey.Tables[0].Rows[0]["TagLine"].ToString().Replace("[Child]", childname)
 </p>
 <div class="form-group">
     <div class='questions list-group'>
+      
         @foreach (System.Data.DataRow q in dsQuestions.Tables[0].Rows)
         {
             var Nclass = q["Nclass"].ToString();
             var Qclass = q["Qclass"].ToString() + " _bold";
             var Aclass = q["Aclass"].ToString();
-         
+
+           
+            var PAnswers="";
+            if (dsQuestions.Tables[0].Rows.IndexOf(q)==0)
+            { 
+                PAnswers = q["Answer"].ToString(); 
+            } 
+            else
+            { 
+                PAnswers = q["PAnswerLike"].ToString(); 
+            }
+        
+
+            //var a = PAnswers.Split('|');
+            
+
+            //var Answer = q["Answer"].ToString();
+            //string value = Array.Find(a, element => element.StartsWith(Answer, StringComparison.Ordinal));
+            //var hidden = value != "" ? "visibility:visible" : "visibility:hidden";
+            //var hidden2 = value != "" ? "display:none;" : "display:block;";       
+            
+
             if (q["PID"].ToString() == string.Empty)
             {
 
@@ -95,29 +123,31 @@
                     @if (@q["QuestionGroup"].ToString().Trim() != "")
                     {
                         <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</h1>
-                        <div style="visibility: hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
+                        <div style="visibility:hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
                     }
 
                     <div class="@Qclass">@q["Question"].ToString().Replace("[Child]", childname) <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
                                    
+                   
 
                     @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass, q["Score"].ToString(), q["Answer"].ToString()))
-                    <input type="hidden" value="@q["Answer"].ToString()" qid="@q["ID"]"  id="@Html.Raw("hdn"+q["ID"].ToString())" />
+                    <input type="hidden" value="@q["Answer"].ToString()" data-possibleanswers="@q["PAnswerLike"].ToString()" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
 
                 </div>
             }
             else
             {
+
                 <div style="display:none;" id="@Html.Raw("q"+q["ID"].ToString())" class="q @Nclass showwhen list-group-item" pid="@Html.Raw("q"+q["PID"].ToString())" pans="@Html.Raw(q["PAnswerLike"].ToString())">
                     @if (@q["QuestionGroup"].ToString().Trim() != "")
                     {
                         <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</h1>
-                        <div style="visibility:hidden;min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
+                        <div style="visibility:hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
                     }
 
                     <div class="@Qclass">@q["Question"] <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
                     @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass,q["Score"].ToString(),q["Answer"].ToString()))
-                    <input type="hidden" value="@q["Answer"].ToString()"  qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
+                    <input type="hidden" value="@q["Answer"].ToString()" data-possibleanswers="@q["PAnswerLike"].ToString()" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
 
                 </div>
             }
@@ -129,7 +159,7 @@
     <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
         <tr>
             <td style="width:155px;padding:0px;">
-                <input type="submit" value="Submit Survey" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;" onclick="submitSurvey();" />
+                <input id="SurveySubmit" type="submit" value="Submit Survey" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;"  />
             </td>
             <td style="padding: 0px;"></td>
         </tr>
@@ -143,19 +173,22 @@
 </div>
 
 @section scripts{
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript">
         $(function () {
             var score;
-          
-            //var childname = decodeURI(getUrlVars()['ChildName']);
-            //$(this).html().replace("[Child]", childname);
-            pageloadtrigger();
-            syncStrips();
 
-          
+            $("#success-alert").hide();
+            //var childname = decodeURI(GetQueryStringValues()['ChildName']);
+            //$(this).html().replace("[Child]", childname);
+
+            syncStrips();
+            pageloadtrigger();
+
 
             $("input[type=radio], input[type=checkbox]").bind("click", function () {
-           
+
                 qid = $(this).attr("qid");
                  score=  $(this).attr("data-score");
                 if ($(this).prop("type") == "radio" || $(this).prop("type") == "checkbox") {
@@ -163,7 +196,7 @@
 
                     $("#hdn" + qid).val("");
                     group.each(function () {
-                   
+
                         $("#hdn" + qid).val($("#hdn" + qid).val() + "|" + this.value).trigger('change');
                     });
                     if (group.length == 0) {
@@ -176,41 +209,83 @@
                 $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
             });
 
-            //$("textarea, input[type=text]").keydown(function () {
-             
-            // //  $("#hdn" + $(this).attr("qid")).val(this.value).trigger('change');
-            //});
-
             $("textarea, input[type=text]").blur(function () {
-             
-                $("#hdn" + $(this).attr("qid")).val("|"+ this.value).trigger('change');
+                var oldval = $("#hdn" + $(this).attr("qid")).val();
+                if (this.value != "") {
+                    var newval = "|" + this.value;
+                    $("#hdn" + $(this).attr("qid")).val(oldval + newval).trigger('change');
+                }
             });
 
             $("input[type=date]").blur(function () {
                 $("#hdn" + $(this).attr("qid")).val("|"+ this.value).trigger('change');
             });
+          
 
+            //function countelement()
+            //{
+            //    $("img[src='test.gif']").length;
+            //}
             function pageloadtrigger(){
-                debugger
-                $("#hdn" + $(this).attr("qid")).val(this.value).trigger('change');
+
+
+                $("input[type=hidden]").each(function(){
+
+                    var qid = $(this).attr("qid");
+                    var chk="q"+qid;
+                    if(qid!=null){
+
+                        var ans = $(this).val();
+                        if (ans != "") {
+
+                            EnableDisableChild(qid, ans);
+                        }
+
+
+
+                        //var ans2= $(this).attr("data-possibleanswers");
+                        //if (ans == "") {  }
+                        //else
+                        //{
+                        //    if (hasAnswer(ans, ans2)) {
+                        //            var va = $("[pid=q" + qid + "]").attr("pid");
+                        //            var ans3 = $("[pid=q" + qid + "]").attr("pans");
+                        //            if(chk==va)
+                        //            {
+                        //                if (hasAnswer(ans, ans3)) {
+                        //                    $("[pid=q" + qid + "]").show();
+                        //                }
+                        //                else {
+                        //                    $("[pid=q" + qid + "]").hide();
+                        //                }
+                        //            }
+                        //        $("#q" + qid).css("display", "block"); $("#q" + qid).slideDown(); $("#q" + qid).show();
+                        //        syncStrips();
+                        //    }
+                        //    else {
+                        //        $("[pid=q" + qid + "]").attr("pid");
+                        //        $("#q" + qid).slideUp(); $("#q" + qid).css("display", "none"); $("#q" + qid).hide();
+                        //    }
+                        //}
+                    }
+
+                });
+
+
+
             }
 
-            function getUrlVars()
-            {
-                var vars = [], hash;
-                var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-                for(var i = 0; i < hashes.length; i++)
-                {
-                    hash = hashes[i].split('=');
-                    vars.push(encodeURI(hash[0]));
-                    vars[hash[0]] = hash[1];
-                }
-                return vars;
+
+            function showStrips() {
+                $(".q").css("background", "");
+                $(".q:visible:odd").css("background", "#f9f9f9");
+                //$(".q").css('display','block');
             }
+
 
 
             $("input[type=hidden]").change(function () {
-     
+
            var ans = this.value.length > 0 ? this.value.substr(1) : "";
 
            var qid = $(this).attr("qid");
@@ -223,40 +298,16 @@
                    break;
                }
            }
-                
+
                 var scor=score;
-                var childId= getUrlVars()['ChildId'];
+                var childId= GetQueryStringValues()['ChildId'];
+                var SurID = GetQueryStringValues()['surveyID'];
 
-                if (ans == "") { $("[pid=q" + qid + "]").slideUp(); }
-                $("[pid=q" + qid + "]").each(function () {
-                    if (hasAnswer(ans, $(this).attr("pans"))) {
-                        $(this).slideDown("fast", function () { syncStrips();});
-                    }
-                    else {
-                        $(this).slideUp("fast", function () { //to hide childs if any
-                            var childid = $(this).attr("id");syncStrips();
-
-                            if (childid.trim() != '') {
-                                $("[pid="+childid+"]").slideUp("fast", function () { //to hide childs if any
-                            var childid = $(this).attr("id");syncStrips();
-
-                            if (childid.trim() != '') {
-                                $("[pid="+childid+"]").slideUp("fast", function () { //to hide childs if any
-                            var childid = $(this).attr("id");syncStrips();
-
-                            if (childid.trim() != '') {
-                                $("[pid="+childid+"]").slideUp();
-                            }
-                        });
-                            }
-                        });
-                            }
-                        });
-                    }
-                });
-               
+                EnableDisableChild(qid, ans);
                 setCompletionDiv();
-                savequestions(qid,ans,score,childId);
+
+                savequestions(qid, ans, score, childId, SurID,"SaveUpdate");
+
             });
   $(".__slider").slider({
      range: "min",
@@ -285,6 +336,54 @@
       }
     });
 });
+
+
+        function EnableDisableChild(qid, ans) {
+
+            if (ans == "") { $("[pid=q" + qid + "]").slideUp(); }
+            $("[pid=q" + qid + "]").each(function () {
+                if (hasAnswer(ans, $(this).attr("pans"))) {
+                    $(this).slideDown("fast", function () { syncStrips(); });
+                }
+                else {
+                    $(this).slideUp("fast", function () { //to hide childs if any
+                        var childid = $(this).attr("id"); syncStrips();
+
+                        if (childid.trim() != '') {
+                            $("[pid=" + childid + "]").slideUp("fast", function () { //to hide childs if any
+                                var childid = $(this).attr("id"); syncStrips();
+
+                                if (childid.trim() != '') {
+                                    $("[pid=" + childid + "]").slideUp("fast", function () { //to hide childs if any
+                                        var childid = $(this).attr("id"); syncStrips();
+
+                                        if (childid.trim() != '') {
+                                            $("[pid=" + childid + "]").slideUp();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+
+
+
+        }
+
+
+        function GetQueryStringValues() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(encodeURI(hash[0]));
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+        }
 
         function syncStrips() {
             $(".q").css("background", "");
@@ -338,34 +437,57 @@
             $("#divCompletion").find(".colored").css("width", percentage);
         }
 
-        function submitSurvey(){
-           
-            $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
-                if($(obj).val() != ""){
+      
+        $("#SurveySubmit").click(function (e) {
+         
+            e.preventDefault();
+
+            var flag = true;
+            $(".questions").find(".q:visible").find("input[type=hidden]").each(function (index, obj) {
+
+                if ($(obj).val() != "") {
                     $(obj).closest(".q").removeClass("notFilled");
                 }
-                else{
+                else {
                     $(obj).closest(".q").addClass("notFilled");
+                    flag = false;
                 }
             });
             setCompletionDiv();
 
-            $('#b1').closest('li').css('background', '#FCD6DF').css('border-right','solid 5px #cc0000;');
-            $(document).scrollTop(100);
+            $('#b1').closest('li').css('background', '#FCD6DF').css('border-right', 'solid 5px #cc0000;');
 
-            return false;
-        }
+            if (flag) {
+                bootbox.confirm("Are you sure to submit this Survey?", function (confirmed) {
+                    if (confirmed == true) {
+                      
 
-        function savequestions(qid,ansid,s,cid){
-         
-            var url="/UserQuestion/SaveUserQuestion"
-            $.post(url,{QuestionID:qid,AnswerID:ansid,score:s,childid:cid},function(data)
-            {
-              
+                        var childId = GetQueryStringValues()['ChildId'];
+                        var SurID = GetQueryStringValues()['surveyID'];
+                        savequestions(null, null, null, childId, SurID, "SubmitStatus")
+
+                        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                            $(this).show();
+                            $("#success-alert").alert('close');
+                        });
+
+                    }
+                });
+            }
+
+
+        });
+
+
+        function savequestions(qid, ansid, s, cid, SurID, status) {
+          
+            var url = "/UserQuestion/SaveUserQuestion"
+            $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status }, function (data) {
+
             });
-
         }
-        
+
+
     </script>
 }
 
@@ -375,25 +497,29 @@
     {
         string returnrsl = "";
         try
-        { 
+        {
         if(sr[i].Length>0)
         {
             returnrsl = sr[i].ToString();
         }
-            
-            
+
+
         }
         catch (System.IndexOutOfRangeException)
         {
             return null;
         }
         return returnrsl;
-        
-        
+
+
     }
+    
+
+
+    
     protected string Option(int qid, string a, string type, string cssclass,string scr,string ans)
     {
-       
+
         var tradio = "<div class='#c#'><input type='radio'  qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' data-score='#sc#' #chk# ><label for='q#q#_#i#'>#si#</label></div>";
         var tslider = "<div class='#c#'><label for='q#q#_#i#' data-score='#sc#'>#si#</label></div>";
         var tcheckbox = "<div class='#c#'><input type='checkbox' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' data-score='#sc#' #chk#><label for='q#q#_#i#'>#si#</label></div>";
@@ -402,11 +528,11 @@
 
         var tdate = "<div class='#c#'><input class='form-control' type='date' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
         var tmed = @"<div class='#c# form-inline'>" +
-                    "<input class='form-control col-sm-2' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
-                    "<input class='form-control col-sm-2' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
-                    "<input class='form-control col-sm-2' placeholder='Frequency' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
-                    "<input class='form-control col-sm-2' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
-                    "<input class='form-control col-sm-2' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
+                    "<input class='form-control col-sm-2' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'>" +
+                    "<input class='form-control col-sm-2' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'>" +
+                    "<input class='form-control col-sm-2' placeholder='Frequency' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si3#'>" +
+                    "<input class='form-control col-sm-2' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si4#'>" +
+                    "<input class='form-control col-sm-2' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si5#'>" +
                     "</div>";
         var tsch = @"<div class='#c# form-inline'>" +
                    "<input class='form-control col-sm-3' placeholder='Count of Sessions/Week' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
@@ -424,19 +550,47 @@
         string[] sr = new string[] { };
         if (scr!="")
         {
-  
+
            sr = scr.Split('|');
         }
-       
-      
-        
+
+
+
         for (int i = 0; i < s.Length; i++)
         {
-            
+
             string att = "";
-           
+
             var multians=ans.Split('|');
-            if (multians.Length > 1)
+
+           
+
+
+
+
+            if (type == "radio")
+            {
+                for (int j = 0; j < s.Length; j++)
+                {
+                    for (int k = 0; k < multians.Length; k++)
+                    {
+                        if (s[i].ToString() == multians[k])
+                        {
+                            att = "checked";
+                            break;
+                        }
+                        else
+                        {
+                            att = "";
+                        }
+                    }
+                    break;
+                }
+                temp += tradio.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]).Replace("#sc#", GetArrayValue(sr, i)).Replace("#chk#", att);
+            }
+            else if (type == "checkbox")
+            {
+                 for (int j = 0; j < s.Length; j++)
             {
                 for (int k = 0; k < multians.Length; k++)
                 {
@@ -450,44 +604,25 @@
                         att = "";
                     }
                 }
+                break;
             }
-            else
-            {
-                if (s[i].ToString() == ans)
-                {
-                    att = "checked";
-                }
-                else
-                {
-                    att = "";
-                }
-                
-            }
-            
-            
-            if (type == "radio")
-            {
-                temp += tradio.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]).Replace("#sc#", GetArrayValue(sr, i)).Replace("#chk#", att);
-            }
-            else if (type == "checkbox")
-            {
-                
+
                 temp += tcheckbox.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]).Replace("#sc#", GetArrayValue(sr, i)).Replace("#chk#", att);
             }
-            
+
             else if (type == "text")
             {
                 temp += ttext.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", ans);
             }
             else if (type == "multitext")
             {
-                
+
                 temp += tmultitext.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", ans);
-               
+
             }
             else if (type == "select")
             {
-                
+
                 //to be continue from here
                 string selectedvalue = "";
                 if (s[i]==ans)
@@ -500,18 +635,18 @@
                 {
                     selectedvalue = "";
                 }
-                    
-                    
-                if (i == 0) 
-                { 
+
+
+                if (i == 0)
+                {
                     temp += "<div class='" + cssclass + "'><select class='form-control' qid='" + qid + "' name='q" + qid + "' id='q" + qid + "_" + i + "' ><option value=''></option>";
                 }
                 temp += "<option value='" + s[i] + "' " +selectedvalue +">" + s[i] + "</option>";
-                if (i == s.Length - 1) 
-                { 
-                    temp += "</select></div>"; 
+                if (i == s.Length - 1)
+                {
+                    temp += "</select></div>";
                 }
-               
+
             }
             else if (type == "date")
             {
@@ -519,7 +654,33 @@
             }
             else if (type == "med")
             {
-                temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+                if ( multians.Length==1)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", multians[0]);
+                }
+               
+                if ( multians.Length == 2)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si2#", multians[1]);
+                }
+               
+                if ( multians.Length == 3)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si3#", multians[2]);
+                }
+               
+                if ( multians.Length == 4)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si4#", multians[3]);
+                }
+               
+               
+                if (multians.Length == 5)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si5#", multians[4]);
+                }
+               
+                
             }
             else if (type == "sch")
             {

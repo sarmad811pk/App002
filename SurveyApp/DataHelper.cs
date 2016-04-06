@@ -60,12 +60,15 @@ namespace SurveyApp
                 return r;
             }
         }
-        public static DataSet QuestionGetbySurveyID(int SurveyID)
+        public static DataSet QuestionGetbySurveyID(int SurveyID, int childid)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@SurveyID", SqlDbType.Int);
             cmd.Parameters["@SurveyID"].Value = SurveyID;
+
+            cmd.Parameters.Add("@childID", SqlDbType.Int);
+            cmd.Parameters["@childID"].Value = Convert.ToInt32(childid);
 
             cmd.CommandText = "Question_GetbySurveyID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
@@ -219,34 +222,39 @@ namespace SurveyApp
             cmd.CommandText = "Child_GetAll";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static int SaveuserQuestions(int UserID,int questionid,string answerid,string  score, string childid)
+        public static int SaveuserQuestions(int UserID, string  questionid, string answerid, string score, string childid, string SurveyID, string status)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
-            cmd.Parameters["@UserID"].Value = UserID;
+            if (UserID != null) { cmd.Parameters["@UserID"].Value = UserID; } else { cmd.Parameters["@UserID"].Value = DBNull.Value; }
+           
+            
             
             cmd.Parameters.Add("@QuestionID", SqlDbType.Int);
-            cmd.Parameters["@QuestionID"].Value = questionid;
+            if (questionid != "") { cmd.Parameters["@QuestionID"].Value = questionid; } else { cmd.Parameters["@QuestionID"].Value = DBNull.Value; }
 
            
         
             cmd.Parameters.Add("@PAnswer", SqlDbType.NVarChar);
-            cmd.Parameters["@PAnswer"].Value = answerid;
+            if (answerid != "") { cmd.Parameters["@PAnswer"].Value = answerid; } else { cmd.Parameters["@PAnswer"].Value=DBNull.Value; }
 
             cmd.Parameters.Add("@Score", SqlDbType.Int);
-            if (score != "")
-            {
-                cmd.Parameters["@Score"].Value = Convert.ToInt32(score);
-            }
-            else
-            {
-                cmd.Parameters["@Score"].Value = DBNull.Value;
-            }
+            if (score != "" && score!="NaN") { cmd.Parameters["@Score"].Value = Convert.ToInt32(score); } else { cmd.Parameters["@Score"].Value = DBNull.Value; }
+           
 
             cmd.Parameters.Add("@ChildId", SqlDbType.Int);
-            cmd.Parameters["@ChildId"].Value = Convert.ToInt32(childid);
+            if (childid != "") { cmd.Parameters["@ChildId"].Value = Convert.ToInt32(childid); } else { cmd.Parameters["@ChildId"].Value = DBNull.Value; }
+            
+
+
+            cmd.Parameters.Add("@SurveyID", SqlDbType.Int);
+            if(SurveyID!=""){  cmd.Parameters["@SurveyID"].Value = Convert.ToInt32(SurveyID);} else {cmd.Parameters["@SurveyID"].Value = DBNull.Value;}
+
+       
+            cmd.Parameters.Add("@Pstatus", SqlDbType.NVarChar);
+            if (status != "") { cmd.Parameters["@Pstatus"].Value = status; } else { cmd.Parameters["@Pstatus"].Value=DBNull.Value; }
 
             cmd.CommandText = "SaveUserQuestions";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);

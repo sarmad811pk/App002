@@ -17,10 +17,10 @@ namespace SurveyApp.Controllers
         {
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
 
-            if (roles[0]=="Parent")
-        {
+            if (roles[0] == "Parent" || roles[0] == "Teacher")
+            {
                 return RedirectToAction("Index", "UserQuestion");
-        }
+            }
 
             return View();
         }

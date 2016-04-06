@@ -29,13 +29,13 @@ namespace SurveyApp.Controllers
 
      
         [HttpPost]
-        public void SaveUserQuestion(string QuestionID, string AnswerID, string score, string childid)
+        public void SaveUserQuestion(string QuestionID, string AnswerID, string score, string childid, string SurveyID, string statusparm)
         {
         
             var userID = WebSecurity.CurrentUserId;
 
 
-            int rsl = SurveyApp.DataHelper.SaveuserQuestions(userID, Convert.ToInt32(QuestionID), AnswerID, score, childid);
+            int rsl = SurveyApp.DataHelper.SaveuserQuestions(userID, QuestionID, AnswerID, score, childid, SurveyID,statusparm);
             
         }  
     }
