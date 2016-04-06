@@ -275,5 +275,27 @@ namespace SurveyApp
             cmd.CommandText = "Getchild_ByUserID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static DataSet RolesGetAll()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "Roles_GetAll";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
+        public static DataSet ScheduleDeviationGetSchedules(int? studyId = null)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;
+
+            cmd.CommandText = "ScheduleDeviation_GetSchedules";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        
     }
 }

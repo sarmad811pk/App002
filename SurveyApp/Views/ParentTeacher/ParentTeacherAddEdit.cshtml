@@ -3,37 +3,84 @@
 @{
     ViewBag.Title = "Parent/Teacher Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
-        
-    dtStudies = ViewData["Studies"] != null ? (DataTable)ViewData["Studies"] : null;
+
+    lstPTS = new List<ParentTeacher_Study>();
+    if(Model.vw_ParentTeacher.Id > 0){
+        using (var ptsContext = new ParentTeacher_StudyContext())
+        {
+            lstPTS = ptsContext.ParentTeacher_Studys.ToList();
+        }
+    }
+    DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
     
 }
 @model SurveyApp.Models.ParentTeacher_Register
 
 @functions{
-    DataTable dtStudies;
+    List<ParentTeacher_Study> lstPTS;
     public string getStudyStatus(int studyId)
     {
-		if(dtStudies != null){
-			foreach (DataRow dr in dtStudies.Rows)
+        if (lstPTS.Count > 0)
+        {
+            foreach (ParentTeacher_Study objPTS in lstPTS)
 			{
-				if (Convert.ToInt32(dr["StudyId"]) == studyId)
+				if (objPTS.StudyId == studyId)
 				{
 					return "checked='checked'";
 				}
 			}
 		}
-
         return "";
     }   
     
 }
+<script src="~/Scripts/zxcvbn.js"></script>
+<script src="~/Scripts/pwstrength.js"></script>
 
 <h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;User Information Editor</h2>
 
 <style>
     ._panel { background: #fafafa; border: solid 1px #cccccc; padding: 10px; border-radius: 6px; }
+    .msg.green {
+        color: #00cc00;
+        margin: 0px 0px 6px 0px;
+    }
+
+    .msg.red {
+        color: #cc0000;
+        margin: 0px 0px 6px 0px;
+    }
+    .progress {
+        margin-bottom: 0px;
+        margin-top: 2px;
+    }
+    .error-list {
+        display: none;
+    }
+    .password-verdict {
+        position: absolute;
+        bottom: 0px;
+        left: 20px;
+        color: #FFF;
+    }
+    .leftsection {
+        z-index: 10;
+        height: 750px;
+        background-color: #f1f1f1;
+    }
+    .rightsection {
+        z-index: 2;
+        height: 750px;
+        background-color: #f1f1f1;
+    }
+    /*#body {
+        padding: 0px 0px;
+        margin: 0px 10px;
+    }*/
 </style>
 <script type="text/javascript">
+    
+
     $(function () {
         $("#ddlSchools").append($("<option></option>").val(-1).html("Other (select to add a new school)"));
         $("#ddlSchools").on("change", function (e) {
@@ -52,11 +99,20 @@
                 return true;
             }
         });
-		
+		        
         var id = $("#hdnParentTeacherId").val();
-		if(id != ""){
-		    disableRegisters();
-		}
+        if (id != "" && id != "0") {
+            disableRegisters();
+        }
+        else {
+            var options = {};
+            options.common = {
+                zxcvbn: true,
+                zxcvbnTerms: ['samurai', 'shogun', 'bushido', 'daisho', 'seppuku']
+            };
+            $("#txtPassword").pwstrength(options);
+        }
+        
     });
 
     function disableRegisters() {
@@ -66,85 +122,288 @@
         $("#txtConfirmPassword").val("*********");
         $("#txtConfirmPassword").attr("readonly", "readonly");
     }
+
 </script>
 <br />
 
-@using (Html.BeginForm("ParentTeacherAddEdit", "ParentTeacher", FormMethod.Post, new { @class = "form-horizontal", style = "width: 600px;" }))
+@using (Html.BeginForm("ParentTeacherAddEdit", "ParentTeacher", FormMethod.Post, new { @class = "form-horizontal", style = "width: 600px;height:510px;" }))
 {
-    @Html.ValidationSummary();
-    @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", value = Request.QueryString["id"] })
+    @*<div style="position: absolute; z-index: 100; width: 600px; height: 510px; background-color: #f1f1f1; "></div>*@
+    <div id="divUserInfo" style="position: absolute;">
+        <div style="width: 600px; height: 510px;">
+            @Html.ValidationSummary()
+            @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Model.vw_ParentTeacher.Id })
             <div class="form-group">
-        <label class="control-label col-sm-3" for="teacher">Study:</label>
-        <div class="col-sm-9">
-            <div class="checklist">
-                @foreach (Study std in Study.StudyGetAll())
-                {                    
-                    <div><label><input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
-                }
-                @*@Html.ListBoxFor(m => m.stds, new MultiSelectList(Study.StudyGetAll(), "Id", "Name"))*@
+                <label class="control-label col-sm-3" for="teacher">Study:</label>
+                <div class="col-sm-9">
+                    <div class="checklist">
+                        @foreach (Study std in Study.StudyGetAll())
+                        {
+                            <div><label><input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
+                        }
+                        @*@Html.ListBoxFor(m => m.stds, new MultiSelectList(Study.StudyGetAll(), "Id", "Name"))*@
+                    </div>
+                </div>
             </div>
-            @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-link" }) 
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-3">Name</label>
-        <div class="col-sm-9">            
-            @Html.TextBoxFor(m => m.vw_ParentTeacher.Name, new { @class = "form-control", id = "parent", placeholder = "User Name" })
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-sm-3" for="gender">Role:</label>
-        <div class="col-sm-9 roles">            
-            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, "1", new { name = "optradio", onclick = "$('.divSchool').hide();" })Parent</label></div>
-            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, "2", new { name = "optradio", onclick = "$('.divSchool').show();" })Teacher</label></div>
-        </div>
-    </div>
-    <div class="form-group divSchool" style="display:none;">
-        <label class="control-label col-sm-3" for="school">School:</label>
-        <div class="col-sm-9">
-            @Html.DropDownListFor(m => m.vw_ParentTeacher.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })            
-        </div> 
-    </div>
-    <div id="addSchool" class="_panel col-sm-12" style="display: none; margin-bottom: 5px;">
-        <div class="form-group">
-            <label class="control-label col-sm-3">School Name</label>
-            <div class="col-sm-9">
-                @Html.TextBoxFor(m => m.vw_ParentTeacher.SchoolName, null, new { id = "txtSchoolName", @class = "form-control", placeholder = "School Name" })
+            <div class="form-group">
+                <label class="control-label col-sm-3"> </label>
+                <div class="col-sm-9" style=" text-align: right;">
+                    @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-link" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Name</label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.vw_ParentTeacher.Name, new { @class = "form-control", id = "parent", placeholder = "User Name" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="gender">Role:</label>
+                <div class="col-sm-9 roles">
+                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, dtRoles.Select("RoleName = 'Parent'")[0]["RoleId"].ToString(), new { name = "optradio", onclick = "$('.divSchool').hide();" })Parent</label></div>
+                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, dtRoles.Select("RoleName = 'Teacher'")[0]["RoleId"].ToString(), new { name = "optradio", onclick = "$('.divSchool').show();" })Teacher</label></div>
+                </div>
+            </div>
+            <div class="form-group divSchool" style="display:none;">
+                <label class="control-label col-sm-3" for="school">School:</label>
+                <div class="col-sm-9">
+                    @Html.DropDownListFor(m => m.vw_ParentTeacher.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })
+                </div>
+            </div>
+            <div id="addSchool" class="_panel form-group" style="display: none; margin-bottom: 5px;">
+                <div class="msg"></div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">School Name</label>
+                    <div class="col-sm-9">
+                        @Html.TextBoxFor(m => m.vw_ParentTeacher.SchoolName, null, new { id = "txtSchoolName", @class = "form-control txtSchoolName", placeholder = "School Name", maxlength = "100" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3"> </label>
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button type="button" class="btn btn-default" onclick="addSchool();">Add School</button>
+                        <button type="button" class="btn btn-default" onclick="$('#addSchool').slideUp();">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-3"> </label>
+                <div class="col-sm-9" style=" text-align: right;">
+                    @if (Model.vw_ParentTeacher.Id > 0)
+                    {
+                        <a href="javascript:void(0);" class="btn btn-link" onclick="showAccountInfo();">Edit Account Information</a>
+                    }                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.vw_Register.UserName, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.vw_Register.Password, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, Model.vw_Register.Password.Length) : "" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.vw_Register.ConfirmPassword, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, Model.vw_Register.Password.Length) : "" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-4">
+                    <button type="submit" class="btn btn-default">Save Information</button>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-sm-3"> </label>
-            <div class="col-sm-offset-3 col-sm-9">
-                <button type="button" class="btn btn-default" onclick="$('#addSchool').slideUp();">Cancel</button>
+    </div>
+
+    <div id="divAccountInfo" style="position: absolute; left: 620px;display:none;">
+        <div style="width: 600px; height: 510px;">
+            <div id="divErrors" class="validation-summary-errors" style="display:none;">
+                <ul></ul>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">User name</label>
+                <div class="col-sm-9">
+                    <input autocomplete="off" class="form-control" id="txtEUserName" placeholder="Email" type="text" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Password</label>
+                <div class="col-sm-9">
+                    <input autocomplete="@(Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off" )" class="form-control" id="txtEPassword" placeholder="Password" type="password" value="">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3">Confirm Password</label>
+                <div class="col-sm-9">
+                    <input autocomplete="@(Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off" )" class="form-control" id="txtEConfirmPassword" placeholder="Confirm Password" type="password" value="">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                    <button type="button" class="btn btn-default" onclick="updateAccount();">Update Information</button>
+                    <button type="button" class="btn btn-default" onclick="showUserInfo();">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.vw_Register.UserName, new { @class = "control-label col-sm-3" })
-        <div class="col-sm-9">            
-            @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.vw_Register.Password, new { @class = "control-label col-sm-3" })
-        <div class="col-sm-9">            
-            @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = "off" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.vw_Register.ConfirmPassword, new { @class = "control-label col-sm-3" })
-        <div class="col-sm-9">            
-            @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = "off" })
-        </div>
-    </div>
-
-  
-    <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-4">
-            <button type="submit" class="btn btn-default">Save Information</button>
-        </div>
-    </div>
-
+    
 }
+
+<script type="text/javascript">
+
+    function School() {
+        this.Name = "";
+    }
+
+    function addSchool() {
+        var div = "#addSchool";
+        var msg = $(div).find(".msg");
+
+        var txtSchoolName = $(div).find(".txtSchoolName");
+        if (txtSchoolName.val() == "") {
+            msg.removeClass("green").addClass("red");
+            msg.html("Please provide the following information.");
+
+            txtSchoolName.addClass("inerror");
+            $(div).find(".inerror").first().focus();
+            return false;
+        }
+
+        var objSchool = new School();
+        objSchool.Name = txtSchoolName.val();
+
+        $.ajax({
+            url: '@Url.Action("addSchool", "School")',
+            data: "{'objSchool': '" + JSON.stringify(objSchool) + "' }",
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                msg.empty();
+                if (data.success == true) {
+                    $("#ddlSchools").append("<option value='" + data.schoolId + "'>" + objSchool.Name + "</option>");
+                    $("#ddlSchools").val(data.schoolId);
+                    txtSchoolName.val("");
+
+                    msg.removeClass("red").addClass("green");
+                    msg.html(objSchool.Name + " is successfully added.");
+                }
+                else {
+                    msg.removeClass("green").addClass("red");
+                    msg.html(data.msg);
+                }
+            },
+
+            //Options to tell JQuery not to process data or worry about content-type
+            cache: false,
+            processData: false
+        });
+    }
+
+    function showAccountInfo() {
+        $("#txtEUserName").val($("#txtUserName").val());
+        $("#txtEPassword").val($("#txtPassword").val());
+        $("#txtEConfirmPassword").val($("#txtConfirmPassword").val());
+        $(".progress-bar").css("width", "0%");
+        $(".password-verdict").text("");
+
+        $("#divUserInfo").animate({ 'left': -1000 }, 500, function () {
+            if ($("#txtEPassword").hasClass("pwdAdded") == false) {
+                var options = {};
+                options.common = {
+                    zxcvbn: true,
+                    zxcvbnTerms: ['samurai', 'shogun', 'bushido', 'daisho', 'seppuku']
+                };
+
+                $("#txtEPassword").pwstrength(options);
+                $("#txtEPassword").addClass("pwdAdded");
+            }
+        });
+
+        $("#divAccountInfo").show();
+        $("#divAccountInfo").animate({ 'left': 0 }, 500);
+    }
+
+    function showUserInfo() {
+        $("#divAccountInfo").animate({ 'left': 620 }, 500, function () {
+            $("#divAccountInfo").fadeOut();
+        });
+        $("#divUserInfo").animate({ 'left': 0 }, 500);
+    }
+
+    function updateAccount() {
+        var userName = "", newUserName = "", password = "", confirmPassword = "", oldPassword = "", updatePassword = false;
+        userName = $("#txtUserName").val();
+        newUserName = $("#txtEUserName").val();
+
+        password = $("#txtEPassword").val();
+        confirmPassword = $("#txtEConfirmPassword").val();
+
+        oldPassword = $("#txtPassword").val();
+
+        $("#divErrors").hide();
+        $("#divErrors ul").empty();
+
+        if (userName == "") {
+            $("#divErrors ul").append("<li>Please provide User Name</li>");
+            $("#divErrors").show();
+            return false;
+        }
+        if (password == "") {
+            $("#divErrors ul").append("<li>Please provide Password</li>");
+            $("#divErrors").show();
+            return false;
+        }
+        if (confirmPassword == "") {
+            $("#divErrors ul").append("<li>Please provide Confirm Password</li>");
+            $("#divErrors").show();
+            return false;
+        }
+        if (password != confirmPassword) {
+            $("#divErrors ul").append("<li>Both password do not match</li>");
+            $("#divErrors").show();
+            return false;
+        }
+        
+        if (oldPassword != password) {
+            updatePassword = true;
+        }
+
+        $.ajax({
+            url: "@Url.Action("AccountEdit", "Account")",
+            data: "{'userName': '" + userName + "', 'newUserName': '" + newUserName + "', 'password' : '" + password + "', 'updatePassword' : '" + updatePassword + "' }",
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (data) {
+                if (data.success == true) {
+                    $("#txtUserName").val(newUserName);
+                    showUserInfo();
+                }
+                else {
+                    $("#divErrors ul").append("<li>We are unable to process your request at this time, please try again or contact our support team.</li>");
+                    $("#divErrors").show();
+                }
+            },
+            error: function (errors) {
+
+            },
+
+            //Options to tell JQuery not to process data or worry about content-type
+            cache: false,
+            processData: false
+        });
+    }
+</script>

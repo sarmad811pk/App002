@@ -5,42 +5,49 @@
     DataSet dsStudies = SurveyApp.DataHelper.StudyGetAll();
 }
 
+<script type="text/javascript">
+    $(function () {
+        $("#tblStudies").DataTable();
+    });
+</script>
 
-<h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Study Management</h2>
-<div class="col-sm-1">
-@Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-default" }) 
+<div>
+    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Study Management</h2>
+    @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-default", style = "float:right;" })
 </div>
+<div style="clear:both;"></div>
+<br />
 <style>
     .table-hover tbody tr{cursor:pointer;}
 </style>
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover" id="tblStudies">
     <thead>
-      <tr>
-        <th>Study</th>
-        <th>Survey(s)</th>
-        <th>Student(s)</th>
-        <th>Teacher(s)</th>
-        <th>Parent(s)</th>
-        <th>Completion</th>
-        <th>Status</th>
-        <th style="width: 50px;">Action</th>
-      </tr>
+        <tr>
+            <th>Study</th>
+            <th>Survey(s)</th>
+            <th>Student(s)</th>
+            <th>Teacher(s)</th>
+            <th>Parent(s)</th>
+            <th>Completion</th>
+            <th>Status</th>
+            <th style="width: 50px;">Action</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (System.Data.DataRow dr in dsStudies.Tables[0].Rows)
-    {
-        <tr onclick="location.href = '@Url.Action("StudyAddEdit", "Study")' + '?Id=@(dr["Id"])';">
-        <td class="name">@dr["Name"]</td>
-        <td>@dr["Surveys"]</td>
-        <td>@dr["Children"]</td>
-        <td>@dr["Teachers"]</td>
-        <td>@dr["Parents"]</td>
-        <td>40%</td>
-        <td class="@(Convert.ToInt32(dr["Status"]) == 2 ? "text-danger" : "text-success")">@(Convert.ToInt32(dr["Status"]) == 1 ? "Active" : (Convert.ToInt32(dr["Status"]) == 2 ? "InActive" : (Convert.ToInt32(dr["Status"]) == 3 ? "Incomplete" : "-")))</td>
-        <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'study', '@dr["Name"]');"></a></td>
-      </tr>
-    }
-      
-      
+        @foreach (System.Data.DataRow dr in dsStudies.Tables[0].Rows)
+        {
+            <tr onclick="location.href = '@Url.Action("StudyAddEdit", "Study", new { id = dr["Id"] })';">
+                <td class="name">@dr["Name"]</td>
+                <td>@dr["Surveys"]</td>
+                <td>@dr["Children"]</td>
+                <td>@dr["Teachers"]</td>
+                <td>@dr["Parents"]</td>
+                <td>40%</td>
+                <td class="@(Convert.ToInt32(dr["Status"]) == 2 ? "text-danger" : "text-success")">@(Convert.ToInt32(dr["Status"]) == 1 ? "Active" : (Convert.ToInt32(dr["Status"]) == 2 ? "InActive" : (Convert.ToInt32(dr["Status"]) == 3 ? "Incomplete" : "-")))</td>
+                <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'study', '@dr["Name"]');"></a></td>
+            </tr>
+        }
+
+
     </tbody>
-  </table>
+</table>

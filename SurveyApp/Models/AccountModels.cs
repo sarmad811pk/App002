@@ -143,9 +143,18 @@ namespace SurveyApp.Models
     //public class webpages_Roles
     //{
     //    [Key]
-    //    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]        
+    //    [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
     //    public int RoleId { get; set; }
     //    public string RoleName { get; set; }
+    //}
+    //public class Webpages_RolesContext : DbContext
+    //{
+    //    public Webpages_RolesContext()
+    //        : base("DefaultConnection")
+    //    {
+    //    }
+
+    //    public DbSet<webpages_Roles> Roles { get; set; }
     //}
     
 }

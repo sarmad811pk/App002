@@ -117,4 +117,29 @@ namespace SurveyApp.Models
             return lstEnroll;
         }
     }
+
+    [Table("Child_Study_Schedule")]
+    public class Child_Study_Schedule
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int ChildId { get; set; }
+        public int StudyId { get; set; }
+        public int ScheduleId { get; set; }
+        public int ActiveOn { get; set; }
+        public int Day { get; set; }
+        public int Month { get; set; }
+        public int Weekday { get; set; }
+    }
+
+    public class Child_Study_ScheduleContext : DbContext
+    {
+        public Child_Study_ScheduleContext()
+            : base("DefaultConnection")
+        {
+        }
+
+        public DbSet<Child_Study_Schedule> Children_Studies_Schedules { get; set; }
+    }
 }

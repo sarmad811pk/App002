@@ -45,12 +45,6 @@
         color: #cc0000;
         margin: 0px 0px 6px 0px;
     }
-    .specify {        
-        padding: 10px 10px 10px 10px;        
-    }
-    .specify table td{
-        vertical-align: top;
-    }
     
 </style>
 <br />
@@ -58,7 +52,7 @@
 @using (Html.BeginForm("ScheduleAddEdit", "Schedule", FormMethod.Post, new { id = "frmAddSchedule", @class = "form-horizontal", style = "width: 700px;" }))
 {
     @Html.ValidationSummary();
-    @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Request.QueryString["id"] })
+    @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Model.Id })
     <div class="form-group">
         <label class="control-label col-sm-3">Title:</label>
         <div class="col-sm-9">
@@ -87,7 +81,7 @@
         <label class="control-label col-sm-3">Active On:</label>
         <div class="col-sm-9">
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.ActiveOn, "1", new { name = "optradio", onclick = "$('#divSpecify').hide();" })Enrolment</label></div>
-            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.ActiveOn, "2", new { name = "optradio", onclick = "$('#divSpecify').show();" })Sepecify</label></div>
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.ActiveOn, "2", new { name = "optradio", onclick = "$('#divSpecify').show();" })Specify</label></div>
         </div>
     </div>
 
@@ -95,29 +89,18 @@
         <label class="control-label col-sm-3">Specify Period:</label>
         <div class="col-sm-9">
             <div class="specify">
-                <table cellpadding="0" cellspacing="0" style="width:100%;">
-                    <tr>
-                        <td><label>Days</label></td>
-                        <td style="text-align:center;"><b>OR</b></td>
-                        <td><label>Weekdays</label></td>
-                    </tr>
+                <table cellpadding="0" cellspacing="0" style="width:100%;">                    
                     <tr>
                         <td>
                             <div class="monthly">                                
-                                @Html.DropDownListFor(m => m.Day, new SelectList(ScheduleDay.GetScheduleDays(), "Id", "Value"), "Select Day", new { id = "ddlDays", @class = "form-control" })
-                                <label>Month</label>
-                                <div class="checklist" style="">
-                                    @foreach (ScheduleMonth objScheduleMonth in ScheduleMonth.GetScheduleMonths())
-                                    {
-                                        <div><label><input type="checkbox" @getMonthStatus(objScheduleMonth.Id) name="ScheduleMonth_@objScheduleMonth.Id" value="@objScheduleMonth.Id" /> @objScheduleMonth.Month</label></div>
-                                    }
-                                </div>
+                                @Html.DropDownListFor(m => m.Day, new SelectList(ScheduleDay.GetScheduleDays(), "Id", "Value"), "Select Day", new { id = "ddlDays", @class = "form-control", style = "width: 49%;display: inline-block;", onchange = "setPeriodSpecification(1);" })                                
+                                @Html.DropDownListFor(m => m.Month, new SelectList(ScheduleMonth.GetScheduleMonths(), "Id", "Month"), "Select Month", new { id = "ddlMonths", @class = "form-control", style = "width: 49%;display: inline-block;", onchange = "setPeriodSpecification(1);" })
                             </div>
                         </td>
-                        <td style="text-align:center;"><div style="border-right: solid 1px #BBB; padding-right: 10px; height: 463px; display: inline-block;"></div></td>
+                        <td style="text-align:center;"><b>&nbsp;OR&nbsp;</b></td>
                         <td>
                             <div class="weekly">
-                                @Html.DropDownListFor(m => m.Weekday, new SelectList(ScheduleWeekday.GetScheduleWeekdays(), "Id", "Weekday"), "Select Weekday", new { id = "ddlWeekdays", @class = "form-control" })
+                                @Html.DropDownListFor(m => m.Weekday, new SelectList(ScheduleWeekday.GetScheduleWeekdays(), "Id", "Weekday"), "Select Weekday", new { id = "ddlWeekdays", @class = "form-control", onchange = "setPeriodSpecification(2);" })
                             </div>
                         </td>
                     </tr>
@@ -165,12 +148,21 @@
                 return true;
             }
         });
-
         
-        @if (String.IsNullOrEmpty(Request.QueryString["id"]))
+        @if (Model.Id <= 0)
         {
             script = "$(\"#frmAddSchedule\").find(\"input[type=text]\").val(\"\")";
         }
         @Html.Raw(script);
     });
+
+    function setPeriodSpecification(type) {
+        if (type == 1) {
+            $("#ddlWeekdays").val("");
+        }
+        if (type == 2) {
+            $("#ddlDays").val("");
+            $("#ddlMonths").val("");
+        }
+    }
 </script>

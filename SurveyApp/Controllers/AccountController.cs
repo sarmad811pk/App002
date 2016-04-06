@@ -120,6 +120,35 @@ namespace SurveyApp.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        public ActionResult AccountEdit(string userName, string newUserName, string password, bool updatePassword)
+        {
+            bool isSuccess = false;
+            string msg = "";
+            try
+            {
+                if (updatePassword == true)
+                {
+                    WebSecurity.ResetPassword(WebSecurity.GeneratePasswordResetToken(userName), password);
+                }
+
+                if(userName != newUserName)
+                {
+                    using (var uContext = new UsersContext())
+                    {
+                        UserProfile objUser = uContext.UserProfiles.SingleOrDefault(u => u.UserName == userName);
+                        objUser.UserName = newUserName;
+                        uContext.SaveChanges();                                                
+                    }
+                }
+                isSuccess = true;
+            }
+            catch(Exception ex) {
+                isSuccess = false;
+                msg = ex.Message;
+            }
+
+            return Json(new { success = isSuccess, error = msg });
+        }        
 
         public static bool CreateAccount(RegisterModel model, string role = ""){
             bool isSuccess = false;

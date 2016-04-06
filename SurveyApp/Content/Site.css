@@ -105,6 +105,7 @@ h5, h6 {
     clear: both;
     padding: 0px 10px;
     overflow: hidden;    
+    padding-bottom: 20px;
 }
 
     .main-content {
@@ -827,3 +828,27 @@ div.checklist div:last-child{
 .inerror {
         background-color: #FFE9E9 !important;
     }
+
+.loading{    
+    position: fixed;
+    width: 100%;
+    top: 46%;
+    text-align: center;
+    z-index: 1000;
+}
+.loading div{
+    position: relative;
+    border: solid 1px #696969;
+    background-color: #FFF;
+    color: #383838;
+    z-index: 3000;
+    background-image: url(../content/images/at3logo_small.png);
+    background-repeat: no-repeat;
+    background-position: 4px center;
+    margin: 0px auto;
+    font-size: 13px;
+    padding: 7px 8px 7px 64px;
+    display: inline-block;
+    background-size: 40% auto;
+    font-family: Calibri;;
+}

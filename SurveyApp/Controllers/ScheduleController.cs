@@ -52,23 +52,23 @@ namespace SurveyApp.Controllers
                 return View(mSchedule);
             }
 
+            if (mSchedule.Frequency == 2)
+            {
+                if (mSchedule.DaysToRepeat == null || mSchedule.DaysToRepeat <= 0)
+                {
+                    ModelState.AddModelError("", "Please enter number of days for frequency.");
+                    return View(mSchedule);
+                }
+            }
+
             if (mSchedule.ActiveOn <= 0)
             {
                 ModelState.AddModelError("", "Please select activation type.");
                 return View(mSchedule);
             }
 
-            int monthCount = 0;
-            foreach (var key in collection.Keys)
-            {
-                if (key.ToString().Contains("ScheduleMonth_"))
-                {
-                    monthCount++;
-                }
-            }
-            if (monthCount == 0)
-            {
-                ModelState.AddModelError("", "Please select at least one month for activation.");
+            if (mSchedule.ActiveOn == 2 && mSchedule.Month <= 0 && mSchedule.Day <= 0 && mSchedule.Weekday <= 0) {
+                ModelState.AddModelError("", "Please specify period.");
                 return View(mSchedule);
             }
             #endregion
@@ -89,17 +89,7 @@ namespace SurveyApp.Controllers
                     objSchedule.DaysToRepeat = mSchedule.DaysToRepeat.HasValue == true ? mSchedule.DaysToRepeat.Value : 0;
                     objSchedule.Frequency = mSchedule.Frequency;
                     objSchedule.LastReminder = mSchedule.LastReminder;
-
-                    string months = "";
-                    foreach (ScheduleMonth objSM in ScheduleMonth.GetScheduleMonths())
-                    {
-                        if (!String.IsNullOrEmpty(collection["ScheduleMonth_" + objSM.Id]))
-                        {
-                            months += objSM.Id + ",";
-                        }
-                    }
-                    objSchedule.Month = months.TrimEnd(',');
-
+                    objSchedule.Month = mSchedule.Month.HasValue == true ? mSchedule.Month.Value : 0;
                     objSchedule.ReminderFrequency = mSchedule.ReminderFrequency;
                     objSchedule.Title = mSchedule.Title;
                     objSchedule.Weekday = mSchedule.Weekday.HasValue == true ? mSchedule.Weekday.Value : 0;
@@ -107,7 +97,7 @@ namespace SurveyApp.Controllers
                     if (mSchedule.Id <= 0)
                     {
                         cSchedule.Schedules.Add(objSchedule);
-                    }                    
+                    }
                     cSchedule.SaveChanges();
                 }
             }
