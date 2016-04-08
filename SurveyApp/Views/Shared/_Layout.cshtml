@@ -28,7 +28,7 @@
             $(document).ajaxStop(function () { $(".loading").hide(); });
         });        
     </script>
-    @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "");    
+    @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")
 </head>
 <body>
     <header>
@@ -76,7 +76,7 @@
     </div>
     <footer class="col-sm-12">
         <div class="content-wrapper" style="padding:10px;"> 
-                <p>&copy; @DateTime.Now.Year - AT<sup>3</sup> Autism Translating To Treatments</p>
+                <p>&copy; @DateTime.Now.Year - eBit (Evidence Based Intervention and Treatment)</p>
   
         </div>
     </footer>
