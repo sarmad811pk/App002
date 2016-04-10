@@ -145,7 +145,7 @@
                         <div style="visibility:hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
                     }
 
-                    <div class="@Qclass">@q["Question"] <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
+                    <div class="@Qclass">@q["Question"].ToString().Replace("[Child]", childname)  <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
                     @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass,q["Score"].ToString(),q["Answer"].ToString()))
                     <input type="hidden" value="@q["Answer"].ToString()" data-possibleanswers="@q["PAnswerLike"].ToString()" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
 
