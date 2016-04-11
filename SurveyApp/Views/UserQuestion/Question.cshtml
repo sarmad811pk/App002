@@ -167,16 +167,15 @@
     </table>
 
 </div>
-<div id="divCompletion" style="bottom: 0px; left: 0px; right: 0px; position: fixed; margin-left: 338px;">
-    <span style="padding: 2px; font-size: 10px; background-color: rgb(0, 128, 128); color: #FFF; ">0% Complete</span>
-    <div style="background:white;height:5px;"><div style="border-bottom: solid 5px #008080; width: 0%" class="colored"></div></div>
-</div>
+@{Html.RenderPartial("~/Views/Survey/_PercentCompletion.cshtml");}
 
 @section scripts{
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript">
         $(function () {
+            setCompletionDiv();
+
             var score;
             $("._datepicker").datepicker(
                 {
@@ -454,9 +453,8 @@
                 noQ++;
             });
 
-            var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0)) + "%";
-            $("#divCompletion").find("span").text(percentage + " Complete");
-            $("#divCompletion").find(".colored").css("width", percentage);
+            var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0));
+            setCompletionPercentage(percentage);
         }
 
       

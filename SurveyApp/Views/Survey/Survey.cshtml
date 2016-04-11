@@ -87,7 +87,9 @@
 @section scripts{
     <script type="text/javascript">
         $(function () {
+            setCompletionDiv();
             syncStrips();
+
             $("input[type=radio], input[type=checkbox]").bind("click", function () {
 
                 qid = $(this).attr("qid");
