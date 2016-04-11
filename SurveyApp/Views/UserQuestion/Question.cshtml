@@ -178,7 +178,15 @@
     <script type="text/javascript">
         $(function () {
             var score;
-
+            $("._datepicker").datepicker(
+                {
+                    onSelect: function(dateText, inst) {
+                        var date = $(this).val();
+                        var txt = $("#q" + $(this).attr("qid") + "_0").val();
+                        txt = (txt==date?"":"|" + txt + "|");
+                        $("#hdn" + $(this).attr("qid")).val(txt + "" + date).trigger('change');
+                    }
+                });
             $("#success-alert").hide();
             //var childname = decodeURI(GetQueryStringValues()['ChildName']);
             //$(this).html().replace("[Child]", childname);
@@ -210,6 +218,7 @@
             });
 
             $("textarea, input[type=text]").blur(function () {
+                if($(this).hasClass("hasDatepicker")==true || $(this).hasClass("_txtdatepicker")){ return; }
                 var oldval = $("#hdn" + $(this).attr("qid")).val();
                 if (this.value != "") {
                     var newval = "|" + this.value;
@@ -217,9 +226,9 @@
                 }
             });
 
-            $("input[type=date]").blur(function () {
-                $("#hdn" + $(this).attr("qid")).val("|"+ this.value).trigger('change');
-            });
+            //$("input[type=date]").blur(function () {
+            //    $("#hdn" + $(this).attr("qid")).val("|"+ this.value).trigger('change');
+            //});
           
 
             //function countelement()
@@ -526,7 +535,7 @@
         var ttext = "<div class='#c#'><input class='form-control' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
         var tmultitext = "<div class='#c#'><textarea class='form-control' qid='#q#' name='q#q#' id='q#q#_#i#'>#si#</textarea></div>";
 
-        var tdate = "<div class='#c#'><input class='form-control' type='date' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
+        var tdate = "<div class='#c#'><input class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
         var tmed = @"<div class='#c# form-inline'>" +
                     "<input class='form-control col-sm-2' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'>" +
                     "<input class='form-control col-sm-2' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'>" +
@@ -540,10 +549,10 @@
                    "<input class='form-control col-sm-3' placeholder='Start (mn-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
                    "<input class='form-control col-sm-3' placeholder='End (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'>" +
                    "</div>";
-        var tcheckdate = "<div class='#c#  form-inline'><input type='checkbox' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='col-sm-1' style='margin-top:10px;' onclick='enableDate(this,\"q#q#_1\")'><div class='col-sm-10'><input disabled='disabled' class='form-control' type='date' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div></div>";
+        var tcheckdate = "<div class='#c#  form-inline'><input type='checkbox' #chk# qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='col-sm-1' style='margin-top:10px;' onclick='enableDate(this,\"q#q#_1\")'><div class='col-sm-10'><input disabled='disabled' placeholder='Select Date' class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div></div>";
         var ttextdate = "<div class='#c#  form-inline'>" +
-                         "<input type='text' placeholder='Details' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='form-control' style='width:68%;' onkeyup='enabletextDate(this,\"q#q#_1\")'>" +
-                         "<input type='date' disabled='disabled' qid='#q#' name='q#q#' id='q#q#_1' value='#si#' class='form-control'></div>";
+                         "<input type='text' placeholder='Details' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si0#' class='form-control _txtdatepicker' style='width:68%;' onkeyup='enabletextDate(this,\"q#q#_1\")'>" +
+                         "<input type='text' disabled='disabled'  placeholder='Select Date' qid='#q#' name='q#q#' id='q#q#_1' value='#si1#' class='form-control _datepicker'></div>";
         string temp = @"";
         string[] s = a.Split('|');
 
@@ -688,11 +697,13 @@
             }
             else if (type == "checkdate")
             {
-                temp += tcheckdate.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+                temp += tcheckdate.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", ans).Replace("#chk#", ans != "" ? "checked" : "").Replace("disabled='disabled'", ans != "" ? "" : "disabled='disabled'");
             }
             else if (type == "textdate")
             {
-                temp += ttextdate.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
+                temp += ttextdate.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString())
+                    .Replace("#si0#", (ans.Contains("|") ? ans.Split('|')[0] : "")).Replace("#si1#", (ans.Contains("|") ? ans.Split('|')[1] : ""))
+                    .Replace("disabled='disabled'", ans != "" ? "" : "disabled='disabled'");
             }
             else if (type == "slider")
             {
