@@ -318,32 +318,45 @@
                 savequestions(qid, ans, score, childId, SurID,"SaveUpdate");
 
             });
-  $(".__slider").slider({
-     range: "min",
-      value: 0,
-      min: 0,
-      max: 700,
-      slide: function( event, ui ) {
-          var items=parseInt($(this).attr("length"));
-          var qid=$(this).attr("qid");
+            
+            $(".__slider").each(function (){ 
+                var defaultvalue = $(this).attr("value");
+                var itemcount=parseInt($(this).attr("length"));
+                defaultvalue = (defaultvalue/itemcount) * 700;
+                $(this).slider({
+                    range: "min",
+                    value: 0,
+                    min: 0,
+                    max: 700,
+                    value:defaultvalue,
+                    slide: function( event, ui ) {
+                        var items=parseInt($(this).attr("length"));
+                        var qid=$(this).attr("qid");
+                        var lblvalue='';
+                        var lblscore=0;
+                        $('label[for^="q'+ qid +'_"]').css("color","#cccccc");
+                        for(var i=0;i<=items;i++){
+                            var step=700/(items+1);
+                            if(ui.value <= (i+1) * step && ui.value > (i) * step){
+                                $('label[for="q'+ qid +'_'+i+'"]').css("color","#000000");
+                                lblvalue = $('label[for="q'+ qid +'_'+i+'"]').text();
+                                lblscore =  $('label[for="q'+ qid +'_'+i+'"]').attr("data-score");
+                            }
+                        }
 
-          $('label[for^="q'+ qid +'_"]').css("color","#cccccc");
-          for(var i=0;i<=items;i++){
-              var step=700/(items+1);
-              if(ui.value <= (i+1) * step && ui.value > (i) * step){
-                  $('label[for="q'+ qid +'_'+i+'"]').css("color","#000000");
-              }
-
-          }
-
-          if(ui.value==0){
-            $('label[for^="q'+ qid +'_"]').css("color","#333333");
-          }
-          else{
-              $("#hdn" + $(this).attr("qid")).val(ui.value).trigger('change');
-          }
-      }
-    });
+                        if(ui.value==0){
+                            $('label[for^="q'+ qid +'_"]').css("color","#333333");
+                        }
+                        else{
+                            score= lblscore;
+                            $("#hdn" + $(this).attr("qid")).val("|"+lblvalue);
+                        }
+                    },
+                    stop: function(event,ui){
+          
+                        $("#hdn" + $(this).attr("qid")).trigger('change');
+                    }
+                })});
 });
 
 
@@ -707,8 +720,8 @@
             }
             else if (type == "slider")
             {
-                temp += tslider.Replace("#c#", cssclass + " slider").Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]);
-                if (i == s.Length - 1) { temp += ("<div id='slider#q#' qid='#q#' length='#i#' class='col-sm-" + (i == 5 ? "12" : "10") + " __slider'></div>").Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()); }
+                temp += tslider.Replace("#c#", cssclass + " slider").Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]).Replace("#sc#", GetArrayValue(sr, i));
+                if (i == s.Length - 1) { temp += ("<div id='slider#q#' qid='#q#' length='#i#' value='#si#' class='col-sm-" + (i == 5 ? "12" : "10") + " __slider'></div>").Replace("#si#", Array.IndexOf(s, ans).ToString()).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()); }
             }
             else
             {
