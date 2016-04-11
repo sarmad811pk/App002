@@ -6,11 +6,21 @@
 
     System.Data.DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
     string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+    int userId = WebSecurity.CurrentUserId;
+
+    
 }
 <style type="text/css">
     .col-centered {
         float: none;
         margin: 0 auto;
+    }
+    .percent {
+        display: inline-block;
+        background-color: #008080;
+        padding: 2px 8px;
+        border-radius: 10%;
+        color: #FFF;
     }
 </style>
 
@@ -26,6 +36,30 @@
             </p>
         </div>
     </section>
+}
+@functions{
+    public string getPercentCompletion(int userId, int SurveyId, int childId){
+        decimal totalQuestions = 0, filledQuestions = 0;
+        
+        //if (SurveyId != 2)
+        //{
+        //    return "0%";
+        //}
+        
+        System.Data.DataSet dsQuestionsFilled = SurveyApp.DataHelper.QuestionGetFilledAnswers(userId, SurveyId, childId);
+
+        if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
+        {
+            totalQuestions = dsQuestionsFilled.Tables[0].Rows.Count;
+        }
+        
+        if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[1] != null && dsQuestionsFilled.Tables[1].Rows != null)
+        {
+            filledQuestions = dsQuestionsFilled.Tables[1].Rows.Count;
+        }
+        
+        return Convert.ToInt32((filledQuestions / totalQuestions) * 100).ToString() + "%";
+    }
 }
 <div class="panel-group">
 
@@ -49,12 +83,9 @@
                         {
                             <a href="@Url.Action("Question", "UserQuestion", new { surveyID = dr["ID"].ToString(), ChildId = drch["ID"].ToString(), ChildName = drch["Name"].ToString() })" class="list-group-item">
                                 <strong>Preview:</strong> @dr["Title"].ToString()
-                                
+                                &nbsp;<span class="percent">@getPercentCompletion(userId, (int)dr["ID"], (int)drch["ID"])</span>
                             </a>
-
-
                         }
-
                     </div>
                 </div>
             </div>
