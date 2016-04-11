@@ -816,11 +816,11 @@ div.checklist{
     -webkit-border-radius: 4px;
     display: inline-block;
 }
-div.checklist div{
+div.checklist div.checker{
     border-bottom: solid 1px #CCC;
-    padding: 6px 0px 0px 10px;
+    padding: 6px 10px 0px 10px;
 }
-div.checklist div:last-child{
+div.checklist div.checker:last-child{
     border-bottom: none;
 }
 

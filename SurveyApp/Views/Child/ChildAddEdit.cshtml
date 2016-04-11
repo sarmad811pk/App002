@@ -90,10 +90,10 @@
 </style>
 <br />
 
-@using (Html.BeginForm("ChildAddEdit", "Child", FormMethod.Post, new { id = "frmAddChild", @class = "form-horizontal", style = "width: 600px;height:500px;" }))
+@using (Html.BeginForm("ChildAddEdit", "Child", FormMethod.Post, new { id = "frmAddChild", @class = "form-horizontal", style = "width: 700px;" }))
 {
-    <div class="childInfo" style="position: absolute;">
-        <div style="width: 600px; min-height: 510px;">
+    <div class="childInfo">
+        <div style="width: 100%;">
             @Html.ValidationSummary()
             @Html.HiddenFor(m => m.Id, new { name = "hdnChildId", value = Model.Id })
             <div class="form-group">
@@ -101,17 +101,91 @@
                 <div class="col-sm-9">
                     <div class="checklist">
                     @foreach (Study std in Study.StudyGetAll())
-                    {
-                        <div>
-                            <label onclick="setDeviation(this);" class="study">
-                                <input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@std.Id" value="@std.Id" /> @std.Name
-                            </label>
-                            <label style="float: right;padding: 0px 6px 0px 0px;display:none;" class="deviation" onchange="showScheduleInfo(@std.Id);">
-                                <input type="checkbox" name="StudyIdDeviate_@std.Id" value="@std.Id" />Deviate
-                            </label>
-                            <a style="float: right;padding: 0px 6px 0px 0px;display:none;" href="javascript:void(0);" class="btn btn-link deviation" onclick="showScheduleInfo(@std.Id);">Set Deviation</a>
-                        </div>
-                    }
+                        {
+                            <div class="checker">
+                                <label onclick="setDeviation(this);" class="study">
+                                    <input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@std.Id" value="@std.Id" /> @std.Name
+                                </label>
+                                <label style="float: right;padding: 0px 6px 0px 0px;" class="deviation" onchange="showScheduleInfo(this, @std.Id);">
+                                    <input type="checkbox" name="StudyIdDeviate_@std.Id" value="@std.Id" />Deviate
+                                </label>
+
+
+                                <div id="divStudy@(std.Id)" style="display:none;" class="studyInfo">
+                                    @{ DataSet dsSchedules = SurveyApp.DataHelper.ScheduleDeviationGetSchedules(std.Id); }
+                                    @foreach (DataRow drSchedule in dsSchedules.Tables[0].Rows)
+                                    {
+
+                                        <div id="divSchedule@(drSchedule["ScheduleID"])" class="schedule _panel" scheduleid="@(drSchedule["ScheduleID"])" style="padding-bottom: 4px; margin-bottom: 10px;">
+                                            <div class="form-group"><label class="col-sm-6"><b>@drSchedule["Title"]</b></label></div>
+                                            <div id="divErrors" class="validation-summary-errors" style="display:none;">
+                                                <ul></ul>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-sm-3">Active On:</label>
+                                                <div class="col-sm-9">
+                                                    <div class="radio-inline"><label><input id="ActiveOn" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "ActiveOn", "radio", 1) name="ActiveOn_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onclick="$('#divSpecify_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])').hide();" type="radio" value="1">Enrolment</label></div>
+                                                    <div class="radio-inline"><label><input id="ActiveOn" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "ActiveOn", "radio", 2) name="ActiveOn_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onclick="$('#divSpecify_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])').show();" type="radio" value="2">Specify</label></div>
+                                                </div>
+                                            </div>
+
+                                            <div id="divSpecify_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" class="form-group specifyParent" style="display:none;">
+                                                <label class="control-label col-sm-3">Specify Period:</label>
+                                                <div class="col-sm-9">
+                                                    <div class="specify">
+                                                        <table cellpadding="0" cellspacing="0" style="width:100%;">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="monthly">
+                                                                            <select class="form-control specification inerror" id="ddlDays" name="ddlDays_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification(this, '_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 1);" style="width: 47%;display: inline-block;">
+                                                                                <option value="0" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "Day", "select", 0)>Day</option>
+                                                                                @foreach (ScheduleDay objSD in ScheduleDay.GetScheduleDays())
+                                                                                {
+                                                                                    <option value="@objSD.Value" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "Day", "select", objSD.Value)>@objSD.Id</option>
+                                                                                }
+                                                                            </select>
+                                                                            <select class="form-control specification inerror" id="ddlMonths" name="ddlMonths_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification(this, '_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 1);" style="width: 47%;display: inline-block;">
+                                                                                <option value="0" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "Month", "select", 0)>Month</option>
+                                                                                @foreach (ScheduleMonth objSM in ScheduleMonth.GetScheduleMonths())
+                                                                                {
+                                                                                    <option value="@objSM.Id" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "Month", "select", objSM.Id)>@objSM.Month</option>
+                                                                                }
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style="text-align:center;"><b>&nbsp;OR&nbsp;</b></td>
+                                                                    <td>
+                                                                        <div class="weekly">
+                                                                            <select class="form-control specification inerror" id="ddlWeekdays" name="ddlWeekdays_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification(this, '_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 2);">
+                                                                                <option value="0" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "Weekday", "select", 0)>Weekday</option>
+                                                                                @foreach (ScheduleWeekday objSW in ScheduleWeekday.GetScheduleWeekdays())
+                                                                                {
+                                                                                    <option value="@objSW.Id" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "Weekday", "select", objSW.Id)>@objSW.Weekday</option>
+                                                                                }
+                                                                            </select>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if (dsSchedules.Tables[0].Rows.Count == 0)
+                                    {
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-0 col-sm-9" style="color: #E4002E;">
+                                                There is not schedule associated with this study.
+                                            </div>                                            
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
                     @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-link" })
                 </div>
@@ -213,9 +287,9 @@
                 <div class="col-sm-9">
                     <div class="checklist teachers">
                         @foreach (System.Data.DataRow dr in Child_Teacher.Child_TeacherGetAll().Tables[0].Rows)
-                    {
-                            <div><label><input type="checkbox" @getTeacherStatus((int)dr["UserId"]) name="TeacherId_@dr["UserId"]" value="@dr["UserId"]" /> @(dr["FullName"])</label></div>
-                    }
+                        {
+                            <div class="checker"><label><input type="checkbox" @getTeacherStatus((int)dr["UserId"]) name="TeacherId_@dr["UserId"]" value="@dr["UserId"]" /> @(dr["FullName"])</label></div>
+                        }
                     </div>
                     <a href="javascript:void(0);" class="btn btn-link" onclick="$('#addTeacher').slideDown();">Add Teacher</a>
                 </div>
@@ -271,97 +345,6 @@
             </div>
             </div>
     </div>
-
-    <div class="scheduleInfo" style="position: absolute; left: 620px;display:none;">
-        <div style="width: 630px; min-height: 510px; margin-left: 15px;">
-            @foreach (Study objStudy in Study.StudyGetAll())
-            {
-                <div id="divStudy@(objStudy.Id)" style="display:none;" class="studyInfo">
-                    @{ DataSet dsSchedules = SurveyApp.DataHelper.ScheduleDeviationGetSchedules(objStudy.Id); }
-                    @foreach (DataRow drSchedule in dsSchedules.Tables[0].Rows)
-                    {
-                        <div id="divSchedule@(drSchedule["ScheduleID"])" class="schedule" style="border-bottom: solid 1px #BDBDBD; padding-bottom: 4px; margin-bottom: 10px;">
-                            <div class="form-group"><label class="control-label col-sm-3"><b>@drSchedule["Title"]</b></label></div>
-                            <div id="divErrors" class="validation-summary-errors" style="display:none;">
-                                <ul></ul>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-3">Active On:</label>
-                                <div class="col-sm-9">
-                                    <div class="radio-inline"><label><input id="ActiveOn" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "ActiveOn", "radio", 1) name="ActiveOn_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onclick="$('#divSpecify_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])').hide();" type="radio" value="1">Enrolment</label></div>
-                                    <div class="radio-inline"><label><input id="ActiveOn" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "ActiveOn", "radio", 2) name="ActiveOn_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onclick="$('#divSpecify_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])').show();" type="radio" value="2">Specify</label></div>
-                                </div>
-                            </div>
-
-                            <div id="divSpecify_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])" class="form-group _panel specifyParent" style="display:none;">
-                                <label class="control-label col-sm-3">Specify Period:</label>
-                                <div class="col-sm-9">
-                                    <div class="specify">
-                                        <table cellpadding="0" cellspacing="0" style="width:100%;">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="monthly">
-                                                            <select class="form-control specification" id="ddlDays" name="ddlDays_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification('_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 1);" style="width: 49%;display: inline-block;">
-                                                                <option value="0" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "Day", "select", 0)>Select Day</option>
-                                                                @foreach (ScheduleDay objSD in ScheduleDay.GetScheduleDays())
-                                                                {
-                                                                    <option value="@objSD.Value" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "Day", "select", objSD.Value)>@objSD.Id</option>
-                                                                }
-                                                            </select>
-                                                            <select class="form-control specification" id="ddlMonths" name="ddlMonths_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification('_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 1);" style="width: 49%;display: inline-block;">
-                                                                <option value="0" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "Month", "select", 0)>Select Month</option>
-                                                                @foreach (ScheduleMonth objSM in ScheduleMonth.GetScheduleMonths())
-                                                                {
-                                                                    <option value="@objSM.Id" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "Month", "select", objSM.Id)>@objSM.Month</option>
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                    <td style="text-align:center;"><b>&nbsp;OR&nbsp;</b></td>
-                                                    <td>
-                                                        <div class="weekly">
-                                                            <select class="form-control specification" id="ddlWeekdays" name="ddlWeekdays_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification('_StudyId_@(objStudy.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 2);">
-                                                                <option value="0" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "Weekday", "select", 0)>Select Weekday</option>
-                                                                @foreach (ScheduleWeekday objSW in ScheduleWeekday.GetScheduleWeekdays())
-                                                                {
-                                                                    <option value="@objSW.Id" @getScheduleStatus(objStudy.Id, (int)drSchedule["ScheduleID"], "Weekday", "select", objSW.Id)>@objSW.Weekday</option>
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-offset-3 col-sm-6">
-                                    <button type="button" class="btn btn-default" onclick="showChildInfo(@(objStudy.Id), @drSchedule["ScheduleId"], 1);">Save Deviation</button>
-                                    <button type="button" class="btn btn-default" onclick="showChildInfo(@(objStudy.Id), @drSchedule["ScheduleId"], 2);">Clear Deviation</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    }
-
-                    @if (dsSchedules.Tables[0].Rows.Count == 0)
-                    {
-                        <div class="form-group">
-                            <div class="col-sm-offset-0 col-sm-9">
-                                There is not schedule associated with this study.
-                            </div>
-                            <div class="col-sm-offset-0 col-sm-9">
-                                <button type="button" class="btn btn-default" onclick="showChildInfo(@(objStudy.Id), 3);">OK</button>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-    </div>
 }
 
 <script type="text/javascript">
@@ -373,8 +356,6 @@
         $(".checklist").find("label.study").each(function (index, obj) {
             setDeviation(obj);
         });
-
-        $("#frmAddChild").height($(".childInfo").height());        
     });
 
     function resetErrorStatus(elem) {
@@ -388,19 +369,19 @@
 
     function RegisterModel() {
         this.UserName;
-        this.Password;        
+        this.Password;
         this.FullName;
-    }    
+    }
 
     function addParentTeacher(type) {
         var div = type == "Parent" ? "#addParent" : "#addTeacher";
         var msg = $(div).find(".msg");
-        
+
         var txtUserName = $(div).find(".txtUserName");
         var txtPassword = $(div).find(".txtPassword");
         var txtConfirmPassword = $(div).find(".txtConfirmPassword");
         var txtFullName = $(div).find(".txtFullName");
-        
+
 
         var isError = false;
         if (txtUserName.val() == "") {
@@ -431,7 +412,7 @@
             txtPassword.addClass("inerror");
             txtConfirmPassword.addClass("inerror").focus();
             msg.removeClass("green").addClass("red");
-            msg.html("Password and Confirm Password should match.");            
+            msg.html("Password and Confirm Password should match.");
             return false;
         }
 
@@ -536,91 +517,107 @@
     function setDeviation(elem) {
         var isChecked = $(elem).find("input[type=checkbox]")[0].checked;
         if (isChecked == true) {
-            $(elem).siblings("a.deviation").fadeIn();
+            $(elem).siblings("label.deviation").fadeIn();
+            
+            $(elem).siblings(".studyInfo").find("input[type=radio]").each(function (index, obj) {
+                if ($(obj)[0].checked == true) {
+                    $(elem).siblings("label").find("input[type=checkbox]")[0].checked = true;
+                    $(elem).siblings(".studyInfo").slideDown();
+
+                    $(obj).click();
+
+                    var ddlDays = $(obj).closest("div.schedule").find(".specifyParent").find(".specify").find("#ddlDays");
+                    var ddlMonths = $(obj).closest("div.schedule").find(".specifyParent").find(".specify").find("#ddlMonths");
+                    var ddlWeekdays = $(obj).closest("div.schedule").find(".specifyParent").find(".specify").find("#ddlWeekdays");
+
+                    if (ddlDays.val() != "0") {
+                        ddlDays.removeClass("inerror");
+                    }
+                    if (ddlMonths.val() != "0") {
+                        ddlMonths.removeClass("inerror");
+                    }
+                    if (ddlWeekdays.val() != "0") {
+                        ddlWeekdays.removeClass("inerror");
+                    }
+
+                    if (ddlDays.val() != "0" && ddlMonths.val() != "0") {
+                        ddlWeekdays.val(0);
+                        ddlWeekdays.removeClass("inerror");
+                    }
+                    else {
+                        if (ddlWeekdays.val() != "0") {
+                            ddlDays.val(0);
+                            ddlDays.removeClass("inerror");
+
+                            ddlMonths.val(0);
+                            ddlMonths.removeClass("inerror");
+                        }
+                    }
+                }
+            });
         }
         else {
-            $(elem).siblings("a.deviation").fadeOut();
+            $(elem).siblings("label").find("input[type=checkbox]")[0].checked = false;
+            $(elem).siblings("label.deviation").fadeOut();
         }
     }
 
-    function showScheduleInfo(id) {
-        $(".childInfo").animate({ 'left': -1000 }, 500);
-        $(".scheduleInfo").show();
-        $(".scheduleInfo").animate({ 'left': 0 }, 500);
+    function showScheduleInfo(elem, id) {
+        var isChecked = false;
+        isChecked = $(elem).find("input[type=checkbox]")[0].checked;
+        if(isChecked == true){
+            $(elem).siblings("#divStudy" + id).slideDown();
 
-        $(".scheduleInfo").find(".studyInfo").hide();
-        $(".scheduleInfo").find("#divStudy" + id).show();
-        
-        $(".scheduleInfo").find("#divStudy" + id).find(".schedule").each(function (index, obj) {
-            $(obj).find("input[type=radio]").each(function (indexR, objR) {
-                if ($(objR).attr("checked") == "checked" && $(objR).val() == "2") {
-                    $(obj).find(".specifyParent").show();
-                }
+            $(elem).siblings("#divStudy" + id).find(".schedule").each(function (index, obj) {
+                $(obj).find("input[type=radio]").each(function (indexR, objR) {
+                    if ($(objR).attr("checked") == "checked" && $(objR).val() == "2") {
+                        $(obj).find(".specifyParent").show();
+                    }
+                });
             });
-        });
+        }
+        else {            
+            showChildInfo(id, 2);
+            $(elem).siblings("#divStudy" + id).slideUp();
+        }
     }
 
-    function showChildInfo(id, scheduleId, type) {
+    function showChildInfo(id, type) {
         var divStudy = $("#divStudy" + id);
-        var divSchedule = divStudy.find("#divSchedule" + scheduleId);
-        var isActiveOn = false, activeOn;
-
-        divSchedule.find("#divErrors").hide();
-        divSchedule.find("#divErrors ul").empty();
-
-        if(type == 1){
-            divSchedule.find("input[type=radio]").each(function(index, obj){                
-                if($(obj)[0].checked == true){
-                    isActiveOn = true;                    
-                    activeOn = $(obj).val();
-                    return;
-                }
+        if (type == 2) {
+            divStudy.find(".schedule").each(function (index, obj) {
+                $(obj).find("input[type=radio]").removeAttr("checked");
+                $(obj).find(".specification").val(0);
+                $(obj).find(".specifyParent").hide();
             });
-
-            if(isActiveOn == false){
-                divSchedule.find("#divErrors ul").append("<li>Please select activation type</li>");
-            }
-
-            if(activeOn == 2){
-                var day = divSchedule.find("#ddlDays").val();
-                var month = divSchedule.find("#ddlMonths").val();
-                var weekday = divSchedule.find("#ddlWeekdays").val();
-
-                if(day == 0 && month == 0 && weekday == 0){
-                    divSchedule.find("#divErrors ul").append("<li>Please select period</li>");
-                }
-                if(day != 0 && month == 0){
-                    divSchedule.find("#divErrors ul").append("<li>Please select month</li>");
-                }
-                if(day == 0 && month != 0){
-                    divSchedule.find("#divErrors ul").append("<li>Please select day</li>");
-                }
-            }
-            
-            if(divSchedule.find("#divErrors ul li").length > 0){
-                divSchedule.find("#divErrors").show();
-                return false;
-            }
         }
-
-        $(".scheduleInfo").animate({ 'left': 620 }, 500, function () {
-            $(".scheduleInfo").fadeOut();
-            if (type == 2) {                
-                divSchedule.find("input[type=radio]").removeAttr("checked");
-                divSchedule.find(".specification").val(0);
-                divSchedule.find(".specifyParent").hide();
-            }
-        });
-        $(".childInfo").animate({ 'left': 0 }, 500);
     }
 
-    function setPeriodSpecification(id, type) {
+    function setPeriodSpecification(elem, id, type) {
+        if ($(elem).val() == "0") {
+            $(elem).addClass("inerror");
+        }
+        else {
+            $(elem).removeClass("inerror");
+        }
+
         if (type == 1) {
             $("#divSpecify" + id).find("#ddlWeekdays").val("0");
+            $("#divSpecify" + id).find("#ddlWeekdays").removeClass("inerror");
+
+            if ($("#divSpecify" + id).find("#ddlDays").val() == "0") {
+                $("#divSpecify" + id).find("#ddlDays").addClass("inerror");
+            }
+            if ($("#divSpecify" + id).find("#ddlMonths").val() == "0") {
+                $("#divSpecify" + id).find("#ddlMonths").addClass("inerror");
+            }
         }
         if (type == 2) {
             $("#divSpecify" + id).find("#ddlDays").val("0");
             $("#divSpecify" + id).find("#ddlMonths").val("0");
+
+            $("#divSpecify" + id).find("#ddlDays").removeClass("inerror");
+            $("#divSpecify" + id).find("#ddlMonths").removeClass("inerror");
         }
     }
 </script>
