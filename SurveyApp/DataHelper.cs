@@ -73,6 +73,23 @@ namespace SurveyApp
             cmd.CommandText = "Question_GetbySurveyID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet QuestionGetFilledAnswers(int userId, int SurveyID, int childid)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@SurveyID", SqlDbType.Int);
+            cmd.Parameters["@SurveyID"].Value = SurveyID;
+
+            cmd.Parameters.Add("@UserId", SqlDbType.Int);
+            cmd.Parameters["@UserId"].Value = userId;
+
+            cmd.Parameters.Add("@childID", SqlDbType.Int);
+            cmd.Parameters["@childID"].Value = Convert.ToInt32(childid);
+
+            cmd.CommandText = "Question_GetFilledAnswers";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }        
         public static DataSet SurveyGetByID(int SurveyID)
         {
             SqlCommand cmd = new SqlCommand();
