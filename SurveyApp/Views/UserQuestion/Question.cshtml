@@ -174,8 +174,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            setCompletionDiv();
-
             var score;
             $("._datepicker").datepicker(
                 {
@@ -356,6 +354,8 @@
                         $("#hdn" + $(this).attr("qid")).trigger('change');
                     }
                 })});
+
+            setCompletionDiv();
 });
 
 
@@ -447,6 +447,7 @@
         function setCompletionDiv(){
             var noQ = 0, nofQ = 0;
             $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
+            //$(".questions").find("input[type=hidden]").each(function(index, obj){
                 if($(obj).val() != ""){
                     nofQ++;
                 }
