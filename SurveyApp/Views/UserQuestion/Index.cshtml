@@ -12,9 +12,9 @@
         float: none;
         margin: 0 auto;
     }
+    .text-left{text-align:left;padding-left:7px;}
 </style>
-
-
+ 
 @section featured {
     <section class="featured">
         <div class="content-wrapper">
@@ -35,7 +35,15 @@
 
         foreach (System.Data.DataRow drch in dschild.Tables[0].Rows)
         {
-            <div class="panel panel-default">
+            
+            var url = Url.Action("Question", "UserQuestion", new { surveyID = "__", ChildId = drch["ID"].ToString(), ChildName = drch["Name"].ToString() });
+            DateTime today = DateTime.Today;
+            DateTime dob = (DateTime)drch["DOB"];
+            int age = today.Year - dob.Year;
+
+            if (dob > today.AddYears(-age)){ age--; }
+ 
+                        <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#@drch["ID"].ToString()">
@@ -44,17 +52,65 @@
                     </h4>
                 </div>
                 <div id="@drch["ID"].ToString()" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
-                        {
-                            <a href="@Url.Action("Question", "UserQuestion", new { surveyID = dr["ID"].ToString(), ChildId = drch["ID"].ToString(), ChildName = drch["Name"].ToString() })" class="list-group-item">
-                                <strong>Preview:</strong> @dr["Title"].ToString()
-                            </a>
+            <div class="panel-body">
+                
+@if (roles[0] != "Teacher") {
+<h4 class="col-md-12">Parent Intake Form</h4>
+<a href="@url.Replace("__","16")" class="btn btn-default col-md-3 text-left">General Information</a>
+<a href="@url.Replace("__","17")" class="btn btn-default col-md-2 text-left">Pregnancy</a>
+<a href="@url.Replace("__","18")" class="btn btn-default col-md-3 text-left">Development and Education</a>
+<a href="@url.Replace("__","19")" class="btn btn-default col-md-2 text-left">Medical History</a>
+<a href="@url.Replace("__","20")" class="btn btn-default col-md-2 text-left">Medication History</a>
+<h4 class="col-md-12">Parent Follow-Up</h4>
+<a href="@url.Replace("__","21")" class="btn btn-default col-md-4 text-left">Medication</a>
+<a href="@url.Replace("__","22")" class="btn btn-default col-md-4 text-left">Part 2</a>
+<a href="@url.Replace("__","23")" class="btn btn-default col-md-4 text-left">Additional Comments</a>
+}
+else { 
+<h4 class="col-md-12">Weekly Scheduled Questionier for Teacher</h4>
+<a href="@url.Replace("__","24")" class="btn btn-default col-md-12 text-left">Language and Communication</a>
+<a href="@url.Replace("__","25")" class="btn btn-default col-md-12 text-left">Behaviors</a>
+<a href="@url.Replace("__","26")" class="btn btn-default col-md-12 text-left">Daily Living Skills/Independence</a>
+<a href="@url.Replace("__","27")" class="btn btn-default col-md-12 text-left">Academic Progress Rating Scales</a>
+}
+<h4 class="col-md-12">Quarterly Scheduled Surveys</h4>
+<a href="@url.Replace("__","1")" class="btn btn-default col-md-12 text-left">Abbreviated sensory profile </a>
+<a href="@url.Replace("__","2")" class="btn btn-default col-md-12 text-left">Caregiver Strain Questionnaire</a>
+<a href="@url.Replace("__","3")" class="btn btn-default col-md-12 text-left">GI Severity Index </a>
+<a href="@url.Replace("__","4")" class="btn btn-default col-md-12 text-left">Aberrant Behavior Checklist</a>
+<a href="@url.Replace("__","5")" class="btn btn-default col-md-12 text-left">Social Responsiveness Scale</a>
+@if (age <= 4 && age >= 2) { 
+<a href="@url.Replace("__","6")" class="btn btn-default col-md-12 text-left">Peds quality of life for 2yrs-4yrs</a>
+}
+else if (age <= 7 && age >= 5) { 
+<a href="@url.Replace("__","7")" class="btn btn-default col-md-12 text-left">Peds quality of life for 5yrs-7yrs</a>
+ }
+else if (age <= 12 && age >= 8) { 
+<a href="@url.Replace("__","8")" class="btn btn-default col-md-12 text-left">Peds quality of life for 8yrs -12yrs</a>
+    }
+else if (age <= 18 && age >= 13) { 
+<a href="@url.Replace("__","9")" class="btn btn-default col-md-12 text-left">Peds quality of life for 13yrs -18yrs</a>
+}
+<a href="@url.Replace("__","10")" class="btn btn-default col-md-12 text-left">Short language profile </a>
+<a href="@url.Replace("__","11")" class="btn btn-default col-md-12 text-left">Social communication Questionnaire – life time </a>
+<a href="@url.Replace("__","12")" class="btn btn-default col-md-12 text-left">Insomnia Severity Index</a>
+<a href="@url.Replace("__","13")" class="btn btn-default col-md-12 text-left">Connor-Davidson Resilience Scale 10</a>
+<a href="@url.Replace("__","14")" class="btn btn-default col-md-12 text-left">Family Empowerment Scale</a>
+                
 
+                <h4 class="col-md-12">Others</h4>
+<a href="@url.Replace("__","15")" class="btn btn-default col-md-4 text-left">Feedback Questionnaire</a>
+<a href="@url.Replace("__","28")" class="btn btn-default col-md-4 text-left">Adverse Reaction</a>
+<a href="@url.Replace("__","29")" class="btn btn-default col-md-4 text-left">Life Events</a>
+                
+            
+                                </div>
+            
+            
+            
+            
 
-                        }
-
-                    </div>
+ 
                 </div>
             </div>
         }
