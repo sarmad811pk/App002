@@ -15,6 +15,11 @@ namespace SurveyApp.Controllers
     {
         public ActionResult Index()
         {
+            if (!Request.IsAuthenticated)
+            {
+                WebSecurity.Logout();
+                return RedirectToAction("Login", "Account");
+            }
             try
             {
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);

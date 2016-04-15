@@ -34,18 +34,17 @@
     DataSet dsQuestionsFilled;
     public string getPercentCompletion(int SurveyId, int childId)
     {
-        decimal totalQuestions = 1, filledQuestions = 0;
+        string percentage = "0%";
         if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
         {
             DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + SurveyId + " AND ChildID = " + childId);
             foreach (DataRow dr in drQuestions)
             {
-                filledQuestions = dr["FilledQuestions"] != null ? Convert.ToDecimal(dr["FilledQuestions"]) : 0;
-                totalQuestions = dr["TotalQuestions"] != null ? Convert.ToDecimal(dr["TotalQuestions"]) : 0;
+                percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;                
             }
         }
 
-        return Convert.ToInt32((filledQuestions / totalQuestions) * 100).ToString() + "%";
+        return percentage;
     }
 }
 <div class="panel-group">
