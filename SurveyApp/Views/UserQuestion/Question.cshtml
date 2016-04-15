@@ -501,9 +501,19 @@
 
 
         function savequestions(qid, ansid, s, cid, SurID, status) {
-          
+            var noQ = 0, nofQ = 0;
+            $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
+                //$(".questions").find("input[type=hidden]").each(function(index, obj){
+                if($(obj).val() != ""){
+                    nofQ++;
+                }
+                noQ++;
+            });
+
+            var prcnt = (Math.round((nofQ / noQ) * 100).toFixed(0)) + "%";
+
             var url = "/UserQuestion/SaveUserQuestion"
-            $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status }, function (data) {
+            $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt }, function (data) {
 
             });
         }

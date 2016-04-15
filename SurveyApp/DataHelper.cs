@@ -233,7 +233,7 @@ namespace SurveyApp
             cmd.CommandText = "Child_GetAll";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static int SaveuserQuestions(int UserID, string  questionid, string answerid, string score, string childid, string SurveyID, string status)
+        public static int SaveuserQuestions(int UserID, string  questionid, string answerid, string score, string childid, string SurveyID, string status, string percentage)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -266,6 +266,9 @@ namespace SurveyApp
        
             cmd.Parameters.Add("@Pstatus", SqlDbType.NVarChar);
             if (status != "") { cmd.Parameters["@Pstatus"].Value = status; } else { cmd.Parameters["@Pstatus"].Value=DBNull.Value; }
+
+            cmd.Parameters.Add("@Percentage", SqlDbType.NVarChar);
+            if (percentage != "") { cmd.Parameters["@Percentage"].Value = percentage; } else { cmd.Parameters["@Percentage"].Value = DBNull.Value; }
 
             cmd.CommandText = "SaveUserQuestions";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);
