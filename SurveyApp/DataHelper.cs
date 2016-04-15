@@ -76,10 +76,10 @@ namespace SurveyApp
         public static DataSet QuestionGetFilledAnswers(int userId)
         {
             SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;            
+            cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@UserId", SqlDbType.Int);
-            cmd.Parameters["@UserId"].Value = userId;            
+            cmd.Parameters["@UserId"].Value = userId;
 
             cmd.CommandText = "Question_GetFilledAnswers";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
