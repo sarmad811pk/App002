@@ -36,7 +36,7 @@
         }
         else
         {
-            if (weekday != null && Convert.ToInt32(weekday) > 0)
+            if (weekday != null && weekday != DBNull.Value && Convert.ToInt32(weekday) > 0)
             {
                 return "Activates every " + SurveyApp.Models.ScheduleWeekday.getWeekdayName(Convert.ToInt32(weekday));
             }

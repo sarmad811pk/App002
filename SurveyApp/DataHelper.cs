@@ -310,6 +310,18 @@ namespace SurveyApp
             cmd.CommandText = "ScheduleDeviation_GetSchedules";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        
+
+        public static DataSet getChildrenSchedulesByUserId(int userId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.CommandText = "User_GetChildSchedules";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
     }
 }

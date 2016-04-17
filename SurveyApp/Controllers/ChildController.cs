@@ -101,7 +101,14 @@ namespace SurveyApp.Controllers
                     objChild.ParentId = childModel.ParentId;
                     objChild.SchoolId = childModel.SchoolId;
                     objChild.StatusId = childModel.StatusId;
-                    
+                    if(childModel.StatusId == 1)
+                    {
+                        objChild.EnrollmentDate = DateTime.Now;
+                    }
+                    else { 
+                        objChild.EnrollmentDate = null;
+                    }
+
                     if (childModel.Id <= 0)
                     {
                         cContext.Children.Add(objChild);
