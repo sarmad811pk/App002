@@ -57,34 +57,36 @@
                 DateTime endDate = DateTime.MinValue;
                 int availableUntil = drSchedule["AvailableUntil"] != DBNull.Value ? Convert.ToInt32(drSchedule["AvailableUntil"]) : -1;
                 int daysToRepeat = drSchedule["DaysToRepeat"] != DBNull.Value ? Convert.ToInt32(drSchedule["DaysToRepeat"]) : -1;
+                DateTime specificDate = drSchedule["Day"] != DBNull.Value && drSchedule["Month"] != DBNull.Value ? new DateTime(DateTime.Now.Year, (int)drSchedule["Month"], (int)drSchedule["Day"]) : DateTime.MinValue;
 
-                if (activeOn == 1)
+
+
+                if(availableUntil > 0)
                 {
-                    if(availableUntil > 0)
+                    if (enrollmentDate != DateTime.MinValue)
                     {
-                        if (enrollmentDate != DateTime.MinValue)
-                        {
-                            endDate = enrollmentDate.AddDays(availableUntil);
-                            schInfo = "&nbsp;&nbsp;<span class='schedule "+ (endDate < DateTime.Now ? "passed" : "due") +"'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span>";
+                        endDate = (activeOn == 1 ? enrollmentDate : specificDate).AddDays(availableUntil);
+                        schInfo = "&nbsp;&nbsp;<span class='schedule "+ (endDate < DateTime.Now ? "passed" : "due") +"'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span>";
 
-                            //if schedule end date has already passed
-                            if (endDate < DateTime.Now)
+                        //if schedule end date has already passed
+                        if (endDate < DateTime.Now)
+                        {
+                            double diff = Convert.ToInt32((DateTime.Now - endDate).TotalDays);
+                            if (daysToRepeat > 0 && diff > 0)
                             {
-                                double diff = Convert.ToInt32((DateTime.Now - endDate).TotalDays);
-                                if (daysToRepeat > 0 && diff > 0)
+                                int length = Convert.ToInt32(Math.Ceiling(diff / daysToRepeat));
+                                DateTime dt = (activeOn == 1 ? enrollmentDate : specificDate);
+                                for (int i = 0; i < length; i++)
                                 {
-                                    int length = Convert.ToInt32(Math.Ceiling(diff / daysToRepeat));
-                                    for (int i = 0; i < length; i++)
-                                    {
-                                        DateTime dt = enrollmentDate.AddDays(daysToRepeat);
-                                        string dtPeroid = dt.AddDays(availableUntil).ToString("MMMM dd, y");
-                                        schInfo = "&nbsp;&nbsp;&nbsp;&nbsp;" + schInfo + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='schedule'>" + dtPeroid + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span>";
-                                    }
+                                    dt = dt.AddDays(daysToRepeat);
+                                    string dtPeroid = dt.AddDays(availableUntil).ToString("MMMM dd, y");
+                                    schInfo = "&nbsp;&nbsp;&nbsp;&nbsp;" + schInfo + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='schedule'>" + dtPeroid + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span>";
                                 }
                             }
                         }
                     }
                 }
+
 
             }
         }
