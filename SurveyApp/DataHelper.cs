@@ -73,6 +73,17 @@ namespace SurveyApp
             cmd.CommandText = "Question_GetbySurveyID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet QuestionGetFilledAnswers(int userId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserId", SqlDbType.Int);
+            cmd.Parameters["@UserId"].Value = userId;
+
+            cmd.CommandText = "Question_GetFilledAnswers";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }        
         public static DataSet SurveyGetByID(int SurveyID)
         {
             SqlCommand cmd = new SqlCommand();
@@ -222,7 +233,7 @@ namespace SurveyApp
             cmd.CommandText = "Child_GetAll";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static int SaveuserQuestions(int UserID, string  questionid, string answerid, string score, string childid, string SurveyID, string status)
+        public static int SaveuserQuestions(int UserID, string  questionid, string answerid, string score, string childid, string SurveyID, string status, string percentage)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -255,6 +266,9 @@ namespace SurveyApp
        
             cmd.Parameters.Add("@Pstatus", SqlDbType.NVarChar);
             if (status != "") { cmd.Parameters["@Pstatus"].Value = status; } else { cmd.Parameters["@Pstatus"].Value=DBNull.Value; }
+
+            cmd.Parameters.Add("@Percentage", SqlDbType.NVarChar);
+            if (percentage != "") { cmd.Parameters["@Percentage"].Value = percentage; } else { cmd.Parameters["@Percentage"].Value = DBNull.Value; }
 
             cmd.CommandText = "SaveUserQuestions";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);
@@ -296,6 +310,18 @@ namespace SurveyApp
             cmd.CommandText = "ScheduleDeviation_GetSchedules";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        
+
+        public static DataSet getChildrenSchedulesByUserId(int userId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.CommandText = "User_GetChildSchedules";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
     }
 }

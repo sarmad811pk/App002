@@ -6,7 +6,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using WebMatrix.WebData;
-using System.Drawing;
 
 
 namespace SurveyApp.Controllers
@@ -16,32 +15,28 @@ namespace SurveyApp.Controllers
     {
         public ActionResult Index()
         {
-            try
-            {
-                string[] roles = Roles.GetRolesForUser(User.Identity.Name);
-
-                if (roles[0] == "Parent" || roles[0] == "Teacher")
-                {
-                    return RedirectToAction("Index", "UserQuestion");
-                }
-
-            }
-            catch (Exception ex)
+            if (!Request.IsAuthenticated)
             {
                 WebSecurity.Logout();
                 return RedirectToAction("Login", "Account");
             }
+            try
+            {
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
 
+            if (roles[0] == "Parent" || roles[0] == "Teacher")
+        {
+                return RedirectToAction("Index", "UserQuestion");
+        }
 
-
-         
+            }
+            catch(Exception ex){
+                WebSecurity.Logout(); 
+                return RedirectToAction("Login", "Account");
+            }
 
             return View();
         }
-
-      
-       
-
 
         
         public ActionResult UserQuestion()

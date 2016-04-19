@@ -32,6 +32,8 @@ namespace SurveyApp.Models
 
         [Required(ErrorMessage = "Please select status of enrollment", AllowEmptyStrings = false)]
         public int StatusId { get; set; }
+
+        public DateTime? EnrollmentDate { get; set; }
         
     }
 

@@ -93,6 +93,22 @@ namespace SurveyApp.Controllers
                     objSchedule.ReminderFrequency = mSchedule.ReminderFrequency;
                     objSchedule.Title = mSchedule.Title;
                     objSchedule.Weekday = mSchedule.Weekday.HasValue == true ? mSchedule.Weekday.Value : 0;
+                    if(mSchedule.ActiveOn == 1)
+                    {
+                        objSchedule.Day = null;
+                        objSchedule.Month = null;
+                        objSchedule.Weekday = null;
+                    }
+                    else
+                    {
+                        objSchedule.Day = objSchedule.Day == 0 ? null : objSchedule.Day;
+                        objSchedule.Month = objSchedule.Month == 0 ? null : objSchedule.Month;
+                        objSchedule.Weekday = objSchedule.Weekday == 0 ? null : objSchedule.Weekday;
+                    }
+                    if(mSchedule.Frequency == 1)
+                    {
+                        objSchedule.DaysToRepeat = null;
+                    }
 
                     if (mSchedule.Id <= 0)
                     {

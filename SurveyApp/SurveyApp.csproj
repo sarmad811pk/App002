@@ -313,8 +313,6 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Images\at3logo.png" />
     <Content Include="Images\back-sprites.png" />
-    <None Include="Properties\PublishProfiles\ucsfebit - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\ucsfebit - Web Deploy.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
@@ -333,9 +331,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\pwstrength.js" />
     <Content Include="Scripts\zxcvbn.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

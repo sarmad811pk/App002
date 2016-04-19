@@ -18,6 +18,7 @@
     <script src="~/Scripts/custom.js"></script>
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/smoothscroll.js"></script>
     <style>
         .form-group { margin-bottom: 5px; }
         .btn-link  { color: #23527c; text-decoration: underline; background-color: transparent; }
@@ -28,7 +29,7 @@
             $(document).ajaxStop(function () { $(".loading").hide(); });
         });        
     </script>
-    @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "");    
+    @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")
 </head>
 <body>
     <header>
@@ -63,7 +64,7 @@
             </div>
         }
        
-    <div class="col-sm-10 rightsection" @(!Roles.IsUserInRole("Administrator")?"style='margin:0px auto 0px aut;'":"")>
+    <div class="col-sm-10 rightsection @(!Roles.IsUserInRole("Administrator") ? " col-sm-offset-1 " : "")" >
             @RenderSection("featured", required: false)
             <section class="content-wrapper main-content clear-fix">
 
@@ -76,7 +77,7 @@
     </div>
     <footer class="col-sm-12">
         <div class="content-wrapper" style="padding:10px;"> 
-                <p>&copy; @DateTime.Now.Year - AT<sup>3</sup> Autism Translating To Treatments</p>
+                <p>&copy; @DateTime.Now.Year - eBit (Evidence Based Intervention and Treatment)</p>
   
         </div>
     </footer>

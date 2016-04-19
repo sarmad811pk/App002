@@ -139,7 +139,7 @@
                     <div class="checklist">
                         @foreach (Study std in Study.StudyGetAll())
                         {
-                            <div><label><input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
+                            <div class="checker"><label><input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
                         }
                         @*@Html.ListBoxFor(m => m.stds, new MultiSelectList(Study.StudyGetAll(), "Id", "Name"))*@
                     </div>
