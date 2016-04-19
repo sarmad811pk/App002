@@ -324,38 +324,38 @@
                 var itemcount=parseInt($(this).attr("length"));
                 defaultvalue = (defaultvalue/itemcount) * 700;
                 $(this).slider({
-                    range: "min",
-                    value: 0,
-                    min: 0,
-                    max: 700,
+     range: "min",
+      value: 0,
+      min: 0,
+      max: 700,
                     value:defaultvalue,
-                    slide: function( event, ui ) {
-                        var items=parseInt($(this).attr("length"));
-                        var qid=$(this).attr("qid");
+      slide: function( event, ui ) {
+          var items=parseInt($(this).attr("length"));
+          var qid=$(this).attr("qid");
                         var lblvalue='';
                         var lblscore=0;
-                        $('label[for^="q'+ qid +'_"]').css("color","#cccccc");
-                        for(var i=0;i<=items;i++){
-                            var step=700/(items+1);
-                            if(ui.value <= (i+1) * step && ui.value > (i) * step){
-                                $('label[for="q'+ qid +'_'+i+'"]').css("color","#000000");
+          $('label[for^="q'+ qid +'_"]').css("color","#cccccc");
+          for(var i=0;i<=items;i++){
+              var step=700/(items+1);
+              if(ui.value <= (i+1) * step && ui.value > (i) * step){
+                  $('label[for="q'+ qid +'_'+i+'"]').css("color","#000000");
                                 lblvalue = $('label[for="q'+ qid +'_'+i+'"]').text();
                                 lblscore =  $('label[for="q'+ qid +'_'+i+'"]').attr("data-score");
-                            }
-                        }
+              }
+          }
 
-                        if(ui.value==0){
-                            $('label[for^="q'+ qid +'_"]').css("color","#333333");
-                        }
-                        else{
+          if(ui.value==0){
+            $('label[for^="q'+ qid +'_"]').css("color","#333333");
+          }
+          else{
                             score= lblscore;
                             $("#hdn" + $(this).attr("qid")).val("|"+lblvalue);
-                        }
+          }
                     },
                     stop: function(event,ui){
           
                         $("#hdn" + $(this).attr("qid")).trigger('change');
-                    }
+      }
                 })});
 });
 
@@ -511,7 +511,7 @@
             });
 
             var prcnt = (Math.round((nofQ / noQ) * 100).toFixed(0)) + "%";
-
+          
             var url = "/UserQuestion/SaveUserQuestion"
             $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt }, function (data) {
 
