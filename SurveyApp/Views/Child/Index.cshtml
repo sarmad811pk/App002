@@ -6,10 +6,28 @@
     DataSet dsChildren = SurveyApp.DataHelper.ChildGetAll();
 }
 
+@functions{
+    public string getStatusDescription(int statusId) {
+        switch (statusId)
+        {
+            case 1:
+                return "Enrolled";
+            case 2:
+                return "Lost Followup";
+            case 3:
+                return "With Drew Consent";
+            case 4:
+                return "No Longer at School";
+            default:
+                return "Not Enrolled";
+        }
+    }
+}
+
 <script type="text/javascript">
     $(function () {
         $("#tblChildren").DataTable();
-    });
+        });
 </script>
 <div>
     <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Child Management</h2>
@@ -45,7 +63,7 @@
                     <td>@dr["Parent"]</td>
                     <td>@dr["Teacher"]</td>
                     <td>@dr["Study"]</td>
-                    <td class="text-success">@dr["StatusId"]</td>
+                    <td class="text-success">@getStatusDescription((int)dr["StatusId"])</td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"></a></td>
                 </tr>
             }
