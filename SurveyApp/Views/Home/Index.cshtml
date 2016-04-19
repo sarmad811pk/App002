@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -7,7 +8,7 @@
     <section class="featured">
         <div class="content-wrapper">
             <hgroup class="title">
-                <h2>Dashboad</h2> 
+                <h2>Admin Dashboad</h2> 
             </hgroup>
             <p style="font-size:16px;"> 
                 Design is pending yet!
@@ -15,5 +16,1130 @@
         </div>
     </section>
 }
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script type="text/javascript">
+    $(function () {
+       //-----------------------------------------ABC VS SRS Line Chart----------------------------------------
+        $('#ABCSRScontainer').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'ABC vs SRS'
+        },
+        subtitle: {
+            text: 'Parent/Teacher Quaterly Trend'
+        },
+        xAxis: {
+            categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016'],
 
- 
+            plotLines: [{
+                color: '#93CDDD',
+                width: 2,
+                value: 1,
+                dashStyle: 'LongDash'
+            }]
+
+            ,
+
+        },
+       
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'Parents ABC Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [65, 69, 69, 70, 72, 74, 75, ],
+            color: '#7CB5EC'
+
+        }, {
+        name: 'Teachers ABC Scores',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [62, 65, 66, 66, 72, 72, 70, ],
+            color: '#434348'
+
+        }, {
+        name: 'Parents SRS Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [42, 45, 46, 46, 42, 42, 45, ],
+            color: '#7CB5EC'
+
+        }, {
+            name: 'Teachers SRS Scores',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [40, 40, 42, 43, 41, 40, 40, ],
+            color: '#434348'
+        }]
+        });
+        //-----------------------------------------End----------------------------------------
+
+        //-----------------------------------------ABC Sub Categories-Parents----------------------------------------
+        $('#ABCSubCategoriesParent').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Aberrant  Behaviour Checklist'
+            },
+            subtitle: {
+                text: 'Parent Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Irritability/Agitation',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'Letargy, Social Withdrawl',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#67F97C'
+
+            }, {
+                name: 'Sterotypic Behavior',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [42, 45, 46, 48, 42, 42, 50, ],
+                color: '#FF9E4F'
+
+            }, {
+                name: 'Hyperactivity/Noncompliance',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 42, 49, 41, 40, 50, ],
+                color: '#8778EC'
+            }
+
+            , {
+                name: 'Inappropriate Sppech',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 22, 49, 10, 20, 30, ],
+                color: '#434348'
+            }],
+
+            
+
+
+        });
+        //-----------------------------------------End----------------------------------------
+
+        //-----------------------------------------ABC Sub Categories-Teacher----------------------------------------
+        $('#ABCSubCategoryTeacher').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Aberrant  Behaviour Checklist'
+            },
+            subtitle: {
+                text: 'Teacher Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Irritability/Agitation',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'Letargy, Social Withdrawl',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#67F97C'
+
+            }, {
+                name: 'Sterotypic Behavior',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [42, 45, 46, 48, 42, 42, 50, ],
+                color: '#FF9E4F'
+
+            }, {
+                name: 'Hyperactivity/Noncompliance',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 42, 49, 41, 40, 50, ],
+                color: '#8778EC'
+            }
+
+            , {
+                name: 'Inappropriate Sppech',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 22, 49, 10, 20, 30, ],
+                color: '#434348'
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+        //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
+        $('#SRSSubScale').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Social Responsivness Scale(SRS) sub scale'
+            },
+            subtitle: {
+                text: 'Parently Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Social Awareness',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'Social Cognition',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#67F97C'
+
+            }, {
+                name: 'Social Communication',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [42, 45, 46, 48, 42, 42, 50, ],
+                color: '#FF9E4F'
+
+            }, {
+                name: 'Social Motivation',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 42, 49, 41, 40, 50, ],
+                color: '#8778EC'
+            }
+
+            , {
+                name: 'Restricted Interests and Repetitive Bahaviour',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 22, 49, 10, 20, 30, ],
+                color: '#434348'
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+        //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
+        $('#SRSSubScaleTeacher').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Social Responsivness Scale(SRS) sub scales'
+            },
+            subtitle: {
+                text: 'Teacher Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Social Awareness',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'Social Cognition',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#67F97C'
+
+            }, {
+                name: 'Social Communication',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [42, 45, 46, 48, 42, 42, 50, ],
+                color: '#FF9E4F'
+
+            }, {
+                name: 'Social Motivation',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 42, 49, 41, 40, 50, ],
+                color: '#8778EC'
+            }
+
+            , {
+                name: 'Restricted Interests and Repetitive Bahaviour',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [40, 40, 22, 49, 10, 20, 30, ],
+                color: '#434348'
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+
+
+        //-----------------------------------------Short Language Profile----------------------------------------
+        $('#ShortLanguageProfile').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Short Language Profile'
+            },
+            subtitle: {
+                text: 'Parent/Teacher Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Parent SPL',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'Teacher SPL',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#434348'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+
+        //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
+        $('#AbbreviatedSensoryProfile').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Abbreviated Sensory Profile- Parent & Teacher'
+            },
+            subtitle: {
+                text: 'Parent/Teacher Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Parent SPL',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'Teacher SPL',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#434348'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+        
+
+        //-----------------------------------------PedsQL-Parent----------------------------------------
+        $('#PedsQLParent').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'PedsQL-Parent Report for Children(8-12)'
+            },
+            subtitle: {
+                text: 'Parent Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Scores',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+
+
+        //-----------------------------------------PedsQL Parent Report----------------------------------------
+        $('#PedsQLParentReport').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'PedsQL Parent Report'
+            },
+            subtitle: {
+                text: 'Parent Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'PedsQL(8-12)',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'PedsQL(13-18)',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#434348'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+        
+
+
+
+        //-----------------------------------------CaregiverStrainQuesionaire----------------------------------------
+        $('#CaregiverStrainQuesionaire').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Caregiver Strain Quesionaire'
+            },
+            subtitle: {
+                text: 'Parent Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Scores',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+        
+
+
+
+        //-----------------------------------------CaregiverStrainQuesionaire----------------------------------------
+        $('#FamilyEmpowementScale').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Family Empowerment Scale'
+            },
+            subtitle: {
+                text: 'Parent Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Scores',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+        //-----------------------------------------GI Severity Index----------------------------------------
+        $('#GISeverityIndex').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'GI Severity Index'
+            },
+            subtitle: {
+                text: 'Parent Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Scores',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+        //-----------------------------------------Academic Progress DSM Level 1----------------------------------------
+        $('#AcademicProgressDSMLevel1').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Academic Progress DSM Level 1'
+            },
+            subtitle: {
+                text: 'Teachers: Quaterly Trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Scores',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+
+        //-----------------------------------------* When level changes for Child----------------------------------------
+        $('#levelchangesforChild').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: '* When level changes for Child'
+            },
+            subtitle: {
+                text: 'Academic Progress'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+            yAxis: {
+                title: {
+                    text: 'Scores'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + '';
+                    }
+                }
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'DSM Level 1',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }, {
+                name: 'DSM Level 2',
+                marker: {
+                    symbol: 'diamond'
+                },
+                data: [62, 65, 66, 60, 72, 72, 80, ],
+                color: '#434348'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+        //-----------------------------------------Weekly Progress Scroe----------------------------------------
+        $('#WeeklyProgressScroe').highcharts({
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: 'Weekly Progress Scroe'
+            },
+            subtitle: {
+                text: 'Teachers: Weekly trend'
+            },
+            xAxis: {
+                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            },
+          
+            yAxis: {
+                plotLines: [{
+                    color: '#4F81BD',
+                    width: 2,
+                    value: 70,
+                    label: {
+                        text: 'Avg score',
+                        align: 'right',
+                        x: -10
+                    }
+                }]
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    }
+                }
+            },
+            series: [{
+                name: 'Scores',
+                marker: {
+                    symbol: 'square'
+                },
+                data: [65, 69, 69, 70, 72, 74, 80, ],
+                color: '#73B3EF'
+
+            }],
+        });
+        //-----------------------------------------End----------------------------------------
+
+
+
+
+
+    });
+
+
+</script>
+
+<style type="text/css">
+    .voffset{ margin-top:10px; }
+
+
+</style>
+<div class="row">
+  
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+   
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="ABCSubCategoriesParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
+
+<div class="row voffset">
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="SRSSubScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
+
+
+<div class="row voffset">
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
+
+
+<div class="row voffset">
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="AbbreviatedSensoryProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="PedsQLParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
+
+
+
+<div class="row voffset">
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="PedsQLParentReport" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="CaregiverStrainQuesionaire" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
+
+
+<div class="row voffset">
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="FamilyEmpowementScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="GISeverityIndex" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
+
+
+<div class="row voffset">
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
+
+
+<div class="row voffset">
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="WeeklyProgressScroe" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+    <div class="col-sm-6" style="background-color:lavenderblush;">
+
+        <div id="levelchangesforChild2312" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+
+    </div>
+
+</div>
