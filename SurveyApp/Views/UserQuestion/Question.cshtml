@@ -298,7 +298,7 @@
                    break;
                }
            }
-         
+
                 var scor=score;
                 var childId= GetQueryStringValues()['ChildId'];
                 var SurID = GetQueryStringValues()['surveyID'];
@@ -513,16 +513,8 @@
 
 
     }
+    
 
-    public string SetMed(string str, string[] arr)
-    {
-        for( int i=0; i<arr.Length ; i++)
-        {
-
-            str.Replace("#si1#", arr[0]).Replace("#si2#", arr[1]).Replace("#si3#", arr[2]).Replace("#si4#", arr[3]).Replace("#si5#", arr[4]);
-        }
-        return str;
-    }
 
     
     protected string Option(int qid, string a, string type, string cssclass,string scr,string ans)
@@ -662,31 +654,31 @@
             }
             else if (type == "med")
             {
-                //if ( multians.Length > 1)
-                //{
-                //    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si2#", multians[1]).Replace("#si3#", multians[0]).Replace("#si4#", multians[0]).Replace("#si5#", multians[0]); 
-                //}
-
-                //if ( multians.Length > 2)
-                //{
-                //    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si2#", multians[1]).Replace("#si3#", multians[0]).Replace("#si4#", multians[0]).Replace("#si5#", multians[0]); 
-                //}
-
-                //if ( multians.Length > 3)
-                //{
-                //    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si3#", multians[2]).Replace("#si4#", multians[0]).Replace("#si5#", multians[0]); 
-                //}
-
-                //if ( multians.Length >4)
-                //{
-                //    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si4#", multians[3]).Replace("#si5#", multians[0]);
-                //}
-
-
-                //if (multians.Length > 5)
-                //{
-                //    temp = tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si5#", multians[4]);
-                //}
+                if ( multians.Length==1)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", multians[0]);
+                }
+               
+                if ( multians.Length == 2)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si2#", multians[1]);
+                }
+               
+                if ( multians.Length == 3)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si3#", multians[2]);
+                }
+               
+                if ( multians.Length == 4)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si4#", multians[3]);
+                }
+               
+               
+                if (multians.Length == 5)
+                {
+                    temp += tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si5#", multians[4]);
+                }
                
                 
             }
