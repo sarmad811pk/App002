@@ -217,6 +217,7 @@
             });
 
             $("textarea, input[type=text]").blur(function () {
+ 
                 if($(this).hasClass("hasDatepicker")==true || $(this).hasClass("_txtdatepicker")){ return; }
                 var oldval = $("#hdn" + $(this).attr("qid")).val();
                 if (this.value != "") {
