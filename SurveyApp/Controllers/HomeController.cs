@@ -13,7 +13,7 @@ namespace SurveyApp.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index(int? studyId)
         {
             if (!Request.IsAuthenticated)
             {
@@ -35,7 +35,7 @@ namespace SurveyApp.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            return View();
+            return View(studyId);
         }
 
         
