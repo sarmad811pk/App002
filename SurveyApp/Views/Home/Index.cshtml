@@ -5,62 +5,11 @@
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    dsDashboard = SurveyApp.DataHelper.DashboardGetByStudyId(Model);
-    studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    int studyId = Model == null ? 0 : (int)Model;
 }
-
-@functions{
-    DataSet dsDashboard;
-    int studyId = 0;
-    public int getUserCount(string type)
-    {
-        int count = 0, statusId = 0;
-        statusId = getStatusId(type);
-
-        if (dsDashboard != null && dsDashboard.Tables != null && dsDashboard.Tables.Count > 0)
-        {
-            if(statusId > 0)
-            {
-                DataRow[] drCount = dsDashboard.Tables[0].Select("StatusId = " + statusId + " AND StudyId = " + studyId);
-                if(drCount.Length > 0)
-                {
-                    count = (int)drCount[0]["ChildCount"];
-                }
-            }
-            if(type == "Parent" || type == "Teacher")
-            {
-                if(dsDashboard.Tables.Count > 1)
-                {
-                    DataRow[] drCount = dsDashboard.Tables[1].Select("RoleName = '" + type + "' AND StudyId = " + studyId);
-                    if (drCount.Length > 0)
-                    {
-                        count = (int)drCount[0]["UserCount"];
-                    }
-                }
-            }
-        }
-        return count;
-    }
-
-    public int getStatusId(string type) {
-        switch (type)
-        {
-            case "Enrolled":
-                return 1;
-            case "Lost Followup":
-                return 2;
-            case "Withdrew Consent":
-                return 3;
-            case "Left School":
-                return 4;
-            default:
-                return 0;
-        }
-    }
-}
-
 
 <style type="text/css">
+    .stats .separator{clear:both;margin-bottom: 10px;}
     .topControls #ddlStudy{float: right; width: 22%; background-color: #fff;}
     .topStats .itembox{width: 16.51%;padding: 4px;}
     .topStats .info-box {min-height: 121px;}
@@ -87,70 +36,13 @@
         }
         </select>
     </div>
-    <div style="clear:both;margin-bottom: 10px;"></div>
-    <div class="topStats">
-        <div class="row">
-            <div class="col-md-6 col-sm-6 col-lg-2 itembox">
-                <div class="info-box mini-stat clearfix bx-shadow bg-success">
-                    <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
-                    <div class="mini-stat-info text-right">
-                        <span class="counter">@getUserCount("Enrolled")</span>
-                        Children<br /><nobr>Enrolled</nobr>
-                    </div>                    
-                </div>
-            </div>
 
-            <div class="col-md-6 col-sm-6 col-lg-2 itembox">
-                <div class="info-box mini-stat clearfix bg-danger bx-shadow">
-                    <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
-                    <div class="mini-stat-info text-right">
-                        <span class="counter">@getUserCount("Lost Followup")</span>
-                        Children<br /><nobr>Lost Followup</nobr>
-                    </div>                    
-                </div>
-            </div>
+    <div class="separator"></div>
+    @{Html.RenderPartial("_ChildrenCounts", studyId);}
 
-            <div class="col-md-6 col-sm-6 col-lg-2 itembox">
-                <div class="info-box mini-stat clearfix bg-info bx-shadow">
-                    <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
-                    <div class="mini-stat-info text-right">
-                        <span class="counter">@getUserCount("Withdrew Consent")</span>
-                        Children<br /><nobr>Withdrew Consent</nobr>
-                    </div>                    
-                </div>
-            </div>
+    <div class="separator"></div>
+    @{Html.RenderPartial("_SurveyCompletion", studyId);}
 
-            <div class="col-md-6 col-sm-6 col-lg-2 itembox">
-                <div class="info-box mini-stat clearfix bg-pink bx-shadow">
-                    <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
-                    <div class="mini-stat-info text-right">
-                        <span class="counter">@getUserCount("Left School")</span>
-                        Children<br /><nobr>Left School</nobr>
-                    </div>                    
-                </div>
-            </div>
-
-            <div class="col-md-6 col-sm-6 col-lg-2 itembox">
-                <div class="info-box mini-stat clearfix bg-purple bx-shadow">
-                    <span class="mini-stat-icon"><i class="ion-ios-person"></i></span>
-                    <div class="mini-stat-info text-right">
-                        <span class="counter">@getUserCount("Parent")</span>
-                        Parents<br /><nobr></nobr>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-sm-6 col-lg-2 itembox">
-                <div class="info-box mini-stat clearfix bg-primary bx-shadow">
-                    <span class="mini-stat-icon"><i class="ion-university"></i></span>
-                    <div class="mini-stat-info text-right">
-                        <span class="counter">@getUserCount("Teacher")</span>
-                        Teachers<br /><nobr></nobr>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script type="text/javascript">

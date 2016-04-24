@@ -397,6 +397,8 @@
     <Content Include="Views\UserQuestion\Index.cshtml" />
     <Content Include="Views\UserQuestion\Question.cshtml" />
     <Content Include="Views\Home\_Charts.cshtml" />
+    <Content Include="Views\Home\_ChildrenCounts.cshtml" />
+    <Content Include="Views\Home\_SurveyCompletion.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
