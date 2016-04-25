@@ -38,6 +38,11 @@ namespace SurveyApp.Controllers
             return View(studyId);
         }
 
+
+        public ActionResult Clinician()
+        {
+            return View();
+        }
         
         public ActionResult UserQuestion()
         {

@@ -351,6 +351,18 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetSchedulesByStudyId";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static DataSet DashboardGetSurveyQAInfo(int surveyId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@SurveyId", SqlDbType.Int);
+            cmd.Parameters["@SurveyId"].Value = surveyId;
+
+            cmd.CommandText = "Dashboard_GetSurveyQAInfo";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         #endregion
 
     }
