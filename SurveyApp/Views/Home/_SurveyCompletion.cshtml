@@ -1,0 +1,345 @@
+﻿@using SurveyApp.Models;
+@using System.Data;
+
+@{
+    DataSet dsCompletion;
+    int studyId = 0;
+    string currParent = "", currTeacher = "";
+
+    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesByStudyId(Model);
+    studyId = Model == null ? 0 : Convert.ToInt32(Model);
+
+    if(dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count > 0)
+    {
+        int completed = 0, partial = 0, notstarted = 0;
+
+        /* PARENT */
+        DataRow[] drCount = dsCompletion.Tables[0].Select("RoleName = 'Parent' AND StudyId = " + studyId);
+        if(drCount.Length > 0)
+        {
+            foreach(DataRow dr in drCount)
+            {
+                if(dr["Percentage"] != DBNull.Value)
+                {
+                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                    if (percent == 100)
+                    {
+                        completed++;
+                    }
+                    else if (percent > 0 && percent < 100)
+                    {
+                        partial++;
+                    }
+                    else if(percent == 0)
+                    {
+                        notstarted++;
+                    }
+                }
+                else
+                {
+                    notstarted++;
+                }
+            }
+        }
+        currParent = "['Completed', "+ completed +"], ['Partially Completed', "+ partial +"],['Not Started', "+ notstarted +"]";
+
+        /* TEACHER */
+        int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
+        DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("RoleName = 'Teacher' AND StudyId = " + studyId);
+        if (drTeacherCount.Length > 0)
+        {
+            foreach (DataRow dr in drTeacherCount)
+            {
+                if (dr["Percentage"] != DBNull.Value)
+                {
+                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                    if (percent == 100)
+                    {
+                        completedTeacher++;
+                    }
+                    else if (percent > 0 && percent < 100)
+                    {
+                        partialTeacher++;
+                    }
+                    else if (percent == 0)
+                    {
+                        notstartedTeacher++;
+                    }
+                }
+                else
+                {
+                    notstartedTeacher++;
+                }
+            }
+        }
+        currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "]";
+
+
+    }
+}
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<style type="text/css">
+    .graphInfo{padding: 0px 0px 0px 30px;}
+    .graphDiv{width: 46%; height: 200px; margin: 0 6px;display: inline-block;}
+</style>
+
+<div class="completion">
+    <h3>Survey Completion</h3>
+    <div style="border:solid 1px #CCC;padding: 6px;">
+        <table style="width:100%">
+            <tr>
+                <td style="width: 18%;">
+                    <div class="graphInfo">
+                        <h4 style="color:#333333;"><i class="ion-checkmark"></i>&nbsp;Completed</h4>
+                        <h4 style="color:#C5E200;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</h4>
+                        <h4 style="color: #D41717;"><i class="ion-minus-round"></i>&nbsp;Not Started</h4>
+                    </div>
+                </td>
+                <td style="width: 40%; text-align: right;">
+                    <div id="previousPeriodParent" class="graphDiv"></div>
+                    <div id="previousPeriodTeacher" class="graphDiv"></div>
+                </td>
+                <td style="width: 40%; text-align: right;">
+                    <div id="currentPeriodParent" class="graphDiv"></div>
+                    <div id="currentPeriodTeacher" class="graphDiv"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var colors = ['#333333', '#C5E200', '#D41717'];
+    /* PREVIOUS PERIOD PARENT */
+    $('#previousPeriodParent').highcharts({
+        chart: {
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        colors: colors,
+        title: {
+            text: 'Previous Period <br/> Parent',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: -70
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                size: '150%',
+                dataLabels: {
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white',
+                        textShadow: '0px 1px 2px black'
+                    }
+                },
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '114%']
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            type: 'pie',
+            name: 'Share',
+            innerSize: '50%',
+            data: [
+                ['Completed', 12],
+                ['Partially Completed', 33],
+                ['Not Started', 45],
+                {
+                    name: 'Proprietary or Undetectable',
+                    y: 0.2,
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            ]
+        }]
+    });
+
+    /* PREVIOUS PERIOD TEACHER */
+    $('#previousPeriodTeacher').highcharts({
+        chart: {
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        colors: colors,
+        title: {
+            text: 'Previous Period <br/> Teacher',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: -70
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                size: '150%',
+                dataLabels: {
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white',
+                        textShadow: '0px 1px 2px black'
+                    }
+                },
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '114%']
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            type: 'pie',
+            name: 'Share',
+            innerSize: '50%',
+            data: [
+                ['Completed', 49],
+                ['Partially Completed', 12],
+                ['Not Started', 4],
+                {
+                    name: 'Proprietary or Undetectable',
+                    y: 0.2,
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            ]
+        }]
+    });
+
+
+
+    /* CURRENT PERIOD PARENT */
+    $('#currentPeriodParent').highcharts({
+        chart: {
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        colors: colors,
+        title: {
+            text: 'Current Period <br/> Parent',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: -70
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                size: '150%',
+                dataLabels: {
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white',
+                        textShadow: '0px 1px 2px black'
+                    }
+                },
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '114%']
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            type: 'pie',
+            name: 'Share',
+            innerSize: '50%',
+            data: [@Html.Raw(currParent),
+                {
+                    name: 'Proprietary or Undetectable',
+                    y: 0.2,
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            ]
+        }]
+    });
+
+
+    /* CURRENT PERIOD TEACHER */
+    $('#currentPeriodTeacher').highcharts({
+        chart: {
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false
+        },
+        colors: colors,
+        title: {
+            text: 'Current Period <br/> Teacher',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: -70
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                size: '150%',
+                dataLabels: {
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white',
+                        textShadow: '0px 1px 2px black'
+                    }
+                },
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '114%']
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            type: 'pie',
+            name: 'Share',
+            innerSize: '50%',
+            data: [@Html.Raw(currTeacher),
+                {
+                    name: 'Proprietary or Undetectable',
+                    y: 0.2,
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            ]
+        }]
+    });
+});
+</script>
