@@ -213,7 +213,21 @@
                 }
             });
             $("select").change(function () {
-                $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
+            
+                if ($(this).attr("data-tmed") == "tmed") {
+                     
+                    var qid = $(this).attr("qid")
+                    if (this.value == "other") {
+                         
+                        $('[data-md=m9' + qid + ']').show();
+                    }
+                    saveTmedValues(qid);
+
+                }
+                else {
+
+                    $("#hdn" + $(this).attr("qid")).val("|" + this.value).trigger('change');
+                }
             });
 
             $("textarea, input[type=text]").blur(function () {
@@ -223,13 +237,7 @@
                     var qid = $(this).attr("qid")
                     if ($(this).attr("data-tmed") == "tmed") {
 
-                        var a1 = $('[data-md=m1' + qid + ']').val();
-                        var a2 = $('[data-md=m2' + qid + ']').val();
-                        var a3 = $('[data-md=m3' + qid + ']').val();
-                        var a4 = $('[data-md=m4' + qid + ']').val();
-                        var a5 = $('[data-md=m5' + qid + ']').val();
-                        var allans = "|" + a1 + "|" + a2 + "|" + a3 + "|" + a4 + "|" + a5;
-                        $("#hdn" + $(this).attr("qid")).val(allans).trigger('change');
+                        saveTmedValues(qid);
                     }
 
                     if ($(this).attr("data-sch") == "tsch") {
@@ -255,7 +263,29 @@
                 }
             });
 
-        
+            function saveTmedValues(qid)
+            {
+                 ;
+          
+                var a1 = $('[data-md=m1' + qid + ']').val();
+                var a2 = $('[data-md=m2' + qid + ']').val();
+                var a3 = $('[data-md=m4' + qid + ']').val();
+                var a4 = $('[data-md=m5' + qid + ']').val();
+
+                var a5 = $('[data-md=m6' + qid + ']').val();
+                var a6 = $('[data-md=m7' + qid + ']').val();
+                var a7 = $('[data-md=m8' + qid + ']').val();
+                var a8 = $('[data-md=m9' + qid + ']').val();
+
+                
+                var allans = "|" + a1 + "|" + a2 + "|" + a3 + "|" + a4 + "|" + a5 + "|" + a6 + "|" + a7 + "|" + a8;
+                 
+                var v = $(this).attr("qid");
+                if (a1 == "" && a2 == "" && a3 == "" && a4 == "" && a5 == "0" && a6 == "0" && a7 == "0" && a8 == "") { }
+                else {
+                    $("#hdn" + qid).val(allans).trigger('change');
+                }
+            }
             function pageloadtrigger(){
 
 
@@ -311,7 +341,7 @@
 
                 EnableDisableChild(qid, ans);
                 setCompletionDiv();
-
+                 
                 savequestions(qid, ans, score, childId, SurID,"SaveUpdate");
 
             });
@@ -498,6 +528,7 @@
 
 
         function savequestions(qid, ansid, s, cid, SurID, status) {
+             
             var noQ = 0, nofQ = 0;
             $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
                 //$(".questions").find("input[type=hidden]").each(function(index, obj){
@@ -532,6 +563,9 @@
         //    savequestions(qid, allans, null, childId, SurID, "SaveUpdate");
         //}
 
+
+      
+
     </script>
 }
 
@@ -558,8 +592,51 @@
 
     }
     
+    public string GetSelect()
+    {
+        return "<select class='form-control col-sm-2' qid='#q#' data-tmed='tmed' data-md='m6#q#'>" +
+         "<option value='0' ></option>" +
+          "<option value='mg'  >mg: milligram(s)</option>" +
+         "<option value='ml' >mL: milliliter(s)</option>" +
+         "<option value='ug' >ug: microgram(s)</option>" +
+         "<option value='ul' >uL: microliter(s)</option>" +
+         "<option value='mmol' >mmol: millimole(s)</option>" +
+         "<option value='iu' >IU: International Unit(s)</option>" +
+         "<option value='other' >Other</option></select>";
+    }
+    
+  
+    public string GetFrequency()
+    {
+        return "<select class='form-control col-sm-2' qid='#q#' data-tmed='tmed' data-md='m7#q#'   >" +
+     "<option value='0' ></option>" +
+     "<option value='1' >01</option>" +
+     "<option value='2' >02</option>" +
+     "<option value='3' >03</option>" +
+     "<option value='4' >04</option>" +
+     "<option value='5' >05</option>" +
+     "<option value='6' >06</option>" +
+     "<option value='7' >07</option>" +
+     "<option value='8' >08</option>" +
+     "<option value='9' >09</option> " +
+     "<option value='10' >10</option>" +
+     "<option value='11' >11</option> " +
+     "<option value='12' >12</option> " +
+     "</select> ";
+        
+    }
 
-
+    public string GetHours()
+    {
+        return "<select class='form-control col-sm-2' qid='#q#' data-tmed='tmed' data-md='m8#q#'>" +
+   "<option value='0'   ></option>" +
+   "<option value='1' >Hour</option>" +
+   "<option value='24' >Day</option>" +
+   "<option value='168' >Week</option>" +
+   "<option value='692' >Month</option>" +
+   "</select>";
+    }
+        
     
     protected string Option(int qid, string a, string type, string cssclass,string scr,string ans)
     {
@@ -572,12 +649,13 @@
 
         var tdate = "<div class='#c#'><input class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
         var tmed = @"<div class='#c# form-inline'>" +
-                    "<input class='form-control col-sm-2' data-tmed='tmed' data-md='m1#q#' data-score='#sc#' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'>" +
-                    "<input class='form-control col-sm-2' data-tmed='tmed' data-md='m2#q#' data-score='#sc#' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'>" +
-                    "<input class='form-control col-sm-2' data-tmed='tmed' data-md='m3#q#' data-score='#sc#' placeholder='Frequency' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si3#'>" +
-                    "<input class='form-control col-sm-2' data-tmed='tmed' data-md='m4#q#' data-score='#sc#' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si4#'>" +
-                    "<input class='form-control col-sm-2' data-tmed='tmed' data-md='m5#q#' data-score='#sc#' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si5#'>" +
-                    "</div>";
+
+                    "<div class='row'><div class='col-sm-1 _bold'>Indication</div> <input class='form-control col-sm-2' data-tmed='tmed' data-md='m1#q#' data-score='#sc#' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'>" +
+                    " <div class='col-sm-1 _bold'>Dosage</div> <input class='form-control col-sm-2' data-tmed='tmed' data-md='m2#q#' data-score='#sc#' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'> " + GetSelect() +
+                    "<input class='form-control col-sm-2' type='text' qid='#q#'  data-tmed='tmed' data-md='m9#q#' style='display:none' value='#si6#'></div> <div class='row'>  <div class='col-sm-1 _bold'>Frequency</div>" + GetFrequency() + "<div class='col-sm-1 _bold'>Times per</div>" + GetHours() +
+                    "<div class='col-sm-2 _bold'>Start Date</div><input class='form-control col-sm-2' data-tmed='tmed' data-md='m4#q#' data-score='#sc#' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si4#'>" +
+                    "<div class='col-sm-1 _bold'>End Date</div><input class='form-control col-sm-2' data-tmed='tmed' data-md='m5#q#' data-score='#sc#' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si5#'>" +
+                    "</div></div>";
         var tsch = @"<div class='#c# form-inline'>" +
                    "<input class='form-control col-sm-3' data-sch='tsch' data-id='t1#q#' placeholder='Count of Sessions/Week' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si0#'>" +
                    "<input class='form-control col-sm-3' data-sch='tsch' data-id='t2#q#' placeholder='Time/Session' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'>" +
@@ -597,21 +675,10 @@
 
            sr = scr.Split('|');
         }
-
-
-
         for (int i = 0; i < s.Length; i++)
         {
-
             string att = "";
-
             var multians=ans.Split('|');
-
-           
-
-
-
-
             if (type == "radio")
             {
                 for (int j = 0; j < s.Length; j++)
@@ -700,13 +767,16 @@
             {
                
                 var tempansvalue = "";
-                if (multians.Length >= 5 )
+                if (multians.Length >= 8 )
                 {
-                    tempansvalue = tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", multians[0]).Replace("#si2#", multians[1]).Replace("#si3#", multians[2]).Replace("#si4#", multians[3]).Replace("#si5#", multians[4]);
+
+                    
+                    tempansvalue = tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", multians[0]).Replace("#si2#", multians[1]).Replace("#si4#", multians[2]).Replace("#si5#", multians[3]).Replace("#si6#", multians[7]).Replace("'" + multians[4] + "'", "'" + multians[4] + "' selected='selected'").Replace("'" + multians[5] + "'", "'" + multians[5] + "' selected='selected'").Replace("'" + multians[6] + "'", "'" + multians[6] + "' selected='selected'");
+                    if (multians[4] == "other") { tempansvalue = tempansvalue.Replace("none", "block"); } 
                 }
                 else
                 {
-                    tempansvalue = tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", "").Replace("#si2#", "").Replace("#si3#", "").Replace("#si4#", "").Replace("#si5#", "");
+                    tempansvalue = tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", "").Replace("#si2#", "").Replace("#si4#", "").Replace("#si5#", "").Replace("#si6#", "");
                 }
                 temp += tempansvalue;
             }
