@@ -59,7 +59,7 @@
 
 <style type="text/css">
     .mini-stat{margin-bottom: 0px;}
-    .topStats .itembox{width: 16.51%;padding: 4px;cursor: pointer;}
+    .topStats .itembox{width: 20.00%;padding: 4px;cursor: pointer;}
     .topStats .info-box {min-height: 121px;}
 </style>
 
@@ -71,7 +71,7 @@
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
                     <span class="counter">@getUserCount("Enrolled")</span>
-                    Children<br /><nobr>Enrolled</nobr>
+                    <nobr>Children&nbsp;Enrolled</nobr>
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
                     <span class="counter">@getUserCount("Lost Followup")</span>
-                    Children<br /><nobr>Lost Followup</nobr>
+                    <nobr>Children&nbsp;Lost Followup</nobr>
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
                     <span class="counter">@getUserCount("Withdrew Consent")</span>
-                    Children<br /><nobr>Withdrew Consent</nobr>
+                    <nobr>Children&nbsp;Withdrew Consent</nobr>
                 </div>
             </div>
         </div>
@@ -101,7 +101,7 @@
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
                     <span class="counter">@getUserCount("Left School")</span>
-                    Children<br /><nobr>Left School</nobr>
+                    <nobr>Children&nbsp;Left School</nobr>
                 </div>
             </div>
         </div>
@@ -109,21 +109,13 @@
         <div class="col-md-6 col-sm-6 col-lg-2 itembox" onclick="window.open('@Url.Action("Index", "ParentTeacher")');">
             <div class="info-box mini-stat clearfix bg-purple bx-shadow">
                 <span class="mini-stat-icon"><i class="ion-ios-person"></i></span>
-                <div class="mini-stat-info text-right">
-                    <span class="counter">@getUserCount("Parent")</span>
-                    Parents<br /><nobr></nobr>
+                <div class="text-left panel-heading">Respondents</div>
+                <div class="text-right">
+                    <span class="counter">Parents:&nbsp;@getUserCount("Parent")</span><br />
+                    <span class="counter">Teachers:&nbsp;@getUserCount("Teacher")</span>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-6 col-sm-6 col-lg-2 itembox" onclick="window.open('@Url.Action("Index", "ParentTeacher")');">
-            <div class="info-box mini-stat clearfix bg-primary bx-shadow">
-                <span class="mini-stat-icon"><i class="ion-university"></i></span>
-                <div class="mini-stat-info text-right">
-                    <span class="counter">@getUserCount("Teacher")</span>
-                    Teachers<br /><nobr></nobr>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </div>
