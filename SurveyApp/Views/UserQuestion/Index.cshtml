@@ -7,7 +7,8 @@
 
     DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
     string[] roles = Roles.GetRolesForUser(User.Identity.Name);
-    int userId = WebSecurity.CurrentUserId;
+    userId = WebSecurity.CurrentUserId;
+    role = roles[0];
 
     dsQuestionsFilled = SurveyApp.DataHelper.QuestionGetFilledAnswers(userId);
     dsChildrenSchedules = SurveyApp.DataHelper.getChildrenSchedulesByUserId(userId);
@@ -37,6 +38,8 @@
 }
 @functions{
     DataSet dsQuestionsFilled, dsChildrenSchedules;
+    int userId;
+    string role = "";
     public string getPercentCompletion(int surveyId, int childId, string url)
     {
         string percentage = "0%", schInfo = "";
@@ -52,9 +55,21 @@
 
         if (dsChildrenSchedules != null && dsChildrenSchedules.Tables != null && dsChildrenSchedules.Tables[0] != null && dsChildrenSchedules.Tables[0].Rows != null)
         {
-            DataRow[] drSchedules = dsChildrenSchedules.Tables[0].Select("SurveyId = " + surveyId + " AND ChildId = " + childId);
+            string condition = " AND ScheduleId" + role + " IS NOT NULL";
+            DataRow[] drSchedules = dsChildrenSchedules.Tables[0].Select("SurveyId = " + surveyId + " AND ChildId = " + childId + "" + condition);
+            int i = 0;
             foreach (DataRow drSchedule in drSchedules)
             {
+                DateTime endDate = drSchedule["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["ScheuleEndDate"]) : DateTime.MinValue;
+                if(endDate != DateTime.MinValue)
+                {
+                    string cssClass = i % 2 == 0 ? "tres" : "dos";
+                    string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
+                    schInfo = schInfo + "&nbsp;&nbsp;&nbsp;&nbsp;<a href='" + urlForSurvey + "'><span class='schedule " + cssClass + "'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+                    i++;
+                }
+
+                /*
                 int activeOn = drSchedule["ActiveOn"] != DBNull.Value ? Convert.ToInt32(drSchedule["ActiveOn"]) : -1;
                 DateTime enrollmentDate = drSchedule["EnrollmentDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["EnrollmentDate"]) : DateTime.MinValue;
                 DateTime endDate = DateTime.MinValue;
@@ -92,7 +107,7 @@
                         }
                     }
                 }
-
+                */
 
             }
         }

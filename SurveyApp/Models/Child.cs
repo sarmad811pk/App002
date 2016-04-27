@@ -144,4 +144,28 @@ namespace SurveyApp.Models
 
         public DbSet<Child_Study_Schedule> Children_Studies_Schedules { get; set; }
     }
+
+    [Table("Child_Survey_Schedule")]
+    public class Child_Survey_Schedule
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int ChildId { get; set; }
+        public int StudyId { get; set; }
+        public int SurveyId { get; set; }
+        public int? ScheduleIdParent { get; set; }
+        public int? ScheduleIdTeacher { get; set; }
+        public DateTime ScheuleStartDate { get; set; }
+        public DateTime ScheuleEndDate { get; set; }
+    }
+
+    public class Child_Survey_ScheduleContext : DbContext
+    {
+        public Child_Survey_ScheduleContext()
+            : base("DefaultConnection")
+        {
+        }
+        public DbSet<Child_Survey_Schedule> Child_Survey_Schedules { get; set; }
+    }
 }
