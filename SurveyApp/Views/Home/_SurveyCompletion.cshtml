@@ -4,22 +4,24 @@
 @{
     DataSet dsCompletion;
     int studyId = 0;
-    string currParent = "", currTeacher = "";
+    string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
 
-    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesByStudyId(Model);
+    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model);
     studyId = Model == null ? 0 : Convert.ToInt32(Model);
 
-    if(dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count > 0)
+    #region CurrentPrriod
+    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count > 1)
     {
-        int completed = 0, partial = 0, notstarted = 0;
-
+        string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
         /* PARENT */
-        DataRow[] drCount = dsCompletion.Tables[0].Select("RoleName = 'Parent' AND StudyId = " + studyId);
-        if(drCount.Length > 0)
+        #region ParentGraph
+        int completed = 0, partial = 0, notstarted = 0;
+        DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  < ScheduleDate");
+        if (drCount.Length > 0)
         {
-            foreach(DataRow dr in drCount)
+            foreach (DataRow dr in drCount)
             {
-                if(dr["Percentage"] != DBNull.Value)
+                if (dr["Percentage"] != DBNull.Value)
                 {
                     int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
                     if (percent == 100)
@@ -30,7 +32,7 @@
                     {
                         partial++;
                     }
-                    else if(percent == 0)
+                    else if (percent == 0)
                     {
                         notstarted++;
                     }
@@ -41,11 +43,13 @@
                 }
             }
         }
-        currParent = "['Completed', "+ completed +"], ['Partially Completed', "+ partial +"],['Not Started', "+ notstarted +"]";
+        currParent = "['Completed', " + completed + "], ['Partially Completed', " + partial + "],['Not Started', " + notstarted + "]";
+        #endregion
 
         /* TEACHER */
+        #region TeacherGraph
         int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
-        DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("RoleName = 'Teacher' AND StudyId = " + studyId);
+        DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("'" + currentDate + "'  < ScheduleDate");
         if (drTeacherCount.Length > 0)
         {
             foreach (DataRow dr in drTeacherCount)
@@ -73,9 +77,82 @@
             }
         }
         currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "]";
-
-
+        #endregion
     }
+    #endregion
+
+    #region PreviousPrriod
+    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count > 1)
+    {
+        string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
+        /* PARENT */
+        #region ParentGraph
+        int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0;
+        DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' >= ScheduleDate");
+        if (drCount.Length > 0)
+        {
+            foreach (DataRow dr in drCount)
+            {
+                if (dr["Percentage"] != DBNull.Value)
+                {
+                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                    if (percent == 100)
+                    {
+                        completedPrevious++;
+                    }
+                    else if (percent > 0 && percent < 100)
+                    {
+                        partialPrevious++;
+                    }
+                    else if (percent == 0)
+                    {
+                        notstartedPrevious++;
+                    }
+                }
+                else
+                {
+                    notstartedPrevious++;
+                }
+            }
+        }
+        prevParent = "['Completed', " + completedPrevious + "], ['Partially Completed', " + partialPrevious + "],['Not Started', " + notstartedPrevious + "]";
+        #endregion
+
+        /* TEACHER */
+        #region TeacherGraph
+        int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
+        DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("'" + currentDate + "' >= ScheduleDate");
+        if (drTeacherCount.Length > 0)
+        {
+            foreach (DataRow dr in drTeacherCount)
+            {
+                if (dr["Percentage"] != DBNull.Value)
+                {
+                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                    if (percent == 100)
+                    {
+                        completedTeacherPrevious++;
+                    }
+                    else if (percent > 0 && percent < 100)
+                    {
+                        partialTeacherPrevious++;
+                    }
+                    else if (percent == 0)
+                    {
+                        notstartedTeacherPrevious++;
+                    }
+                }
+                else
+                {
+                    notstartedTeacherPrevious++;
+                }
+            }
+        }
+        prevTeacher = "['Completed', " + completedTeacherPrevious + "], ['Partially Completed', " + partialTeacherPrevious + "],['Not Started', " + notstartedTeacherPrevious + "]";
+        #endregion
+    }
+    #endregion
+
 }
 
 
@@ -94,9 +171,9 @@
             <tr>
                 <td style="width: 18%;">
                     <div class="graphInfo">
-                        <h4 style="color:#333333;"><i class="ion-checkmark"></i>&nbsp;Completed</h4>
-                        <h4 style="color:#C5E200;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</h4>
-                        <h4 style="color: #D41717;"><i class="ion-minus-round"></i>&nbsp;Not Started</h4>
+                        <h4 style="color:#33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</h4>
+                        <h4 style="color:#286A66;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</h4>
+                        <h4 style="color: #D7524B;"><i class="ion-minus-round"></i>&nbsp;Not Started</h4>
                     </div>
                 </td>
                 <td style="width: 40%; text-align: right;">
@@ -115,8 +192,8 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        var colors = ['#333333', '#C5E200', '#D41717'];
+$(function () {
+    var colors = ['#33B86C', '#286A66', '#D7524B']; //F46F66
     /* PREVIOUS PERIOD PARENT */
     $('#previousPeriodParent').highcharts({
         chart: {
@@ -159,12 +236,9 @@
             type: 'pie',
             name: 'Share',
             innerSize: '50%',
-            data: [
-                ['Completed', 12],
-                ['Partially Completed', 33],
-                ['Not Started', 45],
+            data: [@Html.Raw(prevParent),
                 {
-                    name: 'Proprietary or Undetectable',
+                    name: 'There are no previously scheduled surveys available',
                     y: 0.2,
                     dataLabels: {
                         enabled: false
@@ -216,12 +290,9 @@
             type: 'pie',
             name: 'Share',
             innerSize: '50%',
-            data: [
-                ['Completed', 49],
-                ['Partially Completed', 12],
-                ['Not Started', 4],
+            data: [@Html.Raw(prevTeacher),
                 {
-                    name: 'Proprietary or Undetectable',
+                    name: 'There are no previously scheduled surveys available',
                     y: 0.2,
                     dataLabels: {
                         enabled: false
@@ -275,14 +346,7 @@
             type: 'pie',
             name: 'Share',
             innerSize: '50%',
-            data: [@Html.Raw(currParent),
-                {
-                    name: 'Proprietary or Undetectable',
-                    y: 0.2,
-                    dataLabels: {
-                        enabled: false
-                    }
-                }
+            data: [@Html.Raw(currParent)
             ]
         }]
     });
@@ -330,14 +394,7 @@
             type: 'pie',
             name: 'Share',
             innerSize: '50%',
-            data: [@Html.Raw(currTeacher),
-                {
-                    name: 'Proprietary or Undetectable',
-                    y: 0.2,
-                    dataLabels: {
-                        enabled: false
-                    }
-                }
+            data: [@Html.Raw(currTeacher)
             ]
         }]
     });
