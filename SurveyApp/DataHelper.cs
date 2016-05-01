@@ -363,6 +363,35 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetSurveyQAInfo";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet DashboardGetSchedulesForUserRoles(int? studyId = 0)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            cmd.Parameters["@StudyId"].Value = studyId;
+
+            cmd.CommandText = "Dashboard_GetSchedulesForUserRoles";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        public static DataSet DashboardGetDetailComparison(int? childId = 0)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ChildId", SqlDbType.Int);
+            if(childId == 0)
+            {
+                cmd.Parameters["@ChildId"].Value = null;
+            }
+            else
+            {
+                cmd.Parameters["@ChildId"].Value = childId;
+            }            
+
+            cmd.CommandText = "Dashboard_GetDetailComparison";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         #endregion
 
     }

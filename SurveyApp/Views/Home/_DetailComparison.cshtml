@@ -1,0 +1,116 @@
+﻿@using SurveyApp.Models;
+@using System.Data;
+
+@{ 
+    DataSet dsComparison = SurveyApp.DataHelper.DashboardGetDetailComparison();
+    if(dsComparison != null)
+    {
+        dtChildren = dsComparison.Tables[0];
+        dtTeachers = dsComparison.Tables[1];
+        dtSurveys = dsComparison.Tables[2];
+        dtTotalSurveys = dsComparison.Tables[3];
+    }
+
+}
+
+@functions{
+
+    DataTable dtChildren, dtTeachers, dtSurveys, dtTotalSurveys;
+
+    public string getSurveyValue(int childId, int surveyId)
+    {
+        string value = "";
+        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId);
+        foreach(DataRow drS in drSurveys)
+        {
+            if((int)drS["SurveyId"] == surveyId)
+            {
+                value = "<span><i title='' class='ion-record " + (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable"))) + "'></i></span>";
+                return value;
+            }
+            else
+            {
+                value = "<span><i class='ion-record notapplicable' title='Child is not yet scheduled for this survey'></i></span>";
+            }
+        }
+        return value;
+    }
+}
+
+<style type="text/css">
+    .tblComparison{border: solid 1px #CCC;background-color: #FFF;}
+    .name{border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;width: 140px;padding: 2px;}
+    .dots td{padding: 2px;}    
+    .dots .dot{width: 26px;text-align: center;border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;}
+    .complete{color:#33B86C;}
+    .incomplete{color:#ffd800;}
+    .notstarted{color:#D7524B;}
+    .notapplicable{color:#CA9404;}
+</style>
+
+<div class="comparison">
+    <h3>Surveys Comparison</h3>
+    <h4>Current Period</h4>
+    <table cellpadding="0" cellspacing="0" class="tblComparison" @*class="table table-striped table-hover"*@>
+        <thead>
+            <tr>
+                <td class="name" style="font-weight: bold;">Child</td>            
+                <td>
+                    <table class="dots">
+                        <tr>
+                            <td class="name" style="font-weight: bold;">
+                                Teacher
+                            </td>
+                            @foreach (DataRow drT in dtTotalSurveys.Rows)
+                            {
+                                <td class="dot" style="font-weight: bold;" title="Survey">@drT["SurveyId"]</td>
+                            }
+                        </tr>
+                    </table>
+                </td>                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow drChild in dtChildren.Rows)
+            {
+                DataRow[] drTeachers = dtTeachers.Select("ChildId = " + drChild["ChildId"]);                
+                <tr>
+                    <td class="name">@drChild["Name"]</td>
+                    <td>
+                        <table class="dots">
+                            @foreach (DataRow drTeacher in drTeachers)
+                            {
+                                <tr>
+                                    <td class="name">
+                                        @drTeacher["Teacher"]
+                                    </td>
+                                    @foreach (DataRow drT in dtTotalSurveys.Rows)
+                                    {
+                                        string value = getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"]);
+                                        if (value != "")
+                                        {
+                                            <td class="dot">@Html.Raw(value)</td>
+                                        }
+                                    }
+                                    
+                                </tr>
+                            }                            
+                        </table>
+                    </td>                    
+                </tr>                
+            }
+            
+        </tbody>
+        
+    </table>
+    <div style="padding:10px 0px;text-align:center;">
+        <table>
+            <tr>
+                <td style="width: 100px;"><span><i class="ion-record complete"></i>&nbsp;Complete</span></td>
+                <td style="width: 100px;"><span><i class="ion-record incomplete"></i>&nbsp;Incomplete</span></td>
+                <td style="width: 100px;"><span><i class="ion-record notstarted"></i>&nbsp;Not Started</span></td>
+                <td style="width: 150px;"><span><i class="ion-record notapplicable"></i>&nbsp;Not Applicable</span></td>
+            </tr>
+        </table>
+    </div>
+</div>

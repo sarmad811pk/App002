@@ -401,6 +401,7 @@
     <Content Include="Views\Home\_SurveyCompletion.cshtml" />
     <Content Include="Views\Home\_AdverseReaction.cshtml" />
     <Content Include="Views\Home\Clinician.cshtml" />
+    <Content Include="Views\Home\_DetailComparison.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
