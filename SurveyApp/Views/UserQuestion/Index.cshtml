@@ -157,40 +157,96 @@
                         }
                         else
                         {
-                            <h4 class="col-md-12">Weekly Scheduled Questionnaire for Teacher</h4>
-                            <div class="btn btn-default col-md-12 text-left">Language and Communication@(Html.Raw(getPercentCompletion(24, (int)drch["ID"], url.Replace("__", "24"))))</div>
-                            <div class="btn btn-default col-md-12 text-left">Behaviors@(Html.Raw(getPercentCompletion(25, (int)drch["ID"], url.Replace("__", "25"))))</div>
-                            <div class="btn btn-default col-md-12 text-left">Daily Living Skills/Independence@(Html.Raw(getPercentCompletion(26, (int)drch["ID"], url.Replace("__", "26"))))</div>
+                            <h4 class="col-md-12">Recurring Survey</h4>
+                            var strLanComunication = getPercentCompletion(24, (int)drch["ID"], url.Replace("__", "24"));
+                            if (strLanComunication != "")
+                            {
+                                <div class="btn btn-default col-md-12 text-left">Language and Communication@(Html.Raw(strLanComunication))</div>
+                            }
+                            var acadmicprogrss = getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"));
+                            if (acadmicprogrss != "") { 
                             <div class="btn btn-default col-md-12 text-left">Academic Progress Rating Scales@(Html.Raw(getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"))))</div>
+                             }
                         }
-                        <h4 class="col-md-12">Quarterly Scheduled Surveys</h4>
-                        <div class="btn btn-default col-md-12 text-left">Abbreviated sensory profile @(Html.Raw(getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">Caregiver Strain Questionnaire@(Html.Raw(getPercentCompletion(2, (int)drch["ID"], url.Replace("__", "2"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">GI Severity Index @(Html.Raw(getPercentCompletion(3, (int)drch["ID"], url.Replace("__", "3"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">Aberrant Behavior Checklist@(Html.Raw(getPercentCompletion(4, (int)drch["ID"], url.Replace("__", "4"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">Social Responsiveness Scale@(Html.Raw(getPercentCompletion(5, (int)drch["ID"], url.Replace("__", "5"))))</div>
-                        @if (age <= 4 && age >= 2)
+                        @{
+                        var abbsensoryprofile=getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
+                        if(abbsensoryprofile!=""){
+                        <div class="btn btn-default col-md-12 text-left">Abbreviated sensory profile @(Html.Raw(abbsensoryprofile))</div>
+
+                        }
+                        var CaregiverQuestionair = getPercentCompletion(2, (int)drch["ID"], url.Replace("__", "2"));
+                        if (CaregiverQuestionair != "") { 
+                        <div class="btn btn-default col-md-12 text-left">Caregiver Strain Questionnaire@(Html.Raw(CaregiverQuestionair))</div>
+                        }
+                        var GISeverityIndex = getPercentCompletion(3, (int)drch["ID"], url.Replace("__", "3"));
+                        if (GISeverityIndex != "") { 
+                        <div class="btn btn-default col-md-12 text-left">GI Severity Index @(Html.Raw(GISeverityIndex))</div>
+                        }
+                        var abbehaviourchk = getPercentCompletion(4, (int)drch["ID"], url.Replace("__", "4"));
+                        if (abbehaviourchk != "") { 
+                        <div class="btn btn-default col-md-12 text-left">Aberrant Behavior Checklist@(Html.Raw(abbehaviourchk))</div>
+                        }
+
+                        var socialResponsivenies = getPercentCompletion(5, (int)drch["ID"], url.Replace("__", "5"));
+                        if (socialResponsivenies != "") { 
+                        <div class="btn btn-default col-md-12 text-left">Social Responsiveness Scale@(Html.Raw(socialResponsivenies))</div>
+                        }
+                        
+                       
+                      
+                        if (age <= 4 && age >= 2)
                         {
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 2yrs-4yrs@(Html.Raw(getPercentCompletion(6, (int)drch["ID"], url.Replace("__", "6"))))</div>
+                            var pedsqty = getPercentCompletion(6, (int)drch["ID"], url.Replace("__", "6"));
+                            if (pedsqty != "")
+                            { 
+                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 2yrs-4yrs@(Html.Raw(pedsqty))</div>
+                            }
                         }
                         else if (age <= 7 && age >= 5)
                         {
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 5yrs-7yrs@(Html.Raw(getPercentCompletion(7, (int)drch["ID"], url.Replace("__", "7"))))</div>
+                            var pdsqtylife = getPercentCompletion(7, (int)drch["ID"], url.Replace("__", "7"));
+                            if (pdsqtylife!="")
+                            {
+                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 5yrs-7yrs@(Html.Raw(pdsqtylife))</div>
+                            }
                         }
                         else if (age <= 12 && age >= 8)
                         {
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(getPercentCompletion(8, (int)drch["ID"], url.Replace("__", "8"))))</div>
+                            var pdsqty8yr = getPercentCompletion(8, (int)drch["ID"], url.Replace("__", "8"));
+                            if (pdsqty8yr != "") { 
+                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(pdsqty8yr))</div>
+                            }
                         }
                         else if (age <= 18 && age >= 13)
                         {
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 13yrs -18yrs@(Html.Raw(getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "17"))))</div>
+                            var pdsqty13year = getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "17"));
+                            if (pdsqty13year != "") { 
+                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 13yrs -18yrs@(Html.Raw(pdsqty13year))</div>
+                            }
                         }
-                        <div class="btn btn-default col-md-12 text-left">Short language profile @(Html.Raw(getPercentCompletion(10, (int)drch["ID"], url.Replace("__", "10"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">Social communication Questionnaire – life time @(Html.Raw(getPercentCompletion(11, (int)drch["ID"], url.Replace("__", "11"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">Insomnia Severity Index@(Html.Raw(getPercentCompletion(12, (int)drch["ID"], url.Replace("__", "12"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">Connor-Davidson Resilience Scale 10@(Html.Raw(getPercentCompletion(13, (int)drch["ID"], url.Replace("__", "13"))))</div>
-                        <div class="btn btn-default col-md-12 text-left">Family Empowerment Scale@(Html.Raw(getPercentCompletion(14, (int)drch["ID"], url.Replace("__", "14"))))</div>
+                        var shrtlngprofile = getPercentCompletion(10, (int)drch["ID"], url.Replace("__", "10"));
+                        if (shrtlngprofile != "") { 
+                        <div class="btn btn-default col-md-12 text-left">Short language profile @(Html.Raw(shrtlngprofile))</div>
+                        }
+                        var socialcommqstions = getPercentCompletion(11, (int)drch["ID"], url.Replace("__", "11"));
+                        if (socialcommqstions != "") { 
+                        <div class="btn btn-default col-md-12 text-left">Social communication Questionnaire – life time @(Html.Raw(socialcommqstions))</div>
+                        }
+                        var Insomniaseverity = getPercentCompletion(12, (int)drch["ID"], url.Replace("__", "12"));
+                        if (Insomniaseverity != "") { 
+                        <div class="btn btn-default col-md-12 text-left">Insomnia Severity Index@(Html.Raw(Insomniaseverity))</div>
+                        }
+                        var connordavidson = getPercentCompletion(13, (int)drch["ID"], url.Replace("__", "13"));
+                        if (connordavidson != "")
+                        {
+                            <div class="btn btn-default col-md-12 text-left">Connor-Davidson Resilience Scale 10@(Html.Raw(connordavidson))</div>
+                        }
 
+                        var familyempowermentscale = getPercentCompletion(14, (int)drch["ID"], url.Replace("__", "14"));
+                        if (familyempowermentscale != "") {
+                        <div class="btn btn-default col-md-12 text-left">Family Empowerment Scale@(Html.Raw(familyempowermentscale))</div>
+                        }
+                        }
                         <h4 class="col-md-12">Others</h4>
                         <div class="btn btn-default col-md-4 text-left">Feedback Questionnaire@(Html.Raw(getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"))))</div>
                         <div class="btn btn-default col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
@@ -200,6 +256,7 @@
                 </div>
             </div>
         }
+
     }
     else
     {
