@@ -64,6 +64,7 @@
     .comparison .tblComparison .trhdn{display:none !important;}
     .comparison .title{clear: both;background-color: #FFF;text-align: center;padding: 10px;border-right: solid 1px #CCC;border-left: solid 1px #CCC;}
     .comparison .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;margin-top: 4px;display: inline-block;}
+    .comparison .heading{position: absolute;display:inline-block;font-size:10px;-ms-transform: rotate(-60deg); /* IE 9 */-webkit-transform: rotate(-60deg); /* Chrome, Safari, Opera */transform: rotate(-60deg);}
 </style>
 
 <div class="comparison">
@@ -77,9 +78,9 @@
                 <a href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected'); $('.tblComparison').find('.tblCurrent').hide(); $('.tblComparison').find('.tblPrevious').show();">Previous Period</a>
             </li>
         </ul>
-        <div class="title">Recurring Surveys</div>
+        <div class="title">Recurring Surveys</div>        
         <table cellpadding="0" cellspacing="0" class="tblComparison">
-            <thead>
+            <thead>                
                 <tr>
                     <td class="name hdhelper" data-toggle="tooltip" title="Child enrolled in the specfic survey">Child</td>
                     <td>
@@ -112,7 +113,7 @@
                                     </td>
                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                     {
-                                        <td class="dot">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</td>
+                                        <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                     }
                                 </tr>
                                 @foreach (DataRow drTeacher in drTeachers)
@@ -123,7 +124,7 @@
                                         </td>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
                                         {
-                                            <td class="dot">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</td>
+                                            <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
                                         }
                                     </tr>
                                 }
@@ -135,7 +136,7 @@
                                     </td>
                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                     {
-                                        <td class="dot">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</td>
+                                        <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
                                     }
                                 </tr>
                                 @foreach (DataRow drTeacher in drTeachers)
@@ -146,7 +147,7 @@
                                         </td>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
                                         {
-                                            <td class="dot">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</td>
+                                            <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
                                         }
                                     </tr>
                                 }
