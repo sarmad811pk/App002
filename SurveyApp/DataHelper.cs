@@ -409,7 +409,18 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetDetailComparison";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        #region Charts
+        public static DataSet DashboardGetCharts()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "Dashboard_GetCharts";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         #endregion
+        #endregion        
 
     }
 }

@@ -1290,18 +1290,18 @@ div.dataTables_info {
   color: #ffffff;
 }
 .mini-stat-icon {
-  -moz-border-radius: 100%;
-  -webkit-border-radius: 100%;
-  border-radius: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
-  display: inline-block;
-  float: left;
-  font-size: 30px;
-  height: 60px;
-  line-height: 60px;
-  margin-right: 10px;
-  text-align: center;
-  width: 60px;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: inline-block;
+    float: left;
+    font-size: 28px;
+    height: 50px;
+    line-height: 51px;
+    margin-right: 10px;
+    text-align: center;
+    width: 50px;
 }
 .mini-stat-info {
   padding-top: 2px;

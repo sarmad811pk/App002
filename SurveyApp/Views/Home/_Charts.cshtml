@@ -1,4 +1,149 @@
-﻿
+﻿@using System.Data;
+
+@{ 
+    DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts();
+    string dASP = "", pASP = "", tASP = "";
+    string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
+    string dPEDsql = "", pPEDsql = "";
+    string dCareGiver = "", pCareGiver = "";
+    string dPES = "", pPES = "";
+    string dGSI = "", pGSI = "";
+    string dAPRS = "", tAPRS = "";
+    string dWT = "", tWT = "";
+
+    if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0 && dsCharts.Tables[0].Rows.Count > 0)
+    {
+        foreach (DataRow dr in dsCharts.Tables[0].Rows)
+        {
+            #region Abbreviated Sensory Profile
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 1)
+            {
+                dASP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                if(dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
+                {
+                    pASP += dr["Score"] + ",";
+                    tASP += "0" + ",";
+                }
+                else if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
+                {
+                    tASP += dr["Score"] + ",";
+                    pASP += "0" + ",";
+                }
+            }
+            #endregion
+
+            #region Aberrant Behavior Checklist Social Responsiveness Scale
+            if (dr["SurveyID"] != DBNull.Value && ((int)dr["SurveyID"] == 4 || (int)dr["SurveyID"] == 5))
+            {
+                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
+                {
+                    if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 4)
+                    {
+                        pABC += dr["Score"] + ",";
+                        tABC += "0" + ",";
+                        pSRS += "0" + ",";
+                        tSRS += "0" + ",";
+                    }
+                    else if(dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 5)
+                    {
+                        pSRS += dr["Score"] + ",";
+                        tSRS += "0" + ",";
+                        pABC += "0" + ",";
+                        tABC += "0" + ",";
+                    }
+                }
+                else if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
+                {
+                    if ((int)dr["SurveyID"] == 4)
+                    {
+                        tABC += dr["Score"] + ",";
+                        pABC += "0" + ",";
+                        pSRS += "0" + ",";
+                        tSRS += "0" + ",";
+                    }
+                    else if((int)dr["SurveyID"] == 5)
+                    {
+                        tSRS += dr["Score"] + ",";
+                        pSRS += "0" + ",";
+                        pABC += "0" + ",";
+                        tABC += "0" + ",";
+                    }
+                }
+            }
+            #endregion
+
+            #region PedsQL-Parent Report for Children(8-12)
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 8)
+            {
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
+                {
+                    dPEDsql += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                    pPEDsql += dr["Score"] + ",";
+                }
+            }
+            #endregion
+
+            #region Caregiver Strain Questionnaire
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 2)
+            {
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
+                {
+                    dCareGiver += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                    pCareGiver += dr["Score"] + ",";
+                }
+            }
+            #endregion
+
+            #region Family Empowerment Scale
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 14)
+            {
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
+                {
+                    dPES += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                    pPES += dr["Score"] + ",";
+                }
+            }
+            #endregion
+
+            #region GI Severity Index 
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 3)
+            {
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
+                {
+                    dGSI += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                    pGSI += dr["Score"] + ",";
+                }
+            }
+            #endregion
+
+            #region Academic Progress Rating Scales
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 27)
+            {
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
+                {
+                    dAPRS += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                    tAPRS += dr["Score"] + ",";
+                }
+            }
+            #endregion
+
+            #region Weekly Teacher
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 24)
+            {
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
+                {
+                    dWT += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                    tWT += dr["Score"] + ",";
+                }
+            }
+            #endregion
+        }
+    }
+}
+
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script type="text/javascript">
@@ -15,7 +160,7 @@
             text: 'Parent/Teacher Quaterly Trend'
         },
         xAxis: {
-            categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016'],
+            categories: [@Html.Raw(dABC.Trim(','))],
 
             plotLines: [{
                 color: '#93CDDD',
@@ -51,12 +196,15 @@
                 }
             }
         },
+        credits: {
+            enabled: false
+        },
         series: [{
             name: 'Parents ABC Scores',
             marker: {
                 symbol: 'square'
             },
-            data: [65, 69, 69, 70, 72, 74, 75, ],
+            data: [@Html.Raw(pABC.Trim(','))],
             color: '#7CB5EC'
 
         }, {
@@ -64,7 +212,7 @@
             marker: {
                 symbol: 'diamond'
             },
-            data: [62, 65, 66, 66, 72, 72, 70, ],
+            data: [@Html.Raw(tABC.Trim(','))],
             color: '#434348'
 
         }, {
@@ -72,7 +220,7 @@
             marker: {
                 symbol: 'square'
             },
-            data: [42, 45, 46, 46, 42, 42, 45, ],
+            data: [@Html.Raw(pSRS.Trim(','))],
             color: '#7CB5EC'
 
         }, {
@@ -80,7 +228,7 @@
             marker: {
                 symbol: 'diamond'
             },
-            data: [40, 40, 42, 43, 41, 40, 40, ],
+            data: [@Html.Raw(tSRS.Trim(','))],
             color: '#434348'
         }]
         });
@@ -122,6 +270,9 @@
                         lineWidth: 1
                     }
                 }
+            },
+            credits: {
+                enabled: false
             },
             series: [{
                 name: 'Irritability/Agitation',
@@ -208,6 +359,9 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Irritability/Agitation',
                 marker: {
@@ -290,6 +444,9 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Social Awareness',
                 marker: {
@@ -371,6 +528,9 @@
                         lineWidth: 1
                     }
                 }
+            },
+            credits: {
+                enabled: false
             },
             series: [{
                 name: 'Social Awareness',
@@ -456,6 +616,9 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Parent SPL',
                 marker: {
@@ -490,7 +653,7 @@
                 text: 'Parent/Teacher Quaterly Trend'
             },
             xAxis: {
-                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+                categories: [@Html.Raw(dASP.Trim(','))]
             },
             yAxis: {
                 title: {
@@ -515,12 +678,15 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Parent SPL',
                 marker: {
                     symbol: 'square'
                 },
-                data: [65, 69, 69, 70, 72, 74, 80, ],
+                data: [@Html.Raw(pASP.Trim(','))],
                 color: '#73B3EF'
 
             }, {
@@ -528,7 +694,7 @@
                 marker: {
                     symbol: 'diamond'
                 },
-                data: [62, 65, 66, 60, 72, 72, 80, ],
+                data: [@Html.Raw(tASP.Trim(','))],
                 color: '#434348'
 
             }],
@@ -549,7 +715,7 @@
                 text: 'Parent Quaterly Trend'
             },
             xAxis: {
-                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+                categories: [@Html.Raw(dPEDsql.TrimEnd(','))]
             },
             yAxis: {
                 title: {
@@ -574,12 +740,15 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Scores',
                 marker: {
                     symbol: 'square'
                 },
-                data: [65, 69, 69, 70, 72, 74, 80, ],
+                data: [@Html.Raw(pPEDsql.TrimEnd(','))],
                 color: '#73B3EF'
 
             }],
@@ -626,6 +795,9 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'PedsQL(8-12)',
                 marker: {
@@ -661,7 +833,7 @@
                 text: 'Parent Quaterly Trend'
             },
             xAxis: {
-                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+                categories: [@Html.Raw(dCareGiver.TrimEnd(','))]
             },
             yAxis: {
                 title: {
@@ -686,12 +858,15 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Scores',
                 marker: {
                     symbol: 'square'
                 },
-                data: [65, 69, 69, 70, 72, 74, 80, ],
+                data: [@Html.Raw(pCareGiver.TrimEnd(','))],
                 color: '#73B3EF'
 
             }],
@@ -714,7 +889,7 @@
                 text: 'Parent Quaterly Trend'
             },
             xAxis: {
-                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+                categories: [@Html.Raw(dPES.TrimEnd(','))]
             },
             yAxis: {
                 title: {
@@ -739,12 +914,15 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Scores',
                 marker: {
                     symbol: 'square'
                 },
-                data: [65, 69, 69, 70, 72, 74, 80, ],
+                data: [@Html.Raw(pPES.TrimEnd(','))],
                 color: '#73B3EF'
 
             }],
@@ -764,7 +942,7 @@
                 text: 'Parent Quaterly Trend'
             },
             xAxis: {
-                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+                categories: [@Html.Raw(dGSI.TrimEnd(','))]
             },
             yAxis: {
                 title: {
@@ -789,12 +967,15 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Scores',
                 marker: {
                     symbol: 'square'
                 },
-                data: [65, 69, 69, 70, 72, 74, 80, ],
+                data: [@Html.Raw(pGSI.TrimEnd(','))],
                 color: '#73B3EF'
 
             }],
@@ -813,7 +994,7 @@
                 text: 'Teachers: Quaterly Trend'
             },
             xAxis: {
-                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+                categories: [@Html.Raw(dAPRS.TrimEnd(','))]
             },
             yAxis: {
                 title: {
@@ -838,12 +1019,15 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Scores',
                 marker: {
                     symbol: 'square'
                 },
-                data: [65, 69, 69, 70, 72, 74, 80, ],
+                data: [@Html.Raw(tAPRS.TrimEnd(','))],
                 color: '#73B3EF'
 
             }],
@@ -889,6 +1073,9 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'DSM Level 1',
                 marker: {
@@ -916,13 +1103,13 @@
                 type: 'spline'
             },
             title: {
-                text: 'Weekly Progress Scroe'
+                text: 'Weekly Progress Score'
             },
             subtitle: {
                 text: 'Teachers: Weekly trend'
             },
             xAxis: {
-                categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+                categories: [@Html.Raw(dWT.TrimEnd(','))]
             },
 
             yAxis: {
@@ -950,12 +1137,15 @@
                     }
                 }
             },
+            credits: {
+                enabled: false
+            },
             series: [{
                 name: 'Scores',
                 marker: {
                     symbol: 'square'
                 },
-                data: [65, 69, 69, 70, 72, 74, 80, ],
+                data: [@Html.Raw(tWT.TrimEnd(','))],
                 color: '#73B3EF'
 
             }],
@@ -976,6 +1166,7 @@
         margin-top: 10px;
     }
 </style>
+<h3>Respondents Progress</h3>
 <div class="row">
 
     <div class="col-sm-6" style="background-color:transparent;">

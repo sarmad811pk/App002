@@ -248,7 +248,7 @@ namespace SurveyApp.Controllers
                                             using (var scContext = new ScheduleContext())
                                             {
                                                 Schedule objSchedule = scContext.Schedules.Where(sc => sc.Id == objSSS.ScheduleIdParent).ToArray().FirstOrDefault();
-                                                DateTime specificDate = null != DBNull.Value && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : DateTime.MinValue;
+                                                DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : DateTime.MinValue;
                                                 DateTime endDate = DateTime.MinValue;
 
                                                 if (objSchedule.Frequency == 1)
@@ -260,12 +260,36 @@ namespace SurveyApp.Controllers
                                                     objChildSurveySchedule.StudyId = objCS.StudyId;
                                                     objChildSurveySchedule.SurveyId = objSSS.SurveyId;
 
-                                                    if (objSchedule.ActiveOn == 1)
+                                                    int activeOn = objSchedule.ActiveOn;
+                                                    using (var cCSS = new Child_Study_ScheduleContext())
+                                                    {
+                                                        Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
+                                                        foreach(Child_Study_Schedule css in cStudySchedules)
+                                                        {
+                                                            if(css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                            {
+                                                                DateTime weekday = DateTime.MinValue;
+                                                                if (css.Weekday > 0)
+                                                                {
+                                                                    weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                    while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                    {
+                                                                        weekday = weekday.AddDays(1);
+                                                                    }
+                                                                }
+
+                                                                activeOn = css.ActiveOn;
+                                                                specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (activeOn == 1)
                                                     {
                                                         endDate = dtEnrollment.Value.AddDays(objSchedule.AvailableUntil);
                                                         objChildSurveySchedule.ScheuleStartDate = dtEnrollment.Value;
                                                     }
-                                                    if (objSchedule.ActiveOn == 2)
+                                                    if (activeOn == 2)
                                                     {
                                                         endDate = specificDate.AddDays(objSchedule.AvailableUntil);
                                                         objChildSurveySchedule.ScheuleStartDate = specificDate;
@@ -281,12 +305,36 @@ namespace SurveyApp.Controllers
                                                     int noi = Convert.ToInt32(nods == "" ? "10" : nods);
                                                     DateTime dtStartDate = DateTime.MinValue;
 
-                                                    if (objSchedule.ActiveOn == 1)
+                                                    int activeOn = objSchedule.ActiveOn;
+                                                    using (var cCSS = new Child_Study_ScheduleContext())
+                                                    {
+                                                        Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
+                                                        foreach (Child_Study_Schedule css in cStudySchedules)
+                                                        {
+                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                            {
+                                                                DateTime weekday = DateTime.MinValue;
+                                                                if (css.Weekday > 0)
+                                                                {
+                                                                    weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                    while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                    {
+                                                                        weekday = weekday.AddDays(1);
+                                                                    }
+                                                                }
+
+                                                                activeOn = css.ActiveOn;
+                                                                specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (activeOn == 1)
                                                     {
                                                         dtStartDate = dtEnrollment.Value.AddDays(-objSchedule.AvailableUntil);
 
                                                     }
-                                                    if (objSchedule.ActiveOn == 2)
+                                                    if (activeOn == 2)
                                                     {
                                                         dtStartDate = specificDate.AddDays(-objSchedule.AvailableUntil);
                                                     }
@@ -316,7 +364,17 @@ namespace SurveyApp.Controllers
                                             using (var scContext = new ScheduleContext())
                                             {
                                                 Schedule objSchedule = scContext.Schedules.Where(sc => sc.Id == objSSS.ScheduleIdTeacher).ToArray().FirstOrDefault();
-                                                DateTime specificDate = null != DBNull.Value && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : DateTime.MinValue;
+                                                DateTime specificWeekday = DateTime.MinValue;
+                                                if (objSchedule.Weekday > 0)
+                                                {
+                                                    specificWeekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                    while (specificWeekday.DayOfWeek != (DayOfWeek)(objSchedule.Weekday - 1))
+                                                    {
+                                                        specificWeekday = specificWeekday.AddDays(1);
+                                                    }
+                                                }
+
+                                                DateTime specificDate = objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
                                                 DateTime endDate = DateTime.MinValue;
 
                                                 if (objSchedule.Frequency == 1)
@@ -328,12 +386,36 @@ namespace SurveyApp.Controllers
                                                     objChildSurveySchedule.StudyId = objCS.StudyId;
                                                     objChildSurveySchedule.SurveyId = objSSS.SurveyId;
 
-                                                    if (objSchedule.ActiveOn == 1)
+                                                    int activeOn = objSchedule.ActiveOn;
+                                                    using (var cCSS = new Child_Study_ScheduleContext())
+                                                    {
+                                                        Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
+                                                        foreach (Child_Study_Schedule css in cStudySchedules)
+                                                        {
+                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                            {
+                                                                DateTime weekday = DateTime.MinValue;
+                                                                if (css.Weekday > 0)
+                                                                {
+                                                                    weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                    while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                    {
+                                                                        weekday = weekday.AddDays(1);
+                                                                    }
+                                                                }
+
+                                                                activeOn = css.ActiveOn;
+                                                                specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (activeOn == 1)
                                                     {
                                                         endDate = dtEnrollment.Value.AddDays(objSchedule.AvailableUntil);
                                                         objChildSurveySchedule.ScheuleStartDate = dtEnrollment.Value;
                                                     }
-                                                    if (objSchedule.ActiveOn == 2)
+                                                    if (activeOn == 2)
                                                     {
                                                         endDate = specificDate.AddDays(objSchedule.AvailableUntil);
                                                         objChildSurveySchedule.ScheuleStartDate = specificDate;
@@ -349,12 +431,36 @@ namespace SurveyApp.Controllers
                                                     int noi = Convert.ToInt32(nods == "" ? "10" : nods);
                                                     DateTime dtStartDate = DateTime.MinValue;
 
-                                                    if (objSchedule.ActiveOn == 1)
+                                                    int activeOn = objSchedule.ActiveOn;
+                                                    using (var cCSS = new Child_Study_ScheduleContext())
+                                                    {
+                                                        Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
+                                                        foreach (Child_Study_Schedule css in cStudySchedules)
+                                                        {
+                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                            {
+                                                                DateTime weekday = DateTime.MinValue;
+                                                                if (css.Weekday > 0)
+                                                                {
+                                                                    weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                    while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                    {
+                                                                        weekday = weekday.AddDays(1);
+                                                                    }
+                                                                }
+
+                                                                activeOn = css.ActiveOn;
+                                                                specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            }
+                                                        }
+                                                    }
+
+                                                    if (activeOn == 1)
                                                     {
                                                         dtStartDate = dtEnrollment.Value.AddDays(-objSchedule.AvailableUntil);
 
                                                     }
-                                                    if (objSchedule.ActiveOn == 2)
+                                                    if (activeOn == 2)
                                                     {
                                                         dtStartDate = specificDate.AddDays(-objSchedule.AvailableUntil);
                                                     }

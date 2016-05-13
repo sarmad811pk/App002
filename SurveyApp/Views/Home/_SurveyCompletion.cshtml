@@ -160,7 +160,9 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 <style type="text/css">
-    .graphInfo{padding: 0px 0px 0px 30px;}
+    .graphInfo{padding: 4px 0px 4px 0px;}
+    .graphInfo .tblgraphInfo{margin: 0px auto;}
+    .graphInfo .tblgraphInfo td{padding:0px 10px;}
     .graphDiv{width: 46%; height: 200px; margin: 0 6px;display: inline-block;}
 </style>
 
@@ -168,21 +170,27 @@
     <h3>Survey Completion</h3>
     <div style="border:solid 1px #CCC;">
         <table style="width:100%;background-color: #FFF;">
-            <tr>
-                <td style="width: 18%;">
-                    <div class="graphInfo">
-                        <h4 style="color:#33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</h4>
-                        <h4 style="color:#286A66;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</h4>
-                        <h4 style="color: #D7524B;"><i class="ion-minus-round"></i>&nbsp;Not Started</h4>
-                    </div>
-                </td>
-                <td style="width: 40%; text-align: right;">
+            <tr>                
+                <td style="width: 50%; text-align: right;">
                     <div id="previousPeriodParent" class="graphDiv"></div>
                     <div id="previousPeriodTeacher" class="graphDiv"></div>
                 </td>
-                <td style="width: 40%; text-align: right;">
+                <td style="width: 50%; text-align: right;">
                     <div id="currentPeriodParent" class="graphDiv"></div>
                     <div id="currentPeriodTeacher" class="graphDiv"></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 100%;">
+                    <div class="graphInfo">
+                        <table class="tblgraphInfo">
+                            <tr>
+                                <td style="color:#33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</td>
+                                <td style="color:#286A66;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
+                                <td style="color: #D7524B;"><i class="ion-minus-round"></i>&nbsp;Not Started</td>
+                            </tr>
+                        </table>                        
+                    </div>
                 </td>
             </tr>
         </table>
@@ -204,10 +212,11 @@ $(function () {
         },
         colors: colors,
         title: {
-            text: 'Previous Period <br/> Parent',
+            text: 'Previous Period: Parent',
             align: 'center',
             verticalAlign: 'middle',
-            y: -70
+            y: -70,
+            style: { "color": "#333333", "fontSize": "14px" }
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -258,10 +267,11 @@ $(function () {
         },
         colors: colors,
         title: {
-            text: 'Previous Period <br/> Teacher',
+            text: 'Previous Period: Teacher',
             align: 'center',
             verticalAlign: 'middle',
-            y: -70
+            y: -70,
+            style: { "color": "#333333", "fontSize": "14px" }
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -314,10 +324,11 @@ $(function () {
         },
         colors: colors,
         title: {
-            text: 'Current Period <br/> Parent',
+            text: 'Current Period: Parent',
             align: 'center',
             verticalAlign: 'middle',
-            y: -70
+            y: -70,
+            style: { "color": "#333333", "fontSize": "14px" }
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -362,10 +373,11 @@ $(function () {
         },
         colors: colors,
         title: {
-            text: 'Current Period <br/> Teacher',
+            text: 'Current Period: Teacher',
             align: 'center',
             verticalAlign: 'middle',
-            y: -70
+            y: -70,
+            style: { "color": "#333333", "fontSize": "14px" }
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
