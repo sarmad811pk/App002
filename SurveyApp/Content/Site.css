@@ -108,14 +108,14 @@ h5, h6 {
     padding-bottom: 20px;
 }
 
-    .main-content {
-        background: url("../Images/accent.png") no-repeat 10px 0px;
+    .main-content { 
+        background:#ffffff;/* url("../Images/accent.png") no-repeat 10px 0px;
          
-        padding-top: 30px;
+        padding-top: 30px;*/
     }
 
     .featured + .main-content {
-        background: url("../Images/heroAccent.png") no-repeat 10px 0px;
+        /*background: url("../Images/heroAccent.png") no-repeat 10px 0px;*/
     }
 
 header .content-wrapper {

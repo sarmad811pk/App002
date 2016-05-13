@@ -3,12 +3,16 @@
 @{
     var c = ViewContext.RouteData.Values["Controller"].ToString();
 }
-<div class="list-group small">
-    @Html.ActionLink("Dashboard", "Index", "Home", new object { }, new { @class = "list-group-item" + (c == "Home" ? " active" : "") }) 
-    @Html.ActionLink("Survey Manager", "Index", "Survey", new object { }, new { @class = "list-group-item" + (c == "Survey" ? " active" : "") }) 
-    @Html.ActionLink("User Manager", "Index", "ParentTeacher", new object { }, new { @class = "list-group-item" + (c == "ParentTeacher" ? " active" : "") }) 
-    @Html.ActionLink("Child Manager", "Index", "Child", new object { }, new { @class = "list-group-item" + (c == "Child" ? " active" : "") }) 
-    @Html.ActionLink("School Manager", "Index", "School", new object { }, new { @class = "list-group-item" + (c == "School" ? " active" : "") }) 
-    @Html.ActionLink("Study Manager", "Index", "Study", new object { }, new { @class = "list-group-item" + (c == "Study" ? " active" : "") }) 
-    @Html.ActionLink("Schedule Manager", "Index", "Schedule", new object { }, new { @class = "list-group-item" + (c == "Schedule" ? " active" : "") })  
+<div class="list-group leftmenu">
+    <div class="list-group leftmenu">
+        <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+        <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Survey Manager</a>
+        <a class='list-group-item @(c == "ParentTeacher" ? " active" : "")  ' href="@Url.Action("Index", "ParentTeacher", new object { })"><i class='ion-ios-people'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User Manager</a>
+        <a class='list-group-item @(c == "Child" ? " active" : "")          ' href="@Url.Action("Index", "Child", new object { })"><i class='ion-happy-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Child Manager</a>
+        <a class='list-group-item @(c == "School" ? " active" : "")         ' href="@Url.Action("Index", "School", new object { })"><i class='ion-university'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;School Manager</a>
+        <a class='list-group-item @(c == "Study" ? " active" : "")          ' href="@Url.Action("Index", "Study", new object { })"><i class='ion-ios-book-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Study Manager</a>
+        <a class='list-group-item @(c == "Schedule" ? " active" : "")       ' href="@Url.Action("Index", "Schedule", new object { })"><i class='ion-calendar'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Schedule Manager</a>
+        
+    </div>
+
 </div>

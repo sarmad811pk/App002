@@ -28,7 +28,6 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
-    
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -205,6 +204,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="App_Data\aspnet-SurveyApp-20160130102437.mdf" />
+    <Content Include="App_Data\aspnet-SurveyApp-20160130102437_log.ldf">
+      <DependentUpon>aspnet-SurveyApp-20160130102437.mdf</DependentUpon>
+    </Content>
     <Content Include="bootstrap\css\components.css" />
     <Content Include="bootstrap\css\core.css" />
     <Content Include="bootstrap\css\icons.css" />
