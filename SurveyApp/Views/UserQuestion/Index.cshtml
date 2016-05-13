@@ -12,6 +12,8 @@
 
     dsQuestionsFilled = SurveyApp.DataHelper.QuestionGetFilledAnswers(userId);
     dsChildrenSchedules = SurveyApp.DataHelper.getChildrenSchedulesByUserId(userId);
+
+    
 }
 <style type="text/css">
     .col-centered { float: none; margin: 0 auto; }
@@ -37,7 +39,7 @@
     </section>
 }
 @functions{
-    DataSet dsQuestionsFilled, dsChildrenSchedules;
+    DataSet dsQuestionsFilled, dsChildrenSchedules, Ds_othersurvey,ds_advershist,ds_lifevent;
     int userId;
     string role = "";
     public string getPercentCompletion(int surveyId, int childId, string url)
@@ -115,7 +117,34 @@
 
         return schInfo;
     }
+
+    public string othersStats(int surveyid)
+    {
+        string format = "MMM d,  yyyy";
+        string returnstring = "";
+         Ds_othersurvey = SurveyApp.DataHelper.GetOtherSurveyStats(surveyid,"Stats");
+         if (Ds_othersurvey.Tables[0].Rows.Count >0 )
+         {
+             returnstring = "<span class='schedule dos'>" + Ds_othersurvey.Tables[0].Rows.Count + "  Reported till " + Convert.ToDateTime(Ds_othersurvey.Tables[0].Rows[0][1]).ToString(format) +"</span>";
+         }
+         else
+         {
+           returnstring="0 Reported till " + DateTime.Now.Date.ToString(format);
+         }
+        //ds_advershist = SurveyApp.DataHelper.GetOtherSurveyStats(surveyid, "AdverseRecation");
+
+        return returnstring;
+    }
+   
+    
+    
 }
+
+
+
+
+
+
 <div class="panel-group">
 
     @if (dschild.Tables[0].Rows.Count > 0)
@@ -246,13 +275,35 @@
                         if (familyempowermentscale != "") {
                         <div class="btn btn-default col-md-12 text-left">Family Empowerment Scale@(Html.Raw(familyempowermentscale))</div>
                         }
+
+                         var feedbackquestionair = getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"));
+                        if (feedbackquestionair!=""){
+                            <div class="btn btn-default col-md-4 text-left">Feedback Questionnaire@(Html.Raw(feedbackquestionair))</div>
+
+                        }
                         }
                         <h4 class="col-md-12">Others</h4>
-                        <div class="btn btn-default col-md-4 text-left">Feedback Questionnaire@(Html.Raw(getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"))))</div>
-                        <div class="btn btn-default col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
-                        <div class="btn btn-default col-md-4 text-left">Life Events@(Html.Raw(getPercentCompletion(29, (int)drch["ID"], url.Replace("__", "29"))))</div>
 
-                    </div>
+                        <div class="col-md-12">
+
+                            <div class="btn btn-default col-md-4 text-left"><a href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Adverse Reaction @(Html.Raw(othersStats(28)))</a></div>
+                            @*<div class="row col-md-12">
+                                @foreach (System.Data.DataRow drothers in Ds_othersurvey.Tables[0].Rows)
+                                {
+                                   
+                                }
+                            </div>*@
+
+                        </div>
+
+                                <div class="col-md-12">
+                                    <div class="btn btn-default col-md-4 text-left"><a href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Life Events @(Html.Raw(othersStats(29)))</a></div>
+                                </div>
+                                @*<div class="btn btn-default col-md-4 text-left">Feedback Questionnaire@(Html.Raw(getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"))))</div>
+            <div class="btn btn-default col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
+            <div class="btn btn-default col-md-4 text-left">Life Events@(Html.Raw(getPercentCompletion(29, (int)drch["ID"], url.Replace("__", "29"))))</div>*@
+
+                            </div>
                 </div>
             </div>
         }

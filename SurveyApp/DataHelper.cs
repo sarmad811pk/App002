@@ -327,6 +327,23 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
+
+        public static DataSet GetOtherSurveyStats(int studyId, string status)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@SurveyID", SqlDbType.Int);
+            cmd.Parameters["@SurveyID"].Value = studyId;
+
+
+            cmd.Parameters.Add("@Paramstatus", SqlDbType.NVarChar);
+            if (status != "") { cmd.Parameters["@Paramstatus"].Value = status; } else { cmd.Parameters["@Paramstatus"].Value = DBNull.Value; }
+
+            cmd.CommandText = "OtherSurvey_Stats";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
         #region Dashborad
         public static DataSet DashboardGetByStudyId(int? studyId = 0)
         {
