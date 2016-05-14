@@ -83,14 +83,13 @@
         </div>
     </header>
         <div id="body">
-        @if (Roles.IsUserInRole("Administrator"))
-        {
+  
             <div class="col-sm-2 leftsection" style="margin-top:0px;padding:0px;">                
                 @{Html.RenderPartial("~/Views/Shared/_AdminMenu.cshtml");}
             </div>
-        }
+    
        
-    <div class="col-sm-10 rightsection @(!Roles.IsUserInRole("Administrator") ? " col-sm-offset-1 " : "")" style="margin:0px;padding:0px;">
+    <div class="col-sm-10 rightsection" style="margin:0px;padding:0px;">
             @RenderSection("featured", required: false)
             <section class="content-wrapper main-content clear-fix" style="padding:10px;">@RenderBody()
                 <br /><br />

@@ -12,20 +12,20 @@ namespace SurveyApp.Controllers
     {
         //
         // GET: /UserQuestion/
-       
-        public ActionResult Index()
+
+
+        public ActionResult Index(int? childID)
         {
             if (!Request.IsAuthenticated)
             {
                 WebSecurity.Logout();
                 return RedirectToAction("Login", "Account");
             }
-
-            TempData["ID"] = WebSecurity.CurrentUserId;            
+            TempData["ChildID"] = childID;
+            TempData["ID"] = WebSecurity.CurrentUserId;
             return View();
-            
-        }
 
+        }
         public ActionResult Question(int? surveyID)
         {
             

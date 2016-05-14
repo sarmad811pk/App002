@@ -3,18 +3,36 @@
     ViewBag.Title = "Survey Manager";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int id = Convert.ToInt32(TempData["ID"]);
-    var ds = SurveyApp.DataHelper.SurveyGetAll();
-
-    DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
-    string[] roles = Roles.GetRolesForUser(User.Identity.Name);
-    userId = WebSecurity.CurrentUserId;
-    role = roles[0];
-
-    dsQuestionsFilled = SurveyApp.DataHelper.QuestionGetFilledAnswers(userId);
-    dsChildrenSchedules = SurveyApp.DataHelper.getChildrenSchedulesByUserId(userId);
-
+    //var ds = SurveyApp.DataHelper.SurveyGetAll();
+    int? childID = (int?)TempData["ChildID"];
+    }
     
-}
+@if (childID != null)
+    {
+        DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
+
+        for (int i = 0; i < dschild.Tables[0].Rows.Count; i++) {
+            if ((int?)dschild.Tables[0].Rows[i]["ID"] == childID)
+            {
+            }
+            else {
+                dschild.Tables[0].Rows[i].Delete();   
+            }
+                
+        }
+        dschild.AcceptChanges();
+ 
+    
+        string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+    
+        userId = WebSecurity.CurrentUserId;
+        role = roles[0];
+
+        dsQuestionsFilled = SurveyApp.DataHelper.QuestionGetFilledAnswers(userId);
+        dsChildrenSchedules = SurveyApp.DataHelper.getChildrenSchedulesByUserId(userId);
+  
+    
+
 <style type="text/css">
     .col-centered { float: none; margin: 0 auto; }
     .schedule { width: 60px;  text-align: center; font-style: italic; text-decoration: underline; }
@@ -23,18 +41,21 @@
     .schedule.tres{ color: #5EA226;}
     .percent{font-style :italic;}
     .text-left { text-align: left; padding-left: 7px; }
-    .surveyList div { margin-bottom: 6px; }
+    .surveyList {color:#666666;font-size:12px;
+    }
+    .surveyList div { border-bottom:dotted 1px #cccccc;padding:6px;
+    }
 </style>
 
 @section featured {
     <section class="featured">
         <div class="content-wrapper">
             <hgroup class="title">
-                <h2>@roles[0] Dashboard</h2>
+ 
+                <h2><i class="ion-ios-information-outline"></i>  You need to complete following questionnier for <b>@dschild.Tables[0].Rows[0]["Name"].ToString()</b></h2>
+                
+         
             </hgroup>
-            <p style="font-size:16px;">
-                Complete the following Survey
-            </p>
         </div>
     </section>
 }
@@ -161,64 +182,45 @@
 
             if (dob > today.AddYears(-age)) { age--; }
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#@drch["ID"].ToString()">
-                            @drch["Name"].ToString()
-                        </a>
-                    </h4>
-                </div>
-                <div id="@drch["ID"].ToString()" class="panel-collapse collapse">
-                    <div class="panel-body surveyList">
-                        @if (roles[0] != "Teacher")
+      
+                
+                    <div class="col-sm-9 surveyList">
+                        <div class="col-md-12" style="font-size:14px;border-bottom:solid 2px #000000;"><i class="ion-clipboard"></i> &nbsp;&nbsp;&nbsp;&nbsp;Surveys</div>
+                        @if(roles[0] == "Teacher")
                         {
-                            <h4 class="col-md-12">Parent Intake Form</h4>
-                            <div class="btn btn-default col-md-3 text-left">General Information@(Html.Raw(getPercentCompletion(16, (int)drch["ID"], url.Replace("__", "16")))))</div>
-                            <div class="btn btn-default col-md-2 text-left">Pregnancy@(Html.Raw(getPercentCompletion(17, (int)drch["ID"], url.Replace("__", "17"))))</div>
-                            <div class="btn btn-default col-md-3 text-left">Development and Education@(Html.Raw(getPercentCompletion(18, (int)drch["ID"], url.Replace("__", "18"))))</div>
-                            <div class="btn btn-default col-md-2 text-left">Medical History@(Html.Raw(getPercentCompletion(19, (int)drch["ID"], url.Replace("__", "19"))))</div>
-                            <div class="btn btn-default col-md-2 text-left">Medication History@(Html.Raw(getPercentCompletion(20, (int)drch["ID"], url.Replace("__", "20"))))</div>
-                            <h4 class="col-md-12">Parent Follow-Up</h4>
-                            <div class="btn btn-default col-md-4 text-left">Medication@(Html.Raw(getPercentCompletion(21, (int)drch["ID"], url.Replace("__", "21"))))</div>
-                            <div class="btn btn-default col-md-4 text-left">Part 2@(Html.Raw(getPercentCompletion(22, (int)drch["ID"], url.Replace("__", "22"))))</div>
-                            <div class="btn btn-default col-md-4 text-left">Additional Comments@(Html.Raw(getPercentCompletion(23, (int)drch["ID"], url.Replace("__", "23"))))</div>
-                        }
-                        else
-                        {
-                            <h4 class="col-md-12">Recurring Survey</h4>
+                            
                             var strLanComunication = getPercentCompletion(24, (int)drch["ID"], url.Replace("__", "24"));
                             if (strLanComunication != "")
                             {
-                                <div class="btn btn-default col-md-12 text-left">Language and Communication@(Html.Raw(strLanComunication))</div>
+                                <div class="col-md-12 text-left">Language and Communication@(Html.Raw(strLanComunication))</div>
                             }
                             var acadmicprogrss = getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"));
                             if (acadmicprogrss != "") { 
-                            <div class="btn btn-default col-md-12 text-left">Academic Progress Rating Scales@(Html.Raw(getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"))))</div>
+                            <div class="col-md-12 text-left">Academic Progress Rating Scales@(Html.Raw(getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"))))</div>
                              }
                         }
                         @{
                         var abbsensoryprofile=getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
                         if(abbsensoryprofile!=""){
-                        <div class="btn btn-default col-md-12 text-left">Abbreviated sensory profile @(Html.Raw(abbsensoryprofile))</div>
+                        <div class="col-md-12 text-left">Abbreviated sensory profile @(Html.Raw(abbsensoryprofile))</div>
 
                         }
                         var CaregiverQuestionair = getPercentCompletion(2, (int)drch["ID"], url.Replace("__", "2"));
                         if (CaregiverQuestionair != "") { 
-                        <div class="btn btn-default col-md-12 text-left">Caregiver Strain Questionnaire@(Html.Raw(CaregiverQuestionair))</div>
+                        <div class="col-md-12 text-left">Caregiver Strain Questionnaire@(Html.Raw(CaregiverQuestionair))</div>
                         }
                         var GISeverityIndex = getPercentCompletion(3, (int)drch["ID"], url.Replace("__", "3"));
                         if (GISeverityIndex != "") { 
-                        <div class="btn btn-default col-md-12 text-left">GI Severity Index @(Html.Raw(GISeverityIndex))</div>
+                        <div class="col-md-12 text-left">GI Severity Index @(Html.Raw(GISeverityIndex))</div>
                         }
                         var abbehaviourchk = getPercentCompletion(4, (int)drch["ID"], url.Replace("__", "4"));
                         if (abbehaviourchk != "") { 
-                        <div class="btn btn-default col-md-12 text-left">Aberrant Behavior Checklist@(Html.Raw(abbehaviourchk))</div>
+                        <div class="col-md-12 text-left">Aberrant Behavior Checklist@(Html.Raw(abbehaviourchk))</div>
                         }
 
                         var socialResponsivenies = getPercentCompletion(5, (int)drch["ID"], url.Replace("__", "5"));
                         if (socialResponsivenies != "") { 
-                        <div class="btn btn-default col-md-12 text-left">Social Responsiveness Scale@(Html.Raw(socialResponsivenies))</div>
+                        <div class="col-md-12 text-left">Social Responsiveness Scale@(Html.Raw(socialResponsivenies))</div>
                         }
                         
                        
@@ -228,7 +230,7 @@
                             var pedsqty = getPercentCompletion(6, (int)drch["ID"], url.Replace("__", "6"));
                             if (pedsqty != "")
                             { 
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 2yrs-4yrs@(Html.Raw(pedsqty))</div>
+                            <div class="col-md-12 text-left">Peds quality of life for 2yrs-4yrs@(Html.Raw(pedsqty))</div>
                             }
                         }
                         else if (age <= 7 && age >= 5)
@@ -236,83 +238,117 @@
                             var pdsqtylife = getPercentCompletion(7, (int)drch["ID"], url.Replace("__", "7"));
                             if (pdsqtylife!="")
                             {
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 5yrs-7yrs@(Html.Raw(pdsqtylife))</div>
+                            <div class="col-md-12 text-left">Peds quality of life for 5yrs-7yrs@(Html.Raw(pdsqtylife))</div>
                             }
                         }
                         else if (age <= 12 && age >= 8)
                         {
                             var pdsqty8yr = getPercentCompletion(8, (int)drch["ID"], url.Replace("__", "8"));
                             if (pdsqty8yr != "") { 
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(pdsqty8yr))</div>
+                            <div class="col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(pdsqty8yr))</div>
                             }
                         }
                         else if (age <= 18 && age >= 13)
                         {
                             var pdsqty13year = getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "17"));
                             if (pdsqty13year != "") { 
-                            <div class="btn btn-default col-md-12 text-left">Peds quality of life for 13yrs -18yrs@(Html.Raw(pdsqty13year))</div>
+                            <div class="col-md-12 text-left">Peds quality of life for 13yrs -18yrs@(Html.Raw(pdsqty13year))</div>
                             }
                         }
                         var shrtlngprofile = getPercentCompletion(10, (int)drch["ID"], url.Replace("__", "10"));
                         if (shrtlngprofile != "") { 
-                        <div class="btn btn-default col-md-12 text-left">Short language profile @(Html.Raw(shrtlngprofile))</div>
+                        <div class="col-md-12 text-left">Short language profile @(Html.Raw(shrtlngprofile))</div>
                         }
                         var socialcommqstions = getPercentCompletion(11, (int)drch["ID"], url.Replace("__", "11"));
                         if (socialcommqstions != "") { 
-                        <div class="btn btn-default col-md-12 text-left">Social communication Questionnaire – life time @(Html.Raw(socialcommqstions))</div>
+                        <div class="col-md-12 text-left">Social communication Questionnaire – life time @(Html.Raw(socialcommqstions))</div>
                         }
                         var Insomniaseverity = getPercentCompletion(12, (int)drch["ID"], url.Replace("__", "12"));
                         if (Insomniaseverity != "") { 
-                        <div class="btn btn-default col-md-12 text-left">Insomnia Severity Index@(Html.Raw(Insomniaseverity))</div>
+                        <div class="col-md-12 text-left">Insomnia Severity Index@(Html.Raw(Insomniaseverity))</div>
                         }
                         var connordavidson = getPercentCompletion(13, (int)drch["ID"], url.Replace("__", "13"));
                         if (connordavidson != "")
                         {
-                            <div class="btn btn-default col-md-12 text-left">Connor-Davidson Resilience Scale 10@(Html.Raw(connordavidson))</div>
+                            <div class="col-md-12 text-left">Connor-Davidson Resilience Scale 10@(Html.Raw(connordavidson))</div>
                         }
 
                         var familyempowermentscale = getPercentCompletion(14, (int)drch["ID"], url.Replace("__", "14"));
                         if (familyempowermentscale != "") {
-                        <div class="btn btn-default col-md-12 text-left">Family Empowerment Scale@(Html.Raw(familyempowermentscale))</div>
+                        <div class="col-md-12 text-left">Family Empowerment Scale@(Html.Raw(familyempowermentscale))</div>
                         }
 
                          var feedbackquestionair = getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"));
                         if (feedbackquestionair!=""){
-                            <div class="btn btn-default col-md-4 text-left">Feedback Questionnaire@(Html.Raw(feedbackquestionair))</div>
+                            <div class="col-md-4 text-left">Feedback Questionnaire@(Html.Raw(feedbackquestionair))</div>
 
                         }
                         }
-                        <h4 class="col-md-12">Others</h4>
-
-                        <div class="col-md-12">
-
-                            <div class="btn btn-default col-md-4 text-left"><a href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Adverse Reaction @(Html.Raw(othersStats(28)))</a></div>
-                            @*<div class="row col-md-12">
-                                @foreach (System.Data.DataRow drothers in Ds_othersurvey.Tables[0].Rows)
-                                {
-                                   
-                                }
-                            </div>*@
-
                         </div>
-
-                                <div class="col-md-12">
-                                    <div class="btn btn-default col-md-4 text-left"><a href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Life Events @(Html.Raw(othersStats(29)))</a></div>
-                                </div>
-                                @*<div class="btn btn-default col-md-4 text-left">Feedback Questionnaire@(Html.Raw(getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"))))</div>
-            <div class="btn btn-default col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
-            <div class="btn btn-default col-md-4 text-left">Life Events@(Html.Raw(getPercentCompletion(29, (int)drch["ID"], url.Replace("__", "29"))))</div>*@
-
-                            </div>
+    <div class="col-sm-3">
+        @if (roles[0] != "Teacher")
+{
+            <div style="padding: 0px; background: #3F51B5; color: #ffffff;overflow:auto;margin-bottom:10px;">
+                <div style="padding: 5px; background: #3F51B5; overflow: auto; text-align: center; position: relative;"> <i class="ion-flag" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i> Parent Intake / Followup</div>
+                <div style="padding: 5px; background: #4D5EC1; overflow:auto;font-size:12px;">
+                    <div class="col-md-12 text-left">General Information@(Html.Raw(getPercentCompletion(16, (int)drch["ID"], url.Replace("__", "16"))))</div>
+                    <div class="col-md-12 text-left">Pregnancy@(Html.Raw(getPercentCompletion(17, (int)drch["ID"], url.Replace("__", "17"))))</div>
+                    <div class="col-md-12 text-left">Development and Education@(Html.Raw(getPercentCompletion(18, (int)drch["ID"], url.Replace("__", "18"))))</div>
+                    <div class="col-md-12 text-left">Medical History@(Html.Raw(getPercentCompletion(19, (int)drch["ID"], url.Replace("__", "19"))))</div>
+                    <div class="col-md-12 text-left">Medication History@(Html.Raw(getPercentCompletion(20, (int)drch["ID"], url.Replace("__", "20"))))</div>
+                    <div class="col-md-12 text-left">Medication@(Html.Raw(getPercentCompletion(21, (int)drch["ID"], url.Replace("__", "21"))))</div>
+                    <div class="col-md-12 text-left">Follow-Up@(Html.Raw(getPercentCompletion(22, (int)drch["ID"], url.Replace("__", "22"))))</div>
+                    <div class="col-md-12 text-left">Additional Comments@(Html.Raw(getPercentCompletion(23, (int)drch["ID"], url.Replace("__", "23"))))</div>
                 </div>
             </div>
-        }
+}
 
-    }
-    else
-    {
-        <div class="alert alert-info">
-            <strong>Info!</strong>No child is assosisated with this @roles[0]
+        <div class="col-md-12 text-left" style="padding: 0px; background: #E14C3E; color: #ffffff; overflow: auto;margin-bottom:10px;">
+            <div style="padding: 5px; background: #E14C3E; color: #ffffff; overflow: auto; text-align: center; position: relative;"> <i class="ion-nuclear" style="position:absolute;top:7px;left:12px;font-size:16px;"></i> Adverse Reaction</div>
+            <div style="padding: 5px; background: #EB6357; overflow: auto; font-size: 12px;">
+                <a href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })" style="color:#ffffff;">@(Html.Raw(othersStats(28)))</a>
+            </div>
         </div>
-    }
-</div>
+        <div class="col-md-12 text-left" style="padding: 0px; background: #8BC34A; color: #ffffff; overflow: auto; margin-bottom: 10px;">
+            <div style="padding: 5px; background: #8BC34A; color: #ffffff; overflow: auto; text-align: center; position: relative; "> <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events</div>
+            <div style="padding: 5px; background: #97C95D; overflow: auto; font-size: 12px;">
+                <a href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">@(Html.Raw(othersStats(29)))</a>
+            </div>
+        </div>        <div class="col-md-12 text-left" style="padding: 0px; background: #00ADEE; color: #ffffff; overflow: auto; margin-bottom: 10px;">
+            <div style="padding: 5px; background: #00ADEE; color: #ffffff; overflow: auto; text-align: center; position: relative;"> <i class="ion-chatbox-working" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Feedback Questionnaire</div>
+            <div style="padding: 5px; background: #888888; overflow: auto; font-size: 12px;">
+
+                <div class="col-md-12 text-left">@(Html.Raw(getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"))))</div>
+                </div>
+        </div>
+                @*
+                    <div class="col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
+                    <div class="col-md-4 text-left">Life Events@(Html.Raw(getPercentCompletion(29, (int)drch["ID"], url.Replace("__", "29"))))</div>*@
+
+            </div>
+
+
+            }
+
+            }
+            else
+            {
+            <div class="alert alert-info">
+                <strong>Info!</strong>No child is assosisated with this @roles[0]
+            </div>
+            }
+        </div>
+        }
+        else {
+        @section featured {
+            <section class="featured">
+                <div class="content-wrapper">
+                    <hgroup class="title">
+
+                        <h2>Welcome <b>@User.Identity.Name</b></h2>
+
+                    </hgroup>
+                </div>
+            </section>
+        }
+        }

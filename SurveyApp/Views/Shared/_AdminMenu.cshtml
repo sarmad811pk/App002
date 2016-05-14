@@ -2,9 +2,17 @@
 @*@Html.ActionLink(dr["Title"].ToString(), "Survey",null, new { id = dr["ID"].ToString() },ew with {.class = "tab" })*@
 @{
     var c = ViewContext.RouteData.Values["Controller"].ToString();
+    int? childID = (int?)TempData["ChildID"];
+    int id = Convert.ToInt32(WebSecurity.CurrentUserId);
+    System.Data.DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
+    string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+    var userId = WebSecurity.CurrentUserId;
+    var role = roles[0];
 }
 <div class="list-group leftmenu">
     <div class="list-group leftmenu">
+@if (Roles.IsUserInRole("Administrator"))
+        {
         <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
         <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Survey Manager</a>
         <a class='list-group-item @(c == "ParentTeacher" ? " active" : "")  ' href="@Url.Action("Index", "ParentTeacher", new object { })"><i class='ion-ios-people'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User Manager</a>
@@ -12,7 +20,16 @@
         <a class='list-group-item @(c == "School" ? " active" : "")         ' href="@Url.Action("Index", "School", new object { })"><i class='ion-university'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;School Manager</a>
         <a class='list-group-item @(c == "Study" ? " active" : "")          ' href="@Url.Action("Index", "Study", new object { })"><i class='ion-ios-book-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Study Manager</a>
         <a class='list-group-item @(c == "Schedule" ? " active" : "")       ' href="@Url.Action("Index", "Schedule", new object { })"><i class='ion-calendar'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Schedule Manager</a>
-        
+        }
+else
+{
+    <a class='list-group-item @(c == "UserQuestion" && childID ==null ? " active" : "") ' href="@Url.Action("Index", "UserQuestion", new { })"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+            <div class="list-group-item" style="background:rgba(0,0,0,.9);color:white;text-align:center;padding:2px;">STUDENTS / CHILDREN</div>
+    foreach (System.Data.DataRow drch in dschild.Tables[0].Rows)
+    {
+        <a class='list-group-item @(c == "UserQuestion" && childID==(int?)drch["ID"] ? " active" : "") ' href="@Url.Action("Index", "UserQuestion")?childID=@drch["ID"]"><i class='ion-ios-arrow-forward'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@drch["Name"].ToString()</a>
+    }
+}
     </div>
 
 </div>
