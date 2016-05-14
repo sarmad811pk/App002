@@ -10,6 +10,7 @@
     string dGSI = "", pGSI = "";
     string dAPRS = "", tAPRS = "";
     string dWT = "", tWT = "";
+    string dSLP = "", pSLP = "", tSLP = "";
 
     string dpABCg = "", aspABCg = "", tstpABCg = "", unpABCg = "", vspABCg = "", qpABCg = "";
     string dtABCg = "", astABCg = "", tsttABCg = "", untABCg = "", vstABCg = "", qtABCg = "";
@@ -147,6 +148,23 @@
                 {
                     dWT += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
                     tWT += dr["Score"] + ",";
+                }
+            }
+            #endregion
+
+            #region Short Language Profile
+            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 10)
+            {
+                dSLP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
+                {
+                    pSLP += dr["Score"] + ",";
+                    tSLP += "0" + ",";
+                }
+                else if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
+                {
+                    tSLP += dr["Score"] + ",";
+                    pSLP += "0" + ",";
                 }
             }
             #endregion
@@ -888,7 +906,7 @@
             text: 'Parent/Teacher Quaterly Trend'
         },
         xAxis: {
-            categories: ['Q1-Jan 2014', 'Q2-May 2014', 'Q4-Sep 2014', 'Q5-Jan 2015', 'Q6-May 2015', 'Q7-Sep 2015', 'Q8-Jan 2016']
+            categories: [@Html.Raw(dSLP.Trim(','))]
         },
         yAxis: {
             title: {
@@ -921,7 +939,7 @@
             marker: {
                 symbol: 'square'
             },
-            data: [65, 69, 69, 70, 72, 74, 80, ],
+            data: [@Html.Raw(pSLP.Trim(','))],
             color: '#73B3EF'
 
         }, {
@@ -929,7 +947,7 @@
             marker: {
                 symbol: 'diamond'
             },
-            data: [62, 65, 66, 60, 72, 72, 80, ],
+            data: [@Html.Raw(tSLP.Trim(','))],
             color: '#434348'
 
         }],
