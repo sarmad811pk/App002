@@ -181,7 +181,7 @@
                 if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
                 {
                     dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if(dr["QuestionGroup"].ToString() == "Auditory Sensitivity")
+                    if(dr["QuestionGroup"].ToString() == "Irritability")
                     {
                         aspABCg += dr["Score"] + ",";
                     }
@@ -190,7 +190,7 @@
                         aspABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Taste/Smell Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Lethargy")
                     {
                         tstpABCg += dr["Score"] + ",";
                     }
@@ -199,7 +199,7 @@
                         tstpABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Underresponsiveness")
+                    if (dr["QuestionGroup"].ToString() == "Stereotypy")
                     {
                         unpABCg += dr["Score"] + ",";
                     }
@@ -208,7 +208,7 @@
                         unpABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Visual Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Hyperactivity")
                     {
                         vspABCg += dr["Score"] + ",";
                     }
@@ -217,7 +217,7 @@
                         vspABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Questionnaire")
+                    if (dr["QuestionGroup"].ToString() == "Inappropriate Speech")
                     {
                         qpABCg += dr["Score"] + ",";
                     }
@@ -235,7 +235,7 @@
                 if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
                 {
                     dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Auditory Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Irritability")
                     {
                         astABCg += dr["Score"] + ",";
                     }
@@ -244,7 +244,7 @@
                         astABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Taste/Smell Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Lethargy")
                     {
                         tsttABCg += dr["Score"] + ",";
                     }
@@ -253,7 +253,7 @@
                         tsttABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Underresponsiveness")
+                    if (dr["QuestionGroup"].ToString() == "Stereotypy")
                     {
                         untABCg += dr["Score"] + ",";
                     }
@@ -262,7 +262,7 @@
                         untABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Visual Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Hyperactivity")
                     {
                         vstABCg += dr["Score"] + ",";
                     }
@@ -271,7 +271,7 @@
                         vstABCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Questionnaire")
+                    if (dr["QuestionGroup"].ToString() == "Inappropriate Speech")
                     {
                         qtABCg += dr["Score"] + ",";
                     }
@@ -289,7 +289,7 @@
                 if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
                 {
                     dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Auditory Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Social Awareness")
                     {
                         aspSRSg += dr["Score"] + ",";
                     }
@@ -298,7 +298,7 @@
                         aspSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Taste/Smell Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Social Cognition")
                     {
                         tstpSRSg += dr["Score"] + ",";
                     }
@@ -307,7 +307,7 @@
                         tstpSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Underresponsiveness")
+                    if (dr["QuestionGroup"].ToString() == "Social Communication")
                     {
                         unpSRSg += dr["Score"] + ",";
                     }
@@ -316,7 +316,7 @@
                         unpSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Visual Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Social Motivation")
                     {
                         vspSRSg += dr["Score"] + ",";
                     }
@@ -325,7 +325,7 @@
                         vspSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Questionnaire")
+                    if (dr["QuestionGroup"].ToString() == "Restricted Interests and Repetitive Bahaviour")
                     {
                         qpSRSg += dr["Score"] + ",";
                     }
@@ -343,7 +343,7 @@
                 if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
                 {
                     dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Auditory Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Social Awareness")
                     {
                         astSRSg += dr["Score"] + ",";
                     }
@@ -352,7 +352,7 @@
                         astSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Taste/Smell Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Social Cognition")
                     {
                         tsttSRSg += dr["Score"] + ",";
                     }
@@ -361,7 +361,7 @@
                         tsttSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Underresponsiveness")
+                    if (dr["QuestionGroup"].ToString() == "Social Communication")
                     {
                         untSRSg += dr["Score"] + ",";
                     }
@@ -370,7 +370,7 @@
                         untSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Visual Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "Social Motivation")
                     {
                         vstSRSg += dr["Score"] + ",";
                     }
@@ -379,7 +379,7 @@
                         vstSRSg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Questionnaire")
+                    if (dr["QuestionGroup"].ToString() == "Restricted Interests and Repetitive Bahaviour")
                     {
                         qtSRSg += dr["Score"] + ",";
                     }
@@ -424,7 +424,7 @@
                 if (dr["UserType"] != DBNull.Value/* && (int)dr["UserType"] == 1*/)
                 {
                     dpWLCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Auditory Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "DSM Level 1")
                     {
                         aspWLCg += dr["Score"] + ",";
                     }
@@ -433,7 +433,7 @@
                         aspWLCg += "0" + ",";
                     }
 
-                    if (dr["QuestionGroup"].ToString() == "Taste/Smell Sensitivity")
+                    if (dr["QuestionGroup"].ToString() == "DSM Level 2")
                     {
                         tstpWLCg += dr["Score"] + ",";
                     }

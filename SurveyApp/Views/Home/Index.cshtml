@@ -6,11 +6,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     int studyId = Model == null ? 0 : (int)Model;
+    if(studyId == 0)
+    {
+        using (StudyContext sContext = new StudyContext())
+        {
+            sContext.Studies.OrderBy(s => s.Id).FirstOrDefault();
+        }
+    }
 }
 
 <style type="text/css">
     .stats .separator{clear:both;margin-bottom: 10px;}
-    .topControls #ddlStudy{float: right; width: 22%; background-color: #fff;}    
+    .topControls #ddlStudy{float: right; width: 22%; background-color: #fff;}
+    .tabs{margin-bottom: 12px;}
+    .tabs .current, .comparison .previous {border-top: none;}
+    .tabs ul {height: 41px;margin: 0px;list-style: none;padding:0px;border-bottom: solid 1px #CCC;}
+    .tabs li {float: left;}
+    .tabs li a {text-align:center;margin-right: 2px;border: 1px solid transparent;padding: 10px 15px;display: block;position: relative;text-shadow: none;text-decoration:none;color:#333;min-width: 141px;}
+    .tabs li a:hover {border-color: #FEFEFE;cursor: pointer;}
+    .tabs li a.selected {color: #4d6b8a;background-color: #fff;border: 1px solid #B1B1B1;border-bottom-color: transparent;cursor: default;}
+    .tabs .tblComparison .trhdn{display:none !important;}
+    .tabs .title{clear: both;background-color: #FFF;text-align: center;padding: 10px;border-right: solid 1px #CCC;border-left: solid 1px #CCC;}
+    .tabs .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;margin-top: 4px;display: inline-block;}
+    
 </style>
 
 
@@ -26,9 +44,18 @@
 }
 
 <div class="stats">
+    <div class="tabs">
+        <ul class="tabdashboard">
+            <li>
+                <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected');$('.graphsDetails').hide();$('.dashboardDetails').show();">Dashboard</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected');$('.dashboardDetails').hide();$('.graphsDetails').show();">Graphs</a>
+            </li>
+        </ul>
+    </div>
     <div class="topControls">
-        <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);">
-            <option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>
+        <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);">            
         @foreach (Study objStudy in Study.StudyGetAll())
         {
             <option value="@objStudy.Id"  @(studyId == objStudy.Id ? "selected=selected" : "")>@objStudy.Name</option>
@@ -36,22 +63,29 @@
         </select>
     </div>
     
-    @{Html.RenderPartial("_ChildrenCounts", studyId);}
-    
-    <div class="separator"></div>
-    @{Html.RenderPartial("_AdverseReaction", studyId);}
+    <div class="dashboardDetails">
+        @{Html.RenderPartial("_ChildrenCounts", studyId);}
 
-    <div class="separator"></div>
-    @{Html.RenderPartial("_SurveyCompletion", studyId);}
+        <div class="separator"></div>
+        @{Html.RenderPartial("_AdverseReaction", studyId);}
 
-    <div class="separator"></div>
-    @{Html.RenderPartial("_DetailComparison");}
+        <div class="separator"></div>
+        @{Html.RenderPartial("_SurveyCompletion", studyId);}
 
-    <div class="separator"></div>
-    @{Html.RenderPartial("_Charts");}
+        <div class="separator"></div>
+        @{Html.RenderPartial("_DetailComparison");}
+    </div>
+
+    <div class="graphsDetails">
+        <div class="separator"></div>
+        @{Html.RenderPartial("_Charts");}
+    </div>
 </div>
 
 <script type="text/javascript">
+    $(function () {
+        $(".graphsDetails").hide();
+    });
     function getStudyInfo(elem) {
         var studyId = $(elem).val();
         location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId);
