@@ -68,15 +68,6 @@
     public string getPercentCompletion(int surveyId, int childId, string url)
     {
         string percentage = "0%", schInfo = "";
-        if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
-        {
-            DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + surveyId + " AND ChildID = " + childId);
-            foreach (DataRow dr in drQuestions)
-            {
-                percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;
-            }
-        }
-
 
         if (dsChildrenSchedules != null && dsChildrenSchedules.Tables != null && dsChildrenSchedules.Tables[0] != null && dsChildrenSchedules.Tables[0].Rows != null)
         {
@@ -90,6 +81,16 @@
                     DateTime endDate = drSchedule["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["ScheuleEndDate"]) : DateTime.MinValue;
                     if (endDate != DateTime.MinValue)
                     {
+                        if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
+                        {
+                            DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + surveyId + " AND ChildID = " + childId + " AND ScheduleDate = '" + endDate + "'");
+                            foreach (DataRow dr in drQuestions)
+                            {
+                                percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;
+                            }
+                        }
+
+
                         string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
                         string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
                         schInfo = schInfo + "&nbsp;&nbsp;&nbsp;&nbsp;<a href='" + urlForSurvey + "'><span class='schedule " + cssClass + "'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
