@@ -60,7 +60,7 @@ namespace SurveyApp
                 return r;
             }
         }
-        public static DataSet QuestionGetbySurveyID(int SurveyID, int childid)
+        public static DataSet QuestionGetbySurveyID(int SurveyID, int childid, DateTime FetchDate)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -69,7 +69,9 @@ namespace SurveyApp
 
             cmd.Parameters.Add("@childID", SqlDbType.Int);
             cmd.Parameters["@childID"].Value = Convert.ToInt32(childid);
-
+            cmd.Parameters.Add("@FetchDate", SqlDbType.DateTime);
+            cmd.Parameters["@FetchDate"].Value = FetchDate;
+            
             cmd.CommandText = "Question_GetbySurveyID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
@@ -280,7 +282,52 @@ namespace SurveyApp
 
 
         }
+        public static int savequestionsAdverseReaction(
+                string AdverseReaction,
+                string DateOccured,
+                string DateResolved,
+                string Medication,
+                string DateStart,
+                string DateEnd,
+                string DateSubmitted,
+                int ChildID,
+                int UserID)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
 
+
+            cmd.Parameters.Add("@AdverseReaction", SqlDbType.NVarChar); 
+			cmd.Parameters.Add("@DateOccured", SqlDbType.DateTime);
+			cmd.Parameters.Add("@DateResolved", SqlDbType.DateTime); 
+			cmd.Parameters.Add("@Medication", SqlDbType.NVarChar); 
+			cmd.Parameters.Add("@DateStart", SqlDbType.DateTime); 
+			cmd.Parameters.Add("@DateEnd", SqlDbType.DateTime); 
+			cmd.Parameters.Add("@DateSubmitted", SqlDbType.DateTime); 
+			cmd.Parameters.Add("@ChildID", SqlDbType.Int); 
+			cmd.Parameters.Add("@UserID", SqlDbType.Int);
+
+            cmd.Parameters["@AdverseReaction"].Value = AdverseReaction; 
+			cmd.Parameters["@DateOccured"].Value     = IfDBNULL(DateOccured); 
+			cmd.Parameters["@DateResolved"].Value    = IfDBNULL(DateResolved);
+			cmd.Parameters["@Medication"].Value      = IfDBNULL(Medication); 
+			cmd.Parameters["@DateStart"].Value       = IfDBNULL(DateStart); 
+			cmd.Parameters["@DateEnd"].Value         = IfDBNULL(DateEnd); 
+			cmd.Parameters["@DateSubmitted"].Value   = DateTime.Now; 
+			cmd.Parameters["@ChildID"].Value         = ChildID;
+            cmd.Parameters["@UserID"].Value = UserID;
+
+            cmd.CommandText = "AdverseReaction_Add";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+
+
+
+        }
+        public static object IfDBNULL(object value) { 
+            if(value == null){ return DBNull.Value; }
+            if (value.ToString() == "") { return DBNull.Value; }
+            return value;
+        }
 
         public static DataSet GetChildbyUserID(int Id)
         {

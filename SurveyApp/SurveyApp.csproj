@@ -405,6 +405,7 @@
     <Content Include="Views\Home\_AdverseReaction.cshtml" />
     <Content Include="Views\Home\Clinician.cshtml" />
     <Content Include="Views\Home\_DetailComparison.cshtml" />
+    <Content Include="Views\Survey\_PercentCompletion.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

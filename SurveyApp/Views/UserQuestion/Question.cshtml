@@ -1,9 +1,11 @@
 ﻿@model int?
 @{
     var chiildid = Request.QueryString["ChildId"];
+    DateTime fetchdate = Convert.ToDateTime(Request.QueryString["perioddate"]??DateTime.Now.ToShortDateString());
     System.Data.DataSet dsSurvey = SurveyApp.DataHelper.SurveyGetByID(Model ?? 1);
-    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid));
+    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid),fetchdate);
     var qGroup = "";
+    var SurveyID = Model ?? 1;
     ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString() + " - Preview";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var childname = Request.QueryString["ChildName"];
@@ -167,12 +169,16 @@
     </table>
 
 </div>
-@{Html.RenderPartial("~/Views/Survey/_PercentCompletion.cshtml");}
 
+@{
+    if (SurveyID != 28 && SurveyID != 29) { 
+    Html.RenderPartial("~/Views/Survey/_PercentCompletion.cshtml");}
+    }
 @section scripts{
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript">
+        var SurveryID = @SurveyID;
         $(function () {
             setCompletionDiv();
 
@@ -321,7 +327,7 @@
 
 
             $("input[type=hidden]").change(function () {
-
+                
            var ans = this.value.length > 0 ? this.value.substr(1) : "";
 
            var qid = $(this).attr("qid");
@@ -341,9 +347,9 @@
 
                 EnableDisableChild(qid, ans);
                 setCompletionDiv();
-                 
-                savequestions(qid, ans, score, childId, SurID,"SaveUpdate");
-
+                if(SurveryID!=28 && SurveryID!=29){
+                    savequestions(qid, ans, score, childId, SurID,"SaveUpdate");
+                }
             });
             
             $(".__slider").each(function (){ 
@@ -472,7 +478,8 @@
             }
         }
 
-        function setCompletionDiv(){
+        function setCompletionDiv() {
+            if (SurveryID == 29 || SurveryID ==28) {return;}
             var noQ = 0, nofQ = 0;
             $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
                 if($(obj).val() != ""){
@@ -482,6 +489,7 @@
             });
 
             var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0));
+             
             setCompletionPercentage(percentage);
         }
 
@@ -512,11 +520,19 @@
 
                         var childId = GetQueryStringValues()['ChildId'];
                         var SurID = GetQueryStringValues()['surveyID'];
-                        savequestions(null, null, null, childId, SurID, "SubmitStatus")
-
+                        if (SurID == 28) {
+                            savequestionsAdverseReaction(childId);
+                        }
+                        else if(SurID == 29){
+                            savequestionsLifeEvent(childId);
+                        }
+                        else {
+                            savequestions(null, null, null, childId, SurID, "SubmitStatus")
+                        }
                         $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
                             $(this).show();
                             $("#success-alert").alert('close');
+                            history.back();
                         });
 
                     }
@@ -547,7 +563,30 @@
 
             });
         }
+        function savequestionsAdverseReaction(cid){
+            var AdverseReaction = $("#q861_0").val().trim();
+            var DateOccured = $("#q862_0").val().trim();
+            var DateResolved = $("#q863_0").val().trim();
+            var Medication = $("#q865_0").val().trim();
+            var DateStart = $("#q866_0").val().trim();
+            var DateEnd = $("#q867_0").val().trim();
+            var DateSubmitted = '@DateTime.Now.ToShortDateString()';
+            var ChildID = cid; 
+            debugger;
+            var url = "/UserQuestion/savequestionsAdverseReaction";
+            var period = "@(String.IsNullOrEmpty(Request.QueryString["perioddate"]) == true ? "" : Request.QueryString["perioddate"].ToString())";
 
+            $.post(url, { AdverseReaction: AdverseReaction, 
+                DateOccured: DateOccured, 
+                DateResolved: DateResolved, 
+                Medication: Medication, 
+                DateStart: DateStart, 
+                DateEnd: DateEnd, 
+                DateSubmitted : DateSubmitted, 
+                ChildID : ChildID }, function (data) {
+
+            });
+        }
 
 
         //function SaveValues(qid) {

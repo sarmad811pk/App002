@@ -40,6 +40,30 @@ namespace SurveyApp.Controllers
             //if (SurveyID == "15" || SurveyID == "28" || SurveyID == "29") { statusparm = ""; }
             int rsl = SurveyApp.DataHelper.SaveuserQuestions(userID, QuestionID, AnswerID, score, childid, SurveyID,statusparm, percentage, scheduleDate != "" ? Convert.ToDateTime(scheduleDate) : DateTime.MinValue);
             
-        }  
+        }
+        [HttpPost]
+        public void savequestionsAdverseReaction(
+                string AdverseReaction, 
+                string DateOccured, 
+                string DateResolved, 
+                string Medication, 
+                string DateStart, 
+                string DateEnd, 
+                string DateSubmitted, 
+                int ChildID)
+        {
+            var userID = WebSecurity.CurrentUserId;
+
+            int rsl = SurveyApp.DataHelper.savequestionsAdverseReaction(AdverseReaction, 
+                DateOccured, 
+                DateResolved, 
+                Medication, 
+                DateStart, 
+                DateEnd, 
+                DateSubmitted, 
+                ChildID,
+                userID);
+
+        } 
     }
 }
