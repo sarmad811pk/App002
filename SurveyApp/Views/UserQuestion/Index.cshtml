@@ -83,55 +83,17 @@
             int i = 0;
             foreach (DataRow drSchedule in drSchedules)
             {
-                DateTime endDate = drSchedule["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["ScheuleEndDate"]) : DateTime.MinValue;
-                if(endDate != DateTime.MinValue)
+                if(i <= 1)
                 {
-                    string cssClass = i % 2 == 0 ? "tres" : "dos";
-                    string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
-                    schInfo = schInfo + "&nbsp;&nbsp;&nbsp;&nbsp;<a href='" + urlForSurvey + "'><span class='schedule " + cssClass + "'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
-                    i++;
-                }
-
-                /*
-                int activeOn = drSchedule["ActiveOn"] != DBNull.Value ? Convert.ToInt32(drSchedule["ActiveOn"]) : -1;
-                DateTime enrollmentDate = drSchedule["EnrollmentDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["EnrollmentDate"]) : DateTime.MinValue;
-                DateTime endDate = DateTime.MinValue;
-                int availableUntil = drSchedule["AvailableUntil"] != DBNull.Value ? Convert.ToInt32(drSchedule["AvailableUntil"]) : -1;
-                int daysToRepeat = drSchedule["DaysToRepeat"] != DBNull.Value ? Convert.ToInt32(drSchedule["DaysToRepeat"]) : -1;
-                DateTime specificDate = drSchedule["Day"] != DBNull.Value && drSchedule["Month"] != DBNull.Value ? new DateTime(DateTime.Now.Year, (int)drSchedule["Month"], (int)drSchedule["Day"]) : DateTime.MinValue;
-
-
-
-                if(availableUntil > 0)
-                {
-                    if (enrollmentDate != DateTime.MinValue)
+                    DateTime endDate = drSchedule["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["ScheuleEndDate"]) : DateTime.MinValue;
+                    if (endDate != DateTime.MinValue)
                     {
-                        endDate = (activeOn == 1 ? enrollmentDate : specificDate).AddDays(availableUntil);
+                        string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
                         string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
-                        schInfo = "&nbsp;&nbsp;&nbsp;&nbsp;<a href='" + urlForSurvey + "'><span class='schedule onu'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
-
-                        //if schedule end date has already passed
-                        if (endDate < DateTime.Now)
-                        {
-                            double diff = Convert.ToInt32((DateTime.Now - endDate).TotalDays);
-                            if (daysToRepeat > 0 && diff > 0)
-                            {
-                                int length = Convert.ToInt32(Math.Ceiling(diff / daysToRepeat));
-                                DateTime dt = (activeOn == 1 ? enrollmentDate : specificDate);
-                                for (int i = 0; i < length; i++)
-                                {
-                                    dt = dt.AddDays(daysToRepeat);
-                                    DateTime dtPeroid = dt.AddDays(availableUntil);
-                                    string urlForPeriod = url + "&perioddate=" + dtPeroid.ToString("MM/dd/yyyy");
-                                    string cssClass = i % 2 == 0 ? "tres" : "dos";
-                                    schInfo = schInfo + "<a href='" + urlForPeriod + "'><span class='schedule "+ cssClass + "'>" + dtPeroid.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
-                                }
-                            }
-                        }
+                        schInfo = schInfo + "&nbsp;&nbsp;&nbsp;&nbsp;<a href='" + urlForSurvey + "'><span class='schedule " + cssClass + "'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+                        i++;
                     }
                 }
-                */
-
             }
         }
 
@@ -143,22 +105,22 @@
     {
         string format = "MMM d,  yyyy";
         string returnstring = "";
-         Ds_othersurvey = SurveyApp.DataHelper.GetOtherSurveyStats(surveyid,"Stats");
-         if (Ds_othersurvey.Tables[0].Rows.Count >0 )
-         {
-             returnstring = "<span class='schedule dos'>" + Ds_othersurvey.Tables[0].Rows.Count + "  Reported till " + Convert.ToDateTime(Ds_othersurvey.Tables[0].Rows[0][1]).ToString(format) +"</span>";
-         }
-         else
-         {
-           returnstring="0 Reported till " + DateTime.Now.Date.ToString(format);
-         }
+        Ds_othersurvey = SurveyApp.DataHelper.GetOtherSurveyStats(surveyid,"Stats");
+        if (Ds_othersurvey.Tables[0].Rows.Count >0 )
+        {
+            returnstring = "<span class='schedule dos'>" + Ds_othersurvey.Tables[0].Rows.Count + "  Reported till " + Convert.ToDateTime(Ds_othersurvey.Tables[0].Rows[0][1]).ToString(format) +"</span>";
+        }
+        else
+        {
+            returnstring="0 Reported till " + DateTime.Now.Date.ToString(format);
+        }
         //ds_advershist = SurveyApp.DataHelper.GetOtherSurveyStats(surveyid, "AdverseRecation");
 
         return returnstring;
     }
-   
-    
-    
+
+
+
 }
 
 
