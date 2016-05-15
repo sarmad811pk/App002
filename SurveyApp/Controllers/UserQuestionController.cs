@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using WebMatrix.WebData;
@@ -64,6 +65,40 @@ namespace SurveyApp.Controllers
                 ChildID,
                 userID);
 
+        }
+        [HttpPost]
+        public void savequestionsLifeEvent(
+                string LifeEvent,
+                int ChildID)
+        {
+            var userID = WebSecurity.CurrentUserId;
+            string EventCategory="";
+            string EventName = "";
+            string EventDate = "";
+            string DateSubmitted = "";
+
+            if (LifeEvent.Length > 2) {
+                LifeEvent = LifeEvent.Remove(0, 1);
+                LifeEvent = LifeEvent.Remove(LifeEvent.Length - 1, 1);
+            }
+
+            string[] a = Regex.Split(LifeEvent, @"\]\[");
+            foreach (string b in a) {
+                string[] c = b.Split('|');
+                EventCategory = c[0];
+                EventName = c[1];
+                EventDate = c[2];
+                DateSubmitted = DateTime.Now.ToShortDateString();
+                int rsl = SurveyApp.DataHelper.savequestionsLifeEvent(
+                EventCategory,
+                EventName,
+                EventDate,
+                DateSubmitted,
+                ChildID,
+                userID);
+
+            }
+            
         } 
     }
 }

@@ -178,7 +178,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript">
-        var SurveryID = @SurveyID;
+    var SurveryID = @SurveyID;
         $(function () {
             setCompletionDiv();
 
@@ -219,12 +219,12 @@
                 }
             });
             $("select").change(function () {
-            
+
                 if ($(this).attr("data-tmed") == "tmed") {
-                     
+
                     var qid = $(this).attr("qid")
                     if (this.value == "other") {
-                         
+
                         $('[data-md=m9' + qid + ']').show();
                     }
                     saveTmedValues(qid);
@@ -237,7 +237,7 @@
             });
 
             $("textarea, input[type=text]").blur(function () {
-             
+
                 if ($(this).attr("data-tmed") == "tmed" || $(this).attr("data-sch") == "tsch") {
 
                     var qid = $(this).attr("qid")
@@ -247,7 +247,7 @@
                     }
 
                     if ($(this).attr("data-sch") == "tsch") {
-                    
+
                         var at1 = $('[data-id=t1' + qid + ']').val();
                         var at2 = $('[data-id=t2' + qid + ']').val();
                         var at3 = $('[data-id=t3' + qid + ']').val();
@@ -271,8 +271,8 @@
 
             function saveTmedValues(qid)
             {
-                 
-          
+
+
                 var a1 = $('[data-md=m1' + qid + ']').val();
                 var a2 = $('[data-md=m2' + qid + ']').val();
                 var a3 = $('[data-md=m4' + qid + ']').val();
@@ -283,9 +283,9 @@
                 var a7 = $('[data-md=m8' + qid + ']').val();
                 var a8 = $('[data-md=m9' + qid + ']').val();
 
-                
+
                 var allans = "|" + a1 + "|" + a2 + "|" + a3 + "|" + a4 + "|" + a5 + "|" + a6 + "|" + a7 + "|" + a8;
-                 
+
                 var v = $(this).attr("qid");
                 if (a1 == "" && a2 == "" && a3 == "" && a4 == "" && a5 == "0" && a6 == "0" && a7 == "0" && a8 == "") { }
                 else {
@@ -327,7 +327,7 @@
 
 
             $("input[type=hidden]").change(function () {
-                
+
            var ans = this.value.length > 0 ? this.value.substr(1) : "";
 
            var qid = $(this).attr("qid");
@@ -351,8 +351,8 @@
                     savequestions(qid, ans, score, childId, SurID,"SaveUpdate");
                 }
             });
-            
-            $(".__slider").each(function (){ 
+
+            $(".__slider").each(function (){
                 var defaultvalue = $(this).attr("value");
                 var itemcount=parseInt($(this).attr("length"));
                 defaultvalue = (defaultvalue/itemcount) * 700;
@@ -386,7 +386,7 @@
           }
                     },
                     stop: function(event,ui){
-          
+
                         $("#hdn" + $(this).attr("qid")).trigger('change');
       }
                 })});
@@ -489,13 +489,13 @@
             });
 
             var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0));
-             
+
             setCompletionPercentage(percentage);
         }
 
-      
+
         $("#SurveySubmit").click(function (e) {
-         
+
             e.preventDefault();
 
             var flag = true;
@@ -516,7 +516,7 @@
             if (flag) {
                 bootbox.confirm("Are you sure to submit this Survey?", function (confirmed) {
                     if (confirmed == true) {
-                      
+
 
                         var childId = GetQueryStringValues()['ChildId'];
                         var SurID = GetQueryStringValues()['surveyID'];
@@ -524,7 +524,7 @@
                             savequestionsAdverseReaction(childId);
                         }
                         else if(SurID == 29){
-                            savequestionsLifeEvent(childId);
+                            savequestionsLifeEvents(childId);
                         }
                         else {
                             savequestions(null, null, null, childId, SurID, "SubmitStatus")
@@ -532,7 +532,7 @@
                         $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
                             $(this).show();
                             $("#success-alert").alert('close');
-                            history.back();
+                            location.href = "@Url.Action("Index", "UserQuestion")?childID="+childId;
                         });
 
                     }
@@ -544,7 +544,7 @@
 
 
         function savequestions(qid, ansid, s, cid, SurID, status) {
-             
+
             var noQ = 0, nofQ = 0;
             $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
                 //$(".questions").find("input[type=hidden]").each(function(index, obj){
@@ -555,55 +555,172 @@
             });
 
             var prcnt = (Math.round((nofQ / noQ) * 100).toFixed(0)) + "%";
-          
+
             var url = "/UserQuestion/SaveUserQuestion";
             var period = "@(String.IsNullOrEmpty(Request.QueryString["perioddate"]) == true ? "" : Request.QueryString["perioddate"].ToString())";
 
-            $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt, scheduleDate : period }, function (data) {
+        $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt, scheduleDate : period }, function (data) {
+
+        });
+    }
+    function savequestionsAdverseReaction(cid){
+        var AdverseReaction = $("#q861_0").val().trim();
+        var DateOccured = $("#q862_0").val().trim();
+        var DateResolved = $("#q863_0").val().trim();
+        var Medication = $("#q865_0").val().trim();
+        var DateStart = $("#q866_0").val().trim();
+        var DateEnd = $("#q867_0").val().trim();
+        var DateSubmitted = '@DateTime.Now.ToShortDateString()';
+        var ChildID = cid;
+
+        var url = "/UserQuestion/savequestionsAdverseReaction";
+
+        $.post(url, { AdverseReaction: AdverseReaction,
+            DateOccured: DateOccured,
+            DateResolved: DateResolved,
+            Medication: Medication,
+            DateStart: DateStart,
+            DateEnd: DateEnd,
+            DateSubmitted : DateSubmitted,
+            ChildID : ChildID }, function (data) {
 
             });
-        }
-        function savequestionsAdverseReaction(cid){
-            var AdverseReaction = $("#q861_0").val().trim();
-            var DateOccured = $("#q862_0").val().trim();
-            var DateResolved = $("#q863_0").val().trim();
-            var Medication = $("#q865_0").val().trim();
-            var DateStart = $("#q866_0").val().trim();
-            var DateEnd = $("#q867_0").val().trim();
-            var DateSubmitted = '@DateTime.Now.ToShortDateString()';
-            var ChildID = cid; 
-            debugger;
-            var url = "/UserQuestion/savequestionsAdverseReaction";
-            var period = "@(String.IsNullOrEmpty(Request.QueryString["perioddate"]) == true ? "" : Request.QueryString["perioddate"].ToString())";
+    }
+    function savequestionsLifeEvents(cid){
+        var ChildID = cid;
+        var q869g="School Event",q869="Teacher Change",d869=$('#q869_1').val();
+        var q870g="School Event",q870="Classroom Change",d870=$('#q870_1').val();
+        var q871g="School Event",q871="New Student",d871=$('#q871_1').val();
+        var q872g="School Event",q872="Major peer incident",d872=$('#q872_1').val();
+        var q873g="School Event",q873="Violence in classroom",d873=$('#q873_1').val();
+        var q874g="School Event",q874="Emotional peer interaction",d874=$('#q874_1').val();
+        var q875g="School Event",q875="Change in schedule",d875=$('#q875_1').val();
+        var q876g="School Event",q876="High stakes test",d876=$('#q876_1').val();
+        var q877g="School Event",q877="Formal assessment",d877=$('#q877_1').val();
+        var q878g="School Event",q878="Outside assessor",d878=$('#q878_1').val();
+        var q879g="School Event",q879="Personnel change",d879=$('#q879_1').val();
+        var q880g="School Event",q880="Teacher absence",d880=$('#q880_1').val();
+        var q881g="School Event",q881="School absence",d881=$('#q881_1').val();
+        var q882g="School Event",q882=$('#q882_0').val(),d882=$('#q882_1').val();
+        var q884g="Family Events",q884="New family member",d884=$('#q884_1').val();
+        var q885g="Family Events",q885="Parent temporarily leave",d885=$('#q885_1').val();
+        var q886g="Family Events",q886="Injury or illness in family",d886=$('#q886_1').val();
+        var q887g="Family Events",q887="Change in residence",d887=$('#q887_1').val();
+        var q888g="Family Events",q888="Sibling issues",d888=$('#q888_1').val();
+        var q889g="Family Events",q889="Parents travel",d889=$('#q889_1').val();
+        var q890g="Family Events",q890="New person staying at the home (company)",d890=$('#q890_1').val();
+        var q891g="Family Events",q891="Death in the family",d891=$('#q891_1').val();
+        var q892g="Family Events",q892="Parental separation/divorce",d892=$('#q892_1').val();
+        var q893g="Family Events",q893="Significant family member moves",d893=$('#q893_1').val();
+        var q894g="Family Events",q894="Sibling moves",d894=$('#q894_1').val();
+        var q895g="Family Events",q895="Significant struggles with parents",d895=$('#q895_1').val();
+        var q896g="Family Events",q896="Significant struggles with siblingsabsence",d896=$('#q896_1').val();
+        var q897g="Family Events",q897="Mother pregnant",d897=$('#q897_1').val();
+        var q898g="Family Events",q898="Parent marrying",d898=$('#q898_1').val();
+        var q899g="Family Events",q899="Sibling marrying",d899=$('#q899_1').val();
+        var q900g="Family Events",q900="Parent Job/Work Change",d900=$('#q900_1').val();
+        var q901g="Family Events",q901="Change in family financial circumstances",d901=$('#q901_1').val();
+        var q902g="Family Events",q902=$('#q902_0').val(),d902=$('#q902_1').val();
+        var q904g="Health Events",q904="Physical Injury",d904=$('#q904_1').val();
+        var q905g="Health Events",q905="Medication Change",d905=$('#q905_1').val();
+        var q906g="Health Events",q906="Supplement Change",d906=$('#q906_1').val();
+        var q907g="Health Events",q907="Complementary and Alternative Medicine Change",d907=$('#q907_1').val();
+        var q908g="Health Events",q908="Physician Change",d908=$('#q908_1').val();
+        var q909g="Health Events",q909="Therapist Change",d909=$('#q909_1').val();
+        var q910g="Health Events",q910="Illness requiring doctor visit",d910=$('#q910_1').val();
+        var q911g="Health Events",q911="Illness not requiring doctor visit",d911=$('#q911_1').val();
+        var q912g="Health Events",q912="Change in diet",d912=$('#q912_1').val();
+        var q913g="Health Events",q913="Hospitalization",d913=$('#q913_1').val();
+        var q914g="Health Events",q914="Drug or Alcohol Use",d914=$('#q914_1').val();
+        var q915g="Health Events",q915="Weight Gain or Loss",d915=$('#q915_1').val();
+        var q916g="Health Events",q916="Change in physical appearance (glasses, braces)",d916=$('#q916_1').val();
+        var q917g="Health Events",q917=$('#q917_0').val(),d917=$('#q917_1').val();
+        var q919g="External Events",q919="Significant Weather",d919=$('#q919_1').val();
+        var q920g="External Events",q920="World Events",d920=$('#q920_1').val();
+        var q921g="External Events",q921="Local Events",d921=$('#q921_1').val();
+        var q922g="External Events",q922="Natural Disaster",d922=$('#q922_1').val();
+        var q923g="External Events",q923=$('#q923_0').val(),d923=$('#q923_1').val();
+        var q924g="Additional Notes",q924=$('#q924_0').val();
 
-            $.post(url, { AdverseReaction: AdverseReaction, 
-                DateOccured: DateOccured, 
-                DateResolved: DateResolved, 
-                Medication: Medication, 
-                DateStart: DateStart, 
-                DateEnd: DateEnd, 
-                DateSubmitted : DateSubmitted, 
-                ChildID : ChildID }, function (data) {
+        var str = "";
+        var _LifeE = "[#1#|#2#|#3#]";
+        if(d869!=''){str += _LifeE.replace('#1#',q869g).replace('#2#',q869).replace('#3#',d869);}
+        if(d870!=''){str += _LifeE.replace('#1#',q870g).replace('#2#',q870).replace('#3#',d870);}
+        if(d871!=''){str += _LifeE.replace('#1#',q871g).replace('#2#',q871).replace('#3#',d871);}
+        if(d872!=''){str += _LifeE.replace('#1#',q872g).replace('#2#',q872).replace('#3#',d872);}
+        if(d873!=''){str += _LifeE.replace('#1#',q873g).replace('#2#',q873).replace('#3#',d873);}
+        if(d874!=''){str += _LifeE.replace('#1#',q874g).replace('#2#',q874).replace('#3#',d874);}
+        if(d875!=''){str += _LifeE.replace('#1#',q875g).replace('#2#',q875).replace('#3#',d875);}
+        if(d876!=''){str += _LifeE.replace('#1#',q876g).replace('#2#',q876).replace('#3#',d876);}
+        if(d877!=''){str += _LifeE.replace('#1#',q877g).replace('#2#',q877).replace('#3#',d877);}
+        if(d878!=''){str += _LifeE.replace('#1#',q878g).replace('#2#',q878).replace('#3#',d878);}
+        if(d879!=''){str += _LifeE.replace('#1#',q879g).replace('#2#',q879).replace('#3#',d879);}
+        if(d880!=''){str += _LifeE.replace('#1#',q880g).replace('#2#',q880).replace('#3#',d880);}
+        if(d881!=''){str += _LifeE.replace('#1#',q881g).replace('#2#',q881).replace('#3#',d881);}
+        if(d882!=''){str += _LifeE.replace('#1#',q882g).replace('#2#',q882).replace('#3#',d882);}
+        if(d884!=''){str += _LifeE.replace('#1#',q884g).replace('#2#',q884).replace('#3#',d884);}
+        if(d885!=''){str += _LifeE.replace('#1#',q885g).replace('#2#',q885).replace('#3#',d885);}
+        if(d886!=''){str += _LifeE.replace('#1#',q886g).replace('#2#',q886).replace('#3#',d886);}
+        if(d887!=''){str += _LifeE.replace('#1#',q887g).replace('#2#',q887).replace('#3#',d887);}
+        if(d888!=''){str += _LifeE.replace('#1#',q888g).replace('#2#',q888).replace('#3#',d888);}
+        if(d889!=''){str += _LifeE.replace('#1#',q889g).replace('#2#',q889).replace('#3#',d889);}
+        if(d890!=''){str += _LifeE.replace('#1#',q890g).replace('#2#',q890).replace('#3#',d890);}
+        if(d891!=''){str += _LifeE.replace('#1#',q891g).replace('#2#',q891).replace('#3#',d891);}
+        if(d892!=''){str += _LifeE.replace('#1#',q892g).replace('#2#',q892).replace('#3#',d892);}
+        if(d893!=''){str += _LifeE.replace('#1#',q893g).replace('#2#',q893).replace('#3#',d893);}
+        if(d894!=''){str += _LifeE.replace('#1#',q894g).replace('#2#',q894).replace('#3#',d894);}
+        if(d895!=''){str += _LifeE.replace('#1#',q895g).replace('#2#',q895).replace('#3#',d895);}
+        if(d896!=''){str += _LifeE.replace('#1#',q896g).replace('#2#',q896).replace('#3#',d896);}
+        if(d897!=''){str += _LifeE.replace('#1#',q897g).replace('#2#',q897).replace('#3#',d897);}
+        if(d898!=''){str += _LifeE.replace('#1#',q898g).replace('#2#',q898).replace('#3#',d898);}
+        if(d899!=''){str += _LifeE.replace('#1#',q899g).replace('#2#',q899).replace('#3#',d899);}
+        if(d900!=''){str += _LifeE.replace('#1#',q900g).replace('#2#',q900).replace('#3#',d900);}
+        if(d901!=''){str += _LifeE.replace('#1#',q901g).replace('#2#',q901).replace('#3#',d901);}
+        if(d902!=''){str += _LifeE.replace('#1#',q902g).replace('#2#',q902).replace('#3#',d902);}
+        if(d904!=''){str += _LifeE.replace('#1#',q904g).replace('#2#',q904).replace('#3#',d904);}
+        if(d905!=''){str += _LifeE.replace('#1#',q905g).replace('#2#',q905).replace('#3#',d905);}
+        if(d906!=''){str += _LifeE.replace('#1#',q906g).replace('#2#',q906).replace('#3#',d906);}
+        if(d907!=''){str += _LifeE.replace('#1#',q907g).replace('#2#',q907).replace('#3#',d907);}
+        if(d908!=''){str += _LifeE.replace('#1#',q908g).replace('#2#',q908).replace('#3#',d908);}
+        if(d909!=''){str += _LifeE.replace('#1#',q909g).replace('#2#',q909).replace('#3#',d909);}
+        if(d910!=''){str += _LifeE.replace('#1#',q910g).replace('#2#',q910).replace('#3#',d910);}
+        if(d911!=''){str += _LifeE.replace('#1#',q911g).replace('#2#',q911).replace('#3#',d911);}
+        if(d912!=''){str += _LifeE.replace('#1#',q912g).replace('#2#',q912).replace('#3#',d912);}
+        if(d913!=''){str += _LifeE.replace('#1#',q913g).replace('#2#',q913).replace('#3#',d913);}
+        if(d914!=''){str += _LifeE.replace('#1#',q914g).replace('#2#',q914).replace('#3#',d914);}
+        if(d915!=''){str += _LifeE.replace('#1#',q915g).replace('#2#',q915).replace('#3#',d915);}
+        if(d916!=''){str += _LifeE.replace('#1#',q916g).replace('#2#',q916).replace('#3#',d916);}
+        if(d917!=''){str += _LifeE.replace('#1#',q917g).replace('#2#',q917).replace('#3#',d917);}
+        if(d919!=''){str += _LifeE.replace('#1#',q919g).replace('#2#',q919).replace('#3#',d919);}
+        if(d920!=''){str += _LifeE.replace('#1#',q920g).replace('#2#',q920).replace('#3#',d920);}
+        if(d921!=''){str += _LifeE.replace('#1#',q921g).replace('#2#',q921).replace('#3#',d921);}
+        if(d922!=''){str += _LifeE.replace('#1#',q922g).replace('#2#',q922).replace('#3#',d922);}
+        if(d923!=''){str += _LifeE.replace('#1#',q923g).replace('#2#',q923).replace('#3#',d923);}
+        if(q924!=''){str += _LifeE.replace('#1#',q924g).replace('#2#',q924).replace('#3#','');}
+        var url = "/UserQuestion/savequestionsLifeEvent";
+
+        $.post(url, { LifeEvent: str,
+            ChildID : ChildID }, function (data) {
 
             });
-        }
+
+    }
+
+    //function SaveValues(qid) {
+
+    //    var a1 = $('[data-md=m1' + qid + ']').val();
+    //    var a2 = $('[data-md=m2' + qid + ']').val();
+    //    var a3 = $('[data-md=m3' + qid + ']').val();
+    //    var a4 = $('[data-md=m4' + qid + ']').val();
+    //    var a5 = $('[data-md=m5' + qid + ']').val();
+    //    var allans = a1 + "|" + a2 + "|" + a3 + "|" + a4 + "|" + a5;
+    //    var childId= GetQueryStringValues()['ChildId'];
+    //    var SurID = GetQueryStringValues()['surveyID'];
+    //    savequestions(qid, allans, null, childId, SurID, "SaveUpdate");
+    //}
 
 
-        //function SaveValues(qid) {
-           
-        //    var a1 = $('[data-md=m1' + qid + ']').val();
-        //    var a2 = $('[data-md=m2' + qid + ']').val();
-        //    var a3 = $('[data-md=m3' + qid + ']').val();
-        //    var a4 = $('[data-md=m4' + qid + ']').val();
-        //    var a5 = $('[data-md=m5' + qid + ']').val();
-        //    var allans = a1 + "|" + a2 + "|" + a3 + "|" + a4 + "|" + a5;
-        //    var childId= GetQueryStringValues()['ChildId'];
-        //    var SurID = GetQueryStringValues()['surveyID'];
-        //    savequestions(qid, allans, null, childId, SurID, "SaveUpdate");
-        //}
 
-
-      
 
     </script>
 }
