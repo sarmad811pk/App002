@@ -407,7 +407,7 @@ namespace SurveyApp
         }
 
 
-        public static DataSet GetAdverseReaction(int childid, int userid)
+        public static DataSet GetAdverseReaction(int userid, int? childid = 0)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -459,13 +459,16 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetSurveyQAInfo";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static DataSet DashboardGetSchedulesForUserRoles(int? studyId = 0)
+        public static DataSet DashboardGetSchedulesForUserRoles(int? studyId = 0, int? userId = 0)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@StudyId", SqlDbType.Int);
             cmd.Parameters["@StudyId"].Value = studyId;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
 
             cmd.CommandText = "Dashboard_GetSchedulesForUserRoles";
             return DataHelper.ExecuteCommandAsDataSet(cmd);

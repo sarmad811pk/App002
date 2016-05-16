@@ -1,0 +1,95 @@
+﻿@using SurveyApp.Models;
+@using System.Data;
+
+@{
+    int studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
+    DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, 0); //Adverse Reaction Survey        
+}
+
+<div class="adverseReaction">
+    <h3>Adverse Reaction</h3>
+
+    <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
+        <table id="tblAdverse" cellpadding="0" cellspacing="0" style="width:100%;" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <td>Child Name</td>
+                    <td>Reaction</td>
+                    <td>Reaction Date</td>
+                    <td>Resolve Date</td>
+
+                    <td>Medication</td>
+                    <td>Med. Start Date</td>
+                    <td>Med. End Date</td>
+                    <td>Parent</td>
+                    <td>Parent Email</td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (dsReaction.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dsReaction.Tables[0].Rows)
+                    {
+                        <tr>
+                            <td>@dr["Name"]</td>
+                            <td>@dr["AdverseReaction"]</td>
+                            <td>@dr["DateOccured"]</td>
+                            <td>@dr["DateResolved"]</td>
+
+                            <td>@dr["Medication"]</td>
+                            <td>@dr["DateStart"]</td>
+                            <td>@dr["DateEnd"]</td>
+                            <td>@dr["FullName"]</td>
+                            <td>@dr["UserName"]</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <h3>Life Events</h3>
+    <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
+            <table id="tblLifeEvents" cellpadding="0" cellspacing="0" style="width:100%;" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <td>Child Name</td>
+                        <td>Event Category</td>
+                        <td>Event Name</td>
+
+                        <td>Event Date</td>
+                        <td>Parent</td>
+                        <td>Parent Email</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (dsReaction.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dsReaction.Tables[1].Rows)
+                    {
+                <tr>
+                    <td>@dr["Name"]</td>
+                    <td>@dr["EventCategory"]</td>
+                    <td>@dr["EventName"]</td>
+
+                    <td>@dr["EventDate"]</td>
+                    <td>@dr["FullName"]</td>
+                    <td>@dr["UserName"]</td>
+                </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#tblAdverse").DataTable({ searching: false, paging: false, lengthChange: false, info: false });
+        $("#tblLifeEvents").DataTable({ searching: false, paging: false, lengthChange: false, info: false });
+    });
+</script>
+

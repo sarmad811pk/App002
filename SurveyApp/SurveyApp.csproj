@@ -28,6 +28,7 @@
     </SccAuxPath>
     <SccProvider>
     </SccProvider>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -327,6 +328,7 @@
     <Content Include="bootstrap\fonts\ionicons.ttf" />
     <Content Include="bootstrap\fonts\ionicons.woff" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Index.html" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />
@@ -406,6 +408,7 @@
     <Content Include="Views\Home\Clinician.cshtml" />
     <Content Include="Views\Home\_DetailComparison.cshtml" />
     <Content Include="Views\Survey\_PercentCompletion.cshtml" />
+    <Content Include="Views\Home\_AdverseEvent.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

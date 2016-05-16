@@ -5,13 +5,14 @@
     DataSet dsCompletion;
     int studyId = 0;
     string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
-
-    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model);
-    studyId = Model == null ? 0 : Convert.ToInt32(Model);
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
 
+    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model, userType != 0 ? WebSecurity.CurrentUserId : 0);
+    studyId = Model == null ? 0 : Convert.ToInt32(Model);
+
+
     #region CurrentPrriod
-    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count > 1)
+    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count >= 1)
     {
         string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
         /* PARENT */
@@ -89,7 +90,7 @@
     #endregion
 
     #region PreviousPrriod
-    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count > 1)
+    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count >= 1)
     {
         string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
         /* PARENT */
@@ -172,17 +173,29 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
+@if(userType == 0)
+{
+    <style type="text/css">
+        .graphDiv{width: 46%; height: 200px; margin: 0 6px;display: inline-block;}
+    </style>
+}
+else
+{
+    <style type="text/css">
+        .graphDiv{width: 100%; height: 200px; margin: 0 6px;display: inline-block;}
+    </style>
+}
 <style type="text/css">
     .graphInfo{padding: 4px 0px 4px 0px;}
     .graphInfo .tblgraphInfo{margin: 0px auto;}
     .graphInfo .tblgraphInfo td{padding:0px 10px;}
-    .graphDiv{width: 100%; height: 200px; margin: 0 6px;display: inline-block;}
+    
 </style>
 
 <div class="completion">
     <h3>Survey Completion</h3>
     <div style="border:solid 1px #CCC;">
-        <table style="width:60%;background-color: #FFF;margin: 0px auto;">
+        <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
             <tr>
                 <td style="width: 50%; text-align: right;">
                     @if (userType == 0 || userType == 1)
@@ -224,10 +237,10 @@
 
 </div>
 
+<script type="text/javascript">var colors = ['#33B86C', '#286A66', '#D7524B']; //F46F66</script>
 @if (userType == 0 || userType == 1)
 {
-    <script type="text/javascript">
-        var colors = ['#33B86C', '#286A66', '#D7524B']; //F46F66
+    <script type="text/javascript">        
     $(function () {            
         /* PREVIOUS PERIOD PARENT */
         $('#previousPeriodParent').highcharts({

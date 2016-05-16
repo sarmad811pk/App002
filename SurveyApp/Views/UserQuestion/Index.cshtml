@@ -12,7 +12,7 @@
 @if (childID != null)
     {
         DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
-        DataSet dsReveseandLiveEvent = SurveyApp.DataHelper.GetAdverseReaction((int)childID, id);
+        DataSet dsReveseandLiveEvent = SurveyApp.DataHelper.GetAdverseReaction(id, (int)childID);
         for (int i = 0; i < dschild.Tables[0].Rows.Count; i++) {
             if ((int?)dschild.Tables[0].Rows[i]["ID"] == childID)
             {
@@ -392,5 +392,8 @@
                     .separator{clear:both;margin-bottom: 10px;}
                 </style>
                 <div class="separator"></div>
-                Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", null);
-            }
+                                Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", null);
+
+                                <div class="separator"></div>
+                                Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", null);
+                                    }
