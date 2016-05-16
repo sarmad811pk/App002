@@ -8,6 +8,7 @@
 
     dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model);
     studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
 
     #region CurrentPrriod
     if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count > 1)
@@ -15,68 +16,74 @@
         string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
         /* PARENT */
         #region ParentGraph
-        int completed = 0, partial = 0, notstarted = 0;
-        DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  < ScheduleDate");
-        if (drCount.Length > 0)
+        if (userType == 0 || userType == 1)
         {
-            foreach (DataRow dr in drCount)
+            int completed = 0, partial = 0, notstarted = 0;
+            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  < ScheduleDate");
+            if (drCount.Length > 0)
             {
-                if (dr["Percentage"] != DBNull.Value)
+                foreach (DataRow dr in drCount)
                 {
-                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                    if (percent == 100)
+                    if (dr["Percentage"] != DBNull.Value)
                     {
-                        completed++;
+                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                        if (percent == 100)
+                        {
+                            completed++;
+                        }
+                        else if (percent > 0 && percent < 100)
+                        {
+                            partial++;
+                        }
+                        else if (percent == 0)
+                        {
+                            notstarted++;
+                        }
                     }
-                    else if (percent > 0 && percent < 100)
-                    {
-                        partial++;
-                    }
-                    else if (percent == 0)
+                    else
                     {
                         notstarted++;
                     }
                 }
-                else
-                {
-                    notstarted++;
-                }
             }
+            currParent = "['Completed', " + completed + "], ['Partially Completed', " + partial + "],['Not Started', " + notstarted + "]";
         }
-        currParent = "['Completed', " + completed + "], ['Partially Completed', " + partial + "],['Not Started', " + notstarted + "]";
         #endregion
 
         /* TEACHER */
         #region TeacherGraph
-        int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
-        DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("'" + currentDate + "'  < ScheduleDate");
-        if (drTeacherCount.Length > 0)
+        if (userType == 0 || userType == 2)
         {
-            foreach (DataRow dr in drTeacherCount)
+            int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
+            DataRow[] drTeacherCount = dsCompletion.Tables[userType == 0 ? 1 : 0].Select("'" + currentDate + "'  < ScheduleDate");
+            if (drTeacherCount.Length > 0)
             {
-                if (dr["Percentage"] != DBNull.Value)
+                foreach (DataRow dr in drTeacherCount)
                 {
-                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                    if (percent == 100)
+                    if (dr["Percentage"] != DBNull.Value)
                     {
-                        completedTeacher++;
+                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                        if (percent == 100)
+                        {
+                            completedTeacher++;
+                        }
+                        else if (percent > 0 && percent < 100)
+                        {
+                            partialTeacher++;
+                        }
+                        else if (percent == 0)
+                        {
+                            notstartedTeacher++;
+                        }
                     }
-                    else if (percent > 0 && percent < 100)
-                    {
-                        partialTeacher++;
-                    }
-                    else if (percent == 0)
+                    else
                     {
                         notstartedTeacher++;
                     }
                 }
-                else
-                {
-                    notstartedTeacher++;
-                }
             }
+            currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "]";
         }
-        currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "]";
         #endregion
     }
     #endregion
@@ -87,68 +94,74 @@
         string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
         /* PARENT */
         #region ParentGraph
-        int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0;
-        DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' >= ScheduleDate");
-        if (drCount.Length > 0)
+        if (userType == 0 || userType == 1)
         {
-            foreach (DataRow dr in drCount)
+            int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0;
+            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' >= ScheduleDate");
+            if (drCount.Length > 0)
             {
-                if (dr["Percentage"] != DBNull.Value)
+                foreach (DataRow dr in drCount)
                 {
-                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                    if (percent == 100)
+                    if (dr["Percentage"] != DBNull.Value)
                     {
-                        completedPrevious++;
+                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                        if (percent == 100)
+                        {
+                            completedPrevious++;
+                        }
+                        else if (percent > 0 && percent < 100)
+                        {
+                            partialPrevious++;
+                        }
+                        else if (percent == 0)
+                        {
+                            notstartedPrevious++;
+                        }
                     }
-                    else if (percent > 0 && percent < 100)
-                    {
-                        partialPrevious++;
-                    }
-                    else if (percent == 0)
+                    else
                     {
                         notstartedPrevious++;
                     }
                 }
-                else
-                {
-                    notstartedPrevious++;
-                }
             }
+            prevParent = "['Completed', " + completedPrevious + "], ['Partially Completed', " + partialPrevious + "],['Not Started', " + notstartedPrevious + "]";
         }
-        prevParent = "['Completed', " + completedPrevious + "], ['Partially Completed', " + partialPrevious + "],['Not Started', " + notstartedPrevious + "]";
         #endregion
 
         /* TEACHER */
         #region TeacherGraph
-        int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
-        DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("'" + currentDate + "' >= ScheduleDate");
-        if (drTeacherCount.Length > 0)
+        if (userType == 0 || userType == 2)
         {
-            foreach (DataRow dr in drTeacherCount)
+            int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
+            DataRow[] drTeacherCount = dsCompletion.Tables[userType == 0 ? 1 : 0].Select("'" + currentDate + "' >= ScheduleDate");
+            if (drTeacherCount.Length > 0)
             {
-                if (dr["Percentage"] != DBNull.Value)
+                foreach (DataRow dr in drTeacherCount)
                 {
-                    int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                    if (percent == 100)
+                    if (dr["Percentage"] != DBNull.Value)
                     {
-                        completedTeacherPrevious++;
+                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
+                        if (percent == 100)
+                        {
+                            completedTeacherPrevious++;
+                        }
+                        else if (percent > 0 && percent < 100)
+                        {
+                            partialTeacherPrevious++;
+                        }
+                        else if (percent == 0)
+                        {
+                            notstartedTeacherPrevious++;
+                        }
                     }
-                    else if (percent > 0 && percent < 100)
-                    {
-                        partialTeacherPrevious++;
-                    }
-                    else if (percent == 0)
+                    else
                     {
                         notstartedTeacherPrevious++;
                     }
                 }
-                else
-                {
-                    notstartedTeacherPrevious++;
-                }
             }
+            prevTeacher = "['Completed', " + completedTeacherPrevious + "], ['Partially Completed', " + partialTeacherPrevious + "],['Not Started', " + notstartedTeacherPrevious + "]";
         }
-        prevTeacher = "['Completed', " + completedTeacherPrevious + "], ['Partially Completed', " + partialTeacherPrevious + "],['Not Started', " + notstartedTeacherPrevious + "]";
         #endregion
     }
     #endregion
@@ -163,21 +176,33 @@
     .graphInfo{padding: 4px 0px 4px 0px;}
     .graphInfo .tblgraphInfo{margin: 0px auto;}
     .graphInfo .tblgraphInfo td{padding:0px 10px;}
-    .graphDiv{width: 46%; height: 200px; margin: 0 6px;display: inline-block;}
+    .graphDiv{width: 100%; height: 200px; margin: 0 6px;display: inline-block;}
 </style>
 
 <div class="completion">
     <h3>Survey Completion</h3>
     <div style="border:solid 1px #CCC;">
-        <table style="width:100%;background-color: #FFF;">
-            <tr>                
+        <table style="width:60%;background-color: #FFF;margin: 0px auto;">
+            <tr>
                 <td style="width: 50%; text-align: right;">
-                    <div id="previousPeriodParent" class="graphDiv"></div>
-                    <div id="previousPeriodTeacher" class="graphDiv"></div>
+                    @if (userType == 0 || userType == 1)
+                    {
+                        <div id="previousPeriodParent" class="graphDiv"></div>
+                    }
+                    @if (userType == 0 || userType == 2)
+                    {
+                        <div id="previousPeriodTeacher" class="graphDiv"></div>
+                    }                    
                 </td>
                 <td style="width: 50%; text-align: right;">
-                    <div id="currentPeriodParent" class="graphDiv"></div>
-                    <div id="currentPeriodTeacher" class="graphDiv"></div>
+                    @if (userType == 0 || userType == 1)
+                    {
+                        <div id="currentPeriodParent" class="graphDiv"></div>
+                    }                    
+                    @if (userType == 0 || userType == 2)
+                    {
+                        <div id="currentPeriodTeacher" class="graphDiv"></div>
+                    }                    
                 </td>
             </tr>
             <tr>
@@ -199,216 +224,240 @@
 
 </div>
 
-<script type="text/javascript">
-$(function () {
-    var colors = ['#33B86C', '#286A66', '#D7524B']; //F46F66
-    /* PREVIOUS PERIOD PARENT */
-    $('#previousPeriodParent').highcharts({
-        chart: {
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false
-        },
-        colors: colors,
-        title: {
-            text: 'Previous Period: Parent',
-            align: 'center',
-            verticalAlign: 'middle',
-            y: -70,
-            style: { "color": "#333333", "fontSize": "14px" }
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                size: '140%',
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white',
-                        textShadow: '0px 1px 2px black'
-                    }
+@if (userType == 0 || userType == 1)
+{
+    <script type="text/javascript">
+        var colors = ['#33B86C', '#286A66', '#D7524B']; //F46F66
+    $(function () {            
+        /* PREVIOUS PERIOD PARENT */
+        $('#previousPeriodParent').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: colors,
+            title: {
+                text: 'Previous Period: Parent',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: -70,
+                style: { "color": "#333333", "fontSize": "14px" }
                 },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '114%']
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            type: 'pie',
-            name: 'Share',
-            innerSize: '50%',
-            data: [@Html.Raw(prevParent),
-                {
-                    name: 'There are no previously scheduled surveys available',
-                    y: 0.2,
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    size: '140%',
                     dataLabels: {
-                        enabled: false
-                    }
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0px 1px 2px black'
+                        }
+                        },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '114%']
                 }
-            ]
-        }]
-    });
-
-    /* PREVIOUS PERIOD TEACHER */
-    $('#previousPeriodTeacher').highcharts({
-        chart: {
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false
-        },
-        colors: colors,
-        title: {
-            text: 'Previous Period: Teacher',
-            align: 'center',
-            verticalAlign: 'middle',
-            y: -70,
-            style: { "color": "#333333", "fontSize": "14px" }
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                size: '140%',
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white',
-                        textShadow: '0px 1px 2px black'
-                    }
                 },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '114%']
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            type: 'pie',
-            name: 'Share',
-            innerSize: '50%',
-            data: [@Html.Raw(prevTeacher),
-                {
+            credits: {
+                enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'Share',
+                innerSize: '50%',
+                data: [@Html.Raw(prevParent),
+                    {
                     name: 'There are no previously scheduled surveys available',
-                    y: 0.2,
-                    dataLabels: {
+                        y: 0.2,
+                        dataLabels: {
                         enabled: false
+                        }
                     }
+                ]
+            }]
+        });
+        });
+        </script>
+}
+@if (userType == 0 || userType == 2)
+{
+    <script type="text/javascript">
+    $(function () {
+        /* PREVIOUS PERIOD TEACHER */
+        $('#previousPeriodTeacher').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: colors,
+            title: {
+                text: 'Previous Period: Teacher',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: -70,
+                style: { "color": "#333333", "fontSize": "14px" }
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    size: '140%',
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0px 1px 2px black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '114%']
                 }
-            ]
-        }]
-    });
-
-
-
-    /* CURRENT PERIOD PARENT */
-    $('#currentPeriodParent').highcharts({
-        chart: {
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false
-        },
-        colors: colors,
-        title: {
-            text: 'Current Period: Parent',
-            align: 'center',
-            verticalAlign: 'middle',
-            y: -70,
-            style: { "color": "#333333", "fontSize": "14px" }
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                size: '140%',
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white',
-                        textShadow: '0px 1px 2px black'
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'Share',
+                innerSize: '50%',
+                data: [@Html.Raw(prevTeacher),
+                    {
+                        name: 'There are no previously scheduled surveys available',
+                        y: 0.2,
+                        dataLabels: {
+                            enabled: false
+                        }
                     }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '114%']
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            type: 'pie',
-            name: 'Share',
-            innerSize: '50%',
-            data: [@Html.Raw(currParent)
-            ]
-        }]
+                ]
+            }]
+        });
     });
+    </script>
+}
+@if (userType == 0 || userType == 1)
+{
+    <script type="text/javascript">
+    $(function () {
+        /* CURRENT PERIOD PARENT */
+        $('#currentPeriodParent').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: colors,
+            title: {
+                text: 'Current Period: Parent',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: -70,
+                style: { "color": "#333333", "fontSize": "14px" }
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    size: '140%',
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0px 1px 2px black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '114%']
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'Share',
+                innerSize: '50%',
+                data: [@Html.Raw(currParent)
+                ]
+            }]
+        });
+    });
+    </script>
+}
+@if (userType == 0 || userType == 2)
+{
+    <script type="text/javascript">
+    $(function () {
+        /* CURRENT PERIOD TEACHER */
+        $('#currentPeriodTeacher').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: colors,
+            title: {
+                text: 'Current Period: Teacher',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: -70,
+                style: { "color": "#333333", "fontSize": "14px" }
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    size: '140%',
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0px 1px 2px black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '114%']
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'Share',
+                innerSize: '50%',
+                data: [@Html.Raw(currTeacher)
+                ]
+            }]
+        });
+    });
+    </script>
+}
 
 
-    /* CURRENT PERIOD TEACHER */
-    $('#currentPeriodTeacher').highcharts({
-        chart: {
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false
-        },
-        colors: colors,
-        title: {
-            text: 'Current Period: Teacher',
-            align: 'center',
-            verticalAlign: 'middle',
-            y: -70,
-            style: { "color": "#333333", "fontSize": "14px" }
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                size: '140%',
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white',
-                        textShadow: '0px 1px 2px black'
-                    }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '114%']
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            type: 'pie',
-            name: 'Share',
-            innerSize: '50%',
-            data: [@Html.Raw(currTeacher)
-            ]
-        }]
-    });
-});
-</script>
+
+
+
+
