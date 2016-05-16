@@ -375,17 +375,17 @@ namespace SurveyApp
         }
 
 
-        public static DataSet GetOtherSurveyStats(int studyId, string status)
+        public static DataSet GetAdverseReaction(int childid, int userid)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add("@SurveyID", SqlDbType.Int);
-            cmd.Parameters["@SurveyID"].Value = studyId;
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            cmd.Parameters["@ChildID"].Value = childid;
 
-
-            cmd.Parameters.Add("@Paramstatus", SqlDbType.NVarChar);
-            if (status != "") { cmd.Parameters["@Paramstatus"].Value = status; } else { cmd.Parameters["@Paramstatus"].Value = DBNull.Value; }
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userid;
+        
 
             cmd.CommandText = "OtherSurvey_Stats";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
