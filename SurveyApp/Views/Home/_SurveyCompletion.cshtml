@@ -224,7 +224,7 @@ else
                         <table class="tblgraphInfo">
                             <tr>
                                 <td style="color:#33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</td>
-                                <td style="color:#286A66;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
+                                <td style="color:#FFEE22;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
                                 <td style="color: #D7524B;"><i class="ion-minus-round"></i>&nbsp;Not Started</td>
                             </tr>
                         </table>                        
@@ -237,7 +237,7 @@ else
 
 </div>
 
-<script type="text/javascript">var colors = ['#33B86C', '#286A66', '#D7524B']; //F46F66</script>
+<script type="text/javascript">var colors = ['#33B86C', '#FFEE22', '#D7524B']; //F46F66</script>
 @if (userType == 0 || userType == 1)
 {
     <script type="text/javascript">        
@@ -265,7 +265,7 @@ else
                 pie: {
                     size: '140%',
                     dataLabels: {
-                        enabled: true,
+                        enabled: false,
                         distance: -50,
                         style: {
                             fontWeight: 'bold',
@@ -285,14 +285,14 @@ else
                 type: 'pie',
                 name: 'Share',
                 innerSize: '50%',
-                data: [@Html.Raw(prevParent),
-                    {
-                    name: 'There are no previously scheduled surveys available',
-                        y: 0.2,
-                        dataLabels: {
-                        enabled: false
-                        }
-                    }
+                data: [@Html.Raw(prevParent)
+                    //,{
+                    //name: 'There are no previously scheduled surveys available',
+                    //    y: 0.2,
+                    //    dataLabels: {
+                    //    enabled: false
+                    //    }
+                    //}
                 ]
             }]
         });
@@ -326,7 +326,7 @@ else
                 pie: {
                     size: '140%',
                     dataLabels: {
-                        enabled: true,
+                        enabled: false,
                         distance: -50,
                         style: {
                             fontWeight: 'bold',
@@ -346,14 +346,14 @@ else
                 type: 'pie',
                 name: 'Share',
                 innerSize: '50%',
-                data: [@Html.Raw(prevTeacher),
-                    {
-                        name: 'There are no previously scheduled surveys available',
-                        y: 0.2,
-                        dataLabels: {
-                            enabled: false
-                        }
-                    }
+                data: [@Html.Raw(prevTeacher)
+                    //,{
+                    //    name: 'There are no previously scheduled surveys available',
+                    //    y: 0.2,
+                    //    dataLabels: {
+                    //        enabled: false
+                    //    }
+                    //}
                 ]
             }]
         });
@@ -387,7 +387,7 @@ else
                 pie: {
                     size: '140%',
                     dataLabels: {
-                        enabled: true,
+                        enabled: false,
                         distance: -50,
                         style: {
                             fontWeight: 'bold',
@@ -441,7 +441,7 @@ else
                 pie: {
                     size: '140%',
                     dataLabels: {
-                        enabled: true,
+                        enabled: false,
                         distance: -50,
                         style: {
                             fontWeight: 'bold',
