@@ -304,7 +304,7 @@
                     var feedbackquestionair = getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"));
                     if (feedbackquestionair != "")
                     {
-                        <div class="col-md-4 text-left">Feedback Questionnaire@(Html.Raw(feedbackquestionair))</div>
+                        <div class="col-md-4 text-left" style="display:none;">Feedback Questionnaire@(Html.Raw(feedbackquestionair))</div>
 
                     }
                     }
