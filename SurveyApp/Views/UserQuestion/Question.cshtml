@@ -156,12 +156,26 @@
         }
     </div>
 </div>
+@{
+    var btnsubmit_text="";
+    if (SurveyID == 28){
+        btnsubmit_text="Submit Adverse Reaction";
+    }
+    else if(SurveyID == 29)
+    {
+        btnsubmit_text = "Submit Life Events";
+    }
+    else
+    {
+        btnsubmit_text = "Submit Survey";
+    }
+}
 <div style="margin:20px ;">
     &nbsp;
     <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
         <tr>
             <td style="width:155px;padding:0px;">
-                <input id="SurveySubmit" type="submit" value="Submit Survey" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;"  />
+                <input id="SurveySubmit" type="submit" value="@btnsubmit_text" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;"  />
             </td>
             <td style="padding: 0px;"></td>
         </tr>
