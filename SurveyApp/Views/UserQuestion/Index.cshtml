@@ -94,6 +94,16 @@
             padding: 0px 10px;
             color: #FFF;
         }
+        .intake a {
+        color:#ffffff;
+        font-style:normal !important;
+        display:block;
+        text-decoration:underline;
+        padding:3px;
+        }
+            .intake a:hover {
+            background:rgba(255,255,255,.1);
+            }
     </style>
 
     @section featured {
@@ -114,6 +124,13 @@
         string role = "";
         public string getPercentCompletion(int surveyId, int childId, string url)
         {
+
+            var rrr = "";
+            if (surveyId == 16) { rrr = "General Information"; }
+            if (surveyId == 17) { rrr = "Pregnancy"; }
+            if (surveyId == 18) { rrr = "Development and Education"; }
+            if (surveyId == 19) { rrr = "Medical History"; }
+            if (surveyId == 20) { rrr = "Medication History"; }
             string percentage = "0%", schInfo = "";
 
             if (dsChildrenSchedules != null && dsChildrenSchedules.Tables != null && dsChildrenSchedules.Tables[0] != null && dsChildrenSchedules.Tables[0].Rows != null)
@@ -140,7 +157,7 @@
 
                             string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
                             string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
-                            schInfo = schInfo + "&nbsp;&nbsp;&nbsp;&nbsp;<a href='" + urlForSurvey + "'><span class='schedule " + cssClass + "'>" + endDate.ToString("MMMM dd, y") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+                            schInfo = schInfo + (rrr!=""?"":"&nbsp;&nbsp;&nbsp;&nbsp;") +"<a href='" + urlForSurvey + "'><span class='" + (rrr!=""?"":"schedule "+ cssClass) + "'>" + (rrr!=""?rrr:endDate.ToString("MMMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
                             i++;
                         }
                     }
@@ -323,27 +340,27 @@
                                 @{string percentGen = getPercentCompletion(16, (int)drch["ID"], url.Replace("__", "16"));}
                                 @if (!String.IsNullOrEmpty(percentGen))
                                 {
-                                    <div class="col-md-12 text-left">General Information@(Html.Raw(percentGen))</div>
+                                    <div class="col-md-12 text-left">@(Html.Raw(percentGen))</div>
                                 }
                                 @{string percentPreg = getPercentCompletion(17, (int)drch["ID"], url.Replace("__", "17"));}
                                 @if (!String.IsNullOrEmpty(percentPreg))
                                 {
-                                    <div class="col-md-12 text-left">Pregnancy@(Html.Raw(percentPreg))</div>
+                                    <div class="col-md-12 text-left">@(Html.Raw(percentPreg))</div>
                                 }
                                 @{string percentDev = getPercentCompletion(18, (int)drch["ID"], url.Replace("__", "18"));}
                                 @if (!String.IsNullOrEmpty(percentDev))
                                 {
-                                    <div class="col-md-12 text-left">Development and Education@(Html.Raw(percentDev))</div>
+                                    <div class="col-md-12 text-left">@(Html.Raw(percentDev))</div>
                                 }
                                 @{string percentMed = getPercentCompletion(19, (int)drch["ID"], url.Replace("__", "19"));}
                                 @if (!String.IsNullOrEmpty(percentMed))
                                 {
-                                    <div class="col-md-12 text-left">Medical History@(Html.Raw(percentMed))</div>
+                                    <div class="col-md-12 text-left">@(Html.Raw(percentMed))</div>
                                 }
                                 @{string percentMH = getPercentCompletion(20, (int)drch["ID"], url.Replace("__", "20"));}
                                 @if (!String.IsNullOrEmpty(percentMH))
                                 {
-                                    <div class="col-md-12 text-left">Medication History@(Html.Raw(percentMH))</div>
+                                    <div class="col-md-12 text-left">@(Html.Raw(percentMH))</div>
                                 }
                                 @{string percentM = getPercentCompletion(21, (int)drch["ID"], url.Replace("__", "21"));}
                                 @if (!String.IsNullOrEmpty(percentM))
