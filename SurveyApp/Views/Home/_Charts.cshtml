@@ -132,173 +132,103 @@
         }
         #endregion
 
+        #region Aberrant  Behaviour Checklist : Parent Quarterly Trend
+        DataRow[] drASBC = dsCharts.Tables[12].Select("QuestionGroup = 'Irritability'");
+        foreach(DataRow dr in drASBC)
+        {
+            dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            aspABCg += dr["Score"] + ",";
+        }
+        DataRow[] drTSTP = dsCharts.Tables[12].Select("QuestionGroup = 'Lethargy'");
+        foreach (DataRow dr in drTSTP)
+        {
+            tstpABCg += dr["Score"] + ",";
+        }
+        DataRow[] drSteros = dsCharts.Tables[12].Select("QuestionGroup = 'Stereotypy'");
+        foreach (DataRow dr in drSteros)
+        {
+            unpABCg += dr["Score"] + ",";
+        }
+        DataRow[] drHypers = dsCharts.Tables[12].Select("QuestionGroup = 'Hyperactivity'");
+        foreach (DataRow dr in drHypers)
+        {
+            vspABCg += dr["Score"] + ",";
+        }
+        DataRow[] drInps = dsCharts.Tables[12].Select("QuestionGroup = 'Inappropriate Speech'");
+        foreach (DataRow dr in drInps)
+        {
+            qpABCg += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Aberrant  Behaviour Checklist : Teacher Quarterly Trend
+        DataRow[] drIrrisT = dsCharts.Tables[13].Select("QuestionGroup = 'Irritability'");
+        foreach (DataRow dr in drIrrisT)
+        {
+            dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            astABCg += dr["Score"] + ",";
+        }
+        DataRow[] drLetharsT = dsCharts.Tables[13].Select("QuestionGroup = 'Lethargy'");
+        foreach (DataRow dr in drLetharsT)
+        {
+            tsttABCg += dr["Score"] + ",";
+        }
+        DataRow[] drSterosT = dsCharts.Tables[13].Select("QuestionGroup = 'Stereotypy'");
+        foreach (DataRow dr in drSterosT)
+        {
+            untABCg += dr["Score"] + ",";
+        }
+        DataRow[] drHypersT = dsCharts.Tables[13].Select("QuestionGroup = 'Hyperactivity'");
+        foreach (DataRow dr in drHypersT)
+        {
+            vstABCg += dr["Score"] + ",";
+        }
+        DataRow[] drInpsT = dsCharts.Tables[13].Select("QuestionGroup = 'Inappropriate Speech'");
+        foreach (DataRow dr in drInpsT)
+        {
+            qtABCg += dr["Score"] + ",";
+        }
+        #endregion
+
+
+
+        #region Social Responsivness Scale(SRS) sub scale : Parent Quarterly Trend
+        DataRow[] drAwareness = dsCharts.Tables[12].Select("QuestionGroup = 'Social Awareness'");
+        foreach (DataRow dr in drAwareness)
+        {
+            dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            aspSRSg += dr["Score"] + ",";
+        }
+        DataRow[] drCognition = dsCharts.Tables[12].Select("QuestionGroup = 'Social Cognition'");
+        foreach (DataRow dr in drCognition)
+        {
+            tstpSRSg += dr["Score"] + ",";
+        }
+        DataRow[] drCommunication = dsCharts.Tables[12].Select("QuestionGroup = 'Social Communication'");
+        foreach (DataRow dr in drCommunication)
+        {
+            unpSRSg += dr["Score"] + ",";
+        }
+        DataRow[] drMotivation = dsCharts.Tables[12].Select("QuestionGroup = 'Social Motivation'");
+        foreach (DataRow dr in drMotivation)
+        {
+            vspSRSg += dr["Score"] + ",";
+        }
+        DataRow[] drBahaviour = dsCharts.Tables[12].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour'");
+        foreach (DataRow dr in drBahaviour)
+        {
+            qpSRSg += dr["Score"] + ",";
+        }
+        #endregion
+
     }
 
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0 && dsCharts.Tables[1].Rows.Count > 0)
     {
         foreach (DataRow dr in dsCharts.Tables[1].Rows)
         {
-            #region Aberrant  Behaviour Checklist : Parent Quarterly Trend
-            if (dr["SurveyID"] != DBNull.Value /*&& (int)dr["SurveyID"] == 4*/)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if(dr["QuestionGroup"].ToString() == "Irritability")
-                    {
-                        aspABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        aspABCg += "0" + ",";
-                    }
 
-                    if (dr["QuestionGroup"].ToString() == "Lethargy")
-                    {
-                        tstpABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        tstpABCg += "0" + ",";
-                    }
 
-                    if (dr["QuestionGroup"].ToString() == "Stereotypy")
-                    {
-                        unpABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        unpABCg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Hyperactivity")
-                    {
-                        vspABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        vspABCg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Inappropriate Speech")
-                    {
-                        qpABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        qpABCg += "0" + ",";
-                    }
-                }
-            }
-            #endregion
-
-            #region Aberrant  Behaviour Checklist : Teacher Quarterly Trend
-            if (dr["SurveyID"] != DBNull.Value /*&& (int)dr["SurveyID"] == 4*/)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
-                {
-                    dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Irritability")
-                    {
-                        astABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        astABCg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Lethargy")
-                    {
-                        tsttABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        tsttABCg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Stereotypy")
-                    {
-                        untABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        untABCg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Hyperactivity")
-                    {
-                        vstABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        vstABCg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Inappropriate Speech")
-                    {
-                        qtABCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        qtABCg += "0" + ",";
-                    }
-                }
-            }
-            #endregion
-
-            #region Social Responsivness Scale(SRS) sub scale : Parent Quarterly Trend
-            if (dr["SurveyID"] != DBNull.Value /*&& (int)dr["SurveyID"] == 4*/)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Social Awareness")
-                    {
-                        aspSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        aspSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Social Cognition")
-                    {
-                        tstpSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        tstpSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Social Communication")
-                    {
-                        unpSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        unpSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Social Motivation")
-                    {
-                        vspSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        vspSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Restricted Interests and Repetitive Bahaviour")
-                    {
-                        qpSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        qpSRSg += "0" + ",";
-                    }
-                }
-            }
-            #endregion
 
             #region Social Responsivness Scale(SRS) sub scale : Teacher Quarterly Trend
             if (dr["SurveyID"] != DBNull.Value /*&& (int)dr["SurveyID"] == 4*/)
