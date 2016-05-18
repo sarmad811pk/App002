@@ -47,11 +47,15 @@
     <div class="tabs">
         <ul class="tabdashboard">
             <li>
-                <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected');$('.graphsDetails').hide();$('.dashboardDetails').show();">Dashboard</a>
+                <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.dashboardDetails').show();">Dashboard</a>
             </li>
             <li>
-                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected');$('.dashboardDetails').hide();$('.graphsDetails').show();">Graphs</a>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.graphsDetails').show();">Graphs</a>
             </li>
+            <li>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.Adverse').show();">Adverse Reactions & Life Events</a>
+            </li>
+ 
         </ul>
     </div>
     <div class="topControls">
@@ -63,11 +67,9 @@
         </select>
     </div>
     
-    <div class="dashboardDetails">
+    <div class="dashboardDetails __tabs">
         @{Html.RenderPartial("_ChildrenCounts", studyId);}
 
-        <div class="separator"></div>
-        @{Html.RenderPartial("_AdverseEvent", studyId);}
 
         <div class="separator"></div>
         @{Html.RenderPartial("_SurveyCompletion", studyId);}
@@ -75,8 +77,12 @@
         <div class="separator"></div>
         @{Html.RenderPartial("_DetailComparison");}
     </div>
+    <div class="Adverse __tabs"> 
+        @{Html.RenderPartial("_AdverseEvent", studyId);}
 
-    <div class="graphsDetails">
+
+    </div>
+    <div class="graphsDetails __tabs">
         <div class="separator"></div>
         @{Html.RenderPartial("_Charts");}
     </div>
@@ -85,6 +91,7 @@
 <script type="text/javascript">
     $(function () {
         $(".graphsDetails").hide();
+        $(".Adverse").hide();
     });
     function getStudyInfo(elem) {
         var studyId = $(elem).val();

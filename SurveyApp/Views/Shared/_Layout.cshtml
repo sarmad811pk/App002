@@ -134,5 +134,8 @@
 @RenderSection("scripts", required: false)
 
 <div class="loading" style="display: none;"><div>Please Wait...</div></div>
+    <script type="text/javascript">
+        window.onload = function () { $(".highcharts-button").hide(); }
+    </script>
 </body>
 </html>
