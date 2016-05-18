@@ -14,46 +14,71 @@
 
     <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
-<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
     <link href="~/Content/dataTables.bootstrap.min.css" rel="stylesheet" />
 
     <script src="~/Scripts/jquery-2.2.0.min.js"></script>
-    <script src="~/bootstrap/js/bootstrap.js"></script> 
-<script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/bootstrap/js/bootstrap.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
     <script src="~/Scripts/custom.js"></script>
     <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
     <script src="~/Scripts/smoothscroll.js"></script>
     <style>
-        .form-group { margin-bottom: 5px; }
-        .btn-link  { color: #23527c; text-decoration: underline; background-color: transparent; }
-        #body { padding:0px;}
-        .leftmenu { box-shadow:none;font-size:12px;}
-            .leftmenu .list-group-item:first-child, .leftmenu .list-group-item:last-child {border-radius:0px;padding:10px 10px; }
-             .leftmenu .list-group-item {
-                 padding:10px 10px;
+        .form-group {
+            margin-bottom: 5px;
+        }
+
+        .btn-link {
+            color: #23527c;
+            text-decoration: underline;
+            background-color: transparent;
+        }
+
+        #body {
+            padding: 0px;
+        }
+
+        .leftmenu {
+            box-shadow: none;
+            font-size: 13px;
+        }
+
+            .leftmenu .list-group-item:first-child, .leftmenu .list-group-item:last-child {
+                border-radius: 0px;
+                padding: 10px 10px;
+            }
+
+            .leftmenu .list-group-item {
+                padding: 10px 10px;
                 background: #fafafa;
                 border-bottom: solid 1px #f1f1f1;
                 border: none;
                 color: #666666;
             }
+
                 .leftmenu .list-group-item i {
                     font-size: 18px;
                     position: absolute;
                     top: 8px;
-                    left:15px;
+                    left: 15px;
                 }
-                .leftmenu .list-group-item.active { text-shadow:none;
-                    background: #ffffff;
-                    color: #666666;
+
+                .leftmenu .list-group-item.active {
+                    text-shadow: none;
+                    background: #90DFFC;
+                    color: #000000;
                 }
-               
+
+                .leftmenu .list-group-item:hover {
+                    background: #C5EEFD;
+                }
     </style>
     <script type="text/javascript">
         $(function () {
             $(document).ajaxStart(function () { $(".loading").show(); });
             $(document).ajaxStop(function () { $(".loading").hide(); });
-        });        
+        });
     </script>
     @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")
 </head>
@@ -72,41 +97,42 @@
                 <nav>
                     @if (!Request.Url.ToString().Contains("/Login"))
                     {
-                     <ul id="menu">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>   
-                    }                    
+                        <ul id="menu">
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li>@Html.ActionLink("About", "About", "Home")</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        </ul>
+                    }
                 </nav>
             </div>
         </div>
     </header>
-        <div id="body">
-  
-            <div class="col-sm-2 leftsection" style="margin-top:0px;padding:0px;min-height:600px;">                
-                @{Html.RenderPartial("~/Views/Shared/_AdminMenu.cshtml");}
-            </div>
-    
-       
-    <div class="col-sm-10 rightsection" style="margin: 0px; padding: 0px; min-height: 600px;background:#ffffff;">
+    <div id="body">
+
+        <div class="col-sm-2 leftsection" style="margin-top:0px;padding:0px;min-height:600px;">
+            @{Html.RenderPartial("~/Views/Shared/_AdminMenu.cshtml");}
+        </div>
+
+
+        <div class="col-sm-10 rightsection" style="margin: 0px; padding: 0px; min-height: 600px;background:#ffffff;">
             @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix" style="padding:10px;">@RenderBody()
-                <br /><br />
-            </section>
-        </div>
-           
+            <section class="content-wrapper main-content clear-fix" style="padding:10px;">
+                @RenderBody()
+            <br /><br />
+        </section>
     </div>
-    <footer class="col-sm-12">
-        <div class="content-wrapper" style="padding:10px;"> 
-                <p>&copy; @DateTime.Now.Year - eBit (Evidence Based Intervention and Treatment)</p>
-  
-        </div>
-    </footer>
+
+</div>
+<footer class="col-sm-12">
+    <div class="content-wrapper" style="padding:10px;">
+        <p>&copy; @DateTime.Now.Year - eBit (Evidence Based Intervention and Treatment)</p>
+
+    </div>
+</footer>
 
 
-    @RenderSection("scripts", required: false)
+@RenderSection("scripts", required: false)
 
-    <div class="loading" style="display: none;"><div>Please Wait...</div></div>
+<div class="loading" style="display: none;"><div>Please Wait...</div></div>
 </body>
 </html>

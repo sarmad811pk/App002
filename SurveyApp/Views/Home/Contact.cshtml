@@ -1,50 +1,54 @@
 ﻿@{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = "Contact Us";
 }
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper" style="position:relative;">
+            <hgroup class="title">
+                <h2>@ViewBag.Title.</h2>
+            </hgroup>
+        </div>
+    </section>
+}
+<div class="col-sm-6" style="">
+    <section class="contact">
+        <header style="background:none;">
+            <h3 style="background:none;font-weight:bold;">Brittany Lawton</h3>
+        </header>
+        <p>
+            <strong>
+                Clinical Research Coordinator
+            </strong>
+            <br />Autism and Neurodevelopment Program
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>@ViewBag.Message</h2>
-</hgroup>
+            <br />University of California, San Francisco
+            <br />401 Parnassus Avenue, BOX CAS-0984
+            <br />San Francisco CA, 94143-0984
+        </p>
 
-<section class="contact">
-    <header>
-        <h3>Phone</h3>
-    </header>
-    <p>
-        <span class="label">Main:</span>
-        <span>425.555.0100</span>
-    </p>
-    <p>
-        <span class="label">After Hours:</span>
-        <span>425.555.0199</span>
-    </p>
-</section>
-
-<section class="contact">
-    <header>
-        <h3>Email</h3>
-    </header>
-    <p>
-        <span class="label">Support:</span>
-        <span><a href="mailto:Support@example.com">Support@example.com</a></span>
-    </p>
-    <p>
-        <span class="label">Marketing:</span>
-        <span><a href="mailto:Marketing@example.com">Marketing@example.com</a></span>
-    </p>
-    <p>
-        <span class="label">General:</span>
-        <span><a href="mailto:General@example.com">General@example.com</a></span>
-    </p>
-</section>
-
-<section class="contact">
-    <header>
-        <h3>Address</h3>
-    </header>
-    <p>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399
-    </p>
-</section>
+        <p style="background: #f1f1f1; border-radius: 5px; padding: 5px; margin-right: 10px; text-align: center;">
+            <i style="font-size: 30px; color: #00ADEE; vertical-align: middle;" class="ion-email"></i><span style="vertical-align:baseline;"> Brittany.Lawton@ucsf.edu</span>&nbsp;&nbsp;&nbsp;
+            <i style="font-size: 30px; color: #00ADEE; vertical-align: middle;" class="ion-ios-telephone"></i><span style="vertical-align: baseline;"> 415.476.8803</span>&nbsp;&nbsp;&nbsp;
+            <i style="font-size: 30px; color: #00ADEE; vertical-align: middle;" class="ion-printer"></i><span style="vertical-align: baseline;"> 415.476.7132</span>&nbsp;
+        </p>
+    </section>
+</div>
+<div class="col-sm-6" style="">
+    <section class="contact">
+        <header style="background:none;">
+            <h3 style="background:none;font-weight:bold;">Felicia Widjaja</h3>
+        </header>
+        <p>
+            <strong>Clinical Research Coordinator</strong>
+            <br />Autism and Neurodevelopment Program
+            <br />University of California, San Francisco
+            <br />401 Parnassus Avenue, BOX CAS-0984
+            <br />San Francisco CA, 94143-0984
+        </p>
+        <p style="background:#f1f1f1;border-radius:5px;padding:5px;margin-right:10px;text-align:center;">
+            <i style="font-size: 30px; color: #00ADEE; vertical-align: middle;" class="ion-email"></i><span style="vertical-align:baseline;"> Felicia.Widjaja@ucsf.edu</span>&nbsp;&nbsp;&nbsp;
+            <i style="font-size: 30px; color: #00ADEE; vertical-align: middle;" class="ion-ios-telephone"></i><span style="vertical-align: baseline;"> 415.476.7803</span>&nbsp;&nbsp;&nbsp;
+            <i style="font-size: 30px; color: #00ADEE; vertical-align: middle;" class="ion-printer"></i><span style="vertical-align: baseline;"> 415.476.7132</span>&nbsp;
+        </p>
+    </section>
+</div>

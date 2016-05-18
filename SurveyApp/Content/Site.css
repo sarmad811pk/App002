@@ -231,9 +231,9 @@ ul#menu {
             display:block;
             margin:0px;
             padding:8px;
-            background-color: rgba(0,0,0,0.1); 
+            background-color: #00ADEE; 
             border-bottom:solid 3px #000000; 
-            color: #000000;
+            color: #ffffff;
             font-size:15px;
             font-weight:normal;
 

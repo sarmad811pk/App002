@@ -2,9 +2,9 @@
 <script src="~/Scripts/HighCharts/highcharts-more.js"></script>
 <script src="~/Scripts/HighCharts/solid-gauge.js"></script>
 
-<div id="divCompletion" style="position: fixed; top: 120px; right: 20px; width: 100px; height: 100px; margin: 0 auto"></div>
+<div id="divCompletion" style="position: fixed; top: 120px; right: 20px; width: 80px; height: 80px; margin: 0 auto"></div>
 <script type="text/javascript">
-    
+
     $(function () {
         var gaugeOptions = {
             chart: {
@@ -55,7 +55,7 @@
                 max: 100,
                 title: null
             },
-            colors: ["#008080"],
+            colors: ["#03A9F4"],
             credits: {
                 enabled: false
             },
@@ -76,7 +76,7 @@
         });
     });
 
-    function setCompletionPercentage(value) {        
+    function setCompletionPercentage(value) {
         var chart = Highcharts.charts[0];
         chart.series[0].data[0].update(parseInt(value));
     }
