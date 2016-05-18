@@ -1,34 +1,28 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "eBit (Evidence Based Intervention and Treatment) facilitates";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>@ViewBag.Message</h2>
-</hgroup>
-
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper" style="position:relative;">
+            <hgroup class="title">
+                <h2>@ViewBag.Title.</h2>
+            </hgroup>
+        </div>
+    </section>
+}
+ <div style="height:30px;"></div>
 <article>
+    <img src="~/Images/at3Logo.png" alt="" style="margin-left:40px;display:block;" />
     <p>
-        Use this area to provide additional information.
-    </p>
-
-    <p>
-        Use this area to provide additional information.
-    </p>
-
-    <p>
-        Use this area to provide additional information.
-    </p>
+        
+        <ul><li>Evidence-based care by enabling caregivers to quantify the effects of interventions</li>
+        <li>Integrated care by allowing caregivers to share progress within their network.</li></ul>
+ 
+        </p>
 </article>
-
 <aside>
-    <h3>Aside Title</h3>
-    <p>
-        Use this area to provide additional information.
-    </p>
-    <ul>
-        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-        <li>@Html.ActionLink("About", "About", "Home")</li>
-        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-    </ul>
+    <div>
+       
+    </div>
 </aside>
