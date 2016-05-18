@@ -190,36 +190,36 @@
         }
         #endregion
 
-
-
         #region Social Responsivness Scale(SRS) sub scale : Parent Quarterly Trend
-        DataRow[] drAwareness = dsCharts.Tables[12].Select("QuestionGroup = 'Social Awareness'");
+        DataRow[] drAwareness = dsCharts.Tables[14].Select("QuestionGroup = 'Social Awareness'");
         foreach (DataRow dr in drAwareness)
         {
             dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             aspSRSg += dr["Score"] + ",";
         }
-        DataRow[] drCognition = dsCharts.Tables[12].Select("QuestionGroup = 'Social Cognition'");
+        DataRow[] drCognition = dsCharts.Tables[14].Select("QuestionGroup = 'Social Cognition'");
         foreach (DataRow dr in drCognition)
         {
             tstpSRSg += dr["Score"] + ",";
         }
-        DataRow[] drCommunication = dsCharts.Tables[12].Select("QuestionGroup = 'Social Communication'");
+        DataRow[] drCommunication = dsCharts.Tables[14].Select("QuestionGroup = 'Social Communication'");
         foreach (DataRow dr in drCommunication)
         {
             unpSRSg += dr["Score"] + ",";
         }
-        DataRow[] drMotivation = dsCharts.Tables[12].Select("QuestionGroup = 'Social Motivation'");
+        DataRow[] drMotivation = dsCharts.Tables[14].Select("QuestionGroup = 'Social Motivation'");
         foreach (DataRow dr in drMotivation)
         {
             vspSRSg += dr["Score"] + ",";
         }
-        DataRow[] drBahaviour = dsCharts.Tables[12].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour'");
+        DataRow[] drBahaviour = dsCharts.Tables[14].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour'");
         foreach (DataRow dr in drBahaviour)
         {
             qpSRSg += dr["Score"] + ",";
         }
         #endregion
+
+
 
     }
 
