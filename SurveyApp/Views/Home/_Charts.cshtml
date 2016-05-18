@@ -23,7 +23,7 @@
 
     //Auditory Sensitivity Taste/Smell Sensitivity  Underresponsiveness Visual Sensitivity  Questionnaire
 
-    if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0 && dsCharts.Tables[0].Rows.Count > 0)
+    if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
     {
         #region Aberrant Behavior Checklist Social Responsiveness Scale
         DataRow[] drABCP = dsCharts.Tables[2].Select("UserType = 1");
@@ -59,99 +59,79 @@
         }
         DataRow[] drASPT = dsCharts.Tables[4].Select("UserType = 2");
         foreach (DataRow dr in drASPT)
-        {            
+        {
             tASP += dr["Score"] + ",";
         }
         #endregion
 
-
-        foreach (DataRow dr in dsCharts.Tables[0].Rows)
+        #region Short Language Profile
+        DataRow[] drSLPP = dsCharts.Tables[5].Select("UserType = 1");
+        foreach (DataRow dr in drSLPP)
         {
-
-
-            #region PedsQL-Parent Report for Children(8-12)
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 8)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    dPEDsql += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    pPEDsql += dr["Score"] + ",";
-                }
-            }
-            #endregion
-
-            #region Caregiver Strain Questionnaire
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 2)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    dCareGiver += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    pCareGiver += dr["Score"] + ",";
-                }
-            }
-            #endregion
-
-            #region Family Empowerment Scale
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 14)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    dPES += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    pPES += dr["Score"] + ",";
-                }
-            }
-            #endregion
-
-            #region GI Severity Index 
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 3)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    dGSI += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    pGSI += dr["Score"] + ",";
-                }
-            }
-            #endregion
-
-            #region Academic Progress Rating Scales
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 27)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
-                {
-                    dAPRS += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    tAPRS += dr["Score"] + ",";
-                }
-            }
-            #endregion
-
-            #region Weekly Teacher
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 24)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
-                {
-                    dWT += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    tWT += dr["Score"] + ",";
-                }
-            }
-            #endregion
-
-            #region Short Language Profile
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 10)
-            {
-                dSLP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    pSLP += dr["Score"] + ",";
-                    tSLP += "0" + ",";
-                }
-                else if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
-                {
-                    tSLP += dr["Score"] + ",";
-                    pSLP += "0" + ",";
-                }
-            }
-            #endregion
+            dSLP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pSLP += dr["Score"] + ",";
         }
+        DataRow[] drSLPT = dsCharts.Tables[5].Select("UserType = 2");
+        foreach (DataRow dr in drSLPT)
+        {
+            tSLP += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Weekly Teacher 
+        DataRow[] drWT = dsCharts.Tables[6].Select("UserType = 2");
+        foreach (DataRow dr in drWT)
+        {
+            dWT += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tWT += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region PedsQL-Parent Report for Children(8-12)
+        DataRow[] drPEDsqlP = dsCharts.Tables[7].Select("UserType = 1");
+        foreach(DataRow dr in drPEDsqlP)
+        {
+            dPEDsql += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pPEDsql += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Caregiver Strain Questionnaire
+        DataRow[] drCareGiverP = dsCharts.Tables[8].Select("UserType = 1");
+        foreach (DataRow dr in drCareGiverP)
+        {
+            dCareGiver += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pCareGiver += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Family Empowerment Scale
+        DataRow[] drPESrP = dsCharts.Tables[9].Select("UserType = 1");
+        foreach (DataRow dr in drPESrP)
+        {
+            dPES += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pPES += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region GI Severity Index 
+        DataRow[] drGSIP = dsCharts.Tables[10].Select("UserType = 1");
+        foreach (DataRow dr in drGSIP)
+        {
+            dGSI += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pGSI += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Academic Progress Rating Scales
+        DataRow[] drAPRST = dsCharts.Tables[11].Select("UserType = 2");
+        foreach (DataRow dr in drAPRST)
+        {
+            dAPRS += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tAPRS += dr["Score"] + ",";
+        }
+        #endregion
+
     }
 
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0 && dsCharts.Tables[1].Rows.Count > 0)
@@ -1466,7 +1446,6 @@
         margin-top: 10px;
     }
 </style>
-<h3>Respondents Progress</h3>
 <div class="row">
 
     <div class="col-sm-6" style="background-color:transparent;">
