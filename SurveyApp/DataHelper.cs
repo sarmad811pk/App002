@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Web;
 using System.Data.Entity;
 using System.Linq;
+using WebMatrix.WebData;
 
 namespace SurveyApp
 {
@@ -60,7 +61,7 @@ namespace SurveyApp
                 return r;
             }
         }
-        public static DataSet QuestionGetbySurveyID(int SurveyID, int childid, DateTime FetchDate)
+        public static DataSet QuestionGetbySurveyID(int SurveyID, int childid, int UserID, DateTime FetchDate)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -69,6 +70,8 @@ namespace SurveyApp
 
             cmd.Parameters.Add("@childID", SqlDbType.Int);
             cmd.Parameters["@childID"].Value = Convert.ToInt32(childid);
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = UserID;
             cmd.Parameters.Add("@FetchDate", SqlDbType.DateTime);
             cmd.Parameters["@FetchDate"].Value = FetchDate;
             

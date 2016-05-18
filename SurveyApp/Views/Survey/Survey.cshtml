@@ -2,7 +2,7 @@
 @{
 
     System.Data.DataSet dsSurvey = SurveyApp.DataHelper.SurveyGetByID(Model ?? 1);
-    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, 0, new DateTime(2015, 1, 1));
+    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, 0,0, new DateTime(2015, 1, 1));
     var qGroup = "";
     ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString() + " - Preview";
     Layout = "~/Views/Shared/_Layout.cshtml";
