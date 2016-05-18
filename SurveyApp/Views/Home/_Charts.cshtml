@@ -25,66 +25,49 @@
 
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0 && dsCharts.Tables[0].Rows.Count > 0)
     {
+        #region Aberrant Behavior Checklist Social Responsiveness Scale
+        DataRow[] drABCP = dsCharts.Tables[2].Select("UserType = 1");
+        foreach(DataRow dr in drABCP)
+        {
+            dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pABC += dr["Score"] + ",";
+        }
+        DataRow[] drABCT = dsCharts.Tables[2].Select("UserType = 2");
+        foreach (DataRow dr in drABCT)
+        {
+            tABC += dr["Score"] + ",";
+        }
+
+        DataRow[] drSRSP = dsCharts.Tables[3].Select("UserType = 1");
+        foreach (DataRow dr in drSRSP)
+        {
+            pSRS += dr["Score"] + ",";
+        }
+        DataRow[] drSRST = dsCharts.Tables[3].Select("UserType = 2");
+        foreach (DataRow dr in drSRST)
+        {
+            tSRS += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Abbreviated Sensory Profile
+        DataRow[] drASPP = dsCharts.Tables[4].Select("UserType = 1");
+        foreach (DataRow dr in drASPP)
+        {
+            dASP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pASP += dr["Score"] + ",";
+        }
+        DataRow[] drASPT = dsCharts.Tables[4].Select("UserType = 2");
+        foreach (DataRow dr in drASPT)
+        {            
+            tASP += dr["Score"] + ",";
+        }
+        #endregion
+
+
         foreach (DataRow dr in dsCharts.Tables[0].Rows)
         {
-            #region Abbreviated Sensory Profile
-            if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 1)
-            {
-                dASP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                if(dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    pASP += dr["Score"] + ",";
-                    tASP += "0" + ",";
-                }
-                else if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
-                {
-                    tASP += dr["Score"] + ",";
-                    pASP += "0" + ",";
-                }
-            }
-            #endregion
 
-            #region Aberrant Behavior Checklist Social Responsiveness Scale
-            if (dr["SurveyID"] != DBNull.Value && ((int)dr["SurveyID"] == 4 || (int)dr["SurveyID"] == 5))
-            {
-                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 4)
-                    {
-                        pABC += dr["Score"] + ",";
-                        tABC += "0" + ",";
-                        pSRS += "0" + ",";
-                        tSRS += "0" + ",";
-                    }
-                    else if(dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 5)
-                    {
-                        pSRS += dr["Score"] + ",";
-                        tSRS += "0" + ",";
-                        pABC += "0" + ",";
-                        tABC += "0" + ",";
-                    }
-                }
-                else if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
-                {
-                    if ((int)dr["SurveyID"] == 4)
-                    {
-                        tABC += dr["Score"] + ",";
-                        pABC += "0" + ",";
-                        pSRS += "0" + ",";
-                        tSRS += "0" + ",";
-                    }
-                    else if((int)dr["SurveyID"] == 5)
-                    {
-                        tSRS += dr["Score"] + ",";
-                        pSRS += "0" + ",";
-                        pABC += "0" + ",";
-                        tABC += "0" + ",";
-                    }
-                }
-            }
-            #endregion
 
             #region PedsQL-Parent Report for Children(8-12)
             if (dr["SurveyID"] != DBNull.Value && (int)dr["SurveyID"] == 8)
