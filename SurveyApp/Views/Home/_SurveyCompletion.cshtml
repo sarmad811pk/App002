@@ -7,7 +7,7 @@
     string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
 
-    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model, userType != 0 ? WebSecurity.CurrentUserId : 0);
+    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model, WebSecurity.CurrentUserId);
     studyId = Model == null ? 0 : Convert.ToInt32(Model);
 
 
@@ -56,7 +56,7 @@
         if (userType == 0 || userType == 2)
         {
             int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[userType == 0 ? 1 : 0].Select("'" + currentDate + "'  < ScheduleDate");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  < ScheduleDate");
             if (drTeacherCount.Length > 0)
             {
                 foreach (DataRow dr in drTeacherCount)
@@ -134,7 +134,7 @@
         if (userType == 0 || userType == 2)
         {
             int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[userType == 0 ? 1 : 0].Select("'" + currentDate + "' >= ScheduleDate");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' >= ScheduleDate");
             if (drTeacherCount.Length > 0)
             {
                 foreach (DataRow dr in drTeacherCount)
@@ -285,14 +285,14 @@ else
                 type: 'pie',
                 name: 'Share',
                 innerSize: '50%',
-                data: [@Html.Raw(prevParent),
+                data: [@Html.Raw(prevParent)/*,
                     {
                     name: 'There are no previously scheduled surveys available',
                         y: 0.2,
                         dataLabels: {
                         enabled: false
                         }
-                    }
+                    }*/
                 ]
             }]
         });
@@ -346,14 +346,14 @@ else
                 type: 'pie',
                 name: 'Share',
                 innerSize: '50%',
-                data: [@Html.Raw(prevTeacher),
+                data: [@Html.Raw(prevTeacher)/*,
                     {
                         name: 'There are no previously scheduled surveys available',
                         y: 0.2,
                         dataLabels: {
                             enabled: false
                         }
-                    }
+                    }*/
                 ]
             }]
         });
