@@ -219,126 +219,59 @@
         }
         #endregion
 
-
-
-    }
-
-    if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0 && dsCharts.Tables[1].Rows.Count > 0)
-    {
-        foreach (DataRow dr in dsCharts.Tables[1].Rows)
+        #region Social Responsivness Scale(SRS) sub scale : Teacher Quarterly Trend
+        DataRow[] drAwarenessT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Awareness'");
+        foreach (DataRow dr in drAwarenessT)
         {
-
-
-
-            #region Social Responsivness Scale(SRS) sub scale : Teacher Quarterly Trend
-            if (dr["SurveyID"] != DBNull.Value /*&& (int)dr["SurveyID"] == 4*/)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 2)
-                {
-                    dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Social Awareness")
-                    {
-                        astSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        astSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Social Cognition")
-                    {
-                        tsttSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        tsttSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Social Communication")
-                    {
-                        untSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        untSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Social Motivation")
-                    {
-                        vstSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        vstSRSg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Restricted Interests and Repetitive Bahaviour")
-                    {
-                        qtSRSg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        qtSRSg += "0" + ",";
-                    }
-                }
-            }
-            #endregion
-
-            #region PedsQL Parent Report : Parent Quarterly Trend
-            if (dr["SurveyID"] != DBNull.Value /*&& (int)dr["SurveyID"] == 4*/)
-            {
-                if (dr["UserType"] != DBNull.Value && (int)dr["UserType"] == 1)
-                {
-                    dpPQLg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "Auditory Sensitivity")
-                    {
-                        aspPQLg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        aspPQLg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "Taste/Smell Sensitivity")
-                    {
-                        tstpPQLg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        tstpPQLg += "0" + ",";
-                    }
-                }
-            }
-            #endregion
-
-            #region * When level changes for Child
-            if (dr["SurveyID"] != DBNull.Value /*&& (int)dr["SurveyID"] == 4*/)
-            {
-                if (dr["UserType"] != DBNull.Value/* && (int)dr["UserType"] == 1*/)
-                {
-                    dpWLCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-                    if (dr["QuestionGroup"].ToString() == "DSM Level 1")
-                    {
-                        aspWLCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        aspWLCg += "0" + ",";
-                    }
-
-                    if (dr["QuestionGroup"].ToString() == "DSM Level 2")
-                    {
-                        tstpWLCg += dr["Score"] + ",";
-                    }
-                    else
-                    {
-                        tstpWLCg += "0" + ",";
-                    }
-                }
-            }
-            #endregion
+            dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            astSRSg += dr["Score"] + ",";
         }
+        DataRow[] drCognitionT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Cognition'");
+        foreach (DataRow dr in drCognitionT)
+        {
+            tsttSRSg += dr["Score"] + ",";
+        }
+        DataRow[] drCommunicationT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Communication'");
+        foreach (DataRow dr in drCommunicationT)
+        {
+            untSRSg += dr["Score"] + ",";
+        }
+        DataRow[] drMotivationT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Motivation'");
+        foreach (DataRow dr in drMotivationT)
+        {
+            vstSRSg += dr["Score"] + ",";
+        }
+        DataRow[] drBahaviourT = dsCharts.Tables[15].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour'");
+        foreach (DataRow dr in drBahaviourT)
+        {
+            qtSRSg += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region PedsQL Parent Report : Parent Quarterly Trend
+        DataRow[] drPedSQL0812 = dsCharts.Tables[16].Select("SurveyID = 8");
+        foreach (DataRow dr in drPedSQL0812)
+        {
+            dpPQLg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            aspPQLg += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region * When level changes for Child
+        DataRow[] drDSM1T = dsCharts.Tables[17].Select("QuestionGroup = 'DSM Level 1'");
+        foreach (DataRow dr in drDSM1T)
+        {
+            dpWLCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            aspWLCg += dr["Score"] + ",";
+        }
+        DataRow[] drDSM2T = dsCharts.Tables[17].Select("QuestionGroup = 'DSM Level 2'");
+        foreach (DataRow dr in drDSM2T)
+        {
+            tstpWLCg += dr["Score"] + ",";
+        }
+        #endregion
     }
+    
 }
 
 
