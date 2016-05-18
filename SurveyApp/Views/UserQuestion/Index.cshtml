@@ -374,12 +374,14 @@
                             {
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
                                 {
-                                    <div>
-                                        <div style="text-transform: uppercase;"><b>@dr["AdverseReaction"]</b></div>
-                                        <div style="display:inline-block;width: 50%;"><b>Occured On:</b>@dr["DateOccured"]</div><div style="display:inline-block;width: 50%;"><b>Resolved On:</b>@dr["DateResolved"]</div>
-                                        <div><b>Medication:&nbsp;</b>@dr["Medication"]</div><div></div>
-                                        <div style="display:inline-block;width: 50%;"><b>Started On:&nbsp;</b>@dr["DateStart"]</div><div style="display:inline-block;width: 50%;"><b>Ended On:&nbsp;</b>@dr["DateEnd"]</div>
-                                        <div style="width:80%;margin: 5px auto;border: solid 1px #FFF;"></div>
+                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
+                                        <div style="text-transform:capitalize;"><b>@dr["AdverseReaction"]</b></div>
+                                        <div style="@( @dr["DateOccured"].ToString()==""?"display:none;":"") "><b>Occured On:</b> @dr["DateOccured"]</div>
+                                        <div style="@( @dr["DateResolved"].ToString() == "" ? "display:none;" : "") "><b>Resolved On:</b> @dr["DateResolved"]</div>
+                                        <div style="@( @dr["Medication"].ToString() == "" ? "display:none;" : "") "><b>Medication:</b> @dr["Medication"]</div><div></div>
+                                        <div style="@( @dr["DateStart"].ToString() == "" ? "display:none;" : "") "><b>Started On:</b> @dr["DateStart"]</div>
+                                        <div style="@( @dr["DateEnd"].ToString() == "" ? "display:none;" : "") "><b>Ended On:</b> @dr["DateEnd"]</div>
+                                        
                                     </div>
                                 }
                             }
@@ -398,12 +400,14 @@
                             {
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
                                 {
-                                    <div>
-                                        <div style="text-transform: uppercase;"><b>@dr["EventName"]</b></div>
-                                        <div><b>Category:&nbsp;</b>@dr["EventCategory"]</div>
-                                        <div><b>Date:&nbsp;</b>@dr["EventDate"]</div>
-                                        <div style="width:80%;margin: 5px auto;border: solid 1px #FFF;"></div>
+                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
+                                        <div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>
+                                        <div style="@( @dr["EventName"].ToString() == "" ? "display:none;" : "") ">
+                                            <span>Event:</span> @dr["EventName"]
+                                            <span style="@( @dr["EventDate"].ToString() == "" ? "display:none;" : "") "><span> On:</span> @dr["EventDate"]</span>
+                                        </div>                                        
                                     </div>
+ 
                                 }
                             }
                             else
