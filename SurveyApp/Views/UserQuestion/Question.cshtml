@@ -509,20 +509,23 @@
 
 
         $("#SurveySubmit").click(function (e) {
-
+       
             e.preventDefault();
 
             var flag = true;
-            $(".questions").find(".q:visible").find("input[type=hidden]").each(function (index, obj) {
+            var SurID = GetQueryStringValues()['surveyID'];
+            if(SurID !=28 && SurID!=29){
+                $(".questions").find(".q:visible").find("input[type=hidden]").each(function (index, obj) {
 
-                if ($(obj).val() != "") {
-                    $(obj).closest(".q").removeClass("notFilled");
-                }
-                else {
-                    $(obj).closest(".q").addClass("notFilled");
-                    flag = false;
-                }
-            });
+                    if ($(obj).val() != "") {
+                        $(obj).closest(".q").removeClass("notFilled");
+                    }
+                    else {
+                        $(obj).closest(".q").addClass("notFilled");
+                        flag = false;
+                    }
+                });
+            }
             setCompletionDiv();
 
             $('#b1').closest('li').css('background', '#FCD6DF').css('border-right', 'solid 5px #cc0000;');
@@ -533,7 +536,7 @@
 
 
                         var childId = GetQueryStringValues()['ChildId'];
-                        var SurID = GetQueryStringValues()['surveyID'];
+                       
                         if (SurID == 28) {
                             savequestionsAdverseReaction(childId);
                         }
