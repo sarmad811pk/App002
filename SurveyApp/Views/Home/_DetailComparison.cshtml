@@ -49,21 +49,21 @@
     .tblComparison .hdhelper{font-weight: bold;cursor: pointer;}
     .name{border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;width: 140px;padding: 2px;}
     .dots td{padding: 2px;}    
-    .dots .dot{width: 26px;text-align: center;border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;cursor:pointer;}
+    .dots .dot{width: 43px;text-align: center;border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;cursor:pointer;}
     .complete{color:#33B86C;}
     .incomplete{color:#ffd800;}
     .notstarted{color:#D7524B;}
     .notapplicable{color:#CA9404;}
     .notenrolled{color:#A3A2DE;}
     .comparison .current, .comparison .previous {border-top: none;width: 100%;}
-    .comparison ul {height: 41px;margin: 0px;list-style: none;padding:0px;border-bottom: solid 1px #CCC;}
+    .comparison ul {height: 44px;margin: 0px;list-style: none;padding:0px;border-bottom: solid 1px #CCC;}
     .comparison li {float: left;}
     .comparison li a {margin-right: 2px;border: 1px solid transparent;padding: 10px 15px;display: block;position: relative;text-shadow: none;text-decoration:none;color:#333;min-width: 141px;}
     .comparison li a:hover {border-color: #FEFEFE;cursor: pointer;}
     .comparison li a.selected {color: #4d6b8a;background-color: #fff;border: 1px solid #B1B1B1;border-bottom-color: transparent;cursor: default;}
     .comparison .tblComparison .trhdn{display:none !important;}
-    .comparison .title{height: 162px;clear: both;background-color: #FFF;text-align: center;padding: 10px;border-right: solid 1px #CCC;border-left: solid 1px #CCC;}
-    .comparison .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;margin-left: 91px;display: inline-block;}
+    .comparison .title{height: 50px;clear: both;background-color: #FFF;text-align: center;padding: 10px;}
+    .comparison .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;display: inline-block;}
     .comparison .heading{position: absolute;display:inline-block;font-size:10px;-ms-transform: rotate(-60deg); /* IE 9 */-webkit-transform: rotate(-60deg); /* Chrome, Safari, Opera */transform: rotate(-60deg);}
     .comparison .tilttitle{position:absolute;display: inline-block;transform: rotate(-40deg);top: -3px;left: 6px;right: 0;margin-left: auto;margin-right: auto;white-space: nowrap;}
 </style>
@@ -73,28 +73,42 @@
     <div class="current">
         <ul class="tabperiod">
             <li>
-                <a class="selected" href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected');$('.tblComparison').find('.tblPrevious').hide(); $('.tblComparison').find('.tblCurrent').show();">Current Period</a>
+                <a class="selected" href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected');$('.tblComparison').find('.tblPrevious').hide(); $('.tblComparison').find('.tblCurrent').show();">Currently due</a>
             </li>
             <li>
-                <a href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected'); $('.tblComparison').find('.tblCurrent').hide(); $('.tblComparison').find('.tblPrevious').show();">Previous Period</a>
+                <a href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected'); $('.tblComparison').find('.tblCurrent').hide(); $('.tblComparison').find('.tblPrevious').show();">Last submited</a>
             </li>
         </ul>
+
+
+        <div style="padding:10px 0px;text-align:center;">
+            <table>
+                <tr>
+                    <td style="padding:0px 10px;"><span><i class="ion-record complete"></i>&nbsp;Complete</span></td>
+                    <td style="padding:0px 10px;"><span><i class="ion-record incomplete"></i>&nbsp;Incomplete</span></td>
+                    <td style="padding:0px 10px;"><span><i class="ion-record notstarted"></i>&nbsp;Not Started</span></td>
+                    <td style="padding:0px 10px;"><span><i class="ion-record notapplicable"></i>&nbsp;Not Enrolled</span></td>
+                    <td style="padding:0px 10px;"><span><i class="ion-android-radio-button-off notenrolled"></i>&nbsp;Not Applicable</span></td>
+                   
+                </tr>
+            </table>
+        </div>
         <div class="title"></div>
-        <div style="border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;">
-            <table cellpadding="0" cellspacing="0" class="tblComparison">
+        <div style="border-bottom: solid 1px #CCC;">
+            <table cellpadding="0" cellspacing="0" class="tblComparison" style="width:100%">
                 <thead>
                     <tr>
                         <td class="name hdhelper" data-toggle="tooltip" title="Child enrolled in the specfic survey">Child</td>
                         <td>
-                            <table class="dots">
+                            <table class="dots" style="width:100%">
                                 <tr>
                                     <td class="name hdhelper" data-toggle="tooltip" title="The resondents for the respetive survey i.e. Teacher/Parent">
                                         Respondent
                                     </td>
                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                {
+                                    {
                                         <td class="dot hdhelper" data-toggle="tooltip" style="position:relative" title="@drT["Title"]"><span class="tilttitle">@(drT["Title"] != DBNull.Value ? drT["Title"].ToString().Substring(0, (drT["Title"].ToString().Length > 25 ? 25 : drT["Title"].ToString().Length)) + (drT["Title"].ToString().Length > 25 ? "..." : "") : "")</span></td>
-                                }
+                                    }
                                 </tr>
                             </table>
                         </td>
@@ -103,8 +117,8 @@
                 <tbody>
                     @{ int index = 0;}
                     @foreach (DataRow drChild in dtChildren.Rows)
-                {
-                    DataRow[] drTeachers = dtTeachers.Select("ChildId = " + drChild["ChildId"]);
+                    {
+                        DataRow[] drTeachers = dtTeachers.Select("ChildId = " + drChild["ChildId"]);
                         <tr class="@(index >= 10 ? "chosenones trhdn" : "")">
                             <td class="name">@drChild["Name"]</td>
                             <td>
@@ -114,22 +128,22 @@
                                             @drChild["Parent"]
                                         </td>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                    {
+                                        {
                                             <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
-                                    }
+                                        }
                                     </tr>
                                     @foreach (DataRow drTeacher in drTeachers)
-                                {
+                                    {
                                         <tr>
                                             <td class="name">
                                                 @drTeacher["Teacher"]
                                             </td>
                                             @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                        {
+                                            {
                                                 <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
-                                        }
+                                            }
                                         </tr>
-                                }
+                                    }
                                 </table>
                                 <table class="dots tblPrevious" style="display:none;">
                                     <tr>
@@ -137,41 +151,36 @@
                                             @drChild["Parent"]
                                         </td>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                    {
+                                        {
                                             <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
-                                    }
+                                        }
                                     </tr>
                                     @foreach (DataRow drTeacher in drTeachers)
-                                {
+                                    {
                                         <tr>
                                             <td class="name">
                                                 @drTeacher["Teacher"]
                                             </td>
                                             @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                        {
+                                            {
                                                 <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
-                                        }
+                                            }
                                         </tr>
-                                }
+                                    }
                                 </table>
                             </td>
                         </tr>
-                    index++;
-                }
+                                    index++;
+                    }
                 </tbody>
             </table>
         </div>        
-        <div style="padding:10px 0px;text-align:center;">
-            <table>
-                <tr>
-                    <td style="padding:0px 10px;"><span><i class="ion-record complete"></i>&nbsp;Complete</span></td>
-                    <td style="padding:0px 10px;"><span><i class="ion-record incomplete"></i>&nbsp;Incomplete</span></td>
-                    <td style="padding:0px 10px;"><span><i class="ion-record notstarted"></i>&nbsp;Not Started</span></td>
-                    <td style="padding:0px 10px;"><span><i class="ion-record notapplicable"></i>&nbsp;Not Enrolled</span></td>
-                    <td style="padding:0px 10px;"><span><i class="ion-android-radio-button-off notenrolled"></i>&nbsp;Not Applicable</span></td>
-                    <td style="padding:0px 10px;"><a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a></td>
-                </tr>
-            </table>            
+       
+
+        <div style="margin:0; padding:0; float:left;">
+            
+               <a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a>
+              
         </div>
     </div>    
     
