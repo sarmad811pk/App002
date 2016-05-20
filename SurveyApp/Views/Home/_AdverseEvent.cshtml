@@ -4,7 +4,7 @@
 @{
     int studyId = Model == null ? 0 : Convert.ToInt32(Model);
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
-    DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, 0); //Adverse Reaction Survey        
+    DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, studyId, 0); //Adverse Reaction Survey        
 }
 
 <div class="adverseReaction">

@@ -63,18 +63,6 @@
     .topStats .info-box {min-height: 121px;}
 </style>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        debugger;
-        var selvalue = $("#ddlStudy option:selected").text();
-        $("#topheading").text(selvalue);
-    });
-
-   
-</script>
-
-
-
 <div class="topStats">
     <h3 id="topheading"></h3>
     <div>
@@ -82,7 +70,7 @@
             <div class="info-box mini-stat clearfix bx-shadow bg-success">
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
-                    <span class="counter">@getUserCount("Enrolled")</span>
+                    <span class="counter">@getUserCount("Enrolled")</span><br />
                     <nobr>Children&nbsp;Enrolled</nobr>
                 </div>
             </div>
@@ -92,7 +80,7 @@
             <div class="info-box mini-stat clearfix bg-danger bx-shadow">
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
-                    <span class="counter">@getUserCount("Lost Followup")</span>
+                    <span class="counter">@getUserCount("Lost Followup")</span><br />
                     <nobr>Children&nbsp;Lost Followup</nobr>
                 </div>
             </div>
@@ -102,7 +90,7 @@
             <div class="info-box mini-stat clearfix bg-info bx-shadow">
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
-                    <span class="counter">@getUserCount("Withdrew Consent")</span>
+                    <span class="counter">@getUserCount("Withdrew Consent")</span><br />
                     <nobr>Children&nbsp;Withdrew Consent</nobr>
                 </div>
             </div>
@@ -112,7 +100,7 @@
             <div class="info-box mini-stat clearfix bg-pink bx-shadow">
                 <span class="mini-stat-icon"><i class="ion-android-contacts"></i></span>
                 <div class="mini-stat-info text-right">
-                    <span class="counter">@getUserCount("Left School")</span>
+                    <span class="counter">@getUserCount("Left School")</span><br />
                     <nobr>Children&nbsp;Left School</nobr>
                 </div>
             </div>

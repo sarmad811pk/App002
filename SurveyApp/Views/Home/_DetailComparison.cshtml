@@ -2,13 +2,19 @@
 @using System.Data;
 
 @{ 
-    DataSet dsComparison = SurveyApp.DataHelper.DashboardGetDetailComparison();
+    int studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    int children = 0;
+    DataSet dsComparison = SurveyApp.DataHelper.DashboardGetDetailComparison(studyId);
     if(dsComparison != null)
     {
         dtChildren = dsComparison.Tables[0];
         dtTeachers = dsComparison.Tables[1];
         dtSurveys = dsComparison.Tables[2];
         dtTotalSurveys = dsComparison.Tables[3];
+    }
+    if (dtChildren != null && dtChildren.Rows != null && dtChildren.Rows.Count > 0)
+    {
+        children = dtChildren.Rows.Count;
     }
 
 }
@@ -66,6 +72,7 @@
     .comparison .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;display: inline-block;}
     .comparison .heading{position: absolute;display:inline-block;font-size:10px;-ms-transform: rotate(-60deg); /* IE 9 */-webkit-transform: rotate(-60deg); /* Chrome, Safari, Opera */transform: rotate(-60deg);}
     .comparison .tilttitle{position:absolute;display: inline-block;transform: rotate(-40deg);top: -3px;left: 6px;right: 0;margin-left: auto;margin-right: auto;white-space: nowrap;}
+    .comparison .nodata{margin: 25px;text-align: center;}
 </style>
 
 <div class="comparison">
@@ -103,7 +110,7 @@
                             <td>
                                 <table class="dots" style="width:100%">
                                     <tr>
-                                        <td class="name hdhelper" data-toggle="tooltip" title="The resondents for the respetive survey i.e. Teacher/Parent">
+                                        <td class="name hdhelper" data-toggle="tooltip" title="The resondents for the respective survey i.e. Teacher/Parent">
                                             Respondent
                                         </td>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
@@ -116,73 +123,80 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{ int index = 0;}
-                        @foreach (DataRow drChild in dtChildren.Rows)
+                        @if (children > 0)
                         {
-                            DataRow[] drTeachers = dtTeachers.Select("ChildId = " + drChild["ChildId"]);
-                            <tr class="@(index >= 10 ? "chosenones trhdn" : "")">
-                                <td class="name">@drChild["Name"]</td>
-                                <td>
-                                    <table class="dots tblCurrent" style="width: 100%;">
-                                        <tr>
-                                            <td class="name">
-                                                @drChild["Parent"]
-                                            </td>
-                                            @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                            {
-                                                <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
-                                            }
-                                        </tr>
-                                        @foreach (DataRow drTeacher in drTeachers)
-                                        {
+                            int index = 0;
+                            foreach (DataRow drChild in dtChildren.Rows)
+                            {
+                                DataRow[] drTeachers = dtTeachers.Select("ChildId = " + drChild["ChildId"]);
+                                <tr class="@(index >= 10 ? "chosenones trhdn" : "")">
+                                    <td class="name">@drChild["Name"]</td>
+                                    <td>
+                                        <table class="dots tblCurrent" style="width: 100%;">
                                             <tr>
                                                 <td class="name">
-                                                    @drTeacher["Teacher"]
+                                                    @drChild["Parent"]
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
-                                                    <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
+                                                    <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                 }
                                             </tr>
-                                        }
-                                    </table>
-                                    <table class="dots tblPrevious" style="display:none;width:100%;">
-                                        <tr>
-                                            <td class="name">
-                                                @drChild["Parent"]
-                                            </td>
-                                            @foreach (DataRow drT in dtTotalSurveys.Rows)
+                                            @foreach (DataRow drTeacher in drTeachers)
                                             {
-                                                <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
+                                                <tr>
+                                                    <td class="name">
+                                                        @drTeacher["Teacher"]
+                                                    </td>
+                                                    @foreach (DataRow drT in dtTotalSurveys.Rows)
+                                                    {
+                                                        <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
+                                                    }
+                                                </tr>
                                             }
-                                        </tr>
-                                        @foreach (DataRow drTeacher in drTeachers)
-                                        {
+                                        </table>
+                                        <table class="dots tblPrevious" style="display:none;width:100%;">
                                             <tr>
                                                 <td class="name">
-                                                    @drTeacher["Teacher"]
+                                                    @drChild["Parent"]
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
-                                                    <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
+                                                    <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
                                                 }
                                             </tr>
-                                        }
-                                    </table>
-                                </td>
-                            </tr>
-                                        index++;
+                                            @foreach (DataRow drTeacher in drTeachers)
+                                            {
+                                                <tr>
+                                                    <td class="name">
+                                                        @drTeacher["Teacher"]
+                                                    </td>
+                                                    @foreach (DataRow drT in dtTotalSurveys.Rows)
+                                                    {
+                                                        <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </table>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="2"><div class="nodata">There is no child enrolled in this study currently</div></td></tr>
                         }
                     </tbody>
                 </table>
             </div>
 
-
-            <div style="margin:0; padding:0; float:left;">
-
-                <a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a>
-
-            </div>
+            @if (children > 10)
+            {
+                <div style="margin:0; padding:0; float:left;">
+                    <a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a>
+                </div>
+            }
         </div>    
     
 </div>

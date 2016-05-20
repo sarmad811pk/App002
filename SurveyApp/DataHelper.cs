@@ -410,13 +410,17 @@ namespace SurveyApp
         }
 
 
-        public static DataSet GetAdverseReaction(int userid, int? childid = 0)
+        public static DataSet GetAdverseReaction(int userid, int studyId, int? childid = 0)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@ChildID", SqlDbType.Int);
             cmd.Parameters["@ChildID"].Value = childid;
+
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;
 
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
             cmd.Parameters["@UserID"].Value = userid;
@@ -476,7 +480,7 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetSchedulesForUserRoles";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static DataSet DashboardGetDetailComparison(int? childId = 0)
+        public static DataSet DashboardGetDetailComparison(int studyId, int? childId = 0)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -489,7 +493,10 @@ namespace SurveyApp
             else
             {
                 cmd.Parameters["@ChildId"].Value = childId;
-            }            
+            }
+
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            cmd.Parameters["@StudyId"].Value = studyId;
 
             cmd.CommandText = "Dashboard_GetDetailComparison";
             return DataHelper.ExecuteCommandAsDataSet(cmd);

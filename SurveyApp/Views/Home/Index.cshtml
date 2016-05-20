@@ -6,13 +6,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     int studyId = Model == null ? 0 : (int)Model;
-    if(studyId == 0)
+    string studyName = "";
+    
+    using (StudyContext sContext = new StudyContext())
     {
-        using (StudyContext sContext = new StudyContext())
-        {
-            sContext.Studies.OrderBy(s => s.Id).FirstOrDefault();
-        }
-    }
+        Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
+        studyId = objStd.Id;
+        studyName = objStd.Name;
+    }   
+
 }
 
 <style type="text/css">
@@ -59,6 +61,7 @@
         </ul>
     </div>
     <div class="topControls">
+        <div style="display:inline-block;"><h3 style="margin: 7px 0px 0px 0px;text-transform: capitalize;">@studyName</h3></div>
         <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);">            
         @foreach (Study objStudy in Study.StudyGetAll())
         {
@@ -66,6 +69,7 @@
         }
         </select>
     </div>
+    <div class="separator"></div>
     
     <div class="dashboardDetails __tabs">
         @{Html.RenderPartial("_ChildrenCounts", studyId);}
@@ -77,12 +81,12 @@
         <div class="separator"></div>
         @{Html.RenderPartial("_DetailComparison");}
     </div>
-    <div class="Adverse __tabs"> 
+    <div class="Adverse __tabs" style="display:none;"> 
         @{Html.RenderPartial("_AdverseEvent", studyId);}
 
 
     </div>
-    <div class="graphsDetails __tabs">
+    <div class="graphsDetails __tabs" style="/*display:none;*/">
         <div class="separator"></div>
         @{Html.RenderPartial("_Charts");}
     </div>

@@ -4,15 +4,19 @@
     ViewBag.Title = "Parent/Teacher Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    int roleId = 0, teacherRoleId = 0, parentRoleId = 0;
     lstPTS = new List<ParentTeacher_Study>();
     if(Model.vw_ParentTeacher.Id > 0){
         using (var ptsContext = new ParentTeacher_StudyContext())
         {
             lstPTS = ptsContext.ParentTeacher_Studys.ToList();
         }
+        roleId = Model.vw_ParentTeacher.Role;
     }
     DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
-    
+
+    parentRoleId = (int)dtRoles.Select("RoleName = 'Parent'")[0]["RoleId"];
+    teacherRoleId = (int)dtRoles.Select("RoleName = 'Teacher'")[0]["RoleId"];
 }
 @model SurveyApp.Models.ParentTeacher_Register
 
@@ -92,13 +96,6 @@
                 $("#addSchool").slideUp();
             }
         });
-
-        $(".roles").find("input[type='radio']").each(function (index, obj) {
-            if ($(obj)[0].checked == true) {
-                $(obj)[0].click();
-                return true;
-            }
-        });
 		        
         var id = $("#hdnParentTeacherId").val();
         if (id != "" && id != "0") {
@@ -123,13 +120,40 @@
         $("#txtConfirmPassword").attr("readonly", "readonly");
     }
 
+    function changeRole(roleType) {
+        if (roleType == "@SurveyApp.Models.SurveyAppRoles.Parent") {
+            var goOn = confirm("Changing the role may affect the children enrollment. Do you wish to continue?");
+            if (goOn == true) {
+                $('.divSchool').hide();
+                $("#addSchool").hide();
+            }
+            else {
+                $(".roles").find("input[type=radio]")[0].checked = false;
+                $(".roles").find("input[type=radio]")[1].checked = true;
+            }
+        }
+        else if (roleType == "@SurveyApp.Models.SurveyAppRoles.Teacher") {
+            var goOn = confirm("Changing the role may affect the children enrollment. Do you wish to continue?");
+            if (goOn == true) {
+                $('.divSchool').show();
+                if ($("#ddlSchools").val() == -1) {
+                    $("#addSchool").show();
+                }                
+            }
+            else {
+                $(".roles").find("input[type=radio]")[1].checked = false;
+                $(".roles").find("input[type=radio]")[0].checked = true;
+            }
+        }
+    }
+
 </script>
 <br />
 
 @using (Html.BeginForm("ParentTeacherAddEdit", "ParentTeacher", FormMethod.Post, new { @class = "form-horizontal", style = "width: 600px;height:510px;" }))
 {
     @*<div style="position: absolute; z-index: 100; width: 600px; height: 510px; background-color: #f1f1f1; "></div>*@
-    <div id="divUserInfo" style="position: absolute;">
+    <div id="divUserInfo" style="position: absolute;left:30px;">
         <div style="width: 600px; height: 510px;">
             @Html.ValidationSummary()
             @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Model.vw_ParentTeacher.Id })
@@ -147,7 +171,7 @@
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3"> </label>
-                <div class="col-sm-9" style=" text-align: right;">
+                <div class="col-sm-9" style="text-align: right;">
                     @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-link" })
                 </div>
             </div>
@@ -160,17 +184,17 @@
             <div class="form-group">
                 <label class="control-label col-sm-3" for="gender">Role:</label>
                 <div class="col-sm-9 roles">
-                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, dtRoles.Select("RoleName = 'Parent'")[0]["RoleId"].ToString(), new { name = "optradio", onclick = "$('.divSchool').hide();" })Parent</label></div>
-                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, dtRoles.Select("RoleName = 'Teacher'")[0]["RoleId"].ToString(), new { name = "optradio", onclick = "$('.divSchool').show();" })Teacher</label></div>
+                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, parentRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Parent + "');" })Parent</label></div>
+                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, teacherRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Teacher + "');" })Teacher</label></div>
                 </div>
             </div>
-            <div class="form-group divSchool" style="display:none;">
+            <div class="form-group divSchool" style="@(roleId == teacherRoleId ? "" : "display: none;")">
                 <label class="control-label col-sm-3" for="school">School:</label>
                 <div class="col-sm-9">
                     @Html.DropDownListFor(m => m.vw_ParentTeacher.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })
                 </div>
             </div>
-            <div id="addSchool" class="_panel form-group" style="display: none; margin-bottom: 5px;">
+            <div id="addSchool" class="_panel form-group" style="display: none;margin-bottom: 5px;">
                 <div class="msg"></div>
                 <div class="form-group">
                     <label class="control-label col-sm-3">School Name</label>
@@ -333,14 +357,14 @@
         });
 
         $("#divAccountInfo").show();
-        $("#divAccountInfo").animate({ 'left': 0 }, 500);
+        $("#divAccountInfo").animate({ 'left': 30 }, 500);
     }
 
     function showUserInfo() {
         $("#divAccountInfo").animate({ 'left': 620 }, 500, function () {
             $("#divAccountInfo").fadeOut();
         });
-        $("#divUserInfo").animate({ 'left': 0 }, 500);
+        $("#divUserInfo").animate({ 'left': 30 }, 500);
     }
 
     function updateAccount() {
@@ -376,7 +400,7 @@
             $("#divErrors").show();
             return false;
         }
-        
+
         if (oldPassword != password) {
             updatePassword = true;
         }
