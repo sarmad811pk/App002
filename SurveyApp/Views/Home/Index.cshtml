@@ -79,7 +79,7 @@
         @{Html.RenderPartial("_SurveyCompletion", studyId);}
 
         <div class="separator"></div>
-        @{Html.RenderPartial("_DetailComparison");}
+        @{Html.RenderPartial("_DetailComparison", studyId);}
     </div>
     <div class="Adverse __tabs" style="display:none;"> 
         @{Html.RenderPartial("_AdverseEvent", studyId);}
@@ -88,7 +88,7 @@
     </div>
     <div class="graphsDetails __tabs" style="/*display:none;*/">
         <div class="separator"></div>
-        @{Html.RenderPartial("_Charts");}
+        @{Html.RenderPartial("_Charts", studyId);}
     </div>
 </div>
 
