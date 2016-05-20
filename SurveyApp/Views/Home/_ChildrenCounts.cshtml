@@ -63,8 +63,20 @@
     .topStats .info-box {min-height: 121px;}
 </style>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        var selvalue = $("#ddlStudy option:selected").text();
+        $("#topheading").text(selvalue);
+    });
+
+   
+</script>
+
+
+
 <div class="topStats">
-    <h3>Participants</h3>
+    <h3 id="topheading"></h3>
     <div>
         <div class="col-md-6 col-sm-6 col-lg-2 itembox" onclick="window.open('@Url.Action("Index", "Child")');">
             <div class="info-box mini-stat clearfix bx-shadow bg-success">
