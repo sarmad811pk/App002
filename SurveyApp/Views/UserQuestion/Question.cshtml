@@ -74,6 +74,18 @@
             border: solid 1px #FFA2A2;
             background-color: #FFF2F2 !important;
         }
+    ._medlbl {
+        padding-top: 7px;
+        text-align: right;
+        padding-right: 0px;
+        font-weight: bold;
+    }
+    ._schlbl {
+        padding-top: 7px;
+        text-align: left;
+        padding-right: 0px;
+        font-weight: bold;
+    }
 </style>
 
 
@@ -206,6 +218,15 @@
                         $("#hdn" + $(this).attr("qid")).val(txt + "" + date).trigger('change');
                     }
                 });
+            $("._datepickermed").datepicker(
+            {
+                onSelect: function(dateText, inst) { 
+                    var date = $(this).val();
+                    var qid = $(this).attr("qid");
+                    saveTmedValues(qid);
+                }
+               
+            });
             $("#success-alert").hide();
             //var childname = decodeURI(GetQueryStringValues()['ChildName']);
             //$(this).html().replace("[Child]", childname);
@@ -250,8 +271,8 @@
                 }
             });
 
-            $("textarea, input[type=text]").blur(function () {
-
+            $("textarea, input[type=text]").blur(function () {                  
+                if ($(this).hasClass("hasDatepicker") == true || $(this).hasClass("_txtdatepicker")) { return; }
                 if ($(this).attr("data-tmed") == "tmed" || $(this).attr("data-sch") == "tsch") {
 
                     var qid = $(this).attr("qid")
@@ -274,7 +295,7 @@
                 }
 
                 else {
-                    if ($(this).hasClass("hasDatepicker") == true || $(this).hasClass("_txtdatepicker")) { return; }
+                    
                     var oldval = $("#hdn" + $(this).attr("qid")).val();
                     if (this.value != "") {
                         var newval = "|" + this.value;
@@ -767,7 +788,7 @@
     
     public string GetSelect()
     {
-        return "<select class='form-control col-sm-2' qid='#q#' data-tmed='tmed' data-md='m6#q#'>" +
+        return "<select class='form-control' qid='#q#' data-tmed='tmed' data-md='m6#q#'>" +
          "<option value='0' ></option>" +
           "<option value='mg'  >mg: milligram(s)</option>" +
          "<option value='ml' >mL: milliliter(s)</option>" +
@@ -781,7 +802,7 @@
   
     public string GetFrequency()
     {
-        return "<select class='form-control col-sm-2' qid='#q#' data-tmed='tmed' data-md='m7#q#'   >" +
+        return "<select class='form-control' qid='#q#' data-tmed='tmed' data-md='m7#q#'   >" +
      "<option value='0' ></option>" +
      "<option value='1' >01</option>" +
      "<option value='2' >02</option>" +
@@ -795,13 +816,13 @@
      "<option value='10' >10</option>" +
      "<option value='11' >11</option> " +
      "<option value='12' >12</option> " +
-     "</select> ";
+     "</select>";
         
     }
 
     public string GetHours()
     {
-        return "<select class='form-control col-sm-2' qid='#q#' data-tmed='tmed' data-md='m8#q#'>" +
+        return "<select class='form-control' qid='#q#' data-tmed='tmed' data-md='m8#q#'>" +
    "<option value='0'   ></option>" +
    "<option value='1' >Hour</option>" +
    "<option value='24' >Day</option>" +
@@ -821,20 +842,35 @@
         var tmultitext = "<div class='#c#'><textarea class='form-control' qid='#q#' name='q#q#' id='q#q#_#i#'>#si#</textarea></div>";
 
         var tdate = "<div class='#c#'><input class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
-        var tmed = @"<div class='#c# form-inline'>" +
-
-                    "<div class='row'><div class='col-sm-1 _bold'>Indication</div> <input class='form-control col-sm-2' data-tmed='tmed' data-md='m1#q#' data-score='#sc#' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'>" +
-                    " <div class='col-sm-1 _bold'>Dosage</div> <input class='form-control col-sm-2' data-tmed='tmed' data-md='m2#q#' data-score='#sc#' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'> " + GetSelect() +
-                    "<input class='form-control col-sm-2' type='text' qid='#q#'  data-tmed='tmed' data-md='m9#q#' style='display:none' value='#si6#'></div> <div class='row'>  <div class='col-sm-1 _bold'>Frequency</div>" + GetFrequency() + "<div class='col-sm-1 _bold'>Times per</div>" + GetHours() +
-                    "<div class='col-sm-2 _bold'>Start Date</div><input class='form-control col-sm-2' data-tmed='tmed' data-md='m4#q#' data-score='#sc#' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si4#'>" +
-                    "<div class='col-sm-1 _bold'>End Date</div><input class='form-control col-sm-2' data-tmed='tmed' data-md='m5#q#' data-score='#sc#' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si5#'>" +
-                    "</div></div>";
-        var tsch = @"<div class='#c# form-inline'>" +
-                   "<input class='form-control col-sm-3' data-sch='tsch' data-id='t1#q#' placeholder='Count of Sessions/Week' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si0#'>" +
-                   "<input class='form-control col-sm-3' data-sch='tsch' data-id='t2#q#' placeholder='Time/Session' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'>" +
-                   "<input class='form-control col-sm-3' data-sch='tsch' data-id='t3#q#' placeholder='Start (mn-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'>" +
-                   "<input class='form-control col-sm-3' data-sch='tsch' data-id='t4#q#' placeholder='End (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si3#'>" +
-                   "</div>";
+        var tmed = @"<div class='#c#'>
+                      <div class='row'>
+                        <div class='_spacing col-sm-1 _medlbl'>Indication</div>
+                        <div class='_spacing col-sm-11'><input class='form-control' data-tmed='tmed' data-md='m1#q#' data-score='#sc#' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_0' value='#si1#'></div>
+                        <div class='_spacing col-sm-1 _medlbl'>Dosage</div>
+                        <div class='_spacing col-sm-5'>
+                            <div class='col-sm-6' style='padding:0px;'><input class='form-control' data-tmed='tmed' data-md='m2#q#' data-score='#sc#' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si2#'></div>
+                            <div class='col-sm-6' style='padding:0px;'>#GetSelect#</div></div>                        
+                        <div class='_spacing col-sm-1 _medlbl'>Frequency</div> 
+                        <div class='_spacing col-sm-2'>#GetFrequency#</div>
+                        <div class='_spacing col-sm-1 _medlbl'>Times per</div>
+                        <div class='_spacing col-sm-2'>#GetHours#</div>
+                        <div class='_spacing col-sm-1 _medlbl'>Start Date</div>
+                        <div class='_spacing col-sm-2'><input class='form-control _datepickermed' data-tmed='tmed' data-md='m4#q#' data-score='#sc#' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_2' value='#si4#'></div>
+                        <div class='_spacing col-sm-1 _medlbl'>End Date</div>
+                        <div class='_spacing col-sm-2'><input class='form-control _datepickermed' data-tmed='tmed' data-md='m5#q#' data-score='#sc#' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_3' value='#si5#'></div>
+                      </div>
+                    </div>";
+        tmed = tmed.Replace("#GetSelect#",GetSelect()).Replace("#GetFrequency#",GetFrequency()).Replace("#GetHours#",GetHours());
+        var tsch = @"<div class='#c#'> 
+                        <div class='col-sm-3 _schlbl'>Count of Sessions/Week</div>
+                        <div class='col-sm-3 _schlbl'>Time/Session</div>
+                        <div class='col-sm-3 _schlbl'>Start Date (mm-yy)</div>
+                        <div class='col-sm-3 _schlbl'>End Date (mm-yy)</div>    
+                    <div class='col-sm-3'><input class='form-control' data-sch='tsch' data-id='t1#q#' placeholder='Count of Sessions/Week' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si0#'></div>
+                    <div class='col-sm-3'><input class='form-control' data-sch='tsch' data-id='t2#q#' placeholder='Time/Session' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'></div>
+                    <div class='col-sm-3'><input class='form-control' data-sch='tsch' data-id='t3#q#' placeholder='Start (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'></div>
+                    <div class='col-sm-3'><input class='form-control' data-sch='tsch' data-id='t4#q#' placeholder='End (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si3#'></div>
+                    </div>";
         var tcheckdate = "<div class='#c#  form-inline'><input type='checkbox' #chk# qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='col-sm-1' style='margin-top:10px;' onclick='enableDate(this,\"q#q#_1\")'><div class='col-sm-10'><input disabled='disabled' placeholder='Select Date' class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div></div>";
         var ttextdate = "<div class='#c#  form-inline'>" +
                          "<input type='text' placeholder='Details' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si0#' class='form-control _txtdatepicker' style='width:68%;' onkeyup='enabletextDate(this,\"q#q#_1\")'>" +
