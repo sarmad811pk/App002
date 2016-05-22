@@ -1,7 +1,8 @@
-﻿@using System.Data;
+﻿@model int
+@using System.Data;
 
 @{ 
-    DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts();
+    DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts(Model);
     string dASP = "", pASP = "", tASP = "";
     string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
     string dPEDsql = "", pPEDsql = "";

@@ -512,10 +512,12 @@ namespace SurveyApp
         }
 
         #region Charts
-        public static DataSet DashboardGetCharts()
+        public static DataSet DashboardGetCharts(int studyId)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            cmd.Parameters["@StudyId"].Value = studyId;
 
             cmd.CommandText = "Dashboard_GetCharts";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
