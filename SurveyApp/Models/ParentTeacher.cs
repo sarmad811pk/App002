@@ -81,4 +81,24 @@ namespace SurveyApp.Models
         public ParentTeacher vw_ParentTeacher { get; set; }
         public RegisterModel vw_Register { get; set; }
     }
+
+    [Table("Respondent")]
+    public class Respondent
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string Email { get; set; }
+        public DateTime ReminderDate { get; set; }
+    }
+    public class RespondentContext : DbContext
+    {
+        public RespondentContext()
+            : base("DefaultConnection")
+        {
+        }
+
+        public DbSet<Respondent> Respondents { get; set; }
+    }
 }

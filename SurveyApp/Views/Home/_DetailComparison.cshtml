@@ -73,6 +73,7 @@
     .comparison .heading{position: absolute;display:inline-block;font-size:10px;-ms-transform: rotate(-60deg); /* IE 9 */-webkit-transform: rotate(-60deg); /* Chrome, Safari, Opera */transform: rotate(-60deg);}
     .comparison .tilttitle{position:absolute;display: inline-block;transform: rotate(-40deg);top: -3px;left: 6px;right: 0;margin-left: auto;margin-right: auto;white-space: nowrap;}
     .comparison .nodata{margin: 25px;text-align: center;}
+    .comparison .linker.disabled{background-color: #CCC;cursor: help;}
 </style>
 
 <div class="comparison">
@@ -81,10 +82,10 @@
         <div class="tabs" >
             <ul class="tabperiod">
                 <li>
-                    <a class="selected" href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected');$('.tblComparison').find('.tblPrevious').hide(); $('.tblComparison').find('.tblCurrent').show();">Currently Due</a>
+                    <a class="selected" href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected'); $('.tblComparison').find('.tblPrevious').hide(); $('.tblComparison').find('.tblCurrent').show(); $('.chkPrevious').hide(); $('.chkCurrent').show(); $('.remPrevious').hide(); $('.remCurrent').show();">Currently Due</a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected'); $('.tblComparison').find('.tblCurrent').hide(); $('.tblComparison').find('.tblPrevious').show();">Last Submited</a>
+                    <a href="javascript:void(0);" onclick="$('.tabperiod a').removeClass('selected'); $(this).addClass('selected'); $('.tblComparison').find('.tblCurrent').hide(); $('.tblComparison').find('.tblPrevious').show(); $('.chkCurrent').hide(); $('.chkPrevious').show(); $('.remCurrent').hide(); $('.remPrevious').show();">Last Submited</a>
                 </li>
             </ul>
             </div>
@@ -106,20 +107,27 @@
                 <table cellpadding="0" cellspacing="0" class="tblComparison" style="width:100%">
                     <thead>
                         <tr>
-                            <td class="name hdhelper" data-toggle="tooltip" title="Child enrolled in the specfic survey">Child</td>
-                            <td>
+                            <th class="name hdhelper" data-toggle="tooltip" title="Child enrolled in the specfic survey">Child</th>
+                            <th>
                                 <table class="dots" style="width:100%">
                                     <tr>
-                                        <td class="name hdhelper" data-toggle="tooltip" title="The resondents for the respective survey i.e. Teacher/Parent">
+                                        <th class="name hdhelper" data-toggle="tooltip" title="The resondents for the respective survey i.e. Teacher/Parent">
                                             Respondent
-                                        </td>
+                                        </th>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
                                         {
-                                            <td class="dot hdhelper" data-toggle="tooltip" style="position:relative" title="@drT["FullTitle"]"><span class="tilttitle">@drT["Title"]</span></td>
+                                            <th class="dot hdhelper" data-toggle="tooltip" style="position:relative" title="@drT["FullTitle"]"><span class="tilttitle">@drT["Title"]</span></th>
                                         }
+                                        <th class="dot hdhelper" style="position:relative">
+                                            <span class="tilttitle" style="top: -14px;left: -5px;">
+                                                Reminder
+                                            </span>
+                                            <input type="checkbox" class="chkCurrent" style="position: relative;left: 10px;" onclick="checkAll(this);" />
+                                            <input type="checkbox" class="chkPrevious" style="position: relative;left: 10px;display:none;" onclick="checkAll(this);" />
+                                        </th>
                                     </tr>
                                 </table>
-                            </td>
+                            </th>                            
                         </tr>
                     </thead>
                     <tbody>
@@ -141,6 +149,9 @@
                                                 {
                                                     <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                 }
+                                                <td class="dot">
+                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                </td>
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
                                             {
@@ -152,6 +163,9 @@
                                                     {
                                                         <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
                                                     }
+                                                    <td class="dot">
+                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]"  email="@drTeacher["Email"]" />
+                                                    </td>
                                                 </tr>
                                             }
                                         </table>
@@ -164,6 +178,9 @@
                                                 {
                                                     <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
                                                 }
+                                                <td class="dot">
+                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                </td>                                                
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
                                             {
@@ -174,11 +191,14 @@
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
                                                         <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
-                                                    }
+                                                    }    
+                                                    <td class="dot">
+                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
+                                                    </td>                                                
                                                 </tr>
                                             }
                                         </table>
-                                    </td>
+                                    </td>                                    
                                 </tr>
                                 index++;
                             }
@@ -194,9 +214,15 @@
             @if (children > 10)
             {
                 <div style="margin:0; padding:0; float:left;">
-                    <a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a>
+                    <a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a>                    
                 </div>
             }
+            <div style="margin:0px 0px 0px 5px; padding:0; float:left;" class="remCurrent">
+                <a href="javascript:void(0);" class="linker disabled" data-toggle='tooltip' title="Please select a respondent first to send reminder" onclick="sendReminder(this);">Send Reminder</a>
+            </div>
+            <div style="margin:0px 0px 0px 5px; padding:0; float:left;display:none;" class="remPrevious">
+                <a href="javascript:void(0);" class="linker disabled" data-toggle='tooltip' title="Please select a respondent first to send reminder" onclick="sendReminder(this);">Send Reminder</a>
+            </div>
         </div>    
     
 </div>
@@ -217,5 +243,97 @@
             $(elem).removeClass("hdn");
             $(elem).text("Show All Children");
         }        
+    }
+
+    function checkAll(elem) {
+        var isChecked = $(elem)[0].checked;
+        if (isChecked == true) {
+            var tbl = $(".tblCurrent").is(":visible") == true ? $(".tblCurrent") : $(".tblPrevious");            
+            tbl.find(".checkReminder").each(function (index, obj) {
+                $(obj)[0].checked = true;
+            });            
+        }
+        else {
+            var tbl = $(".tblCurrent").is(":visible") == true ? $(".tblCurrent") : $(".tblPrevious");
+            tbl.find(".checkReminder").each(function (index, obj) {
+                $(obj)[0].checked = false;
+            });
+        }
+    }
+
+    function setReminderOption(elem) {
+        if ($(".tblCurrent").is(":visible") == true) {
+            var isChecked = false;
+            $(".tblCurrent").find(".checkReminder").each(function (inex, obj) {
+                if ($(obj)[0].checked == true){
+                    isChecked = true;
+                }
+            });
+            if (isChecked == true) {
+                $(".remCurrent a").removeClass("disabled");
+                $(".remCurrent a").attr("title", "A reminder email will be send to the selected respondent(s)");
+            }
+            else {
+                $(".remCurrent a").addClass("disabled");
+                $(".remCurrent a").attr("title", "Please select a respondent first to send reminder");
+            }
+        }
+
+        if ($(".tblPrevious").is(":visible") == true) {
+            var isChecked = false;
+            $(".tblPrevious").find(".checkReminder").each(function (inex, obj) {
+                if ($(obj)[0].checked == true) {
+                    isChecked = true;
+                }
+            });
+            if (isChecked == true) {
+                $(".remPrevious a").removeClass("disabled");
+                $(".remPrevious a").attr("title", "A reminder email will be send to the selected respondent(s)");
+            }
+            else {
+                $(".remPrevious a").addClass("disabled");
+                $(".remPrevious a").attr("title", "Please select a respondent first to send reminder");
+            }
+        }
+    }
+
+    function Respondent() {
+        this.UserId = 0;
+        this.Email = "";
+        this.ReminderDate = "";
+    }
+
+    function sendReminder(elem) {
+        var respos = new Array();
+        $(".tblComparison").find(".checkReminder").each(function (index, obj) {            
+            if ($(obj)[0].checked == true && $(obj).attr("email") != "") {
+                var respo = new Respondent();
+                respo.UserId = $(obj).attr("userid");
+                respo.Email = $(obj).attr("email");
+                respo.ReminderDate = "@DateTime.Now";
+                respos.push(respo);
+            }
+        });
+
+        $.ajax({
+            url: "@Url.Action("SendReminder", "Home")",
+            data: "{'respos': '" + JSON.stringify(respos) + "'}",
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            success: function (data) {
+                if (data.success == true) {
+                    
+                }
+                else {
+                    
+                }
+            },
+            error: function (errss) {
+                result = false;
+            },            
+            cache: false,
+            processData: false
+        });
     }
 </script>

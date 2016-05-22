@@ -1,6 +1,8 @@
-﻿using SurveyApp.Models;
+﻿using Newtonsoft.Json;
+using SurveyApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,6 +15,10 @@ namespace SurveyApp.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        public HomeController()
+        {
+            Database.SetInitializer<RespondentContext>(null);
+        }
         public ActionResult Index(int? studyId)
         {
             if (!Request.IsAuthenticated)
@@ -205,5 +211,45 @@ namespace SurveyApp.Controllers
             }
             }
         }
+
+        public ActionResult SendReminder(string respos) {
+            bool isSuccess = false;
+            try
+            {
+                SurveyApp.Models.Respondent[] objRespos = JsonConvert.DeserializeObject<SurveyApp.Models.Respondent[]>(respos);
+                List<string> lstEmails = new List<string>();
+                foreach (Respondent objRp in objRespos)
+                {
+                    //lstEmails.Add(objRp.Email);
+                }
+                lstEmails.Add("shazeb140@gmail.com");
+
+                bool isSent = SMTPHelper.SendEmail("test email please ignore", "test email please ignore", lstEmails, true);
+
+                if(isSent == true)
+                {
+                    //string enc = Encryption.Encrypt("ewrwerwerwerwe", System.Web.Configuration.WebConfigurationManager.AppSettings["EncryptionKey"].ToString(), false);
+                    using (var cRespondent = new RespondentContext())
+                    {
+                        foreach (SurveyApp.Models.Respondent objRespo in objRespos)
+                        {
+                            cRespondent.Respondents.Add(objRespo);
+                        }
+
+                        cRespondent.SaveChanges();
+                    }
+                    isSuccess = true;
+                }
+
+            }
+            catch (Exception ex){
+                isSuccess = false;
+            }
+            
+            
+            return Json(new { success = isSuccess });
+        }
     }
+
+    
 }

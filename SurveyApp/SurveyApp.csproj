@@ -205,6 +205,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="SMTPHelper.cs" />
     <Content Include="App_Data\aspnet-SurveyApp-20160130102437.mdf" />
     <Content Include="App_Data\aspnet-SurveyApp-20160130102437_log.ldf">
       <DependentUpon>aspnet-SurveyApp-20160130102437.mdf</DependentUpon>
@@ -226,6 +227,7 @@
     <Compile Include="Controllers\SurveyController.cs" />
     <Compile Include="Controllers\UserQuestionController.cs" />
     <Compile Include="DataHelper.cs" />
+    <Compile Include="Encryption.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
