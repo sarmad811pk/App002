@@ -45,7 +45,7 @@
             </div>
             foreach (System.Data.DataRow drch in dschild.Tables[0].Rows)
             {
-                <a class='list-group-item @(c == "UserQuestion" && childID==(int?)drch["ID"] ? " active" : "") ' href="@Url.Action("Index", "UserQuestion")?childID=@drch["ID"]"><i class='ion-ios-arrow-forward'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@drch["Name"].ToString()</a>
+                <a class='list-group-item @(c == "UserQuestion" && childID==(int?)drch["ID"] ? " active" : "") ' href="@Url.Action("Index", "UserQuestion")?childID=@drch["ID"]&studyId=@studyId"><i class='ion-ios-arrow-forward'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@drch["Name"].ToString()</a>
             }
         }
     </div>
