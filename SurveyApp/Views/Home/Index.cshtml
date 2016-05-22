@@ -57,7 +57,9 @@
             <li>
                 <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.Adverse').show();">Adverse Reactions & Life Events</a>
             </li>
- 
+            <li>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.WeeklyGraph').show();">Weekly Progress</a>
+            </li>
         </ul>
     </div>
     <div class="topControls">
@@ -70,7 +72,7 @@
         </select>
     </div>
     <div class="separator"></div>
-    
+
     <div class="dashboardDetails __tabs">
         @{Html.RenderPartial("_ChildrenCounts", studyId);}
 
@@ -89,6 +91,9 @@
     <div class="graphsDetails __tabs" style="/*display:none;*/">
         <div class="separator"></div>
         @{Html.RenderPartial("_Charts", studyId);}
+    </div>
+    <div class="WeeklyGraph _tabs">
+        @{Html.RenderPartial("_WeeklyChart", studyId);}
     </div>
 </div>
 

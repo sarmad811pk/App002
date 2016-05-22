@@ -429,6 +429,15 @@ namespace SurveyApp
             cmd.CommandText = "OtherSurvey_Stats";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet GetWeeklyProgressForGraph(int StudyID)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = StudyID;
+            cmd.CommandText = "getWeeklyProgressForGraph";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
 
         #region Dashborad
         public static DataSet DashboardGetByStudyId(int? studyId = 0)

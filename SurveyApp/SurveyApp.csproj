@@ -344,6 +344,12 @@
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\pwstrength.js" />
+    <Content Include="Scripts\r\g.bar-min.js" />
+    <Content Include="Scripts\r\g.dot-min.js" />
+    <Content Include="Scripts\r\g.line.js" />
+    <Content Include="Scripts\r\g.pie-min.js" />
+    <Content Include="Scripts\r\g.raphael.js" />
+    <Content Include="Scripts\r\raphael.js" />
     <Content Include="Scripts\zxcvbn.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -408,6 +414,7 @@
     <Content Include="Views\Home\_DetailComparison.cshtml" />
     <Content Include="Views\Survey\_PercentCompletion.cshtml" />
     <Content Include="Views\Home\_AdverseEvent.cshtml" />
+    <Content Include="Views\Home\_WeeklyChart.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
