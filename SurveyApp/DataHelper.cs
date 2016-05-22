@@ -375,6 +375,17 @@ namespace SurveyApp
             cmd.CommandText = "Getchild_ByUserID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet GetChildbyStudyID(int studyId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;
+
+            cmd.CommandText = "Getchild_ByStudyID";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
 
         public static DataSet RolesGetAll()
         {

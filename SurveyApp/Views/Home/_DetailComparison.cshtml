@@ -323,10 +323,10 @@
             async: true,
             success: function (data) {
                 if (data.success == true) {
-                    
+                    alert("An email about the survey completion has been sent to selected respondent(s).");
                 }
                 else {
-                    
+                    alert("We are unable to send email at this time, please try again later.");
                 }
             },
             error: function (errss) {

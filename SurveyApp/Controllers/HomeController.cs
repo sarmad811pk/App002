@@ -220,11 +220,10 @@ namespace SurveyApp.Controllers
                 List<string> lstEmails = new List<string>();
                 foreach (Respondent objRp in objRespos)
                 {
-                    //lstEmails.Add(objRp.Email);
+                    lstEmails.Add(objRp.Email);
                 }
-                lstEmails.Add("shazeb140@gmail.com");
 
-                bool isSent = SMTPHelper.SendEmail("test email please ignore", "test email please ignore", lstEmails, true);
+                bool isSent = SMTPHelper.SendEmail("UCSFEBIT Survey Reminder", "Please login to UCSFEBIT Survey app and complete the surveys. <br/>Thank You<br/>UCSFEBIT Team", lstEmails, true);
 
                 if(isSent == true)
                 {
@@ -240,12 +239,10 @@ namespace SurveyApp.Controllers
                     }
                     isSuccess = true;
                 }
-
             }
             catch (Exception ex){
                 isSuccess = false;
             }
-            
             
             return Json(new { success = isSuccess });
         }

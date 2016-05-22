@@ -49,7 +49,6 @@ namespace SurveyApp
                 objSMTPClient.Port = smtpPort;
                 objSMTPClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-
                 try
                 {
                     objSMTPClient.Send(message);
@@ -58,18 +57,7 @@ namespace SurveyApp
                 {
                     return false;
                 }
-
             }
-            //var objSMTPClient = new SmtpClient(smtpServer, 587) { Credentials = new NetworkCredential(sender, password), EnableSsl = true, UseDefaultCredentials = true };
-
-            //try
-            //{
-            //    objSMTPClient.Send(message);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return false;
-            //}
             return true;
         }
     }
