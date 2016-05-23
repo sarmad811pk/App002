@@ -53,7 +53,7 @@
 
 }
 
-@using (Html.BeginForm("StudyAddEdit", "Study", FormMethod.Post))
+@using (Html.BeginForm("StudyAddEdit", "Study", FormMethod.Post, new { style = "padding-left: 24px;" }))
 {
     @Html.ValidationSummary();
     @Html.HiddenFor(s => s.Id, new { name = "hdnStudyId", value = Model.Id })

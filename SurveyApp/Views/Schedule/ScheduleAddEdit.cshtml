@@ -49,7 +49,7 @@
 </style>
 <br />
 
-@using (Html.BeginForm("ScheduleAddEdit", "Schedule", FormMethod.Post, new { id = "frmAddSchedule", @class = "form-horizontal", style = "width: 700px;" }))
+@using (Html.BeginForm("ScheduleAddEdit", "Schedule", FormMethod.Post, new { id = "frmAddSchedule", @class = "form-horizontal", style = "width: 700px;padding-left: 24px;" }))
 {
     @Html.ValidationSummary();
     @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Model.Id })
