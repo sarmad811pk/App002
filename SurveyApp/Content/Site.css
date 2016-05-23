@@ -836,10 +836,10 @@ div.checklist div.checker:last-child{
 
 .loading{    
     position: fixed;
-    width: 100%;
-    top: 46%;
+    width: 100%;    
     text-align: center;
     z-index: 1000;
+    top: 46%;
 }
 .loading div{
     position: relative;
@@ -855,5 +855,17 @@ div.checklist div.checker:last-child{
     padding: 7px 8px 7px 64px;
     display: inline-block;
     background-size: 40% auto;
-    font-family: Calibri;;
+    font-family: Calibri;    
+}
+.disablebackground{
+    opacity: 0.4;
+    background: #000000;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    position: fixed;
+    z-index: 90;
+    display: none;
+    height: 100%;
 }

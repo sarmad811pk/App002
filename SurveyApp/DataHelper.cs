@@ -375,13 +375,16 @@ namespace SurveyApp
             cmd.CommandText = "Getchild_ByUserID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static DataSet GetChildbyStudyID(int studyId)
+        public static DataSet GetChildbyStudyID(int studyId, int userId)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@StudyID", SqlDbType.Int);
             cmd.Parameters["@StudyID"].Value = studyId;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
 
             cmd.CommandText = "Getchild_ByStudyID";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
@@ -530,7 +533,7 @@ namespace SurveyApp
             cmd.Parameters.Add("@StudyId", SqlDbType.Int);
             cmd.Parameters["@StudyId"].Value = studyId;
 
-            cmd.CommandText = "Dashboard_GetCharts";
+            cmd.CommandText = "Dashboard_GetChartsFixed";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
         #endregion

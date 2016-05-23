@@ -27,24 +27,24 @@
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
     {
         #region Aberrant Behavior Checklist Social Responsiveness Scale
-        DataRow[] drABCP = dsCharts.Tables[2].Select("UserType = 1");
+        DataRow[] drABCP = dsCharts.Tables[0].Select("SURVEYid = 4");
         foreach(DataRow dr in drABCP)
         {
             dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pABC += dr["Score"] + ",";
         }
-        DataRow[] drABCT = dsCharts.Tables[2].Select("UserType = 2");
+        DataRow[] drABCT = dsCharts.Tables[1].Select("SURVEYid = 4");
         foreach (DataRow dr in drABCT)
         {
             tABC += dr["Score"] + ",";
         }
 
-        DataRow[] drSRSP = dsCharts.Tables[3].Select("UserType = 1");
+        DataRow[] drSRSP = dsCharts.Tables[0].Select("SURVEYid = 5");
         foreach (DataRow dr in drSRSP)
         {
             pSRS += dr["Score"] + ",";
         }
-        DataRow[] drSRST = dsCharts.Tables[3].Select("UserType = 2");
+        DataRow[] drSRST = dsCharts.Tables[1].Select("SURVEYid = 5");
         foreach (DataRow dr in drSRST)
         {
             tSRS += dr["Score"] + ",";
@@ -52,45 +52,45 @@
         #endregion
 
         #region Abbreviated Sensory Profile
-        DataRow[] drASPP = dsCharts.Tables[4].Select("UserType = 1");
+        DataRow[] drASPP = dsCharts.Tables[0].Select("SURVEYid = 4");
         foreach (DataRow dr in drASPP)
         {
             dASP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pASP += dr["Score"] + ",";
         }
-        DataRow[] drASPT = dsCharts.Tables[4].Select("UserType = 2");
+        DataRow[] drASPT = dsCharts.Tables[1].Select("SURVEYid = 4");
         foreach (DataRow dr in drASPT)
         {
             tASP += dr["Score"] + ",";
         }
         #endregion
 
-        #region Short Language Profile
-        DataRow[] drSLPP = dsCharts.Tables[5].Select("UserType = 1");
-        foreach (DataRow dr in drSLPP)
-        {
-            dSLP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            pSLP += dr["Score"] + ",";
-        }
-        DataRow[] drSLPT = dsCharts.Tables[5].Select("UserType = 2");
-        foreach (DataRow dr in drSLPT)
-        {
-            tSLP += dr["Score"] + ",";
-        }
-        #endregion
+        //#region Short Language Profile
+        //DataRow[] drSLPP = dsCharts.Tables[5].Select("UserType = 1");
+        //foreach (DataRow dr in drSLPP)
+        //{
+        //    dSLP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+        //    pSLP += dr["Score"] + ",";
+        //}
+        //DataRow[] drSLPT = dsCharts.Tables[5].Select("UserType = 2");
+        //foreach (DataRow dr in drSLPT)
+        //{
+        //    tSLP += dr["Score"] + ",";
+        //}
+        //#endregion
 
-        #region Weekly Teacher 
-        DataRow[] drWT = dsCharts.Tables[6].Select("UserType = 2");
-        foreach (DataRow dr in drWT)
-        {
-            dWT += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            tWT += dr["Score"] + ",";
-        }
-        #endregion
+        //#region Weekly Teacher 
+        //DataRow[] drWT = dsCharts.Tables[6].Select("UserType = 2");
+        //foreach (DataRow dr in drWT)
+        //{
+        //    dWT += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+        //    tWT += dr["Score"] + ",";
+        //}
+        //#endregion
 
         #region PedsQL-Parent Report for Children(8-12)
-        DataRow[] drPEDsqlP = dsCharts.Tables[7].Select("UserType = 1");
-        foreach(DataRow dr in drPEDsqlP)
+        DataRow[] drPEDsqlP = dsCharts.Tables[2].Select("SURVEYid IN (6 ,7, 8, 9)");
+        foreach (DataRow dr in drPEDsqlP)
         {
             dPEDsql += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pPEDsql += dr["Score"] + ",";
@@ -98,7 +98,7 @@
         #endregion
 
         #region Caregiver Strain Questionnaire
-        DataRow[] drCareGiverP = dsCharts.Tables[8].Select("UserType = 1");
+        DataRow[] drCareGiverP = dsCharts.Tables[2].Select("SURVEYid = 2");
         foreach (DataRow dr in drCareGiverP)
         {
             dCareGiver += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -107,7 +107,7 @@
         #endregion
 
         #region Family Empowerment Scale
-        DataRow[] drPESrP = dsCharts.Tables[9].Select("UserType = 1");
+        DataRow[] drPESrP = dsCharts.Tables[2].Select("SURVEYid = 14");
         foreach (DataRow dr in drPESrP)
         {
             dPES += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -116,7 +116,7 @@
         #endregion
 
         #region GI Severity Index 
-        DataRow[] drGSIP = dsCharts.Tables[10].Select("UserType = 1");
+        DataRow[] drGSIP = dsCharts.Tables[2].Select("SURVEYid = 3");
         foreach (DataRow dr in drGSIP)
         {
             dGSI += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -125,7 +125,7 @@
         #endregion
 
         #region Academic Progress Rating Scales
-        DataRow[] drAPRST = dsCharts.Tables[11].Select("UserType = 2");
+        DataRow[] drAPRST = dsCharts.Tables[2].Select("SURVEYid = 27");
         foreach (DataRow dr in drAPRST)
         {
             dAPRS += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -134,28 +134,28 @@
         #endregion
 
         #region Aberrant  Behaviour Checklist : Parent Quarterly Trend
-        DataRow[] drASBC = dsCharts.Tables[12].Select("QuestionGroup = 'Irritability'");
-        foreach(DataRow dr in drASBC)
+        DataRow[] drASBC = dsCharts.Tables[3].Select("QuestionGroup = 'Irritability' AND SURVEYid = 4");
+        foreach (DataRow dr in drASBC)
         {
             dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             aspABCg += dr["Score"] + ",";
         }
-        DataRow[] drTSTP = dsCharts.Tables[12].Select("QuestionGroup = 'Lethargy'");
+        DataRow[] drTSTP = dsCharts.Tables[3].Select("QuestionGroup = 'Lethargy' AND SURVEYid = 4");
         foreach (DataRow dr in drTSTP)
         {
             tstpABCg += dr["Score"] + ",";
         }
-        DataRow[] drSteros = dsCharts.Tables[12].Select("QuestionGroup = 'Stereotypy'");
+        DataRow[] drSteros = dsCharts.Tables[3].Select("QuestionGroup = 'Stereotypy' AND SURVEYid = 4");
         foreach (DataRow dr in drSteros)
         {
             unpABCg += dr["Score"] + ",";
         }
-        DataRow[] drHypers = dsCharts.Tables[12].Select("QuestionGroup = 'Hyperactivity'");
+        DataRow[] drHypers = dsCharts.Tables[3].Select("QuestionGroup = 'Hyperactivity' AND SURVEYid = 4");
         foreach (DataRow dr in drHypers)
         {
             vspABCg += dr["Score"] + ",";
         }
-        DataRow[] drInps = dsCharts.Tables[12].Select("QuestionGroup = 'Inappropriate Speech'");
+        DataRow[] drInps = dsCharts.Tables[3].Select("QuestionGroup = 'Inappropriate Speech' AND SURVEYid = 4");
         foreach (DataRow dr in drInps)
         {
             qpABCg += dr["Score"] + ",";
@@ -163,28 +163,28 @@
         #endregion
 
         #region Aberrant  Behaviour Checklist : Teacher Quarterly Trend
-        DataRow[] drIrrisT = dsCharts.Tables[13].Select("QuestionGroup = 'Irritability'");
+        DataRow[] drIrrisT = dsCharts.Tables[4].Select("QuestionGroup = 'Irritability' AND SURVEYid = 4");
         foreach (DataRow dr in drIrrisT)
         {
             dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             astABCg += dr["Score"] + ",";
         }
-        DataRow[] drLetharsT = dsCharts.Tables[13].Select("QuestionGroup = 'Lethargy'");
+        DataRow[] drLetharsT = dsCharts.Tables[4].Select("QuestionGroup = 'Lethargy' AND SURVEYid = 4");
         foreach (DataRow dr in drLetharsT)
         {
             tsttABCg += dr["Score"] + ",";
         }
-        DataRow[] drSterosT = dsCharts.Tables[13].Select("QuestionGroup = 'Stereotypy'");
+        DataRow[] drSterosT = dsCharts.Tables[4].Select("QuestionGroup = 'Stereotypy' AND SURVEYid = 4");
         foreach (DataRow dr in drSterosT)
         {
             untABCg += dr["Score"] + ",";
         }
-        DataRow[] drHypersT = dsCharts.Tables[13].Select("QuestionGroup = 'Hyperactivity'");
+        DataRow[] drHypersT = dsCharts.Tables[4].Select("QuestionGroup = 'Hyperactivity' AND SURVEYid = 4");
         foreach (DataRow dr in drHypersT)
         {
             vstABCg += dr["Score"] + ",";
         }
-        DataRow[] drInpsT = dsCharts.Tables[13].Select("QuestionGroup = 'Inappropriate Speech'");
+        DataRow[] drInpsT = dsCharts.Tables[4].Select("QuestionGroup = 'Inappropriate Speech' AND SURVEYid = 4");
         foreach (DataRow dr in drInpsT)
         {
             qtABCg += dr["Score"] + ",";
@@ -192,28 +192,28 @@
         #endregion
 
         #region Social Responsivness Scale(SRS) sub scale : Parent Quarterly Trend
-        DataRow[] drAwareness = dsCharts.Tables[14].Select("QuestionGroup = 'Social Awareness'");
+        DataRow[] drAwareness = dsCharts.Tables[3].Select("QuestionGroup = 'Social Awareness' AND SURVEYid = 5");
         foreach (DataRow dr in drAwareness)
         {
             dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             aspSRSg += dr["Score"] + ",";
         }
-        DataRow[] drCognition = dsCharts.Tables[14].Select("QuestionGroup = 'Social Cognition'");
+        DataRow[] drCognition = dsCharts.Tables[3].Select("QuestionGroup = 'Social Cognition' AND SURVEYid = 5");
         foreach (DataRow dr in drCognition)
         {
             tstpSRSg += dr["Score"] + ",";
         }
-        DataRow[] drCommunication = dsCharts.Tables[14].Select("QuestionGroup = 'Social Communication'");
+        DataRow[] drCommunication = dsCharts.Tables[3].Select("QuestionGroup = 'Social Communication' AND SURVEYid = 5");
         foreach (DataRow dr in drCommunication)
         {
             unpSRSg += dr["Score"] + ",";
         }
-        DataRow[] drMotivation = dsCharts.Tables[14].Select("QuestionGroup = 'Social Motivation'");
+        DataRow[] drMotivation = dsCharts.Tables[3].Select("QuestionGroup = 'Social Motivation' AND SURVEYid = 5");
         foreach (DataRow dr in drMotivation)
         {
             vspSRSg += dr["Score"] + ",";
         }
-        DataRow[] drBahaviour = dsCharts.Tables[14].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour'");
+        DataRow[] drBahaviour = dsCharts.Tables[3].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour' AND SURVEYid = 5");
         foreach (DataRow dr in drBahaviour)
         {
             qpSRSg += dr["Score"] + ",";
@@ -221,63 +221,67 @@
         #endregion
 
         #region Social Responsivness Scale(SRS) sub scale : Teacher Quarterly Trend
-        DataRow[] drAwarenessT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Awareness'");
+        DataRow[] drAwarenessT = dsCharts.Tables[4].Select("QuestionGroup = 'Social Awareness' AND SURVEYid = 5");
         foreach (DataRow dr in drAwarenessT)
         {
             dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             astSRSg += dr["Score"] + ",";
         }
-        DataRow[] drCognitionT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Cognition'");
+        DataRow[] drCognitionT = dsCharts.Tables[4].Select("QuestionGroup = 'Social Cognition' AND SURVEYid = 5");
         foreach (DataRow dr in drCognitionT)
         {
             tsttSRSg += dr["Score"] + ",";
         }
-        DataRow[] drCommunicationT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Communication'");
+        DataRow[] drCommunicationT = dsCharts.Tables[4].Select("QuestionGroup = 'Social Communication' AND SURVEYid = 5");
         foreach (DataRow dr in drCommunicationT)
         {
             untSRSg += dr["Score"] + ",";
         }
-        DataRow[] drMotivationT = dsCharts.Tables[15].Select("QuestionGroup = 'Social Motivation'");
+        DataRow[] drMotivationT = dsCharts.Tables[4].Select("QuestionGroup = 'Social Motivation' AND SURVEYid = 5");
         foreach (DataRow dr in drMotivationT)
         {
             vstSRSg += dr["Score"] + ",";
         }
-        DataRow[] drBahaviourT = dsCharts.Tables[15].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour'");
+        DataRow[] drBahaviourT = dsCharts.Tables[4].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour' AND SURVEYid = 5");
         foreach (DataRow dr in drBahaviourT)
         {
             qtSRSg += dr["Score"] + ",";
         }
         #endregion
 
-        #region PedsQL Parent Report : Parent Quarterly Trend
-        DataRow[] drPedSQL0812 = dsCharts.Tables[16].Select("SurveyID = 8");
-        foreach (DataRow dr in drPedSQL0812)
-        {
-            dpPQLg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            aspPQLg += dr["Score"] + ",";
-        }
-        #endregion
+        //#region PedsQL Parent Report : Parent Quarterly Trend
+        //DataRow[] drPedSQL0812 = dsCharts.Tables[16].Select("SurveyID = 8");
+        //foreach (DataRow dr in drPedSQL0812)
+        //{
+        //    dpPQLg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+        //    aspPQLg += dr["Score"] + ",";
+        //}
+        //#endregion
 
-        #region * When level changes for Child
-        DataRow[] drDSM1T = dsCharts.Tables[17].Select("QuestionGroup = 'DSM Level 1'");
-        foreach (DataRow dr in drDSM1T)
-        {
-            dpWLCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            aspWLCg += dr["Score"] + ",";
-        }
-        DataRow[] drDSM2T = dsCharts.Tables[17].Select("QuestionGroup = 'DSM Level 2'");
-        foreach (DataRow dr in drDSM2T)
-        {
-            tstpWLCg += dr["Score"] + ",";
-        }
-        #endregion
+        //#region * When level changes for Child
+        //DataRow[] drDSM1T = dsCharts.Tables[17].Select("QuestionGroup = 'DSM Level 1'");
+        //foreach (DataRow dr in drDSM1T)
+        //{
+        //    dpWLCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+        //    aspWLCg += dr["Score"] + ",";
+        //}
+        //DataRow[] drDSM2T = dsCharts.Tables[17].Select("QuestionGroup = 'DSM Level 2'");
+        //foreach (DataRow dr in drDSM2T)
+        //{
+        //    tstpWLCg += dr["Score"] + ",";
+        //}
+        //#endregion
     }
-    
+
 }
 
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------ABC VS SRS Line Chart----------------------------------------
@@ -719,7 +723,7 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(function () {
     //-----------------------------------------Short Language Profile----------------------------------------
     $('#ShortLanguageProfile').highcharts({
@@ -781,7 +785,7 @@
     });
         //-----------------------------------------End----------------------------------------
     });
-</script>
+</script>*@
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
@@ -900,7 +904,7 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(function () {
     //-----------------------------------------PedsQL Parent Report----------------------------------------
     $('#PedsQLParentReport').highcharts({
@@ -962,7 +966,7 @@
     });
         //-----------------------------------------End----------------------------------------
     });
-</script>
+</script>*@
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------CaregiverStrainQuesionaire----------------------------------------
@@ -971,7 +975,7 @@
             type: 'spline'
         },
         title: {
-            text: 'Caregiver Strain Quesionaire'
+            text: 'Caregiver Strain Quesionnaire'
         },
         subtitle: {
             text: 'Parent Quaterly Trend'
@@ -1183,7 +1187,7 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(function () {
     //-----------------------------------------* When level changes for Child----------------------------------------
     $('#levelchangesforChild').highcharts({
@@ -1245,8 +1249,8 @@
     });
         //-----------------------------------------End----------------------------------------
     });
-</script>
-<script type="text/javascript">
+</script>*@
+@*<script type="text/javascript">
     $(function () {
     //-----------------------------------------Weekly Progress Scroe----------------------------------------
     $('#WeeklyProgressScroe').highcharts({
@@ -1303,160 +1307,168 @@
     });
         //-----------------------------------------End----------------------------------------
     });
-</script>
+</script>*@
 
 <style type="text/css">
     .voffset {
         margin-top: 10px;
     }
+    .graphTabs ul{
+        margin: 0px;
+        list-style: none;
+        padding: 0px;        
+    }
+    .graphTabs li a{
+        text-align: left;        
+        border: 1px solid transparent;
+        padding: 10px 15px;
+        display: block;
+        position: relative;
+        text-shadow: none;
+        text-decoration: none;
+        color: #333;
+        min-width: 141px;
+        position: relative;        
+        z-index: 1111;
+        background-color: #FFF;
+    }
+    .graphTabs li:first-child a{        
+        /*border-top: solid 1px #CCC;*/
+    }
+    .graphTabs li a:hover{
+        background-color: #c7d1d6;        
+    }
+    .graphTabs li a.selected{
+        /*background-color: #c7d1d6;*/
+        border-right:none;
+        cursor: default;
+        border-top: solid 1px #CCC;
+        border-left: solid 1px #CCC;
+        border-bottom: solid 1px #CCC;
+        right: -1px;
+    }
 </style>
-<div class="row">
 
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="ABCSubCategoriesParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
-
-<div class="row voffset">
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="SRSSubScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
-
-
-<div class="row voffset">
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
-
-
-<div class="row voffset">
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="AbbreviatedSensoryProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="PedsQLParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
-
-
-
-<div class="row voffset">
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="PedsQLParentReport" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="CaregiverStrainQuesionaire" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
-
-
-<div class="row voffset">
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="FamilyEmpowementScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="GISeverityIndex" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
-
-
-<div class="row voffset">
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
-
-
-<div class="row voffset">
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="WeeklyProgressScroe" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-    <div class="col-sm-6" style="background-color:transparent;">
-
-        <div id="levelchangesforChild2312" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-    </div>
-
-</div>
+<table cellpadding="0" cellspacing="0" style="width:100%;">
+    <tr>
+        <td style="width: 14%;vertical-align: top;">
+            <div class="graphTabs">                
+                    <ul class="graphSections">
+                        <li>
+                            <a class="selected" href="javascript:void(0);" onclick="showGraphsSection(this, 1);">Parent</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" onclick="showGraphsSection(this, 2);">Teacher</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" onclick="showGraphsSection(this, 3);">Parent/Teacher</a>
+                        </li>
+                    </ul>
+                </div>           
+        </td>
+        <td style="width: 84%;border: solid 1px #CCC;">
+            <div class="gDetails">
+                <div class="row parentteacherdiv">
+                    <div class="col-sm-6 parentteacher" style="background-color:transparent;">
+                        <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                    <div class="col-sm-6 parentteacher" style="background-color:transparent;">
+                        <div id="AbbreviatedSensoryProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                </div>
+
+                <div class="row voffset parentdiv">
+                    <div class="col-sm-6 parent" style="background-color:transparent;">
+                        <div id="ABCSubCategoriesParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>                    
+                    <div class="col-sm-6 parent" style="background-color:transparent;">
+                        <div id="SRSSubScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                </div>
+
+                <div class="row voffset teacherdiv">
+                    <div class="col-sm-6 teacher" style="background-color:transparent;">
+                        <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                    <div class="col-sm-6 teacher" style="background-color:transparent;">
+                        <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                    @*<div class="col-sm-6" style="background-color:transparent;">
+                    <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>*@
+                </div>
+
+                <div class="row voffset parentdiv">                    
+                    <div class="col-sm-6 parent" style="background-color:transparent;">
+                        <div id="PedsQLParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                    <div class="col-sm-6 parent" style="background-color:transparent;">
+                        <div id="CaregiverStrainQuesionaire" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                </div>
+
+                @*<div class="row voffset">
+                    <div class="col-sm-6" style="background-color:transparent;">
+                    <div id="PedsQLParentReport" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                </div>*@
+
+                <div class="row voffset parentdiv">
+                    <div class="col-sm-6 parent" style="background-color:transparent;">
+                        <div id="FamilyEmpowementScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                    <div class="col-sm-6 parent" style="background-color:transparent;">
+                        <div id="GISeverityIndex" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                </div>
+
+                <div class="row voffset teacherdiv">
+                    <div class="col-sm-6 teacher" style="background-color:transparent;">
+                        <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                    @*<div class="col-sm-6" style="background-color:transparent;">
+                    <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>*@
+                </div>
+
+                @*<div class="row voffset">
+                    <div class="col-sm-6" style="background-color:transparent;">
+                    <div id="WeeklyProgressScroe" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>
+                    <div class="col-sm-6" style="background-color:transparent;">
+                    <div id="levelchangesforChild2312" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>
+                </div>*@
+            </div>
+
+
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $(".teacherdiv").hide();
+        $(".parentteacherdiv").hide();        
+    });
+    
+    function showGraphsSection(elem, type) {
+        $(".parentdiv").hide();
+        $(".teacherdiv").hide();
+        $(".parentteacherdiv").hide();
+        $(".graphTabs a").removeClass("selected");
+        $(elem).addClass("selected");
+
+        if (type == 1) {
+            $(".parentdiv").show();
+        }
+        else if (type == 2) {
+            $(".teacherdiv").show();
+        }
+        else if (type == 3) {
+            $(".parentteacherdiv").show();
+        }
+
+        //$(window).resize();
+    }
+</script>

@@ -20,7 +20,24 @@
     <script src="~/bootstrap/js/bootstrap.js"></script> 
 <script src="~/Scripts/jquery-ui.min.js"></script>
     <script src="~/Scripts/custom.js"></script>
- 
+ <style type="text/css">
+     .container .disabled {
+        background-color: #D0D0D0;
+        color: #FFF;
+        border: solid 1px #AAA;
+        cursor: default;
+    }
+     .container .btn-primary.disabled:hover, .btn-primary.disabled:focus {
+        background-color: #D0D0D0;
+        background-position: 0 -15px;
+        border-color: #AAA;
+    }
+    .container .btn-primary.disabled:hover {
+        color: #fff;
+        background-color: #D0D0D0;
+        border-color: #AAA;
+    }
+ </style>
     </head><body>
 <header>
     <div class="content-wrapper" style="overflow:auto;padding:10px;">
@@ -78,7 +95,7 @@
                 @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox", autocomplete = "off" })
             </li>
         </ol>
-        <input type="submit" value="Log in" class="btn btn-primary" />
+        <input type="submit" value="Log in" id="btnLogin" class="btn btn-primary" />
     </fieldset>
     <p style="margin-top: 20px;">
         @Html.ActionLink("Register", "Register") if you don't have an account.
@@ -98,5 +115,17 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+    <script type="text/javascript">
+        $(function () {
+            $("form").submit(function () {
+                if ($("#btnLogin").hasClass("disabled") == true) {
+                    return false;
+                }
+                $("#btnLogin").addClass("disabled");
+
+            });
+        });
+    </script>
 </body>
+
 </html>

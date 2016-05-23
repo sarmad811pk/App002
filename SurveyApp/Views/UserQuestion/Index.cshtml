@@ -79,7 +79,7 @@
             font-size: 14px;
         }
         .surveyList div a {
-            display:block;float:right;width:170px;text-align:right;
+            display:block;float:right;width:145px;text-align:right;
         }
             .surveyList div {
                 border-bottom: dotted 1px #cccccc;
@@ -135,36 +135,47 @@
 
             if (dsChildrenSchedules != null && dsChildrenSchedules.Tables != null && dsChildrenSchedules.Tables[0] != null && dsChildrenSchedules.Tables[0].Rows != null)
             {
-                string condition = " AND ScheduleId" + role + " IS NOT NULL";
-                DataRow[] drSchedules = dsChildrenSchedules.Tables[0].Select("SurveyId = " + surveyId + " AND ChildId = " + childId + "" + condition);
-                int i = 0;
-                foreach (DataRow drSchedule in drSchedules)
+                for(int i = 0; i < 2; i++)
                 {
-                    if (i <= 1)
-                    {
-                        DateTime endDate = drSchedule["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["ScheuleEndDate"]) : DateTime.MinValue;
-                        if (endDate != DateTime.MinValue)
-                        {
-                            percentage = "0%";
-                            if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
-                            {
-                                DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + surveyId + " AND ChildID = " + childId + " AND ScheduleDate = '" + endDate + "'");
-                                foreach (DataRow dr in drQuestions)
-                                {
-                                    percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;
-                                }
-                            }
-
-                            string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
-                            string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
-                            schInfo = schInfo + (rrr!=""?"":"&nbsp;&nbsp;&nbsp;&nbsp;") +"<a href='" + urlForSurvey + "'><span class='" + (rrr!=""?"":"schedule "+ cssClass) + "'>" + (rrr!=""?rrr:endDate.ToString("MMMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
-                            i++;
-                        }
-                    }
+                    schInfo = getExactInfo(i, surveyId, childId, percentage, rrr, url) + schInfo;
                 }
+
             }
 
             return schInfo;
+        }
+
+        public string getExactInfo(int index, int surveyId, int childId, string percentage, string rrr, string url) {
+            string info = "";
+            string condition = " AND ScheduleId" + role + " IS NOT NULL";
+            DataRow[] drSchedules = dsChildrenSchedules.Tables[index].Select("SurveyId = " + surveyId + " AND ChildId = " + childId + "" + condition);
+
+            int i = 0;
+            foreach (DataRow drSchedule in drSchedules)
+            {
+                if(i < 1)
+                {
+                    DateTime endDate = drSchedule["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["ScheuleEndDate"]) : DateTime.MinValue;
+                    if (endDate != DateTime.MinValue)
+                    {
+                        percentage = "0%";
+                        if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
+                        {
+                            DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + surveyId + " AND ChildID = " + childId + " AND ScheduleDate = '" + endDate + "'");
+                            foreach (DataRow dr in drQuestions)
+                            {
+                                percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;
+                            }
+                        }
+
+                        string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
+                        string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
+                        info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a href='" + urlForSurvey + "'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+                    }
+                    i++;
+                }
+            }
+            return info;
         }
 
         public string othersStats()

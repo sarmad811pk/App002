@@ -76,8 +76,8 @@
     </style>
     <script type="text/javascript">
         $(function () {
-            $(document).ajaxStart(function () { $(".loading").show(); });
-            $(document).ajaxStop(function () { $(".loading").hide(); });
+            $(document).ajaxStart(function () { $(".loading").show(); $(".disablebackground").show(); });
+            $(document).ajaxStop(function () { $(".loading").hide(); $(".disablebackground").hide(); });
         });
     </script>
     @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")
@@ -134,6 +134,7 @@
 @RenderSection("scripts", required: false)
 
 <div class="loading" style="display: none;"><div>Please Wait...</div></div>
+    <div class="disablebackground"></div>
     <script type="text/javascript">
         window.onload = function () { $(".highcharts-button").hide(); }
     </script>
