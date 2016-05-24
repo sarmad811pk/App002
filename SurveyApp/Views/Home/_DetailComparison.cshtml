@@ -90,8 +90,8 @@
             </ul>
             </div>
 
-            <div style="padding:10px 0px;text-align:center;">
-                <table>
+            <div style="padding:10px 0px;overflow:hidden;text-align:center;">
+                <table style="float:right;">
                     <tr>
                         <td style="padding:0px 10px;"><span><i class="ion-record complete"></i>&nbsp;Complete</span></td>
                         <td style="padding:0px 10px;"><span><i class="ion-record incomplete"></i>&nbsp;Incomplete</span></td>
@@ -111,6 +111,18 @@
                             <th>
                                 <table class="dots" style="width:100%">
                                     <tr>
+                                        <th class="dot hdhelper" style="position:relative">
+                                            <div style="position:absolute;top:-25px;width:140px;left:-40px;">
+                                                <div style="margin:0px 0px 0px 5px; padding:0; float:left;" class="remCurrent">
+                                                    <a href="javascript:void(0);" class="linker disabled" data-toggle='tooltip' title="Please select a respondent first to send reminder" onclick="sendReminder(this);">Send Reminder</a>
+                                                </div>
+                                                <div style="margin:0px 0px 0px 5px; padding:0; float:left;display:none;" class="remPrevious">
+                                                    <a href="javascript:void(0);" class="linker disabled" data-toggle='tooltip' title="Please select a respondent first to send reminder" onclick="sendReminder(this);">Send Reminder</a>
+                                                </div>
+                                            </div>
+                                            <input type="checkbox" class="chkCurrent" style="" onclick="checkAll(this);" />
+                                            <input type="checkbox" class="chkPrevious" style="display:none;" onclick="checkAll(this);" />
+                                        </th>
                                         <th class="name hdhelper" data-toggle="tooltip" title="The resondents for the respective survey i.e. Teacher/Parent">
                                             Respondent
                                         </th>
@@ -118,13 +130,7 @@
                                         {
                                             <th class="dot hdhelper" data-toggle="tooltip" style="position:relative" title="@drT["FullTitle"]"><span class="tilttitle">@drT["Title"]</span></th>
                                         }
-                                        <th class="dot hdhelper" style="position:relative">
-                                            <span class="tilttitle" style="top: -14px;left: -5px;">
-                                                Reminder
-                                            </span>
-                                            <input type="checkbox" class="chkCurrent" style="position: relative;left: 10px;" onclick="checkAll(this);" />
-                                            <input type="checkbox" class="chkPrevious" style="position: relative;left: 10px;display:none;" onclick="checkAll(this);" />
-                                        </th>
+                                        
                                     </tr>
                                 </table>
                             </th>                            
@@ -142,59 +148,59 @@
                                     <td>
                                         <table class="dots tblCurrent" style="width: 100%;">
                                             <tr>
+                                                <td class="dot">
+                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                </td>
                                                 <td class="name">
-                                                    @drChild["Parent"]
+                                                   <i class="ion-home"></i> @drChild["Parent"]
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
                                                     <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                 }
-                                                <td class="dot">
-                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
-                                                </td>
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
                                             {
                                                 <tr>
+                                                    <td class="dot">
+                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
+                                                    </td>
                                                     <td class="name">
-                                                        @drTeacher["Teacher"]
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"]
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
                                                         <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
                                                     }
-                                                    <td class="dot">
-                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]"  email="@drTeacher["Email"]" />
-                                                    </td>
                                                 </tr>
                                             }
                                         </table>
                                         <table class="dots tblPrevious" style="display:none;width:100%;">
                                             <tr>
+                                                <td class="dot">
+                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                </td>  
                                                 <td class="name">
-                                                    @drChild["Parent"]
+                                                    <i class="ion-home"></i> @drChild["Parent"]
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
                                                     <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
-                                                }
-                                                <td class="dot">
-                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
-                                                </td>                                                
+                                                }                                              
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
                                             {
                                                 <tr>
+                                                    <td class="dot">
+                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
+                                                    </td>  
                                                     <td class="name">
-                                                        @drTeacher["Teacher"]
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"]
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
                                                         <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
-                                                    }    
-                                                    <td class="dot">
-                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
-                                                    </td>                                                
+                                                    }                                              
                                                 </tr>
                                             }
                                         </table>
@@ -217,12 +223,7 @@
                     <a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a>                    
                 </div>
             }
-            <div style="margin:0px 0px 0px 5px; padding:0; float:left;" class="remCurrent">
-                <a href="javascript:void(0);" class="linker disabled" data-toggle='tooltip' title="Please select a respondent first to send reminder" onclick="sendReminder(this);">Send Reminder</a>
-            </div>
-            <div style="margin:0px 0px 0px 5px; padding:0; float:left;display:none;" class="remPrevious">
-                <a href="javascript:void(0);" class="linker disabled" data-toggle='tooltip' title="Please select a respondent first to send reminder" onclick="sendReminder(this);">Send Reminder</a>
-            </div>
+
         </div>    
     
 </div>
@@ -258,6 +259,29 @@
             tbl.find(".checkReminder").each(function (index, obj) {
                 $(obj)[0].checked = false;
             });
+        }
+        if ($(".tblCurrent").is(":visible") == true) {
+ 
+            if (isChecked == true) {
+                $(".remCurrent a").removeClass("disabled");
+                $(".remCurrent a").attr("title", "A reminder email will be send to the selected respondent(s)");
+            }
+            else {
+                $(".remCurrent a").addClass("disabled");
+                $(".remCurrent a").attr("title", "Please select a respondent first to send reminder");
+            }
+        }
+
+        if ($(".tblPrevious").is(":visible") == true) {
+    
+            if (isChecked == true) {
+                $(".remPrevious a").removeClass("disabled");
+                $(".remPrevious a").attr("title", "A reminder email will be send to the selected respondent(s)");
+            }
+            else {
+                $(".remPrevious a").addClass("disabled");
+                $(".remPrevious a").attr("title", "Please select a respondent first to send reminder");
+            }
         }
     }
 
