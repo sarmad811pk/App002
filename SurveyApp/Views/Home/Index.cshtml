@@ -122,10 +122,8 @@
         var hash;
         if (window.location.hash) {
             hash = window.location.hash.substring(1);
-        }
-        var selectedDiv = "@divSelected";
-
-        $(".tabdashboard").find("li:eq("+ (selectedDiv != "" ? selectedDiv : hash) +")").find("a").click();
+        }        
+        $(".tabdashboard").find("li:eq("+ (hash) +")").find("a").click();
     });
 
     function getVisibleDiv(){
@@ -138,11 +136,11 @@
     function getStudyInfo(elem) {
         var div = getVisibleDiv();
         var studyId = $(elem).val();
-        location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&childId=" + @childId + "&div=" + div;
+        location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&childId=" + @childId + "#" + div;
     }
     function getChildInfo(elem) {
         var div = getVisibleDiv();
         var childId = $(elem).val();
-        location.href = "@Url.Action("Index", "Home")" + "?studyId=" + @studyId +"&childId=" + (childId == 0 ? "" : childId) + "&div=" + div;
+        location.href = "@Url.Action("Index", "Home")" + "?studyId=" + @studyId +"&childId=" + (childId == 0 ? "" : childId) + "#" + div;
     }
 </script>

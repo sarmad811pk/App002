@@ -596,9 +596,7 @@ else
             if (window.location.hash) {
                 hash = window.location.hash.substring(1);
             }
-            var selectedDiv = "@divSelected";
-
-            $(".tabdashboard").find("li:eq("+ (selectedDiv != "" ? selectedDiv : hash) +")").find("a").click();
+            $(".tabdashboard").find("li:eq("+ (hash) +")").find("a").click();
         });
 
         function getVisibleDiv() {
@@ -609,7 +607,7 @@ else
         function getChildInfo(elem) {
             var div = getVisibleDiv();
             var childIdts = $(elem).val();
-            location.href = "@Url.Action("Index", "UserQuestion")" + "?studyId=" + @studyId +"&childIdts=" + (childIdts == 0 ? "" : childIdts) + "&div=" + div;
+            location.href = "@Url.Action("Index", "UserQuestion")" + "?studyId=" + @studyId +"&childIdts=" + (childIdts == 0 ? "" : childIdts) + "#" + div;
         }
     </script>
     
