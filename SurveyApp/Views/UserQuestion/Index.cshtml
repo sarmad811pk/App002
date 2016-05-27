@@ -6,13 +6,16 @@
     //var ds = SurveyApp.DataHelper.SurveyGetAll();
     int? childID = (int?)TempData["ChildID"];
 
-
+    string divSelected = String.IsNullOrEmpty(Request.QueryString["div"]) == true ? "" : Request.QueryString["div"].ToString();
+    int childIdts = String.IsNullOrEmpty(Request.QueryString["childIdts"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childIdts"]);
+    int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["studyId"]);
+    System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, WebSecurity.CurrentUserId);
 }
 
 @if (childID != null)
 {
     DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
-    DataSet dsReveseandLiveEvent = SurveyApp.DataHelper.GetAdverseReaction(id,0, (int)childID);
+    DataSet dsReveseandLiveEvent = SurveyApp.DataHelper.GetAdverseReaction(id, 0, (int)childID);
     for (int i = 0; i < dschild.Tables[0].Rows.Count; i++)
     {
         if ((int?)dschild.Tables[0].Rows[i]["ID"] == childID)
@@ -204,7 +207,6 @@
 
 
 
-
     <div class="panel-group">
 
         @if (dschild.Tables[0].Rows.Count > 0)
@@ -240,101 +242,101 @@
                         }
                     }
                     @{
-                    var abbsensoryprofile = getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
-                    if (abbsensoryprofile != "")
-                    {
+                        var abbsensoryprofile = getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
+                        if (abbsensoryprofile != "")
+                        {
                         <div class="col-md-12 text-left">Abbreviated sensory profile @(Html.Raw(abbsensoryprofile))</div>
 
-                    }
-                    var CaregiverQuestionair = getPercentCompletion(2, (int)drch["ID"], url.Replace("__", "2"));
-                    if (CaregiverQuestionair != "")
-                    {
+                        }
+                        var CaregiverQuestionair = getPercentCompletion(2, (int)drch["ID"], url.Replace("__", "2"));
+                        if (CaregiverQuestionair != "")
+                        {
                         <div class="col-md-12 text-left">Caregiver Strain Questionnaire@(Html.Raw(CaregiverQuestionair))</div>
-                    }
-                    var GISeverityIndex = getPercentCompletion(3, (int)drch["ID"], url.Replace("__", "3"));
-                    if (GISeverityIndex != "")
-                    {
+                        }
+                        var GISeverityIndex = getPercentCompletion(3, (int)drch["ID"], url.Replace("__", "3"));
+                        if (GISeverityIndex != "")
+                        {
                         <div class="col-md-12 text-left">GI Severity Index @(Html.Raw(GISeverityIndex))</div>
-                    }
-                    var abbehaviourchk = getPercentCompletion(4, (int)drch["ID"], url.Replace("__", "4"));
-                    if (abbehaviourchk != "")
-                    {
+                        }
+                        var abbehaviourchk = getPercentCompletion(4, (int)drch["ID"], url.Replace("__", "4"));
+                        if (abbehaviourchk != "")
+                        {
                         <div class="col-md-12 text-left">Aberrant Behavior Checklist@(Html.Raw(abbehaviourchk))</div>
-                    }
+                        }
 
-                    var socialResponsivenies = getPercentCompletion(5, (int)drch["ID"], url.Replace("__", "5"));
-                    if (socialResponsivenies != "")
-                    {
+                        var socialResponsivenies = getPercentCompletion(5, (int)drch["ID"], url.Replace("__", "5"));
+                        if (socialResponsivenies != "")
+                        {
                         <div class="col-md-12 text-left">Social Responsiveness Scale@(Html.Raw(socialResponsivenies))</div>
-                    }
+                        }
 
 
 
-                    if (age <= 4 && age >= 2)
-                    {
-                        var pedsqty = getPercentCompletion(6, (int)drch["ID"], url.Replace("__", "6"));
-                        if (pedsqty != "")
+                        if (age <= 4 && age >= 2)
                         {
+                            var pedsqty = getPercentCompletion(6, (int)drch["ID"], url.Replace("__", "6"));
+                            if (pedsqty != "")
+                            {
                             <div class="col-md-12 text-left">Peds quality of life for 2yrs-4yrs@(Html.Raw(pedsqty))</div>
+                            }
                         }
-                    }
-                    else if (age <= 7 && age >= 5)
-                    {
-                        var pdsqtylife = getPercentCompletion(7, (int)drch["ID"], url.Replace("__", "7"));
-                        if (pdsqtylife != "")
+                        else if (age <= 7 && age >= 5)
                         {
+                            var pdsqtylife = getPercentCompletion(7, (int)drch["ID"], url.Replace("__", "7"));
+                            if (pdsqtylife != "")
+                            {
                             <div class="col-md-12 text-left">Peds quality of life for 5yrs-7yrs@(Html.Raw(pdsqtylife))</div>
+                            }
                         }
-                    }
-                    else if (age <= 12 && age >= 8)
-                    {
-                        var pdsqty8yr = getPercentCompletion(8, (int)drch["ID"], url.Replace("__", "8"));
-                        if (pdsqty8yr != "")
+                        else if (age <= 12 && age >= 8)
                         {
+                            var pdsqty8yr = getPercentCompletion(8, (int)drch["ID"], url.Replace("__", "8"));
+                            if (pdsqty8yr != "")
+                            {
                             <div class="col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(pdsqty8yr))</div>
+                            }
                         }
-                    }
-                    else if (age <= 18 && age >= 13)
-                    {
-                        var pdsqty13year = getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "17"));
-                        if (pdsqty13year != "")
+                        else if (age <= 18 && age >= 13)
                         {
+                            var pdsqty13year = getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "17"));
+                            if (pdsqty13year != "")
+                            {
                             <div class="col-md-12 text-left">Peds quality of life for 13yrs -18yrs@(Html.Raw(pdsqty13year))</div>
+                            }
                         }
-                    }
-                    var shrtlngprofile = getPercentCompletion(10, (int)drch["ID"], url.Replace("__", "10"));
-                    if (shrtlngprofile != "")
-                    {
+                        var shrtlngprofile = getPercentCompletion(10, (int)drch["ID"], url.Replace("__", "10"));
+                        if (shrtlngprofile != "")
+                        {
                         <div class="col-md-12 text-left">Short language profile @(Html.Raw(shrtlngprofile))</div>
-                    }
-                    var socialcommqstions = getPercentCompletion(11, (int)drch["ID"], url.Replace("__", "11"));
-                    if (socialcommqstions != "")
-                    {
+                        }
+                        var socialcommqstions = getPercentCompletion(11, (int)drch["ID"], url.Replace("__", "11"));
+                        if (socialcommqstions != "")
+                        {
                         <div class="col-md-12 text-left">Social communication Questionnaire – life time @(Html.Raw(socialcommqstions))</div>
-                    }
-                    var Insomniaseverity = getPercentCompletion(12, (int)drch["ID"], url.Replace("__", "12"));
-                    if (Insomniaseverity != "")
-                    {
+                        }
+                        var Insomniaseverity = getPercentCompletion(12, (int)drch["ID"], url.Replace("__", "12"));
+                        if (Insomniaseverity != "")
+                        {
                         <div class="col-md-12 text-left">Insomnia Severity Index@(Html.Raw(Insomniaseverity))</div>
-                    }
-                    var connordavidson = getPercentCompletion(13, (int)drch["ID"], url.Replace("__", "13"));
-                    if (connordavidson != "")
-                    {
+                        }
+                        var connordavidson = getPercentCompletion(13, (int)drch["ID"], url.Replace("__", "13"));
+                        if (connordavidson != "")
+                        {
                         <div class="col-md-12 text-left">Connor-Davidson Resilience Scale 10@(Html.Raw(connordavidson))</div>
-                    }
+                        }
 
-                    var familyempowermentscale = getPercentCompletion(14, (int)drch["ID"], url.Replace("__", "14"));
-                    if (familyempowermentscale != "")
-                    {
+                        var familyempowermentscale = getPercentCompletion(14, (int)drch["ID"], url.Replace("__", "14"));
+                        if (familyempowermentscale != "")
+                        {
                         <div class="col-md-12 text-left">Family Empowerment Scale@(Html.Raw(familyempowermentscale))</div>
-                    }
+                        }
 
-                    var feedbackquestionair = getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"));
-                    if (feedbackquestionair != "")
-                    {
+                        var feedbackquestionair = getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"));
+                        if (feedbackquestionair != "")
+                        {
                         <div class="col-md-4 text-left" style="display:none;">Feedback Questionnaire@(Html.Raw(feedbackquestionair))</div>
 
-                    }
+                        }
                     }
                 </div>
                 <div class="col-sm-3">
@@ -390,7 +392,7 @@
                                 }
                             </div>
                         </div>
-                    }
+                                    }
                     <div class="col-md-12 text-left" style="padding: 0px; background: #999999; color: #ffffff; overflow: auto;margin-bottom:10px;">
                         <div style="padding: 5px 5px 5px 32px; background: #666666; color: #ffffff; overflow: auto; text-align: center; position: relative;text-align: left;">
                             <i class="ion-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
@@ -404,9 +406,11 @@
                                     var _qq = dr["Question"].ToString().Split('-')[1].Trim();
                                     var _aa = dr["Answers"];
                                     string[] _a = _aa.ToString().Split('|');
-                                    if (_a.Length >= 5) {
-                                        if (_a[2].Length > 0 || _a[3].Length>0) { 
-                                     
+                                    if (_a.Length >= 5)
+                                    {
+                                        if (_a[2].Length > 0 || _a[3].Length > 0)
+                                        {
+
                                     <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
                                         <div style="overflow:hidden;" title='@_qq'>
                                             <b>@_qq (@_a[1] @_a[4])</b>
@@ -416,9 +420,9 @@
 
 
                                     </div>   
-                                        } 
-//Indication|Dosage|02/01/2015|03/02/2015|ug|9|Hour|undefined
-//Indication|5|05/01/2016|05/11/2016|ul|6|Week|undefined
+                                        }
+                                        //Indication|Dosage|02/01/2015|03/02/2015|ug|9|Hour|undefined
+                                        //Indication|5|05/01/2016|05/11/2016|ul|6|Week|undefined
                                     }
                                 }
                             }
@@ -475,7 +479,7 @@ Ended on: @dr["DateEnd"]'>
                                             <div style="text-align:right;float:right;@( @dr["EventDate"].ToString() == "" ? "display:none;" : "") "> on @dr["EventDate"]</div>
                                         </div>                                        
                                     </div>
- 
+
                                 }
                             }
                             else
@@ -497,19 +501,20 @@ Ended on: @dr["DateEnd"]'>
                 </div>
 
 
-            }
+                                        }
 
-        }
-        else
-        {
+                                    }
+                                    else
+                                    {
             <div class="alert alert-info">
                 <strong>Info!</strong>No child is assosisated with this @roles[0]
             </div>
-        }
+                                    }
     </div>
 }
 else
 {
+
     @section featured {
         <section class="featured">
             <div class="content-wrapper">
@@ -528,9 +533,70 @@ else
             margin-bottom: 10px;
         }
     </style>
-    <div class="separator"></div>
-    Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", null);
+    <style type="text/css">
+        .topControls #ddlStudy, .topControls #ddlChildren{float: right; width: 22%; background-color: #fff;}
+        .tabs{margin-bottom: 12px;}
+        .tabs .current, .comparison .previous {border-top: none;}
+        .tabs ul {height: 41px;margin: 0px;list-style: none;padding:0px;border-bottom: solid 1px #CCC;}
+        .tabs li {float: left;}
+        .tabs li a {text-align:center;margin-right: 2px;border: 1px solid transparent;padding: 10px 15px;display: block;position: relative;text-shadow: none;text-decoration:none;color:#333;min-width: 141px;}
+        .tabs li a:hover {border-color: #FEFEFE;cursor: pointer;}
+        .tabs li a.selected {color: #4d6b8a;background-color: #fff;border: 1px solid #B1B1B1;border-bottom-color: transparent;cursor: default;}
+        .tabs .tblComparison .trhdn{display:none !important;}
+        .tabs .title{clear: both;background-color: #FFF;text-align: center;padding: 10px;border-right: solid 1px #CCC;border-left: solid 1px #CCC;}
+        .tabs .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;margin-top: 4px;display: inline-block;}
+    </style>
 
-    <div class="separator"></div>
-    Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", null);
+    <div class="tabs">
+        <ul class="tabdashboard">
+            <li>
+                <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="dashboardDetails __tabs">
+        <div class="separator"></div>
+        @{Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", null);}
+
+        <div class="separator"></div>
+        @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", null);}
+    </div>
+    <div class="graphsDetails __tabs">
+        <div class="topControls">
+            <select id="ddlChildren" class="col-sm-9 form-control childrendropdown" onchange="getChildInfo(this);">
+                <option value="0">All Children</option>
+                @foreach (DataRow drChild in dschildren.Tables[0].Rows)
+                {
+                    <option value="@drChild["ChildId"]" @(childIdts == (int)drChild["childId"] ? "selected=selected" : "")>@drChild["Name"]</option>
+                }
+            </select>
+        </div>
+        <div class="separator"></div>
+        @{Html.RenderPartial("~/Views/Home/_Charts.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childIdts } });}
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".graphsDetails").hide();            
+            $(".childrendropdown").hide();
+
+            $(".tabdashboard").find("li:eq(@divSelected)").find("a").click();
+        });
+
+        function getVisibleDiv() {
+            if ($(".dashboardDetails").is(":visible") == true) { return 0; }
+            if ($(".graphsDetails").is(":visible") == true) { return 1; }
+        }
+
+        function getChildInfo(elem) {
+            var div = getVisibleDiv();
+            var childIdts = $(elem).val();
+            location.href = "@Url.Action("Index", "UserQuestion")" + "?studyId=" + @studyId +"&childIdts=" + (childIdts == 0 ? "" : childIdts) + "&div=" + div;
+        }
+    </script>
+    
 }
