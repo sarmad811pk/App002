@@ -558,10 +558,10 @@ else
     <div class="tabs">
         <ul class="tabdashboard">
             <li>
-                <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
+                <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
             </li>
             <li>
-                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
+                <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
             </li>
         </ul>
     </div>
@@ -589,10 +589,16 @@ else
 
     <script type="text/javascript">
         $(function () {
-            $(".graphsDetails").hide();            
+            $(".graphsDetails").hide();
             $(".childrendropdown").hide();
 
-            $(".tabdashboard").find("li:eq(@divSelected)").find("a").click();
+            var hash;
+            if (window.location.hash) {
+                hash = window.location.hash.substring(1);
+            }
+            var selectedDiv = "@divSelected";
+
+            $(".tabdashboard").find("li:eq("+ (selectedDiv != "" ? selectedDiv : hash) +")").find("a").click();
         });
 
         function getVisibleDiv() {
