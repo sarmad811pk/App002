@@ -7,19 +7,25 @@
 
     int studyId = Model == null ? 0 : (int)Model;
     string studyName = "";
-    
+    string divSelected = String.IsNullOrEmpty(Request.QueryString["div"]) == true ? "" : Request.QueryString["div"].ToString();
+
     using (StudyContext sContext = new StudyContext())
     {
         Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
         studyId = objStd.Id;
         studyName = objStd.Name;
-    }   
+    }
+
+    int childId = String.IsNullOrEmpty(Request.QueryString["childId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childId"]);
+
+    var userId = WebSecurity.CurrentUserId;
+    System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, 0);
 
 }
 
 <style type="text/css">
     .stats .separator{clear:both;margin-bottom: 10px;}
-    .topControls #ddlStudy{float: right; width: 22%; background-color: #fff;}
+    .topControls #ddlStudy, .topControls #ddlChildren{float: right; width: 22%; background-color: #fff;}
     .tabs{margin-bottom: 12px;}
     .tabs .current, .comparison .previous {border-top: none;}
     .tabs ul {height: 41px;margin: 0px;list-style: none;padding:0px;border-bottom: solid 1px #CCC;}
@@ -49,27 +55,36 @@
     <div class="tabs">
         <ul class="tabdashboard">
             <li>
-                <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.dashboardDetails').show();">Dashboard</a>
+                <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
             </li>
             <li>
-                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.graphsDetails').show();">Graphs</a>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
             </li>
             <li>
-                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.Adverse').show();">Adverse Reactions & Life Events</a>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.Adverse').show();">Adverse Reactions & Life Events</a>
             </li>
             <li>
-                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.WeeklyGraph').show();">Weekly Progress</a>
+                <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.WeeklyGraph').show();">Weekly Progress</a>
             </li>
         </ul>
     </div>
     <div class="topControls">
         <div style="display:inline-block;"><h3 style="margin: 7px 0px 0px 0px;text-transform: capitalize;">@studyName</h3></div>
-        <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);">            
+
+        <select id="ddlChildren" class="col-sm-9 form-control childrendropdown" onchange="getChildInfo(this);">
+            <option value="0">All Children</option>
+            @foreach (DataRow drChild in dschildren.Tables[0].Rows)
+            {
+                <option value="@drChild["ChildId"]"  @(childId == (int)drChild["childId"] ? "selected=selected" : "")>@drChild["Name"]</option>
+            }
+        </select>
+
+        <select id="ddlStudy" class="col-sm-9 form-control" style="margin-right: 5px;" onchange="getStudyInfo(this);">            
         @foreach (Study objStudy in Study.StudyGetAll())
         {
             <option value="@objStudy.Id"  @(studyId == objStudy.Id ? "selected=selected" : "")>@objStudy.Name</option>
         }
-        </select>
+        </select>        
     </div>
     <div class="separator"></div>
 
@@ -90,7 +105,7 @@
     </div>
     <div class="graphsDetails __tabs" style="/*display:none;*/">
         <div class="separator"></div>
-        @{Html.RenderPartial("_Charts", studyId);}
+        @{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "childId" , childId } });}
     </div>
     <div class="WeeklyGraph __tabs">
         @{Html.RenderPartial("_WeeklyChart", studyId);}
@@ -102,9 +117,26 @@
         $(".graphsDetails").hide();
         $(".Adverse").hide();
         $(".WeeklyGraph").hide();
+        $(".childrendropdown").hide();
+        
+        $(".tabdashboard").find("li:eq(@divSelected)").find("a").click();
     });
+
+    function getVisibleDiv(){
+        if ($(".dashboardDetails").is(":visible") == true) { return 0; }        
+        if ($(".graphsDetails").is(":visible") == true) { return 1; }
+        if ($(".Adverse").is(":visible") == true) { return 2; }
+        if ($(".WeeklyGraph").is(":visible") == true) { return 3; }
+    }
+
     function getStudyInfo(elem) {
+        var div = getVisibleDiv();
         var studyId = $(elem).val();
-        location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId);
+        location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&childId=" + @childId + "&div=" + div;
+    }
+    function getChildInfo(elem) {
+        var div = getVisibleDiv();
+        var childId = $(elem).val();
+        location.href = "@Url.Action("Index", "Home")" + "?studyId=" + @studyId +"&childId=" + (childId == 0 ? "" : childId) + "&div=" + div;
     }
 </script>
