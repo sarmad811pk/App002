@@ -3,7 +3,7 @@
 
 @{ 
     int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
-    int childId = ViewData["childId"] != null ? Convert.ToInt32(ViewData["childId"]) : 0;
+    int childId = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
     DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts(studyId, WebSecurity.CurrentUserId, childId);
 
     string dASP = "", pASP = "", tASP = "";

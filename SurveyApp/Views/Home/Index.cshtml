@@ -105,7 +105,7 @@
     </div>
     <div class="graphsDetails __tabs" style="/*display:none;*/">
         <div class="separator"></div>
-        @{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "childId" , childId } });}
+        @{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "childIdts", childId } });}
     </div>
     <div class="WeeklyGraph __tabs">
         @{Html.RenderPartial("_WeeklyChart", studyId);}
