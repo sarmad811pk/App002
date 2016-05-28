@@ -1363,6 +1363,9 @@
                         <li>
                             <a href="javascript:void(0);" onclick="showGraphsSection(this, 3);">Parent/Teacher</a>
                         </li>
+                        <li>
+                            <a href="javascript:void(0);" onclick="showGraphsSection(this, 4);">Weekly Teacher</a>
+                        </li>
                     </ul>
                 </div>           
         </td>
@@ -1430,6 +1433,10 @@
                     <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>*@
                 </div>
+                <div class="row voffset weeklydiv" >
+                    @{Html.RenderPartial("_WeeklyChart", Model);}
+
+                </div>
 
                 @*<div class="row voffset">
                     <div class="col-sm-6" style="background-color:transparent;">
@@ -1449,13 +1456,15 @@
 <script type="text/javascript">
     $(function () {
         $(".teacherdiv").hide();
-        $(".parentteacherdiv").hide();        
+        $(".parentteacherdiv").hide();
+        $(".weeklydiv").hide();
     });
     
     function showGraphsSection(elem, type) {
         $(".parentdiv").hide();
         $(".teacherdiv").hide();
         $(".parentteacherdiv").hide();
+        $(".weeklydiv").hide();
         $(".graphTabs a").removeClass("selected");
         $(elem).addClass("selected");
 
@@ -1467,6 +1476,9 @@
         }
         else if (type == 3) {
             $(".parentteacherdiv").show();
+        }
+        else if (type == 4) {
+            $(".weeklydiv").show();
         }
 
         //$(window).resize();
