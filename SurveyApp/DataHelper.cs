@@ -443,12 +443,33 @@ namespace SurveyApp
             cmd.CommandText = "OtherSurvey_Stats";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static DataSet GetWeeklyProgressForGraph(int StudyID)
+        public static DataSet GetWeeklyProgressForGraph(int StudyID, int childId, int userId)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@StudyID", SqlDbType.Int);
             cmd.Parameters["@StudyID"].Value = StudyID;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            if(childId > 0)
+            {
+                cmd.Parameters["@ChildID"].Value = childId;
+            }
+            else
+            {
+                cmd.Parameters["@ChildID"].Value = DBNull.Value;
+            }            
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            if(userId > 0)
+            {
+                cmd.Parameters["@UserID"].Value = userId;
+            }
+            else
+            {
+                cmd.Parameters["@UserID"].Value = DBNull.Value;
+            }            
+
             cmd.CommandText = "getWeeklyProgressForGraph";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }

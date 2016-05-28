@@ -1437,7 +1437,7 @@
                 </div>*@
                 </div>
                 <div class="row voffset weeklydiv" >
-                    @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", studyId);}
+                    @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
 
                 </div>
 

@@ -1,9 +1,8 @@
-﻿@model int? 
-@{
-    var StudyID = Model;
-    
+﻿@{    
     ViewBag.Title = "_WeeklyChart";
-    System.Data.DataSet ds = SurveyApp.DataHelper.GetWeeklyProgressForGraph(StudyID ?? 1);
+    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
+    int childId = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
+    System.Data.DataSet ds = SurveyApp.DataHelper.GetWeeklyProgressForGraph(studyId, childId, WebSecurity.CurrentUserId);
     var ScheduleDates = "";
     foreach (System.Data.DataRow dr in ds.Tables[0].Rows) {
         ScheduleDates = ScheduleDates + "'" + dr["ScheduleDate"] + "',";
