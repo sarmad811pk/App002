@@ -2,11 +2,21 @@
 @using System.Data;
 
 @{
+    
     DataSet dsCompletion;
     int studyId = 0;
     string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
-
+    var Title = "";
+    if (userType == 2) { 
+        Title = " (Teacher)";
+    }
+    else if(userType == 1){
+        Title = "(Parent)";
+    }
+    else{
+        Title="";
+    }
     dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model, WebSecurity.CurrentUserId);
     studyId = Model == null ? 0 : Convert.ToInt32(Model);
 
@@ -193,7 +203,7 @@ else
 </style>
 
 <div class="completion">
-    <h3>Survey Completion</h3>
+    <h3>Survey Completion @Title</h3>
     <div style="border:solid 1px #CCC;">
         <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
             <tr>
@@ -223,9 +233,9 @@ else
                     <div class="graphInfo">
                         <table class="tblgraphInfo">
                             <tr>
-                                <td style="color:#33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</td>
-                                <td style="color:#F5F514;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
-                                <td style="color: #D7524B;"><i class="ion-minus-round"></i>&nbsp;Not Started</td>
+                                <td style="color: #33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</td>
+                                <td style="color: #FFF379;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
+                                <td style="color: #EF5350;"><i class="ion-minus-round"></i>&nbsp;Not Started</td>
                             </tr>
                         </table>                        
                     </div>
@@ -237,7 +247,7 @@ else
 
 </div>
 
-<script type="text/javascript">var colors = ['#2AFF7F', '#FFFF7F', '#FF7F2A']; //F46F66</script>
+<script type="text/javascript">var colors = ['#33B86C', '#FFF379', '#EF5350']; //F46F66</script>
 @if (userType == 0 || userType == 1)
 {
     <script type="text/javascript">        
@@ -252,7 +262,7 @@ else
             },
             colors: colors,
             title: {
-                text: 'Last submited: Parent',
+                text: '@(userType==1?"Last submited": "Last Submited: Parent")',
                 align: 'center',
                 verticalAlign: 'middle',
                 y: -70,
@@ -313,7 +323,7 @@ else
             },
             colors: colors,
             title: {
-                text: 'Last submited: Teacher',
+                text: '@(userType==2?"Last submited": "Last Submited: Teacher")',
                 align: 'center',
                 verticalAlign: 'middle',
                 y: -70,
@@ -374,7 +384,7 @@ else
             },
             colors: colors,
             title: {
-                text: 'Currently due: Parent',
+                text: '@(userType == 1 ? "Currently Due" : "Currently Due: Parent")',
                 align: 'center',
                 verticalAlign: 'middle',
                 y: -70,
@@ -428,7 +438,7 @@ else
             },
             colors: colors,
             title: {
-                text: 'Currently due: Teacher',
+                text: '@(userType == 2 ? "Currently Due" : "Currently Due: Teacher")',
                 align: 'center',
                 verticalAlign: 'middle',
                 y: -70,

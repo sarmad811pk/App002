@@ -296,23 +296,34 @@
             text: 'ABC vs SRS'
         },
         subtitle: {
-            text: 'Parent/Teacher Quaterly Trend'
+            text: 'Parent/Teacher Quaterly Trend<br/>*Low is better'
         },
         xAxis: {
-            categories: [@Html.Raw(dABC.Trim(','))],
+            categories: [@Html.Raw(dABC.Trim(','))]
+            //,plotLines: [{
+            //    color: '#93CDDD',
+            //    width: 2,
+            //    value: 0.6,
+            //    dashStyle: 'LongDash',
+            //    label: {
+            //        text: 'Last quarter minimum'
+            //    },
+            //    ID:'LF'
+            //}]
 
-            plotLines: [{
-                color: '#93CDDD',
-                width: 2,
-                value: 1,
-                dashStyle: 'LongDash'
-            }]
-
-            ,
 
         },
-
         yAxis: {
+            max:200,
+            plotLines: [{
+                value: 195, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'SRS Max(195)', style: { "color": "#333333", "fontSize": "10px" } }
+            },
+            {
+                value: 140, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'ABC Max(174)', style: { "color": "#333333", "fontSize": "10px" } }
+            }],
+          
+
+        
             title: {
                 text: 'Scores'
             },
@@ -385,7 +396,7 @@
             text: 'Aberrant  Behaviour Checklist'
         },
         subtitle: {
-            text: 'Parent Quaterly Trend'
+            text: '*Lower is Better'
         },
         xAxis: {
             categories: [@Html.Raw(dpABCg.Trim(','))]
@@ -457,8 +468,24 @@
             data: [@Html.Raw(qpABCg.Trim(','))],
             color: '#434348'
         }],
-
-
+        yAxis:{
+            max: 50,
+            plotLines: [{
+                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(48)', style: { "color": "#8778EC", "fontSize": "10px" } }
+            },
+            {
+                value: 12, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(12)', style: { "color": "#434348", "fontSize": "10px" } }
+            },
+            {
+                value: 45, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(45)', style: { "color": "#73B3EF", "fontSize": "10px" } }
+            },
+            {
+                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(48)', style: { "color": "#67F97C", "fontSize": "10px" } }
+            },
+            {
+                value: 21, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(21)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
+            }]
+        }
 
 
     });
@@ -547,7 +574,24 @@
             },
             data: [@Html.Raw(qtABCg.Trim(','))],
             color: '#434348'
-        }],
+        }], yAxis: {
+            max: 50,
+            plotLines: [{
+                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(48)', style: { "color": "#8778EC", "fontSize": "10px" } }
+            },
+            {
+                value: 12, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(12)', style: { "color": "#434348", "fontSize": "10px" } }
+            },
+            {
+                value: 45, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(45)', style: { "color": "#73B3EF", "fontSize": "10px" } }
+            },
+            {
+                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right",userHTML:true, text: ' <br> Max(48)', style: { "color": "#67F97C", "fontSize": "10px" } }
+            },
+            {
+                value: 21, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(21)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
+            }]
+        }
     });
         //-----------------------------------------End----------------------------------------
     });
@@ -563,7 +607,7 @@
             text: 'Social Responsivness Scale(SRS) sub scale'
         },
         subtitle: {
-            text: 'Parently Quaterly Trend'
+            text: '*Lower is better'
         },
         xAxis: {
             categories: [@Html.Raw(dpSRSg.Trim(','))]
@@ -634,7 +678,27 @@
             },
             data: [@Html.Raw(qpSRSg.Trim(','))],
             color: '#434348'
-        }],
+        }],yAxis: {
+            max: 70,
+            plotLines: [{
+                value: 24, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(24)', style: { "color": "#73B3EF", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(36)', style: { "color": "#67F97C", "fontSize": "10px" } }
+            },
+            {
+                value: 63, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(63)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(36)', style: { "color": "#8778EC", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br>.<br>.Max(36)', style: { "color": "#434348", "fontSize": "10px" } }
+            }]
+        }
+         
+
+
     });
         //-----------------------------------------End----------------------------------------
     });
@@ -650,7 +714,7 @@
             text: 'Social Responsivness Scale(SRS) sub scales'
         },
         subtitle: {
-            text: 'Teacher Quaterly Trend'
+            text: '*Lower is better'
         },
         xAxis: {
             categories: [@Html.Raw(dtSRSg.Trim(','))]
@@ -721,7 +785,24 @@
             },
             data: [@Html.Raw(qtSRSg.Trim(','))],
             color: '#434348'
-        }],
+        }], yAxis: {
+            max: 70,
+            plotLines: [{
+                value: 24, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(24)', style: { "color": "#73B3EF", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(36)', style: { "color": "#67F97C", "fontSize": "10px" } }
+            },
+            {
+                value: 63, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(63)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(36)', style: { "color": "#8778EC", "fontSize": "10px"} }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br>.<br>.Max(36)', style: { "color": "#434348", "fontSize": "10px" } }
+            }]
+        }
     });
         //-----------------------------------------End----------------------------------------
     });
@@ -797,10 +878,10 @@
             type: 'spline'
         },
         title: {
-            text: 'Abbreviated Sensory Profile- Parent & Teacher'
+            text: 'Abbreviated Sensory Profile'
         },
         subtitle: {
-            text: 'Parent/Teacher Quaterly Trend'
+            text: 'Parent vs Teacher<br/>*low is better'
         },
         xAxis: {
             categories: [@Html.Raw(dASP.Trim(','))]
@@ -860,10 +941,10 @@
             type: 'spline'
         },
         title: {
-            text: 'PedsQL-Parent Report for Children(8-12)'
+            text: 'Peds Quality of Life'
         },
         subtitle: {
-            text: 'Parent Quaterly Trend'
+            text: '*Higher is better'
         },
         xAxis: {
             categories: [@Html.Raw(dPEDsql.TrimEnd(','))]
@@ -900,7 +981,7 @@
                 symbol: 'square'
             },
             data: [@Html.Raw(pPEDsql.TrimEnd(','))],
-            color: '#73B3EF'
+            color: '#00cc00'
 
         }],
     });
@@ -981,7 +1062,7 @@
             text: 'Caregiver Strain Quesionnaire'
         },
         subtitle: {
-            text: 'Parent Quaterly Trend'
+            text: '*Lower is better'
         },
         xAxis: {
             categories: [@Html.Raw(dCareGiver.TrimEnd(','))]
@@ -1018,7 +1099,7 @@
                 symbol: 'square'
             },
             data: [@Html.Raw(pCareGiver.TrimEnd(','))],
-            color: '#73B3EF'
+            color: '#cc0000'
 
         }],
     });
@@ -1036,7 +1117,7 @@
             text: 'Family Empowerment Scale'
         },
         subtitle: {
-            text: 'Parent Quaterly Trend'
+            text: '*Higher is better'
         },
         xAxis: {
             categories: [@Html.Raw(dPES.TrimEnd(','))]
@@ -1073,7 +1154,7 @@
                 symbol: 'square'
             },
             data: [@Html.Raw(pPES.TrimEnd(','))],
-            color: '#73B3EF'
+            color: '#00cc00'
 
         }],
     });
@@ -1091,7 +1172,7 @@
             text: 'GI Severity Index'
         },
         subtitle: {
-            text: 'Parent Quaterly Trend'
+            text: '*Lower is better'
         },
         xAxis: {
             categories: [@Html.Raw(dGSI.TrimEnd(','))]
@@ -1128,7 +1209,7 @@
                 symbol: 'square'
             },
             data: [@Html.Raw(pGSI.TrimEnd(','))],
-            color: '#73B3EF'
+            color: '#cc0000'
 
         }],
     });
@@ -1143,10 +1224,10 @@
             type: 'spline'
         },
         title: {
-            text: 'Academic Progress DSM Level 1'
+            text: 'Academic Progress'
         },
         subtitle: {
-            text: 'Teachers: Quaterly Trend'
+            text: '*High is better'
         },
         xAxis: {
             categories: [@Html.Raw(dAPRS.TrimEnd(','))]
@@ -1394,10 +1475,10 @@
 
                 <div class="row voffset teacherdiv">
                     <div class="col-sm-6 teacher" style="background-color:transparent;">
-                        <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                     <div class="col-sm-6 teacher" style="background-color:transparent;">
-                        <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                     @*<div class="col-sm-6" style="background-color:transparent;">
                     <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
