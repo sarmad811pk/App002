@@ -233,8 +233,7 @@ namespace SurveyApp.Controllers
                 bool isSent = SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", body, lstEmails, true);
 
                 if(isSent == true)
-                {
-                    //string enc = Encryption.Encrypt("ewrwerwerwerwe", System.Web.Configuration.WebConfigurationManager.AppSettings["EncryptionKey"].ToString(), false);
+                {                    
                     using (var cRespondent = new RespondentContext())
                     {
                         foreach (SurveyApp.Models.Respondent objRespo in objRespos)

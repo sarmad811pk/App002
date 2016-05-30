@@ -16,7 +16,7 @@ namespace SurveyApp
             string smtpServer = Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["SMTPSERVER"]); //"smtp.gmail.com";
             int smtpPort = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["SMTPPORT"]);
             string sender = Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["SMTPSENDER"]);
-            string password = Encryption.Decrypt(Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["SMTPPASSWORD"]), System.Web.Configuration.WebConfigurationManager.AppSettings["EncryptionKey"].ToString(), false);
+            string password = Encryption.Decrypt(Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["key2"]), System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false);
 
             var message = new MailMessage { Body = body, BodyEncoding = Encoding.UTF8, IsBodyHtml = isHtml, Subject = subject, From = new MailAddress(sender) };
 
@@ -65,7 +65,7 @@ namespace SurveyApp
         public static bool SendGridEmail(string subject, string body, IEnumerable<string> TOs, bool isHtml, IEnumerable<string> CCs = null, IEnumerable<string> BCCs = null)
         {
             string sender = Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["SMTPSENDER"]);
-            string password = Encryption.Decrypt(Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["SMTPPASSWORD"]), System.Web.Configuration.WebConfigurationManager.AppSettings["EncryptionKey"].ToString(), false);
+            string password = Encryption.Decrypt(Convert.ToString(System.Web.Configuration.WebConfigurationManager.AppSettings["key2"]), System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false);
 
             try
             {
