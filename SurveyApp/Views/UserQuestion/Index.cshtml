@@ -137,11 +137,8 @@
         {
 
             var rrr = "";
-            if (surveyId == 16) { rrr = "General Information"; }
-            if (surveyId == 17) { rrr = "Pregnancy"; }
-            if (surveyId == 18) { rrr = "Development and Education"; }
-            if (surveyId == 19) { rrr = "Medical History"; }
-            if (surveyId == 20) { rrr = "Medication History"; }
+            if (surveyId == 16) { rrr = "Parent Intake Form"; }
+            if (surveyId == 21) { rrr = "Parent Follow-Up Form"; } 
             string percentage = "0%", schInfo = "";
 
             if (dsChildrenSchedules != null && dsChildrenSchedules.Tables != null && dsChildrenSchedules.Tables[0] != null && dsChildrenSchedules.Tables[0].Rows != null)
@@ -350,22 +347,7 @@
                         if (monthlyTeacher != "")
                         {
                             <div class="col-md-12 text-left">Monthly Teacher@(Html.Raw(monthlyTeacher))</div>
-                        }
-                        var familyHistory = getPercentCompletion(38, (int)drch["ID"], url.Replace("__", "38"));
-                        if (familyHistory != "")
-                        {
-                            <div class="col-md-12 text-left">Family History@(Html.Raw(familyHistory))</div>
-                        }
-                        var socialHistory = getPercentCompletion(39, (int)drch["ID"], url.Replace("__", "39"));
-                        if (socialHistory != "")
-                        {
-                            <div class="col-md-12 text-left">Social History@(Html.Raw(socialHistory))</div>
-                        }
-                        var treatment = getPercentCompletion(41, (int)drch["ID"], url.Replace("__", "41"));
-                        if (treatment != "")
-                        {
-                            <div class="col-md-12 text-left">Treatment and Intervention History@(Html.Raw(treatment))</div>
-                        }
+                        } 
                     }
                 </div>
                 <div class="col-sm-3">
@@ -383,42 +365,12 @@
                                 @if (!String.IsNullOrEmpty(percentGen))
                                 {
                                     <div class="col-md-12 text-left">@(Html.Raw(percentGen))</div>
-                                }
-                                @{string percentPreg = getPercentCompletion(17, (int)drch["ID"], url.Replace("__", "17"));}
-                                @if (!String.IsNullOrEmpty(percentPreg))
-                                {
-                                    <div class="col-md-12 text-left">@(Html.Raw(percentPreg))</div>
-                                }
-                                @{string percentDev = getPercentCompletion(18, (int)drch["ID"], url.Replace("__", "18"));}
-                                @if (!String.IsNullOrEmpty(percentDev))
-                                {
-                                    <div class="col-md-12 text-left">@(Html.Raw(percentDev))</div>
-                                }
-                                @{string percentMed = getPercentCompletion(19, (int)drch["ID"], url.Replace("__", "19"));}
-                                @if (!String.IsNullOrEmpty(percentMed))
-                                {
-                                    <div class="col-md-12 text-left">@(Html.Raw(percentMed))</div>
-                                }
-                                @{string percentMH = getPercentCompletion(20, (int)drch["ID"], url.Replace("__", "20"));}
-                                @if (!String.IsNullOrEmpty(percentMH))
-                                {
-                                    <div class="col-md-12 text-left">@(Html.Raw(percentMH))</div>
-                                }
+                                } 
                                 @{string percentM = getPercentCompletion(21, (int)drch["ID"], url.Replace("__", "21"));}
                                 @if (!String.IsNullOrEmpty(percentM))
                                 {
-                                    <div class="col-md-12 text-left">Medication@(Html.Raw(percentM))</div>
-                                }
-                                @{string percentFol = getPercentCompletion(22, (int)drch["ID"], url.Replace("__", "22"));}
-                                @if (!String.IsNullOrEmpty(percentFol))
-                                {
-                                    <div class="col-md-12 text-left">Follow-Up@(Html.Raw(percentFol))</div>
-                                }
-                                @{string percentAC = getPercentCompletion(23, (int)drch["ID"], url.Replace("__", "23"));}
-                                @if (!String.IsNullOrEmpty(percentAC))
-                                {
-                                    <div class="col-md-12 text-left">Additional Comments@(Html.Raw(percentAC))</div>
-                                }
+                                    <div class="col-md-12 text-left">@(Html.Raw(percentM))</div>
+                                } 
                             </div>
                         </div>
                                     }
