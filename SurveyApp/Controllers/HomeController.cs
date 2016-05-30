@@ -220,10 +220,17 @@ namespace SurveyApp.Controllers
                 List<string> lstEmails = new List<string>();
                 foreach (Respondent objRp in objRespos)
                 {
-                    lstEmails.Add(objRp.Email);
+                    bool isEmailEnabled = Convert.ToBoolean(System.Web.Configuration.WebConfigurationManager.AppSettings["SendEmails"]);
+                    if (isEmailEnabled) {
+                        lstEmails.Add(objRp.Email);
+                    }
+                    else
+                    {
+                        lstEmails.Add(System.Web.Configuration.WebConfigurationManager.AppSettings["TestEmailAddress"].ToString());
+                    }
                 }
 
-                bool isSent = SMTPHelper.SendEmail("UCSFEBIT Survey Reminder", "Please login to UCSFEBIT Survey app and complete the surveys. <br/>Thank You<br/>UCSFEBIT Team", lstEmails, true);
+                bool isSent = SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", "Please login to UCSFEBIT Survey app and complete the surveys. <br/><br/>Thank You<br/><br/>UCSFEBIT Team", lstEmails, true);
 
                 if(isSent == true)
                 {
