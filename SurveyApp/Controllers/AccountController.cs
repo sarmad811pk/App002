@@ -140,7 +140,19 @@ namespace SurveyApp.Controllers
                         uContext.SaveChanges();                                                
                     }
                 }
-                isSuccess = true;
+
+                List<string> lstEmails = new List<string>();
+                lstEmails.Add(newUserName);
+                string body = "";
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Account_Update.html")))
+                {
+                    body = reader.ReadToEnd();
+                }
+                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
+                body = body.Replace("_USERNAME_", newUserName);
+                body = body.Replace("_PASSWORD_", password);
+
+                isSuccess = SMTPHelper.SendGridEmail("UCSFEBIT SurveyApp - Update Account", body, lstEmails, true);
             }
             catch(Exception ex) {
                 isSuccess = false;
@@ -165,7 +177,20 @@ namespace SurveyApp.Controllers
                     }
                     Roles.AddUserToRole(model.UserName, role);
                 }
-                isSuccess = true;
+                List<string> lstEmails = new List<string>();
+                lstEmails.Add(model.UserName);
+
+                string body = "";
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Attachments/Account_Add.html")))
+                {
+                    body = reader.ReadToEnd();
+                }
+                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
+                body = body.Replace("_USERNAME_", model.UserName);
+                body = body.Replace("_PASSWORD_", model.Password);
+                body = body.Replace("_FULLNAME_", model.FullName);
+
+                isSuccess = SMTPHelper.SendGridEmail("UCSFEBIT SurveyApp - New Account", body, lstEmails, true);                
             }
             catch (Exception ex)
             {

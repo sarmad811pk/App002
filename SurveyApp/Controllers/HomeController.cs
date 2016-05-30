@@ -219,18 +219,18 @@ namespace SurveyApp.Controllers
                 SurveyApp.Models.Respondent[] objRespos = JsonConvert.DeserializeObject<SurveyApp.Models.Respondent[]>(respos);
                 List<string> lstEmails = new List<string>();
                 foreach (Respondent objRp in objRespos)
-                {
-                    bool isEmailEnabled = Convert.ToBoolean(System.Web.Configuration.WebConfigurationManager.AppSettings["SendEmails"]);
-                    if (isEmailEnabled) {
-                        lstEmails.Add(objRp.Email);
-                    }
-                    else
-                    {
-                        lstEmails.Add(System.Web.Configuration.WebConfigurationManager.AppSettings["TestEmailAddress"].ToString());
-                    }
+                { 
+                    lstEmails.Add(objRp.Email);
                 }
 
-                bool isSent = SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", "Please login to UCSFEBIT Survey app and complete the surveys. <br/><br/>Thank You<br/><br/>UCSFEBIT Team", lstEmails, true);
+                string body = "";
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Attachments/Reminder.html")))
+                {
+                    body = reader.ReadToEnd();
+                }
+                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());               
+
+                bool isSent = SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", body, lstEmails, true);
 
                 if(isSent == true)
                 {

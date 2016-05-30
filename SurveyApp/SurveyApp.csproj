@@ -223,6 +223,9 @@
     <Content Include="App_Data\aspnet-SurveyApp-20160130102437_log.ldf">
       <DependentUpon>aspnet-SurveyApp-20160130102437.mdf</DependentUpon>
     </Content>
+    <Content Include="Attachments\Account_Add.html" />
+    <Content Include="Attachments\Reminder.html" />
+    <Content Include="Attachments\Account_Update.html" />
     <Content Include="bootstrap\css\components.css" />
     <Content Include="bootstrap\css\core.css" />
     <Content Include="bootstrap\css\icons.css" />

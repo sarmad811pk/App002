@@ -74,33 +74,41 @@ namespace SurveyApp
                 msg.Html = body;
 
                 msg.From = new MailAddress(sender);
-                msg.AddTo(TOs);
 
-                MailAddress[] ccEmails = null;
-                MailAddress[] bccEmails = null;
-
-                if (CCs != null)
+                bool isEmailEnabled = Convert.ToBoolean(System.Web.Configuration.WebConfigurationManager.AppSettings["SendEmails"]);
+                if (isEmailEnabled)
                 {
-                    
-                    int i = 0;
-                    foreach (var c in CCs)
+                    msg.AddTo(TOs);
+                    MailAddress[] ccEmails = null;
+                    MailAddress[] bccEmails = null;
+
+                    if (CCs != null)
                     {
-                        ccEmails[i] = new MailAddress(c);
-                        i++;
+
+                        int i = 0;
+                        foreach (var c in CCs)
+                        {
+                            ccEmails[i] = new MailAddress(c);
+                            i++;
+                        }
+                        msg.Cc = ccEmails;
                     }
-                    msg.Cc = ccEmails;
+
+                    if (BCCs != null)
+                    {
+
+                        int i = 0;
+                        foreach (var c in BCCs)
+                        {
+                            bccEmails[i] = new MailAddress(c);
+                            i++;
+                        }
+                        msg.Bcc = bccEmails;
+                    }
                 }
-
-                if (BCCs != null)
+                else
                 {
-                    
-                    int i = 0;
-                    foreach (var c in BCCs)
-                    {
-                        bccEmails[i] = new MailAddress(c);
-                        i++;
-                    }
-                    msg.Bcc = bccEmails;
+                    msg.AddTo(System.Web.Configuration.WebConfigurationManager.AppSettings["TestEmailAddress"].ToString());
                 }
 
                 var credentials = new NetworkCredential(sender, password);
