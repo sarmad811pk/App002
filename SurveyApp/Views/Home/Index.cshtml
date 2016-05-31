@@ -120,20 +120,30 @@
         if (window.location.hash) {
             hash = window.location.hash.substring(1);
         }
-        $(".tabdashboard").find("li:eq(" + (hash) + ")").find("a").click();
+        $(".tabdashboard").find("li:eq(" + (hash > 2 ? 1 : hash) + ")").find("a").click();
+        if (hash > 2) {            
+            $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
+        }
         $(".__tabs").css("opacity", "1");
+        
     });
 
     function getVisibleDiv(){
         if ($(".dashboardDetails").is(":visible") == true) { return 0; }
-        if ($(".graphsDetails").is(":visible") == true) { return 1; }
-        if ($(".Adverse").is(":visible") == true) { return 2; }
- 
+        if ($(".graphsDetails").is(":visible") == true) { return getInnerVisibleDiv(); }
+        if ($(".Adverse").is(":visible") == true) { return 2; } 
+    }
+
+    function getInnerVisibleDiv() {        
+        if ($(".gDetails .parentdiv").is(":visible") == true) { return 3; }
+        if ($(".gDetails .teacherdiv").is(":visible") == true) { return 4; }
+        if ($(".gDetails .parentteacherdiv").is(":visible") == true) { return 5; }
+        if ($(".gDetails .weeklydiv").is(":visible") == true) { return 6; }
     }
 
     function getStudyInfo(elem) {
         var div = getVisibleDiv();
-        var studyId = $(elem).val();
+        var studyId = $(elem).val();        
         location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&childId=" + @childId + "#" + div;
     }
     function getChildInfo(elem) {
