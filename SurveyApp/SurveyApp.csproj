@@ -345,6 +345,8 @@
     <Content Include="bootstrap\fonts\ionicons.eot" />
     <Content Include="bootstrap\fonts\ionicons.ttf" />
     <Content Include="bootstrap\fonts\ionicons.woff" />
+    <None Include="Properties\PublishProfiles\ucsfebit - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\ucsfebit - Web Deploy.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\ebitbg.jpg" />
     <Content Include="Images\ebitrainbow.jpg" />
