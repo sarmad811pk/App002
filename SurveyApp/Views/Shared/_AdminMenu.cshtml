@@ -20,11 +20,11 @@
     System.Data.DataSet dschild = SurveyApp.DataHelper.GetChildbyStudyID(studyId, userId);
 
 }
-<div class="waiting" style="@(Request.Url.ToString().ToLower().Contains("/home/") == true || Request.Url.ToString().ToLower().Contains("/userquestion/") == true ? "" : "display:none;")"><div>Please Wait...</div></div> 
+<div class="waiting" style="@((Request.Url.ToString().ToLower().Contains("/home/") == true && Request.Url.ToString().ToLower().Contains("/home/about") == false && Request.Url.ToString().ToLower().Contains("/home/contact") == false) || (Request.Url.ToString().ToLower().Contains("/userquestion/") == true && Request.Url.ToString().ToLower().Contains("/userquestion/question") == false && Request.Url.ToString().ToLower().Contains("/userquestion/index?childid=") == false) ? "" : "display:none;")"><div>Please Wait...</div></div> 
 <div class="list-group leftmenu">
     <div class="list-group leftmenu">
         @if (Roles.IsUserInRole("Administrator"))
-        {
+        {            
             <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
             <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Survey Manager</a>
             <a class='list-group-item @(c == "School" ? " active" : "")         ' href="@Url.Action("Index", "School", new object { })"><i class='ion-university'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;School Manager</a>
