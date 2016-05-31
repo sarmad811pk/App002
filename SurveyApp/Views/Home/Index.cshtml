@@ -52,7 +52,7 @@
 }
 
 <div class="stats">
-    <div class="tabs">
+    <div class="tabs toptabs" style="display:none;">
         <ul class="tabdashboard">
             <li>
                 <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
@@ -65,7 +65,7 @@
             </li>
         </ul>
     </div>
-    <div class="topControls">
+    <div class="topControls" style="display:none;">
         <div style="display:inline-block;"><h3 style="margin: 7px 0px 0px 0px;text-transform: capitalize;">@studyName</h3></div>
 
         <select id="ddlChildren" class="col-sm-9 form-control childrendropdown" onchange="getChildInfo(this);">
@@ -85,7 +85,7 @@
     </div>
     <div class="separator"></div>
 
-    <div class="dashboardDetails __tabs">
+    <div class="dashboardDetails __tabs" style="opacity:0;">
         @{Html.RenderPartial("_ChildrenCounts", studyId);}
 
 
@@ -95,12 +95,12 @@
         <div class="separator"></div>
         @{Html.RenderPartial("_DetailComparison", studyId);}
     </div>
-    <div class="Adverse __tabs" style="display:none;"> 
+    <div class="Adverse __tabs" style="opacity:0;"> 
         @{Html.RenderPartial("_AdverseEvent", studyId);}
 
 
     </div>
-    <div class="graphsDetails __tabs" style="/*display:none;*/">
+    <div class="graphsDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
         @{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "childIdts", childId } });}
     </div>
@@ -108,18 +108,20 @@
         
     </div>
 </div>
+ 
 
-<script type="text/javascript">
-    $(function () {
-        $(".graphsDetails").hide();
-        $(".Adverse").hide();
-        $(".childrendropdown").hide();
+<script type="text/javascript">    
+    $(window).load(function () {        
+        $(".waiting").hide();
+        $(".toptabs").show();
+        $(".topControls").show();
 
-        var hash;
+        var hash = 0;
         if (window.location.hash) {
             hash = window.location.hash.substring(1);
-        }        
-        $(".tabdashboard").find("li:eq("+ (hash) +")").find("a").click();
+        }
+        $(".tabdashboard").find("li:eq(" + (hash) + ")").find("a").click();
+        $(".__tabs").css("opacity", "1");
     });
 
     function getVisibleDiv(){

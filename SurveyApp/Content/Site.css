@@ -834,14 +834,14 @@ div.checklist div.checker:last-child{
         background-color: #FFE9E9 !important;
     }
 
-.loading{    
+.loading, .waiting{    
     position: fixed;
     width: 100%;    
     text-align: center;
     z-index: 1000;
     top: 46%;
 }
-.loading div{
+.loading div, .waiting div{
     position: relative;
     border: solid 1px #696969;
     background-color: #FFF;
