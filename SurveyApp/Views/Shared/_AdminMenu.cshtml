@@ -20,7 +20,7 @@
     System.Data.DataSet dschild = SurveyApp.DataHelper.GetChildbyStudyID(studyId, userId);
 
 }
-<div class="waiting" style="@(Request.Url.ToString().ToLower().Contains("/home/") == true ? "" : "display:none;")"><div>Please Wait...</div></div> 
+<div class="waiting" style="@(Request.Url.ToString().ToLower().Contains("/home/") == true || Request.Url.ToString().ToLower().Contains("/userquestion/") == true ? "" : "display:none;")"><div>Please Wait...</div></div> 
 <div class="list-group leftmenu">
     <div class="list-group leftmenu">
         @if (Roles.IsUserInRole("Administrator"))

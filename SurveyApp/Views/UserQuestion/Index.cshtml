@@ -528,7 +528,7 @@ else
         .tabs .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;margin-top: 4px;display: inline-block;}
     </style>
 
-    <div class="tabs">
+    <div class="tabs toptabs" style="display:none;">
         <ul class="tabdashboard">
             <li>
                 <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
@@ -539,14 +539,14 @@ else
         </ul>
     </div>
 
-    <div class="dashboardDetails __tabs">
+    <div class="dashboardDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
         @{Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", null);}
 
         <div class="separator"></div>
         @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", null);}
     </div>
-    <div class="graphsDetails __tabs">
+    <div class="graphsDetails __tabs" style="opacity:0;">
         <div class="topControls">
             <select id="ddlChildren" class="col-sm-9 form-control childrendropdown" onchange="getChildInfo(this);">
                 <option value="0">All Children</option>
@@ -561,15 +561,16 @@ else
     </div>
 
     <script type="text/javascript">
-        $(function () {
-            $(".graphsDetails").hide();
-            $(".childrendropdown").hide();
+        $(window).load(function () {
+            $(".waiting").hide();
+            $(".toptabs").show();
 
-            var hash;
+            var hash = 0;
             if (window.location.hash) {
                 hash = window.location.hash.substring(1);
             }
-            $(".tabdashboard").find("li:eq("+ (hash) +")").find("a").click();
+            $(".tabdashboard").find("li:eq(" + (hash) + ")").find("a").click();
+            $(".__tabs").css("opacity", "1");
         });
 
         function getVisibleDiv() {
