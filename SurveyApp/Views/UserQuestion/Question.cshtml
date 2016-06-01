@@ -101,14 +101,18 @@
 </p>
 <div class="form-group">
     <div class='questions list-group'>
-      
+      @{
+          var Title = "";
+      }
         @foreach (System.Data.DataRow q in dsQuestions.Tables[0].Rows)
         {
             var Nclass = q["Nclass"].ToString();
             var Qclass = q["Qclass"].ToString() + " _bold";
             var Aclass = q["Aclass"].ToString();
-
-           
+            var title = q["ScoreCategory"].ToString();
+            if (Title == title) {
+                title = "";
+            } 
             var PAnswers="";
             if (dsQuestions.Tables[0].Rows.IndexOf(q)==0)
             { 
@@ -127,8 +131,13 @@
             //string value = Array.Find(a, element => element.StartsWith(Answer, StringComparison.Ordinal));
             //var hidden = value != "" ? "visibility:visible" : "visibility:hidden";
             //var hidden2 = value != "" ? "display:none;" : "display:block;";       
-            
 
+            if (title != "")
+            { 
+                 <div class="list-group-item-heading col-sm-12 btn-primary disabled" style="margin-bottom:0px;">
+                     <h4>@title</h4>
+                 </div>
+            }
             if (q["PID"].ToString() == string.Empty)
             {
 
@@ -165,6 +174,8 @@
 
                 </div>
             }
+
+            Title = q["ScoreCategory"].ToString();
         }
     </div>
 </div>
