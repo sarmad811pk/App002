@@ -8,7 +8,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblUsers").DataTable();
+        $("#tblUsers").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel" }] });
     });    
 </script>
 

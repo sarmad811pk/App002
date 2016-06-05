@@ -7,7 +7,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblSchools").DataTable();
+        $("#tblSchools").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel" }] });
     });
 </script>
 <div>

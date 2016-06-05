@@ -350,8 +350,10 @@
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Images\ebitbg.jpg" />
     <Content Include="Images\ebitrainbow.jpg" />
+    <Content Include="Scripts\buttons.html5.min.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\dataTables.buttons.min.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Scripts\jquery-ui.min.js" />
@@ -362,6 +364,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\knockout-2.2.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />

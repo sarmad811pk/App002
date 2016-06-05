@@ -55,7 +55,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblSchedules").DataTable();
+        $("#tblSchedules").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel" }] });
     });
 </script>
 <div>
