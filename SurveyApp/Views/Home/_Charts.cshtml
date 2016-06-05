@@ -4,6 +4,8 @@
 @{ 
     int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
     int childId = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
+    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+
     DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts(studyId, WebSecurity.CurrentUserId, childId);
 
     string dASP = "", pASP = "", tASP = "";
@@ -1433,6 +1435,7 @@
     }
 </style>
 
+<h3 style="text-transform:capitalize;">@studyName - Statistical Analysis</h3>
 <table cellpadding="0" cellspacing="0" style="width:100%;">
     <tr>
         <td style="width: 14%;vertical-align: top;">

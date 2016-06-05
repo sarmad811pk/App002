@@ -4,6 +4,7 @@
     ViewBag.Title = "Survey Manager";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int id = Convert.ToInt32(TempData["ID"]);
+    string studyName = "";
     //var ds = SurveyApp.DataHelper.SurveyGetAll();
     int? childID = (int?)TempData["ChildID"];
 
@@ -15,6 +16,7 @@
     {
         Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
         studyId = objStd.Id;
+        studyName = objStd.Name;
     }
     System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, WebSecurity.CurrentUserId);
 
@@ -541,10 +543,10 @@ else
 
     <div class="dashboardDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
-        @{Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", null);}
+        @{Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
 
         <div class="separator"></div>
-        @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", null);}
+        @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
     </div>
     <div class="graphsDetails __tabs" style="opacity:0;">
         <div class="topControls">
@@ -557,7 +559,7 @@ else
             </select>
         </div>
         <div class="separator"></div>
-        @{Html.RenderPartial("~/Views/Home/_Charts.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childIdts } });}
+        @{Html.RenderPartial("~/Views/Home/_Charts.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childIdts } });}
     </div>
 
     <script type="text/javascript">

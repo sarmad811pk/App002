@@ -2,13 +2,15 @@
 @using System.Data;
 
 @{ 
-    dsDashboard = SurveyApp.DataHelper.DashboardGetByStudyId(Model);
-    studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
+    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+    dsDashboard = SurveyApp.DataHelper.DashboardGetByStudyId(studyId);
+    
 }
 
 @functions{
     DataSet dsDashboard;
-    int studyId = 0;
+    int studyId;
     public int getUserCount(string type)
     {
         int count = 0, statusId = 0;
@@ -64,7 +66,7 @@
 </style>
 
 <div class="topStats">
-    <h3 id="topheading"></h3>
+    <h3 style="text-transform:capitalize;" id="topheading">@studyName - Respondents</h3>    
     <div>
         <div class="col-md-6 col-sm-6 col-lg-2 itembox" onclick="window.open('@Url.Action("Index", "Child")');">
             <div class="info-box mini-stat clearfix bx-shadow bg-success">

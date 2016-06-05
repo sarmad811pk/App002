@@ -2,13 +2,15 @@
 @using System.Data;
 
 @{
-    
-    DataSet dsCompletion;
-    int studyId = 0;
+
+    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
+    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+
+    DataSet dsCompletion;    
     string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
     var Title = "";
-    if (userType == 2) { 
+    if (userType == 2) {
         Title = " (Teacher)";
     }
     else if(userType == 1){
@@ -17,8 +19,7 @@
     else{
         Title="";
     }
-    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(Model, WebSecurity.CurrentUserId);
-    studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(studyId, WebSecurity.CurrentUserId);
 
 
     #region CurrentPrriod
@@ -203,7 +204,7 @@ else
 </style>
 
 <div class="completion">
-    <h3>Survey Completion @Title</h3>
+    <h3 style="text-transform:capitalize;">@studyName - Survey Completion @Title</h3>
     <div style="border:solid 1px #CCC;">
         <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
             <tr>

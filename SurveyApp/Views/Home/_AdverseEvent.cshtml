@@ -2,13 +2,15 @@
 @using System.Data;
 
 @{
-    int studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
+    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
     DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, studyId, 0); //Adverse Reaction Survey        
 }
 
 <div class="adverseReaction">
-    <h3>Adverse Reaction</h3>
+    <h3 style="text-transform:capitalize;">@studyName - Adverse Reaction</h3>
 
     <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
         <table id="tblAdverse" cellpadding="0" cellspacing="0" style="width:100%;" class="table table-striped table-hover">
@@ -50,7 +52,7 @@
 
     </div>
 
-    <h3>Life Events</h3>
+    <h3 style="text-transform:capitalize;">@studyName - Life Events</h3>
     <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
             <table id="tblLifeEvents" cellpadding="0" cellspacing="0" style="width:100%;" class="table table-striped table-hover">
                 <thead>

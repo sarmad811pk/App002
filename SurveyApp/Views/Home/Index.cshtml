@@ -66,7 +66,7 @@
         </ul>
     </div>
     <div class="topControls" style="display:none;">
-        <div style="display:inline-block;"><h3 style="margin: 7px 0px 0px 0px;text-transform: capitalize;">@studyName</h3></div>
+        <div style="display:none;"><h3 style="margin: 7px 0px 0px 0px;text-transform: capitalize;">@studyName - Respondents</h3></div>
 
         <select id="ddlChildren" class="col-sm-9 form-control childrendropdown" onchange="getChildInfo(this);">
             <option value="0">All Children</option>
@@ -86,23 +86,23 @@
     <div class="separator"></div>
 
     <div class="dashboardDetails __tabs" style="opacity:0;">
-        @{Html.RenderPartial("_ChildrenCounts", studyId);}
+        @{Html.RenderPartial("_ChildrenCounts", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
 
 
         <div class="separator"></div>
-        @{Html.RenderPartial("_SurveyCompletion", studyId);}
+        @{Html.RenderPartial("_SurveyCompletion", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
 
         <div class="separator"></div>
-        @{Html.RenderPartial("_DetailComparison", studyId);}
+        @{Html.RenderPartial("_DetailComparison", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
     </div>
     <div class="Adverse __tabs" style="opacity:0;"> 
-        @{Html.RenderPartial("_AdverseEvent", studyId);}
+        @{Html.RenderPartial("_AdverseEvent", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
 
 
     </div>
     <div class="graphsDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
-        @{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "childIdts", childId } });}
+        @{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "studyName", studyName }, { "childIdts", childId } });}
     </div>
     <div class="WeeklyGraph __tabs">
         

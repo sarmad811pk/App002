@@ -2,7 +2,9 @@
 @using System.Data;
 
 @{ 
-    int studyId = Model == null ? 0 : Convert.ToInt32(Model);
+    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
+    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+    
     int children = 0;
     DataSet dsComparison = SurveyApp.DataHelper.DashboardGetDetailComparison(studyId);
     if(dsComparison != null)
@@ -77,7 +79,7 @@
 </style>
 
 <div class="comparison">
-    <h3>Survey Completion Detail</h3>   
+    <h3 style="text-transform:capitalize;">@studyName - Survey Completion Detail</h3>   
     <div class="current">
         <div class="tabs" >
             <ul class="tabperiod">
