@@ -9,6 +9,19 @@
     DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, studyId, 0); //Adverse Reaction Survey        
 }
 
+<style type="text/css">
+    .adverseReaction .dt-buttons{
+        bottom: 10px;
+        position: relative;
+    }
+    #tblAdverse_wrapper{
+        margin-top: 10px;
+    }
+     #tblLifeEvents_wrapper{
+        margin-top: 10px;
+    }
+</style>
+
 <div class="adverseReaction">
     <h3 style="text-transform:capitalize;">@studyName - Adverse Reaction</h3>
 
@@ -90,8 +103,8 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblAdverse").DataTable({ searching: false, paging: true, lengthChange: false, info: false });
-        $("#tblLifeEvents").DataTable({ searching: false, paging: true, lengthChange: false, info: false });
+        $("#tblAdverse").DataTable({ searching: false, paging: true, lengthChange: false, info: false, dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Adverse_Reactions' }] });
+        $("#tblLifeEvents").DataTable({ searching: false, paging: true, lengthChange: false, info: false, dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Life_Events' }] });
     });
 </script>
 

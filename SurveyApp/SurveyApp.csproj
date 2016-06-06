@@ -230,6 +230,7 @@
     <Content Include="bootstrap\css\core.css" />
     <Content Include="bootstrap\css\icons.css" />
     <Content Include="bootstrap\css\ionicons.min.css" />
+    <Content Include="bootstrap\fonts\fontawesome-webfont.svg" />
     <Content Include="bootstrap\fonts\ionicons.svg" />
     <Content Include="bootstrap\js\bootstrap-slider.js" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -266,6 +267,8 @@
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="bootstrap\js\npm.js" />
     <Content Include="Content\dataTables.bootstrap.min.css" />
+    <Content Include="Content\awsm\css\font-awesome.min.css" />
+    <Content Include="Content\awsm\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\at3logo.png" />
     <Content Include="Content\images\at3logo_small.png" />
     <Content Include="Content\images\red_cross_50x50.png" />
@@ -345,6 +348,15 @@
     <Content Include="bootstrap\fonts\ionicons.eot" />
     <Content Include="bootstrap\fonts\ionicons.ttf" />
     <Content Include="bootstrap\fonts\ionicons.woff" />
+    <Content Include="Content\awsm\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\awsm\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\awsm\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\awsm\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\awsm\fonts\FontAwesome.otf" />
+    <Content Include="bootstrap\fonts\fontawesome-webfont.ttf" />
+    <Content Include="bootstrap\fonts\fontawesome-webfont.woff" />
+    <Content Include="bootstrap\fonts\fontawesome-webfont.woff2" />
+    <Content Include="bootstrap\fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\ucsfebit - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ucsfebit - Web Deploy.pubxml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />

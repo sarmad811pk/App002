@@ -869,3 +869,28 @@ div.checklist div.checker:last-child{
     display: none;
     height: 100%;
 }
+/* ICONS */
+.dt-buttons a.buttons-excel span:before{
+    content: "\f1c3";
+    font-family: FontAwesome;
+    margin-right: 4px;
+}
+.dt-buttons a span{
+    background-color: #000;
+    color: #FFF;
+    padding: 6px;
+    border-radius: 4px;
+    top: 5px;
+    position: relative;
+}
+.dt-buttons a:hover{
+    text-decoration: none;
+    background-color: transparent;
+}
+.dataTables_filter{
+    float:right;
+}
+.dt-buttons {
+  float: right !important;
+}
+/* ICONS END*/

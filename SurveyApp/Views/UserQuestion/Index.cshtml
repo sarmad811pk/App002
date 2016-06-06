@@ -124,7 +124,7 @@
             <div class="content-wrapper">
                 <hgroup class="title">
 
-                    <h2><i class="ion-ios-information-outline"></i>  You need to complete following questionnaire for <b>@dschild.Tables[0].Rows[0]["Name"].ToString()</b></h2>
+                    <h2><i class="ion-ios-information-outline"></i>  Questionnaire for <b>@dschild.Tables[0].Rows[0]["Name"].ToString()</b></h2>
 
 
                 </hgroup>
@@ -180,7 +180,7 @@
 
                         string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
                         string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
-                        info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a href='" + urlForSurvey + "'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+                        info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a href='" + urlForSurvey + "' title='"+ (index == 0 ? "Previously Due" : "Currently Due") +"'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
                     }
                     i++;
                 }

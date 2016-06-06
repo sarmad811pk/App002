@@ -263,7 +263,7 @@ else
             },
             colors: colors,
             title: {
-                text: '@(userType==1?"Last submited": "Last Submited: Parent")',
+                text: '@(userType==1? "Previously Due" : "Previously Due: Parent")',
                 align: 'center',
                 verticalAlign: 'middle',
                 y: -70,
@@ -324,7 +324,7 @@ else
             },
             colors: colors,
             title: {
-                text: '@(userType==2?"Last submited": "Last Submited: Teacher")',
+                text: '@(userType==2? "Previously Due" : "Previously Due: Teacher")',
                 align: 'center',
                 verticalAlign: 'middle',
                 y: -70,
