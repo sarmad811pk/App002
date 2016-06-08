@@ -1,10 +1,22 @@
 ﻿
 @using System.Data;
+@using SurveyApp.Models;
 
 @{ 
     int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
     int childId = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
     string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+
+    string childName = "";
+    if(childId > 0)
+    {
+        using (var cChild = new ChildContext())
+        {
+            Child objChildTS = cChild.Children.Where(c => c.Id == childId).FirstOrDefault();
+            childName = objChildTS.Name;
+        }
+    }
+
 
     DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts(studyId, WebSecurity.CurrentUserId, childId);
 
@@ -1435,7 +1447,7 @@
     }
 </style>
 
-<h3 style="text-transform:capitalize;">@studyName - Statistical Analysis</h3>
+<h3 style="text-transform:capitalize;">@studyName @(childName != "" ? "(" + childName + ")" : "") - Statistical Analysis</h3>
 
 @if (childId == 0 ) {
     var c = dsCharts.Tables[5].Rows.Count;

@@ -8,19 +8,32 @@
     int studyId = Model == null ? 0 : (int)Model;
     string studyName = "";
     string divSelected = String.IsNullOrEmpty(Request.QueryString["div"]) == true ? "" : Request.QueryString["div"].ToString();
-    
+
     using (StudyContext sContext = new StudyContext())
     {
         Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
         studyId = objStd.Id;
         studyName = objStd.Name;
-    }   
+    }
 
     int childId = String.IsNullOrEmpty(Request.QueryString["childId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childId"]);
 
     var userId = WebSecurity.CurrentUserId;
+    bool isChildAssigned = false;
     System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, 0);
+    if(dschildren != null && dschildren.Tables.Count > 0)
+    {
+        DataRow[] drChildrenAssigned = dschildren.Tables[0].Select("childId = " + childId);
+        if (drChildrenAssigned.Length > 0)
+        {
+            isChildAssigned = true;
+        }
+    }
 
+    if(isChildAssigned == false)
+    {
+        childId = 0;
+    }
 }
 
 <style type="text/css">
