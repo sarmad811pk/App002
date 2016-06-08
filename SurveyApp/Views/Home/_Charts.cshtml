@@ -1436,6 +1436,127 @@
 </style>
 
 <h3 style="text-transform:capitalize;">@studyName - Statistical Analysis</h3>
+
+@if (childId == 0 ) {
+    var c = dsCharts.Tables[5].Rows.Count;
+    DataRow[] drABCGroup = dsCharts.Tables[5].Select("SURVEYid = 4");
+    string temp="{name: '#name#',marker: {symbol: 'circle'},data: [#min#, #max# ]}",
+           ABCg  ="";
+    DataRow[] drSRSGroup = dsCharts.Tables[5].Select("SURVEYid = 5");
+    string SRSg = "";   
+        
+    foreach (DataRow dr in drABCGroup)
+    {
+        ABCg += temp.Replace("#name#",dr["Name"].ToString()).Replace("#min#",dr["minScore"].ToString()).Replace("#max#",dr["maxScore"].ToString()) + ",";
+    }
+    foreach (DataRow dr in drSRSGroup)
+    {
+        SRSg += temp.Replace("#name#", dr["Name"].ToString()).Replace("#min#", dr["minScore"].ToString()).Replace("#max#", dr["maxScore"].ToString()) + ",";
+    }
+    ABCg = ABCg.TrimEnd(',');
+    SRSg = SRSg.TrimEnd(',');
+        <div style="border:solid 1px #cccccc;background:#eaffff;overflow:hidden;padding-top:8px;margin:10px 0px 10px 0px;">
+        <div class="col-sm-6"><div class="dvABCGroup"></div></div>
+        <div class="col-sm-6"><div class="dvSRSGroup"></div></div>
+        </div>
+    <script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
+            $('.dvABCGroup').highcharts({
+                chart: {
+                    type: 'spline',
+                    backgroundColor: null
+                },
+                title: {
+                    text: 'ABC for Group (@studyName)'
+                },
+                subtitle: {
+                    text: 'Base line vs Current'
+                },
+                xAxis: {
+                    categories: ['Base Line<br>*Study Start', 'Current']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Scores'
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value + '';
+                        }
+                    }
+                },
+                tooltip: {
+                    crosshairs: true,
+                    shared: true
+                },
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            radius: 4,
+                            lineColor: '#666666',
+                            lineWidth: 1
+                        }
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [@Html.Raw(ABCg)
+                    ]
+        });
+        //-----------------------------------------End----------------------------------------
+ 
+            //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
+            $('.dvSRSGroup').highcharts({
+                chart: {
+                    type: 'spline',
+                    backgroundColor: null
+                },
+                title: {
+                    text: 'SRS for Group (@studyName)'
+                },
+                subtitle: {
+                    text: 'Base line vs Current'
+                },
+                xAxis: {
+                    categories: ['Base Line<br>*Study Start', 'Current']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Scores'
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value + '';
+                        }
+                    }
+                },
+                tooltip: {
+                    crosshairs: true,
+                    shared: true
+                },
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            radius: 4,
+                            lineColor: '#666666',
+                            lineWidth: 1
+                        }
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [@Html.Raw(SRSg)
+                ]
+            });
+            //-----------------------------------------End----------------------------------------
+    });
+</script>
+    
+}
+
 <table cellpadding="0" cellspacing="0" style="width:100%;">
     <tr>
         <td style="width: 14%;vertical-align: top;">
