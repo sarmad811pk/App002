@@ -224,6 +224,8 @@
       <DependentUpon>aspnet-SurveyApp-20160130102437.mdf</DependentUpon>
     </Content>
     <Content Include="Attachments\Account_Add.html" />
+    <Content Include="Attachments\Child_Study_Assignment.html" />
+    <Content Include="Attachments\Child_Teacher_Assignment.html" />
     <Content Include="Attachments\Reminder.html" />
     <Content Include="Attachments\Account_Update.html" />
     <Content Include="bootstrap\css\components.css" />
@@ -388,7 +390,9 @@
     <Content Include="Scripts\r\g.raphael.js" />
     <Content Include="Scripts\r\raphael.js" />
     <Content Include="Scripts\zxcvbn.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

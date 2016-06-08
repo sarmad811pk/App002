@@ -194,6 +194,7 @@ namespace SurveyApp.Controllers
                 }
 
                 //save child teacher relationship info                
+                List<int> lstTeacherIds = new List<int>();
                 using (var ctContext = new Child_TeacherContext())
                 {
                     if (childModel.Id > 0)
@@ -210,9 +211,12 @@ namespace SurveyApp.Controllers
                             objCT.ChildId = cId;
                             objCT.TeacherId = Convert.ToInt32(collection["TeacherId_" + drT["UserId"].ToString()]);
 
+                            lstTeacherIds.Add(objCT.TeacherId);
                             ctContext.Child_Teachers.Add(objCT);
                         }
                     }
+
+                    
 
                     ctContext.SaveChanges();
                 }
@@ -490,7 +494,37 @@ namespace SurveyApp.Controllers
                     }
                 }
                 #endregion
-                
+
+                #region Emails
+                List<string> lstEmails = new List<string>();
+                List<UserProfile> lstUsers = new List<UserProfile>();
+                using (var cUP = new UsersContext())
+                {
+                    lstUsers = cUP.UserProfiles.ToList();
+                }
+
+                foreach (int id in lstTeacherIds)
+                {
+                    foreach(UserProfile objUP in lstUsers)
+                    {
+                        if(objUP.UserId == id)
+                        {
+                            lstEmails.Add(objUP.UserName);
+                        }
+                    }   
+                }
+
+                string body = "";
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Child_Teacher_Assignment.html")))
+                {
+                    body = reader.ReadToEnd();
+                }
+                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
+                body = body.Replace("_CHIDLREN_", childModel.Name);
+
+                SMTPHelper.SendGridEmail("USFEBIT SurveyApp - Child_Assignment", body, lstEmails, true, null, null);
+                #endregion
+
             }
             catch (Exception ex)
             {
