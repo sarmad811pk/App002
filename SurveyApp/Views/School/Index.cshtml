@@ -12,7 +12,8 @@
 </script>
 <div>
     <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">School Management</h2>
-    @Html.ActionLink("Add School", "SchoolAddEdit", "School", new object { }, new { @class = "btn btn-default", style = "float:right;" })
+    <a href="@Url.Action("SchoolAddEdit", "School")" class="btn btn-default" style="float:right;"><i class="fa fa-graduation-cap"></i>&nbsp;Add School</a>
+    @*@Html.ActionLink("Add School", "SchoolAddEdit", "School", new object { }, new { @class = "btn btn-default", style = "float:right;" })*@
 </div>
 <div style="clear:both;"></div>
 <br />

@@ -13,7 +13,8 @@
 
 <div>
     <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Study Management</h2>
-    @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-default", style = "float:right;" })
+    <a href="@Url.Action("StudyAddEdit", "Study")" class="btn btn-default" style="float:right;"><i class="fa fa-book"></i>&nbsp;Add Study</a>
+    @*@Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-default", style = "float:right;" })*@
 </div>
 <div style="clear:both;"></div>
 <br />
