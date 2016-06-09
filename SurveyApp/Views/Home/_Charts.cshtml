@@ -327,14 +327,14 @@
             ,plotLines: [
                 @foreach(LifeEventChart objLEC in lstABCPTLifeEvents)
                 {
-                    @Html.Raw("{color: '#93CDDD', width: 2, value: ["+ objLEC.IndexOnChart +"], dashStyle: 'LongDash', label: { text: '"+ objLEC.EventsName +"' }, ID: 'LF'},")
+                    @Html.Raw("{color: '#93CDDD', width: 2, value: ["+ objLEC.IndexOnChart +"], dashStyle: 'LongDash', label: { text: '"+ objLEC.EventsName +"' }, ID: 'LF"+ objLEC.IndexOnChart +"'},")
                 }
             ]
         },
         yAxis: {
             max:200,
             plotLines: [{
-                value: 195, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'SRS Max(195)', style: { "color": "#333333", "fontSize": "10px", "margin-left" } }
+                value: 195, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'SRS Max(195)', style: { "color": "#333333", "fontSize": "10px" } }
             },
             {
                 value: 140, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'ABC Max(174)', style: { "color": "#333333", "fontSize": "10px" } }
@@ -1785,7 +1785,7 @@
                 </div>*@
                 </div>
                 <div class="row voffset weeklydiv" >
-                    @*@{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}*@
+                    @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
 
                 </div>
 
