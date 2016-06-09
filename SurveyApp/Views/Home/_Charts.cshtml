@@ -41,6 +41,11 @@
 
     //Auditory Sensitivity Taste/Smell Sensitivity  Underresponsiveness Visual Sensitivity  Questionnaire
 
+    /* LIFE EVENTS */
+    List<LifeEventChart> lstABCPTLifeEvents = new List<LifeEventChart>();
+    int indexLE = 0;
+
+
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
     {
         #region Aberrant Behavior Checklist Social Responsiveness Scale
@@ -48,7 +53,12 @@
         foreach(DataRow dr in drABCP)
         {
             dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            if(dr["EventName"] != DBNull.Value)
+            {
+                lstABCPTLifeEvents.Add(new LifeEventChart { IndexOnChart = indexLE, EventsName = dr["EventName"].ToString() });
+            }
             pABC += dr["Score"] + ",";
+            indexLE++;
         }
         DataRow[] drABCT = dsCharts.Tables[1].Select("SURVEYid = 4");
         foreach (DataRow dr in drABCT)
@@ -314,23 +324,17 @@
         },
         xAxis: {
             categories: [@Html.Raw(dABC.Trim(','))]
-            //,plotLines: [{
-            //    color: '#93CDDD',
-            //    width: 2,
-            //    value: 0.6,
-            //    dashStyle: 'LongDash',
-            //    label: {
-            //        text: 'Last quarter minimum'
-            //    },
-            //    ID:'LF'
-            //}]
-
-
+            ,plotLines: [
+                @foreach(LifeEventChart objLEC in lstABCPTLifeEvents)
+                {
+                    @Html.Raw("{color: '#93CDDD', width: 2, value: ["+ objLEC.IndexOnChart +"], dashStyle: 'LongDash', label: { text: '"+ objLEC.EventsName +"' }, ID: 'LF'},")
+                }
+            ]
         },
         yAxis: {
             max:200,
             plotLines: [{
-                value: 195, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'SRS Max(195)', style: { "color": "#333333", "fontSize": "10px" } }
+                value: 195, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'SRS Max(195)', style: { "color": "#333333", "fontSize": "10px", "margin-left" } }
             },
             {
                 value: 140, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'ABC Max(174)', style: { "color": "#333333", "fontSize": "10px" } }
@@ -1781,7 +1785,7 @@
                 </div>*@
                 </div>
                 <div class="row voffset weeklydiv" >
-                    @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
+                    @*@{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}*@
 
                 </div>
 
