@@ -1,5 +1,6 @@
 ﻿@*@Html.ActionLink(dr["Title"].ToString(), "Survey",null, new { id = dr["ID"].ToString() },ew with {.class = "tab" })*@
 @using SurveyApp.Models;
+@using System.Data;
 @{
     var c = ViewContext.RouteData.Values["Controller"].ToString();
     int? childID = (int?)TempData["ChildID"];
@@ -38,9 +39,9 @@
             <a class='list-group-item @(c == "UserQuestion" && childID ==null ? " active" : "") ' href="@Url.Action("Index", "UserQuestion", new { })"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
             <div class="list-group-item" style="height: 38px;padding:2px;">
                 <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;">
-                    @foreach (SurveyApp.Models.Study objStudy in SurveyApp.Models.Study.StudyGetAll())
+                    @foreach (DataRow drStd in dschild.Tables[1].Rows)
                     {
-                        <option value="@objStudy.Id" @(studyId == objStudy.Id ? "selected=selected" : "")>@objStudy.Name</option>
+                        <option value="@drStd["Id"]" @(studyId == (int)drStd["Id"] ? "selected=selected" : "")>@drStd["Name"]</option>
                     }
                 </select>
             </div>
