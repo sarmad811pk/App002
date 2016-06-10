@@ -1,6 +1,6 @@
 ﻿@using System.Data;
 @{
-    ViewBag.Title = "Parent/Teacher Management";
+    ViewBag.Title = "eBit - User Manager";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     DataSet dsUsers = SurveyApp.DataHelper.UserManagementGetUsers();
@@ -8,13 +8,13 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblUsers").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Users_List' }] });
+        $("#tblUsers").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Users_List' }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Users" } });
     });    
 </script>
 
 
 <div>
-    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">User Management</h2>
+    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">User Manager</h2>
     <a href="@Url.Action("ParentTeacherAddEdit", "ParentTeacher")" class="btn btn-default" style="float:right;"><i class="fa fa-user-plus"></i>&nbsp;Add User</a>
     @*@Html.ActionLink("Add User", "ParentTeacherAddEdit", "ParentTeacher", new object { }, new { @class = "btn btn-default", style = "float:right;" })*@ 
 </div>

@@ -1,17 +1,17 @@
 ﻿@using System.Data;
 @{
-    ViewBag.Title = "School Management";
+    ViewBag.Title = "eBit - School Manager";
     Layout = "~/Views/Shared/_Layout.cshtml";
     DataSet ds = SurveyApp.DataHelper.SchoolGetAll();
 }
 
 <script type="text/javascript">
     $(function () {
-        $("#tblSchools").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Shools_List' }] });
+        $("#tblSchools").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Shools_List' }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Schools" } });
     });
 </script>
 <div>
-    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">School Management</h2>
+    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">School Manager</h2>
     <a href="@Url.Action("SchoolAddEdit", "School")" class="btn btn-default" style="float:right;"><i class="fa fa-graduation-cap"></i>&nbsp;Add School</a>
     @*@Html.ActionLink("Add School", "SchoolAddEdit", "School", new object { }, new { @class = "btn btn-default", style = "float:right;" })*@
 </div>

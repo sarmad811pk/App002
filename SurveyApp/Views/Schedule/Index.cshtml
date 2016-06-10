@@ -1,6 +1,6 @@
 ﻿@using System.Data;
 @{
-    ViewBag.Title = "Schedule Manager";
+    ViewBag.Title = "eBit - Schedule Manager";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var dsSchedules = SurveyApp.DataHelper.ScheduleGetAll();
 }
@@ -55,11 +55,11 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblSchedules").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Schedules_List' }] });
+        $("#tblSchedules").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Schedules_List' }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Schedules" } });
     });
 </script>
 <div>
-    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Schedule Management</h2>
+    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Schedule Manager</h2>
     <a href="@Url.Action("ScheduleAddEdit", "Schedule")" class="btn btn-default" style="float:right;"><i class="fa fa-calendar-check-o"></i>&nbsp;Add Schedule</a>
     @*@Html.ActionLink("Add Schedule", "ScheduleAddEdit", "Schedule", new object { }, new { @class = "btn btn-default", style = "float:right;" })*@
 </div>
