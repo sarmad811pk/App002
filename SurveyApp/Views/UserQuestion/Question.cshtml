@@ -6,7 +6,7 @@
     System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid), WebSecurity.CurrentUserId, fetchdate);
     var qGroup = "";
     var SurveyID = Model ?? 1;
-    ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString() + " - Preview";
+    ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString();
     Layout = "~/Views/Shared/_Layout.cshtml";
     var childname = Request.QueryString["ChildName"];
 }
@@ -17,7 +17,7 @@
     }
 
         .questions h1._title {
-            font-weight: normal;
+            font-weight:normal;
             margin: 0px;
             padding: 0px;
             font-size: 14px;
@@ -284,7 +284,7 @@
 
             $("textarea, input[type=text]").blur(function () {                  
                 if ($(this).hasClass("hasDatepicker") == true || $(this).hasClass("_txtdatepicker")) { return; }
-                if ($(this).attr("data-tmed") == "tmed" || $(this).attr("data-sch") == "tsch") {
+                if ($(this).attr("data-tmed") == "tmed" || $(this).attr("data-sch") == "tsch" || $(this).attr("data-schdiet") == "tschdiet") {
 
                     var qid = $(this).attr("qid")
                     if ($(this).attr("data-tmed") == "tmed") {
@@ -302,7 +302,15 @@
                         var allanst = "|" + at1 + "|" + at2 + "|" + at3 + "|" + at4;
                         $("#hdn" + $(this).attr("qid")).val(allanst).trigger('change');
                     }
+                    if ($(this).attr("data-schdiet") == "tschdiet") {
 
+                        var at1 = $('[data-id=t1' + qid + ']').val();
+                        var at2 = $('[data-id=t2' + qid + ']').val();
+                        var at3 = $('[data-id=t3' + qid + ']').val(); 
+
+                        var allanst = "|" + at1 + "|" + at2 + "|" + at3;
+                        $("#hdn" + $(this).attr("qid")).val(allanst).trigger('change');
+                    }
                 }
 
                 else {
@@ -855,8 +863,8 @@
         var tdate = "<div class='#c#'><input class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#'></div>";
         var tmed = @"<div class='#c#'>
                       <div class='row'>
-                        <div class='_spacing col-sm-1 _medlbl'>Indication</div>
-                        <div class='_spacing col-sm-11'><input class='form-control' data-tmed='tmed' data-md='m1#q#' data-score='#sc#' placeholder='Indication' type='text' qid='#q#' name='q#q#' id='q#q#_0' value='#si1#'></div>
+                        <div class='_spacing col-sm-1 _medlbl'>Details</div>
+                        <div class='_spacing col-sm-11'><input class='form-control' data-tmed='tmed' data-md='m1#q#' data-score='#sc#' placeholder='Details and Indication' type='text' qid='#q#' name='q#q#' id='q#q#_0' value='#si1#'></div>
                         <div class='_spacing col-sm-1 _medlbl'>Dosage</div>
                         <div class='_spacing col-sm-5'>
                             <div class='col-sm-6' style='padding:0px;'><input class='form-control' data-tmed='tmed' data-md='m2#q#' data-score='#sc#' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si2#'></div>
@@ -881,6 +889,14 @@
                     <div class='col-sm-3'><input class='form-control' data-sch='tsch' data-id='t2#q#' placeholder='Time/Session' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'></div>
                     <div class='col-sm-3'><input class='form-control' data-sch='tsch' data-id='t3#q#' placeholder='Start (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'></div>
                     <div class='col-sm-3'><input class='form-control' data-sch='tsch' data-id='t4#q#' placeholder='End (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si3#'></div>
+                    </div>";
+        var tschdiet = @"<div class='#c#'>  
+                        <div class='col-sm-6 _schlbl'>Diet Details</div>
+                        <div class='col-sm-3 _schlbl'>Start Date (mm-yy)</div>
+                        <div class='col-sm-3 _schlbl'>End Date (mm-yy)</div>    
+                    <div class='col-sm-6'><input class='form-control' data-schdiet='tschdiet' data-id='t1#q#' placeholder='Details' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si0#'></div>
+                    <div class='col-sm-3'><input class='form-control' data-schdiet='tschdiet' data-id='t2#q#' placeholder='Start (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'></div>
+                    <div class='col-sm-3'><input class='form-control' data-schdiet='tschdiet' data-id='t3#q#' placeholder='End (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'></div>
                     </div>";
         var tcheckdate = "<div class='#c#  form-inline'><input type='checkbox' #chk# qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='col-sm-1' style='margin-top:10px;' onclick='enableDate(this,\"q#q#_1\")'><div class='col-sm-10'><input disabled='disabled' placeholder='Select Date' class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div></div>";
         var ttextdate = "<div class='#c#  form-inline'>" +
@@ -1015,6 +1031,22 @@
 
 
                 temp += temptsch;
+            }
+            else if (type == "schdiet")
+            {
+                var temptschdiet = "";
+
+                if (multians.Length >= 3)
+                {
+                    temptschdiet = tschdiet.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si0#", multians[0]).Replace("#si1#", multians[1]).Replace("#si2#", multians[2]);
+                }
+                else
+                {
+                    temptschdiet = tschdiet.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si0#", "").Replace("#si1#", "").Replace("#si2#", "").Replace("#si3#", "");
+                }
+
+
+                temp += temptschdiet;
             }
             else if (type == "checkdate")
             {
