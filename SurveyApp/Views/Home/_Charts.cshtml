@@ -42,8 +42,8 @@
     //Auditory Sensitivity Taste/Smell Sensitivity  Underresponsiveness Visual Sensitivity  Questionnaire
 
     /* LIFE EVENTS */
-    List<LifeEventChart> lstABCPTLifeEvents = new List<LifeEventChart>();
-    int indexLE = 0;
+    //List<LifeEventChart> lstABCPTLifeEvents = new List<LifeEventChart>();
+    //int indexLE = 0;
 
 
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
@@ -55,10 +55,10 @@
             dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             if(dr["EventName"] != DBNull.Value)
             {
-                lstABCPTLifeEvents.Add(new LifeEventChart { IndexOnChart = indexLE, EventsName = dr["EventName"].ToString() });
+                //lstABCPTLifeEvents.Add(new LifeEventChart { IndexOnChart = indexLE, EventsName = dr["EventName"].ToString() });
             }
             pABC += dr["Score"] + ",";
-            indexLE++;
+            //indexLE++;
         }
         DataRow[] drABCT = dsCharts.Tables[1].Select("SURVEYid = 4");
         foreach (DataRow dr in drABCT)
@@ -324,12 +324,12 @@
         },
         xAxis: {
             categories: [@Html.Raw(dABC.Trim(','))]
-            ,plotLines: [
+            @*,plotLines: [
                 @foreach(LifeEventChart objLEC in lstABCPTLifeEvents)
                 {
                     @Html.Raw("{color: '#93CDDD', width: 2, value: ["+ objLEC.IndexOnChart +"], dashStyle: 'LongDash', label: { text: '"+ objLEC.EventsName +"' }, ID: 'LF"+ objLEC.IndexOnChart +"'},")
                 }
-            ]
+            ]*@
         },
         yAxis: {
             max:200,
