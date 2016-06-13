@@ -53,10 +53,10 @@
         foreach(DataRow dr in drABCP)
         {
             dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            if(dr["EventName"] != DBNull.Value)
-            {
-                //lstABCPTLifeEvents.Add(new LifeEventChart { IndexOnChart = indexLE, EventsName = dr["EventName"].ToString() });
-            }
+            //if(dr["EventName"] != DBNull.Value)
+            //{
+            //    //lstABCPTLifeEvents.Add(new LifeEventChart { IndexOnChart = indexLE, EventsName = dr["EventName"].ToString() });
+            //}
             pABC += dr["Score"] + ",";
             //indexLE++;
         }
