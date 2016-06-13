@@ -76,6 +76,7 @@
     .comparison .tilttitle{position:absolute;display: inline-block;transform: rotate(-40deg);top: -3px;left: 6px;right: 0;margin-left: auto;margin-right: auto;white-space: nowrap;}
     .comparison .nodata{margin: 25px;text-align: center;}
     .comparison .linker.disabled{background-color: #CCC;cursor: help;}
+    .ui-tooltip {max-width: 400px;}
 </style>
 
 <div class="comparison">
@@ -165,7 +166,7 @@
                                             {
                                                 <tr>
                                                     <td class="dot">
-                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
+                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"] <br/> Last Reminder Sent On: @drTeacher["ReminderDate"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
                                                     </td>
                                                     <td class="name">
                                                         <i class="ion-university"></i> @drTeacher["Teacher"]
@@ -180,7 +181,7 @@
                                         <table class="dots tblPrevious" style="display:none;width:100%;">
                                             <tr>
                                                 <td class="dot">
-                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"] <br/> Last Reminder Sent On: @drChild["ReminderDate"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
                                                 </td>  
                                                 <td class="name">
                                                     <i class="ion-home"></i> @drChild["Parent"]
@@ -232,7 +233,11 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip({
+            content: function () {
+                return $(this).attr('title').replace(/<br\/>/g, "<br/>");
+            },
+        });
     });
 
     function showHideChildren(elem) {

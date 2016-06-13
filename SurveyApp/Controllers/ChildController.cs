@@ -252,7 +252,17 @@ namespace SurveyApp.Controllers
                                             using (var scContext = new ScheduleContext())
                                             {
                                                 Schedule objSchedule = scContext.Schedules.Where(sc => sc.Id == objSSS.ScheduleIdParent).ToArray().FirstOrDefault();
-                                                DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : DateTime.MinValue;
+                                                DateTime specificWeekday = DateTime.MinValue;
+                                                if (objSchedule.Weekday > 0)
+                                                {
+                                                    specificWeekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                    while (specificWeekday.DayOfWeek != (DayOfWeek)(objSchedule.Weekday - 1))
+                                                    {
+                                                        specificWeekday = specificWeekday.AddDays(1);
+                                                    }
+                                                }
+                                                DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
+
                                                 DateTime endDate = DateTime.MinValue;
 
                                                 if (objSchedule.Frequency == 1)
