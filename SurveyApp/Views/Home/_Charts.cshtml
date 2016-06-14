@@ -39,6 +39,9 @@
     string dpPQLg = "", aspPQLg = "", tstpPQLg = "";
     string dpWLCg = "", aspWLCg = "", tstpWLCg = "";
 
+    string dpADAM = "", dtADAM = "", pADAM = "", tADAM = "";
+    string dpVanderbilt = "", dtVanderbilt = "", pVanderbilt = "", tVanderbilt = "";
+
     //Auditory Sensitivity Taste/Smell Sensitivity  Underresponsiveness Visual Sensitivity  Questionnaire
 
     /* LIFE EVENTS */
@@ -89,6 +92,36 @@
         foreach (DataRow dr in drASPT)
         {
             tASP += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Anxiety Depression and Mood Scale
+        DataRow[] drPADAM = dsCharts.Tables[0].Select("SURVEYid = 35");
+        foreach (DataRow dr in drPADAM)
+        {
+            dpADAM += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pADAM += dr["Score"] + ",";
+        }
+        DataRow[] drTADAM = dsCharts.Tables[1].Select("SURVEYid = 35");
+        foreach (DataRow dr in drTADAM)
+        {
+            dtADAM += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tADAM += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Vanderbilt Adhd Diagnostic Teacher Rating Scale
+        DataRow[] drPVanderbilt = dsCharts.Tables[0].Select("SURVEYid = 34");
+        foreach (DataRow dr in drPVanderbilt)
+        {
+            dpVanderbilt += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pVanderbilt += dr["Score"] + ",";
+        }
+        DataRow[] drTVanderbilt = dsCharts.Tables[1].Select("SURVEYid = 34");
+        foreach (DataRow dr in drTVanderbilt)
+        {
+            dtVanderbilt += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tVanderbilt += dr["Score"] + ",";
         }
         #endregion
 
@@ -1411,6 +1444,230 @@
     });
 </script>*@
 
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Anxiety Depression and Mood Scale--PARENT--------------------------------------
+    $('#pADAM').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Anxiety Depression and Mood Scale'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dpADAM.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pADAM.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Vanderbilt Adhd Diagnostic Teacher Rating Scale--PARENT--------------------------------------
+        $('#pVanderbilt').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Vanderbilt Adhd Diagnostic Teacher Rating Scale'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dpVanderbilt.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pVanderbilt.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Anxiety Depression and Mood Scale----TEACHER------------------------------------
+    $('#tADAM').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Anxiety Depression and Mood Scale'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dtADAM.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tADAM.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Vanderbilt Adhd Diagnostic Teacher Rating Scale----TEACHER------------------------------------
+        $('#tVanderbilt').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Vanderbilt Adhd Diagnostic Teacher Rating Scale'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dtVanderbilt.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tVanderbilt.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
 <style type="text/css">
     .voffset {
         margin-top: 10px;
@@ -1729,7 +1986,7 @@
                 </div>           
         </td>
         <td style="width: 84%;border: solid 1px #CCC;">
-            <div class="gDetails">
+            <div class="gDetails" style="margin-top: 40px;">
                 <div class="parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6"><div class="dvABCGroup"></div></div>
                     <div class="col-sm-6"><div class="dvSRSGroup"></div></div>
@@ -1805,6 +2062,17 @@
                 <div class="row voffset weeklydiv" >
                     @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
 
+                </div>
+
+
+                <div class="parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                    <div class="col-sm-6"><div id="pADAM"></div></div>
+                    <div class="col-sm-6"><div id="pVanderbilt"></div></div>
+                </div>
+
+                <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                    <div class="col-sm-6"><div id="tADAM"></div></div>
+                    <div class="col-sm-6"><div id="tVanderbilt"></div></div>
                 </div>
 
                 @*<div class="row voffset">
