@@ -56,6 +56,7 @@
     .tblComparison{background-color: #FFF;}
     .tblComparison .hdhelper{font-weight: normal;cursor: pointer;color:#000000;}
     .name{border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;width: 140px;padding: 2px;}
+    .name span{cursor:pointer;}
     .dots td{padding: 2px;}    
     .dots .dot{width: 43px;text-align: center;border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;cursor:pointer;}
     .complete{color:#33B86C;}
@@ -155,7 +156,7 @@
                                                     <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
                                                 </td>
                                                 <td class="name">
-                                                   <i class="ion-home"></i> @drChild["Parent"]
+                                                   <i class="ion-home"></i> @drChild["Parent"] @if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
@@ -166,10 +167,10 @@
                                             {
                                                 <tr>
                                                     <td class="dot">
-                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"] <br/> Last Reminder Sent On: @drTeacher["ReminderDate"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
+                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
                                                     </td>
                                                     <td class="name">
-                                                        <i class="ion-university"></i> @drTeacher["Teacher"]
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"] @if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
@@ -181,10 +182,10 @@
                                         <table class="dots tblPrevious" style="display:none;width:100%;">
                                             <tr>
                                                 <td class="dot">
-                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"] <br/> Last Reminder Sent On: @drChild["ReminderDate"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
                                                 </td>  
                                                 <td class="name">
-                                                    <i class="ion-home"></i> @drChild["Parent"]
+                                                    <i class="ion-home"></i> @drChild["Parent"]@if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
@@ -198,7 +199,7 @@
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
                                                     </td>  
                                                     <td class="name">
-                                                        <i class="ion-university"></i> @drTeacher["Teacher"]
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"]@if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
@@ -227,8 +228,8 @@
                 </div>
             }
 
-        </div>    
-    
+        </div>
+
 </div>
 
 <script type="text/javascript">
@@ -335,6 +336,9 @@
     }
 
     function sendReminder(elem) {
+        if ($(elem).hasClass("disabled")) {
+            return false;
+        }
         var respos = new Array();
         $(".tblComparison").find(".checkReminder").each(function (index, obj) {            
             if ($(obj)[0].checked == true && $(obj).attr("email") != "") {
@@ -354,11 +358,11 @@
             async: true,
             success: function (data) {
                 if (data.success == true) {
-                    alert("An email about the survey completion has been sent to selected respondent(s).");
+                    alert("An email about the survey completion has been sent to the selected respondent(s).");
                 }
                 else {
                     alert("We are unable to send email at this time, please try again later.");
-                }
+                }                
             },
             error: function (errss) {
                 result = false;

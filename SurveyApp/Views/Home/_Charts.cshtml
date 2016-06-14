@@ -317,10 +317,10 @@
             type: 'spline'
         },
         title: {
-            text: 'ABC vs SRS'
+            text: 'ABC vs SRS <span style="font-size:13px;">(Parent vs Teacher)</span>'
         },
         subtitle: {
-            text: 'Parent/Teacher Quaterly Trend<br/>*Low is better'
+            text: '*Lower is Better'
         },
         xAxis: {
             categories: [@Html.Raw(dABC.Trim(','))]
@@ -622,10 +622,10 @@
             type: 'spline'
         },
         title: {
-            text: 'Social Responsivness Scale(SRS) sub scale'
+            text: 'Social Responsivness Scale <span style="font-size:13px;">(sub scale)</span>'
         },
         subtitle: {
-            text: '*Lower is better'
+            text: '*Lower is Better'
         },
         xAxis: {
             categories: [@Html.Raw(dpSRSg.Trim(','))]
@@ -729,10 +729,10 @@
             type: 'spline'
         },
         title: {
-            text: 'Social Responsivness Scale(SRS) sub scales'
+            text: 'Social Responsivness Scale <span style="font-size:13px;">(sub scale)</span>'
         },
         subtitle: {
-            text: '*Lower is better'
+            text: '*Lower is Better'
         },
         xAxis: {
             categories: [@Html.Raw(dtSRSg.Trim(','))]
@@ -896,10 +896,10 @@
             type: 'spline'
         },
         title: {
-            text: 'Abbreviated Sensory Profile'
+            text: 'Abbreviated Sensory Profile <span style="font-size:13px;">(Parent vs Teacher)</span>'
         },
         subtitle: {
-            text: 'Parent vs Teacher<br/>*low is better'
+            text: '*Lower is Better'
         },
         xAxis: {
             categories: [@Html.Raw(dASP.Trim(','))]
@@ -1080,7 +1080,7 @@
             text: 'Caregiver Strain Quesionnaire'
         },
         subtitle: {
-            text: '*Lower is better'
+            text: '*Lower is Better'
         },
         xAxis: {
             categories: [@Html.Raw(dCareGiver.TrimEnd(','))]
@@ -1190,7 +1190,7 @@
             text: 'GI Severity Index'
         },
         subtitle: {
-            text: '*Lower is better'
+            text: '*Lower is Better'
         },
         xAxis: {
             categories: [@Html.Raw(dGSI.TrimEnd(','))]
@@ -1453,7 +1453,8 @@
 
 <h3 style="text-transform:capitalize;">@studyName @(childName != "" ? "(" + childName + ")" : "") - Statistical Analysis</h3>
 
-@if (childId == 0 ) {
+@if (childId == 0 || childId != 0)
+{
     var c = dsCharts.Tables[5].Rows.Count;
     DataRow[] drABCGroup = dsCharts.Tables[5].Select("SURVEYid = 4");
     string temp = "{name: '#name#',marker: {symbol: 'circle'},data: [#min#, #max# ]}",
@@ -1471,8 +1472,10 @@
     }
     ABCg = ABCg.TrimEnd(',');
     SRSg = SRSg.TrimEnd(',');
-        
-    <script type="text/javascript">
+
+    if (drABCGroup.Length > 0)
+    {
+        <script type="text/javascript">
     $(function () {
         //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
             $('.dvABCGroup').highcharts({
@@ -1481,10 +1484,10 @@
                     backgroundColor: null
                 },
                 title: {
-                    text: 'ABC for Group (@studyName)'
+                    text: 'Aberrant  Behaviour Checklist <span style="font-size:13px;">(Base line vs Current)</span>'
                 },
                 subtitle: {
-                    text: 'Base line vs Current'
+                    text: '*Lower is Better'
                 },
                 xAxis: {
                     categories: ['Base Line<br>*Study Start', 'Current']
@@ -1519,55 +1522,62 @@
                     ]
         });
         //-----------------------------------------End----------------------------------------
- 
-            //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
-            $('.dvSRSGroup').highcharts({
-                chart: {
-                    type: 'spline',
-                    backgroundColor: null
-                },
-                title: {
-                    text: 'SRS for Group (@studyName)'
-                },
-                subtitle: {
-                    text: 'Base line vs Current'
-                },
-                xAxis: {
-                    categories: ['Base Line<br>*Study Start', 'Current']
-                },
-                yAxis: {
-                    title: {
-                        text: 'Scores'
-                    },
-                    labels: {
-                        formatter: function () {
-                            return this.value + '';
-                        }
-                    }
-                },
-                tooltip: {
-                    crosshairs: true,
-                    shared: true
-                },
-                plotOptions: {
-                    spline: {
-                        marker: {
-                            radius: 4,
-                            lineColor: '#666666',
-                            lineWidth: 1
-                        }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [@Html.Raw(SRSg)
-                ]
-            });
-            //-----------------------------------------End----------------------------------------
     });
-</script>
+        </script>
+    }
 
+    if(drSRSGroup.Length > 0)
+    {
+        <script type="text/javascript">
+            $(function(){
+                //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
+                $('.dvSRSGroup').highcharts({
+                    chart: {
+                        type: 'spline',
+                        backgroundColor: null
+                    },
+                    title: {
+                        text: 'Social Responsivness Scale <span style="font-size:13px;">(Base line vs Current)</span>'
+                    },
+                    subtitle: {
+                        text: '*Lower is Better'
+                    },
+                    xAxis: {
+                        categories: ['Base Line<br>*Study Start', 'Current']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Scores'
+                        },
+                        labels: {
+                            formatter: function () {
+                                return this.value + '';
+                            }
+                        }
+                    },
+                    tooltip: {
+                        crosshairs: true,
+                        shared: true
+                    },
+                    plotOptions: {
+                        spline: {
+                            marker: {
+                                radius: 4,
+                                lineColor: '#666666',
+                                lineWidth: 1
+                            }
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [@Html.Raw(SRSg)
+                    ]
+                });
+                //-----------------------------------------End----------------------------------------
+            });
+        </script>
+    }
 
 
 
@@ -1591,54 +1601,62 @@
     ABCgTeacher = ABCgTeacher.TrimEnd(',');
     SRSgTeacher = SRSgTeacher.TrimEnd(',');
 
+    if(drABCGroupTeacher.Length > 0)
+    {
         <script type="text/javascript">
-    $(function () {
-        //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
-        $('.dvABCGroupTeacher').highcharts({
-                chart: {
-                    type: 'spline',
-                    backgroundColor: null
-                },
-                title: {
-                    text: 'ABC for Group (@studyName)'
-                },
-                subtitle: {
-                    text: 'Base line vs Current'
-                },
-                xAxis: {
-                    categories: ['Base Line<br>*Study Start', 'Current']
-                },
-                yAxis: {
-                    title: {
-                        text: 'Scores'
+            $(function () {
+                //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
+                $('.dvABCGroupTeacher').highcharts({
+                    chart: {
+                        type: 'spline',
+                        backgroundColor: null
                     },
-                    labels: {
-                        formatter: function () {
-                            return this.value + '';
+                    title: {
+                        text: 'Aberrant  Behaviour Checklist <span style="font-size:13px;">(Base line vs Current)</span>'
+                    },
+                    subtitle: {
+                        text: '*Lower is Better'
+                    },
+                    xAxis: {
+                        categories: ['Base Line<br>*Study Start', 'Current']
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Scores'
+                        },
+                        labels: {
+                            formatter: function () {
+                                return this.value + '';
+                            }
                         }
-                    }
-                },
-                tooltip: {
-                    crosshairs: true,
-                    shared: true
-                },
-                plotOptions: {
-                    spline: {
-                        marker: {
-                            radius: 4,
-                            lineColor: '#666666',
-                            lineWidth: 1
+                    },
+                    tooltip: {
+                        crosshairs: true,
+                        shared: true
+                    },
+                    plotOptions: {
+                        spline: {
+                            marker: {
+                                radius: 4,
+                                lineColor: '#666666',
+                                lineWidth: 1
+                            }
                         }
-                    }
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [@Html.Raw(ABCgTeacher)
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [@Html.Raw(ABCgTeacher)
                     ]
-        });
-        //-----------------------------------------End----------------------------------------
-
+                });
+                //-----------------------------------------End----------------------------------------
+            });
+        </script>
+    }
+    if (drSRSGroupTeacher.Length > 0)
+    {
+        <script type="text/javascript">
+            $(function () {
             //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
         $('.dvSRSGroupTeacher').highcharts({
                 chart: {
@@ -1646,10 +1664,10 @@
                     backgroundColor: null
                 },
                 title: {
-                    text: 'SRS for Group (@studyName)'
+                    text: 'Social Responsivness Scale <span style="font-size:13px;">(Base line vs Current)</span>'
                 },
                 subtitle: {
-                    text: 'Base line vs Current'
+                    text: '*Lower is Better'
                 },
                 xAxis: {
                     categories: ['Base Line<br>*Study Start', 'Current']
@@ -1686,7 +1704,7 @@
             //-----------------------------------------End----------------------------------------
     });
         </script>
-
+    }
 
 }
 

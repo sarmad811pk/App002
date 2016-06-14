@@ -81,6 +81,12 @@
             width: 25px; 
             font-weight:bold;
         }
+        .lowFilled span{
+            color: #DE0000 !important; 
+        }
+        .medFilled span{
+            color: #FF7272 !important;             
+        }
 
         .text-left {
             text-align: left;
@@ -180,7 +186,8 @@
 
                         string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
                         string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
-                        info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a href='" + urlForSurvey + "' title='"+ (index == 0 ? "Previously Due" : "Currently Due") +"'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+                        int percInt = Convert.ToInt32(percentage.Replace("%", ""));
+                        info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a class='"+ (percInt < 50 ? "lowFilled" : (percInt < 100 && percInt > 50 ? "medFilled" : "")) +"' href='" + urlForSurvey + "' title='"+ (index == 0 ? "Previously Due" : "Currently Due") +"'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
                     }
                     i++;
                 }
