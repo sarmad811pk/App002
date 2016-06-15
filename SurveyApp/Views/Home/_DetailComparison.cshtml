@@ -23,40 +23,59 @@
 
 @functions{
 
-    DataTable dtChildren, dtTeachers, dtSurveys, dtTotalSurveys;
+            DataTable dtChildren, dtTeachers, dtSurveys, dtTotalSurveys;
 
-    public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype)
-    {
-        string value = "";
-        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = "+ surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL)");
-        foreach(DataRow drS in drSurveys)
-        {
-            if((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
+            public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype)
             {
-                string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
-                string title = (cssClass == "complete" ? "This survey is complete" : (cssClass == "incomplete" ? "This survey is partially complete" : (cssClass == "notstarted" ? "This survey has not started yet" : "Child is not scheduled for this survey")));
-                value = "<span><i data-toggle='tooltip' title='" + title + "' class='ion-record " + cssClass + "'></i></span>";
+                string value = "";
+                string notstarted = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This survey has not started yet'></i></span>";
+                string notapplicable = "<span><i class='ion-android-radio-button-off notenrolled' data-toggle='tooltip' title='Not applicable to respond'></i></span>";
+                string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this survey'></i></span>";
+
+                DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = "+ surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL)");
+                foreach(DataRow drS in drSurveys)
+                {
+                    if((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
+                    {
+                        string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
+                        string title = (cssClass == "complete" ? "This survey is complete" : (cssClass == "incomplete" ? "This survey is partially complete" : (cssClass == "notstarted" ? "This survey has not started yet" : "Child is not scheduled for this survey")));
+                        value = "<span><i data-toggle='tooltip' title='" + title + "' class='ion-record " + cssClass + "'></i></span>";
+                        return value;
+                    }
+                    else
+                    {
+                        if(drS["ScheduleDate"] == DBNull.Value && drS["UserID"] == DBNull.Value)
+                        {                            
+                            if (surveyId == 6 || surveyId == 7 || surveyId == 8 || surveyId == 9)
+                            {
+                                DataRow[] drChildren = dtChildren.Select("ChildId = " + childId);
+                                if(drChildren.Length > 0)
+                                {
+                                    int age = DateTime.Today.Year - Convert.ToDateTime(drChildren[0]["dob"]).Year;
+                                    if (surveyId == 6) { if (age <= 4 && age >= 2 && surveyId == 6) { value = notstarted; } else { value = notapplicable; } }
+                                    if (surveyId == 7) { if (age <= 7 && age >= 5 && surveyId == 7) { value = notstarted; } else { value = notapplicable; } }
+                                    if (surveyId == 8) { if (age <= 12 && age >= 8 && surveyId == 8) { value = notstarted; } else { value = notapplicable; } }
+                                    if (surveyId == 9) { if (age <= 18 && age >= 13 && surveyId == 9) { value = notstarted; } else { value = notapplicable; } }
+                                }
+                            }
+                            else
+                            {
+                                value = notstarted;
+                            }
+                        }
+                        else
+                        {
+                            value = notscheduled;
+                        }
+                    }
+                }
+                if(value == "")
+                {
+                    value = notapplicable;
+                }
                 return value;
             }
-            else
-            {
-                if(drS["ScheduleDate"] == DBNull.Value && drS["UserID"] == DBNull.Value)
-                {
-                    value = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This survey has not started yet'></i></span>";
-                }
-                else
-                {
-                    value = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this survey'></i></span>";
-                }
-            }
         }
-        if(value == "")
-        {
-            value = "<span><i class='ion-android-radio-button-off notenrolled' data-toggle='tooltip' title='Not applicable to respond'></i></span>";
-        }
-        return value;
-    }
-}
 
 <style type="text/css">
     .comparison h4, .comparison .current{display: inline-block;}    
@@ -88,7 +107,7 @@
 </style>
 
 <div class="comparison">
-    <h3 style="text-transform:capitalize;">@studyName - Survey Completion Detail</h3>   
+    <h3 style="text-transform:capitalize;">@studyName - Survey Completion Detail</h3>
     <div class="current">
         <div class="tabs" >
             <ul class="tabperiod">
@@ -138,7 +157,7 @@
                                             Respondent
                                         </th>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                        {
+    {
                                             <th class="dot hdhelper" data-toggle="tooltip" style="position:relative" title="@drT["FullTitle"]"><span class="tilttitle">@drT["Title"]</span></th>
                                         }
                                         
@@ -149,11 +168,11 @@
                     </thead>
                     <tbody>
                         @if (children > 0)
-                        {
-                            int index = 0;
-                            foreach (DataRow drChild in dtChildren.Rows)
-                            {
-                                DataRow[] drTeachers = dtTeachers.Select("ChildId = " + drChild["ChildId"]);
+    {
+        int index = 0;
+        foreach (DataRow drChild in dtChildren.Rows)
+        {
+            DataRow[] drTeachers = dtTeachers.Select("ChildId = " + drChild["ChildId"]);
                                 <tr class="@(index >= 10 ? "chosenones trhdn" : "")">
                                     <td class="name">@drChild["Name"]</td>
                                     <td>
@@ -166,12 +185,12 @@
                                                    <i class="ion-home"></i> @drChild["Parent"] @if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                                {
+    {
                                                     <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                 }
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
-                                            {
+    {
                                                 <tr>
                                                     <td class="dot">
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
@@ -180,7 +199,7 @@
                                                         <i class="ion-university"></i> @drTeacher["Teacher"] @if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                                    {
+    {
                                                         <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
                                                     }
                                                 </tr>
@@ -195,12 +214,12 @@
                                                     <i class="ion-home"></i> @drChild["Parent"]@if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                                {
+    {
                                                     <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
                                                 }                                              
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
-                                            {
+    {
                                                 <tr>
                                                     <td class="dot">
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
@@ -209,7 +228,7 @@
                                                         <i class="ion-university"></i> @drTeacher["Teacher"]@if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
-                                                    {
+    {
                                                         <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
                                                     }                                              
                                                 </tr>
@@ -229,7 +248,7 @@
             </div>
 
             @if (children > 10)
-            {
+    {
                 <div style="margin:0; padding:0; float:left;">
                     <a href="javascript:void(0);" class="linker" onclick="showHideChildren(this);">Show All Children</a>                    
                 </div>
@@ -258,125 +277,125 @@
             $('.tblComparison tr.chosenones').addClass('trhdn');
             $(elem).removeClass("hdn");
             $(elem).text("Show All Children");
-        }        
+        }
     }
 
     function checkAll(elem) {
         var isChecked = $(elem)[0].checked;
         if (isChecked == true) {
-            var tbl = $(".tblCurrent").is(":visible") == true ? $(".tblCurrent") : $(".tblPrevious");            
-            tbl.find(".checkReminder").each(function (index, obj) {
-                $(obj)[0].checked = true;
-            });            
-        }
-        else {
             var tbl = $(".tblCurrent").is(":visible") == true ? $(".tblCurrent") : $(".tblPrevious");
             tbl.find(".checkReminder").each(function (index, obj) {
+                $(obj)[0].checked = true;
+                });
+            }
+        else {
+                var tbl = $(".tblCurrent").is(":visible") == true ? $(".tblCurrent") : $(".tblPrevious");
+                tbl.find(".checkReminder").each(function (index, obj) {
                 $(obj)[0].checked = false;
-            });
-        }
-        if ($(".tblCurrent").is(":visible") == true) {
- 
-            if (isChecked == true) {
+                    });
+                }
+                if ($(".tblCurrent").is(":visible") == true) {
+
+                    if (isChecked == true) {
                 $(".remCurrent a").removeClass("disabled");
                 $(".remCurrent a").attr("title", "A reminder email will be sent to the selected respondent(s)");
-            }
-            else {
+                    }
+                    else {
                 $(".remCurrent a").addClass("disabled");
                 $(".remCurrent a").attr("title", "Please select a respondent first to send reminder");
-            }
-        }
+                    }
+                }
 
-        if ($(".tblPrevious").is(":visible") == true) {
-    
-            if (isChecked == true) {
+                if ($(".tblPrevious").is(":visible") == true) {
+
+                    if (isChecked == true) {
                 $(".remPrevious a").removeClass("disabled");
                 $(".remPrevious a").attr("title", "A reminder email will be send to the selected respondent(s)");
-            }
-            else {
+                    }
+                    else {
                 $(".remPrevious a").addClass("disabled");
                 $(".remPrevious a").attr("title", "Please select a respondent first to send reminder");
-            }
-        }
-    }
-
-    function setReminderOption(elem) {
-        if ($(".tblCurrent").is(":visible") == true) {
-            var isChecked = false;
-            $(".tblCurrent").find(".checkReminder").each(function (inex, obj) {
-                if ($(obj)[0].checked == true){
-                    isChecked = true;
+                    }
                 }
-            });
-            if (isChecked == true) {
+            }
+
+            function setReminderOption(elem) {
+                if ($(".tblCurrent").is(":visible") == true) {
+                    var isChecked = false;
+            $(".tblCurrent").find(".checkReminder").each(function (inex, obj) {
+                        if ($(obj)[0].checked == true){
+                            isChecked = true;
+                        }
+                        });
+                        if (isChecked == true) {
                 $(".remCurrent a").removeClass("disabled");
                 $(".remCurrent a").attr("title", "A reminder email will be sent to the selected respondent(s)");
-            }
-            else {
+                        }
+                        else {
                 $(".remCurrent a").addClass("disabled");
                 $(".remCurrent a").attr("title", "Please select a respondent first to send reminder");
-            }
-        }
+                        }
+                    }
 
-        if ($(".tblPrevious").is(":visible") == true) {
-            var isChecked = false;
+                    if ($(".tblPrevious").is(":visible") == true) {
+                        var isChecked = false;
             $(".tblPrevious").find(".checkReminder").each(function (inex, obj) {
-                if ($(obj)[0].checked == true) {
-                    isChecked = true;
-                }
-            });
-            if (isChecked == true) {
+                            if ($(obj)[0].checked == true) {
+                                isChecked = true;
+                            }
+                            });
+                            if (isChecked == true) {
                 $(".remPrevious a").removeClass("disabled");
                 $(".remPrevious a").attr("title", "A reminder email will be sent to the selected respondent(s)");
-            }
-            else {
+                            }
+                            else {
                 $(".remPrevious a").addClass("disabled");
                 $(".remPrevious a").attr("title", "Please select a respondent first to send reminder");
-            }
-        }
-    }
+                            }
+                        }
+                    }
 
-    function Respondent() {
-        this.UserId = 0;
-        this.Email = "";
-        this.ReminderDate = "";
-    }
+                    function Respondent() {
+                        this.UserId = 0;
+                        this.Email = "";
+                        this.ReminderDate = "";
+                    }
 
-    function sendReminder(elem) {
-        if ($(elem).hasClass("disabled")) {
-            return false;
-        }
-        var respos = new Array();
-        $(".tblComparison").find(".checkReminder").each(function (index, obj) {            
-            if ($(obj)[0].checked == true && $(obj).attr("email") != "") {
-                var respo = new Respondent();
-                respo.UserId = $(obj).attr("userid");
-                respo.Email = $(obj).attr("email");
-                respo.ReminderDate = "@DateTime.Now";
-                respos.push(respo);
-            }
-        });
+                    function sendReminder(elem) {
+                        if ($(elem).hasClass("disabled")) {
+                            return false;
+                        }
+                        var respos = new Array();
+        $(".tblComparison").find(".checkReminder").each(function (index, obj) {
+                            if ($(obj)[0].checked == true && $(obj).attr("email") != "") {
+                                var respo = new Respondent();
+                                respo.UserId = $(obj).attr("userid");
+                                respo.Email = $(obj).attr("email");
+                                respo.ReminderDate = "@DateTime.Now";
+                                respos.push(respo);
+                            }
+                            });
 
         $.ajax({
-            url: "@Url.Action("SendReminder", "Home")",
+                                url: "@Url.Action("SendReminder", "Home")",
             data: "{'respos': '" + JSON.stringify(respos) + "'}",
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             async: true,
             success: function (data) {
-                if (data.success == true) {
-                    alert("An email about the survey completion has been sent to the selected respondent(s).");
-                }
-                else {
-                    alert("We are unable to send email at this time, please try again later.");
-                }                
-            },
+                                    if (data.success == true) {
+                                        alert("An email about the survey completion has been sent to the selected respondent(s).");
+                                    }
+                                    else {
+                                        alert("We are unable to send email at this time, please try again later.");
+                                    }
+                                },
             error: function (errss) {
-                result = false;
-            },            
+                                    result = false;
+                                },            
             cache: false,
             processData: false
         });
-    }
+                        }
     //#FFD740
 </script>
