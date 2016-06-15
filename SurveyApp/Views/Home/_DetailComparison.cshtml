@@ -28,10 +28,10 @@
     public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype)
     {
         string value = "";
-        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + "AND '" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate");
+        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = "+ surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL)");
         foreach(DataRow drS in drSurveys)
         {
-            if((int)drS["SurveyId"] == surveyId && (drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
+            if((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
             {
                 string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
                 string title = (cssClass == "complete" ? "This survey is complete" : (cssClass == "incomplete" ? "This survey is partially complete" : (cssClass == "notstarted" ? "This survey has not started yet" : "Child is not scheduled for this survey")));
@@ -40,7 +40,14 @@
             }
             else
             {
-                value = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this survey'></i></span>";
+                if(drS["ScheduleDate"] == DBNull.Value && drS["UserID"] == DBNull.Value)
+                {
+                    value = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This survey has not started yet'></i></span>";
+                }
+                else
+                {
+                    value = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this survey'></i></span>";
+                }
             }
         }
         if(value == "")
@@ -56,7 +63,7 @@
     .tblComparison{background-color: #FFF;}
     .tblComparison .hdhelper{font-weight: normal;cursor: pointer;color:#000000;}
     .name{border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;width: 140px;padding: 2px;}
-    .name span{cursor:pointer;}
+    .name span{cursor:pointer;color: #EA0000;}
     .dots td{padding: 2px;}    
     .dots .dot{width: 43px;text-align: center;border-right: solid 1px #CCC;border-bottom: solid 1px #CCC;cursor:pointer;}
     .complete{color:#33B86C;}
@@ -156,7 +163,7 @@
                                                     <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
                                                 </td>
                                                 <td class="name">
-                                                   <i class="ion-home"></i> @drChild["Parent"] @if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                   <i class="ion-home"></i> @drChild["Parent"] @if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
@@ -170,7 +177,7 @@
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
                                                     </td>
                                                     <td class="name">
-                                                        <i class="ion-university"></i> @drTeacher["Teacher"] @if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"] @if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
@@ -185,7 +192,7 @@
                                                     <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
                                                 </td>  
                                                 <td class="name">
-                                                    <i class="ion-home"></i> @drChild["Parent"]@if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                    <i class="ion-home"></i> @drChild["Parent"]@if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
@@ -199,7 +206,7 @@
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
                                                     </td>  
                                                     <td class="name">
-                                                        <i class="ion-university"></i> @drTeacher["Teacher"]@if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"]@if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
@@ -272,7 +279,7 @@
  
             if (isChecked == true) {
                 $(".remCurrent a").removeClass("disabled");
-                $(".remCurrent a").attr("title", "A reminder email will be send to the selected respondent(s)");
+                $(".remCurrent a").attr("title", "A reminder email will be sent to the selected respondent(s)");
             }
             else {
                 $(".remCurrent a").addClass("disabled");
@@ -303,7 +310,7 @@
             });
             if (isChecked == true) {
                 $(".remCurrent a").removeClass("disabled");
-                $(".remCurrent a").attr("title", "A reminder email will be send to the selected respondent(s)");
+                $(".remCurrent a").attr("title", "A reminder email will be sent to the selected respondent(s)");
             }
             else {
                 $(".remCurrent a").addClass("disabled");
@@ -320,7 +327,7 @@
             });
             if (isChecked == true) {
                 $(".remPrevious a").removeClass("disabled");
-                $(".remPrevious a").attr("title", "A reminder email will be send to the selected respondent(s)");
+                $(".remPrevious a").attr("title", "A reminder email will be sent to the selected respondent(s)");
             }
             else {
                 $(".remPrevious a").addClass("disabled");
