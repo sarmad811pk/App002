@@ -156,7 +156,7 @@
                                                     <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
                                                 </td>
                                                 <td class="name">
-                                                   <i class="ion-home"></i> @drChild["Parent"] @if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                   <i class="ion-home"></i> @drChild["Parent"] @if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
@@ -170,7 +170,7 @@
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
                                                     </td>
                                                     <td class="name">
-                                                        <i class="ion-university"></i> @drTeacher["Teacher"] @if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"] @if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
@@ -185,7 +185,7 @@
                                                     <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
                                                 </td>  
                                                 <td class="name">
-                                                    <i class="ion-home"></i> @drChild["Parent"]@if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                    <i class="ion-home"></i> @drChild["Parent"]@if (@drChild["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
@@ -199,7 +199,7 @@
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drTeacher["Email"]" onclick="setReminderOption(this);" userid="@drTeacher["TeacherId"]" email="@drTeacher["Email"]" />
                                                     </td>  
                                                     <td class="name">
-                                                        <i class="ion-university"></i> @drTeacher["Teacher"]@if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="Reminder has not been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
+                                                        <i class="ion-university"></i> @drTeacher["Teacher"]@if (@drTeacher["ReminderDate"] != DBNull.Value) { <span data-toggle="tooltip" title="Last Reminder Sent On: @drTeacher["ReminderDate"]"><i class="fa fa-clock-o"></i></span> } else { <span data-toggle="tooltip" title="A reminder has never been sent to this respondent"><i style="color:#EA0000;" class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
