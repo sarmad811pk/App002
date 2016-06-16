@@ -13,13 +13,21 @@
 @if (dsLifeEvents != null && dsLifeEvents.Tables.Count > 0 && dsLifeEvents.Tables[0].Rows.Count > 0)
 {
     string data = "";
-    int index = 4;
+    int index = 1;
+    List<DateTime> lstEventDates = new List<DateTime>();
     foreach (DataRow dr in dsLifeEvents.Tables[0].Rows)
     {
+        bool isDuplicate = false;
         DateTime dtEventDate = Convert.ToDateTime(dr["EventDate"]);
+        if (lstEventDates.Contains(dtEventDate))
+        {
+            isDuplicate = true;
+        }
+        lstEventDates.Add(dtEventDate);
+
         string name = dr["Name"].ToString();
-        data += "{event: '" + dr["EventName"] + "',x: Date.UTC(" + dtEventDate.Year + ", " + dtEventDate.Month + ", " + dtEventDate.Day + "), y:" + index + " , child:'" + name + "'},";
-        index = index + 4;
+        data += "{event: '" + dr["EventName"] + "',x: Date.UTC(" + dtEventDate.Year + ", " + dtEventDate.Month + ", " + dtEventDate.Day + "), y:" + (isDuplicate == true ? index + 1 : index) + " , child:'" + name + "'},";
+        
     }
 
 
@@ -43,7 +51,7 @@
                     allowDecimals: false,
                     labels: {
                         formatter: function () {
-                            return Highcharts.dateFormat('%d-%b-%y', (this.value));
+                            return Highcharts.dateFormat('%e %b %Y', (this.value));
                         }
                     }
                 },
@@ -53,7 +61,8 @@
                     },
                     title: {
                         text: null
-                    }
+                    },
+                    minTickInterval : 1
                 },
                 plotOptions: {
                     scatter: {
@@ -62,7 +71,7 @@
                             states: {
                                 hover: {
                                     enabled: true,
-                                    lineColor: 'rgba(151, 201, 93, .7)'
+                                    lineColor: 'rgba(70, 78, 243, 0.901961)'
                                 }
                             }
                         },
@@ -85,7 +94,7 @@
                 },
                 series: [{
                     name: 'Events',
-                    color: 'rgba(151, 201, 93, .9)',
+                    color: 'rgba(70, 78, 243, 0.901961)',
                     data: [@Html.Raw(data.TrimEnd(','))]
                 }]
             });
