@@ -141,7 +141,7 @@
         
     });
 
-    function getVisibleDiv(){
+    function getVisibleDiv() {        
         if ($(".dashboardDetails").is(":visible") == true) { return 0; }
         if ($(".graphsDetails").is(":visible") == true) { return getInnerVisibleDiv(); }
         if ($(".Adverse").is(":visible") == true) { return 2; } 
@@ -152,11 +152,12 @@
         if ($(".gDetails .teacherdiv").is(":visible") == true) { return 4; }
         if ($(".gDetails .parentteacherdiv").is(":visible") == true) { return 5; }
         if ($(".gDetails .weeklydiv").is(":visible") == true) { return 6; }
+        if ($(".gDetails .lifeeventsdiv").is(":visible") == true) { return 7; }
     }
 
-    function getStudyInfo(elem) {
+    function getStudyInfo(elem) {        
         var div = getVisibleDiv();
-        var studyId = $(elem).val();        
+        var studyId = $(elem).val();
         location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&childId=" + @childId + "#" + div;
     }
     function getChildInfo(elem) {

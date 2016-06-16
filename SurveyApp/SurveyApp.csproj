@@ -457,6 +457,7 @@
     <Content Include="Views\Survey\_PercentCompletion.cshtml" />
     <Content Include="Views\Home\_AdverseEvent.cshtml" />
     <Content Include="Views\Home\_WeeklyChart.cshtml" />
+    <Content Include="Views\Home\_LifeEventsChart.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

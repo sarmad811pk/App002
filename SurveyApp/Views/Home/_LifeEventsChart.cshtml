@@ -1,0 +1,101 @@
+﻿@using System.Data;
+@using SurveyApp.Models;
+
+@{ 
+    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
+    int childId = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
+
+    bool isAdmin = Roles.IsUserInRole("Administrator");
+    DataSet dsLifeEvents = SurveyApp.DataHelper.DashboardGetLifeEventChart(studyId, isAdmin == false ? WebSecurity.CurrentUserId : 0, childId);
+        
+}
+
+@if (dsLifeEvents != null && dsLifeEvents.Tables.Count > 0 && dsLifeEvents.Tables[0].Rows.Count > 0)
+{
+    string data = "";
+    int index = 4;
+    foreach (DataRow dr in dsLifeEvents.Tables[0].Rows)
+    {
+        DateTime dtEventDate = Convert.ToDateTime(dr["EventDate"]);
+        string name = dr["Name"].ToString();
+        data += "{event: '" + dr["EventName"] + "',x: Date.UTC(" + dtEventDate.Year + ", " + dtEventDate.Month + ", " + dtEventDate.Day + "), y:" + index + " , child:'" + name + "'},";
+        index = index + 4;
+    }
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#divLifeEventsChart').highcharts({
+                chart: {
+                    type: 'scatter',
+                    zoomType: 'xy'
+                },
+                title: {
+                    text: 'Life Events'
+                },                
+                xAxis: {
+                    title: {
+                        enabled: true,
+                        text: 'Event Date'
+                    },
+                    type: 'datetime',
+                    //tickInterval: (24 * 3600 * 1000), // the number of milliseconds in a day
+                    allowDecimals: false,
+                    labels: {
+                        formatter: function () {
+                            return Highcharts.dateFormat('%d-%b-%y', (this.value));
+                        }
+                    }
+                },
+                yAxis: {
+                    labels: {
+                        enabled: false
+                    },
+                    title: {
+                        text: null
+                    }
+                },
+                plotOptions: {
+                    scatter: {
+                        marker: {
+                            radius: 5,
+                            states: {
+                                hover: {
+                                    enabled: true,
+                                    lineColor: 'rgba(151, 201, 93, .7)'
+                                }
+                            }
+                        },
+                        states: {
+                            hover: {
+                                marker: {
+                                    enabled: false
+                                }
+                            }
+                        },
+                        tooltip: {
+                            headerFormat: '<b>{point.key}</b> ',
+                            pointFormat: '<br/>Child: {point.child} <br />Event: {point.event} ',
+                            shared: true
+                        },
+                    }
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    name: 'Events',
+                    color: 'rgba(151, 201, 93, .9)',
+                    data: [@Html.Raw(data.TrimEnd(','))]
+                }]
+            });
+        });
+    </script>
+
+    <div id="divLifeEventsChart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+}
+else
+{
+    <div><p style="text-align: center;">There is no life event present for this child</p></div>
+}
+

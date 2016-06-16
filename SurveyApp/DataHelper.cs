@@ -571,6 +571,30 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetChartsFixed";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static DataSet DashboardGetLifeEventChart(int studyId, int userId, int childId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            cmd.Parameters["@StudyId"].Value = studyId;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            if (childId > 0)
+            {
+                cmd.Parameters["@ChildID"].Value = childId;
+            }
+            else
+            {
+                cmd.Parameters["@ChildID"].Value = DBNull.Value;
+            }
+
+            cmd.CommandText = "Dashboard_GetLifeEventChart";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         #endregion
         #endregion        
 

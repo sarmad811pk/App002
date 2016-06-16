@@ -1982,6 +1982,9 @@
                         <li>
                             <a href="#6" onclick="showGraphsSection(this, 4);">Weekly Teacher</a>
                         </li>
+                        <li>
+                            <a href="#7" onclick="showGraphsSection(this, 5);">Life Events</a>
+                        </li>
                     </ul>
                 </div>           
         </td>
@@ -2063,7 +2066,9 @@
                     @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
 
                 </div>
-
+                <div class="row voffset lifeeventsdiv">
+                    @{Html.RenderPartial("~/Views/Home/_LifeEventsChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
+                </div>
 
                 <div class="parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6"><div id="pADAM"></div></div>
@@ -2095,6 +2100,7 @@
         $(".teacherdiv").hide();
         $(".parentteacherdiv").hide();
         $(".weeklydiv").hide();
+        $(".lifeeventsdiv").hide();
     });
     
     function showGraphsSection(elem, type) {
@@ -2102,6 +2108,8 @@
         $(".teacherdiv").hide();
         $(".parentteacherdiv").hide();
         $(".weeklydiv").hide();
+        $(".lifeeventsdiv").hide();
+
         $(".graphTabs a").removeClass("selected");
         $(elem).addClass("selected");
 
@@ -2116,6 +2124,9 @@
         }
         else if (type == 4) {
             $(".weeklydiv").show();
+        }
+        else if (type == 5) {
+            $(".lifeeventsdiv").show();
         }
 
         //$(window).resize();
