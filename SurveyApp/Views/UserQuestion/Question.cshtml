@@ -879,7 +879,27 @@
                         <div class='_spacing col-sm-2'><input class='form-control _datepickermed' data-tmed='tmed' data-md='m5#q#' data-score='#sc#' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_3' value='#si5#'></div>
                       </div>
                     </div>";
-        tmed = tmed.Replace("#GetSelect#",GetSelect()).Replace("#GetFrequency#",GetFrequency()).Replace("#GetHours#",GetHours());
+        tmed = tmed.Replace("#GetSelect#", GetSelect()).Replace("#GetFrequency#", GetFrequency()).Replace("#GetHours#", GetHours());
+        var tsupmed = @"<div class='#c#'>
+                      <div class='row'>                       
+                        <div class='_spacing col-sm-1 _medlbl'>Brand</div>
+                        <div class='_spacing col-sm-11'><input class='form-control' data-tmed='tmed' data-md='m1#q#' data-score='#sc#' placeholder='Brand' type='text' qid='#q#' name='q#q#' id='q#q#_0' value='#si1#'></div>
+                        <div style='display:none;'>
+                        <div class='_spacing col-sm-1 _medlbl'>Dosage</div>
+                        <div class='_spacing col-sm-5'>
+                            <div class='col-sm-6' style='padding:0px;'><input class='form-control' data-tmed='tmed' data-md='m2#q#' data-score='#sc#' placeholder='Dosage' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si2#'></div>
+                            <div class='col-sm-6' style='padding:0px;'>#GetSelect#</div></div></div>                    
+                        <div class='_spacing col-sm-1 _medlbl'>Frequency</div> 
+                        <div class='_spacing col-sm-2'>#GetFrequency#</div>
+                        <div class='_spacing col-sm-1 _medlbl'>Times per</div>
+                        <div class='_spacing col-sm-2'>#GetHours#</div>
+                        <div class='_spacing col-sm-1 _medlbl'>Start Date</div>
+                        <div class='_spacing col-sm-2'><input class='form-control _datepickermed' data-tmed='tmed' data-md='m4#q#' data-score='#sc#' placeholder='Start Date' type='text' qid='#q#' name='q#q#' id='q#q#_2' value='#si4#'></div>
+                        <div class='_spacing col-sm-1 _medlbl'>End Date</div>
+                        <div class='_spacing col-sm-2'><input class='form-control _datepickermed' data-tmed='tmed' data-md='m5#q#' data-score='#sc#' placeholder='End Date' type='text' qid='#q#' name='q#q#' id='q#q#_3' value='#si5#'></div>
+                      </div>
+                    </div>";
+        tsupmed = tsupmed.Replace("#GetSelect#", GetSelect()).Replace("#GetFrequency#", GetFrequency()).Replace("#GetHours#", GetHours());
         var tsch = @"<div class='#c#'> 
                         <div class='col-sm-3 _schlbl'>Count of Sessions/Week</div>
                         <div class='col-sm-3 _schlbl'>Time/Session</div>
@@ -1013,6 +1033,21 @@
                 else
                 {
                     tempansvalue = tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", "").Replace("#si2#", "").Replace("#si4#", "").Replace("#si5#", "").Replace("#si6#", "");
+                }
+                temp += tempansvalue;
+            }
+            else if (type == "supmed")
+            {
+
+                var tempansvalue = "";
+                if (multians.Length >= 8)
+                {
+                    tempansvalue = tsupmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", multians[0]).Replace("#si2#", multians[1]).Replace("#si4#", multians[2]).Replace("#si5#", multians[3]).Replace("#si6#", multians[7]).Replace("'" + multians[4] + "'", "'" + multians[4] + "' selected='selected'").Replace("'" + multians[5] + "'", "'" + multians[5] + "' selected='selected'").Replace("'" + multians[6] + "'", "'" + multians[6] + "' selected='selected'");
+                    if (multians[4] == "other") { tempansvalue = tempansvalue.Replace("none", "block"); }
+                }
+                else
+                {
+                    tempansvalue = tsupmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", "").Replace("#si2#", "").Replace("#si4#", "").Replace("#si5#", "").Replace("#si6#", "");
                 }
                 temp += tempansvalue;
             }
