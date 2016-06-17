@@ -281,6 +281,9 @@
     <Content Include="Content\images\ui-icons_777777_256x240.png" />
     <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
     <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\scroller\jquery.mCustomScrollbar.concat.min.js" />
+    <Content Include="Content\scroller\jquery.mCustomScrollbar.min.css" />
+    <Content Include="Content\scroller\mCSB_buttons.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -458,6 +461,7 @@
     <Content Include="Views\Home\_AdverseEvent.cshtml" />
     <Content Include="Views\Home\_WeeklyChart.cshtml" />
     <Content Include="Views\Home\_LifeEventsChart.cshtml" />
+    <Content Include="Views\UserQuestion\_ChildDetails.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -3,10 +3,10 @@
 @{
     ViewBag.Title = "Survey Manager";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    int id = Convert.ToInt32(TempData["ID"]);
+    
     string studyName = "";
     //var ds = SurveyApp.DataHelper.SurveyGetAll();
-    int? childID = (int?)TempData["ChildID"];
+
 
     string divSelected = String.IsNullOrEmpty(Request.QueryString["div"]) == true ? "" : Request.QueryString["div"].ToString();
     int childIdts = String.IsNullOrEmpty(Request.QueryString["childIdts"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childIdts"]);
@@ -19,503 +19,7 @@
         studyName = objStd.Name;
     }
     System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, WebSecurity.CurrentUserId);
-
 }
-
-@if (childID != null)
-{
-    DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(id);
-    DataSet dsReveseandLiveEvent = SurveyApp.DataHelper.GetAdverseReaction(id, 0, (int)childID);
-    for (int i = 0; i < dschild.Tables[0].Rows.Count; i++)
-    {
-        if ((int?)dschild.Tables[0].Rows[i]["ID"] == childID)
-        {
-        }
-        else
-        {
-            dschild.Tables[0].Rows[i].Delete();
-        }
-
-    }
-    dschild.AcceptChanges();
-
-
-    string[] roles = Roles.GetRolesForUser(User.Identity.Name);
-
-    userId = WebSecurity.CurrentUserId;
-    role = roles[0];
-
-    dsQuestionsFilled = SurveyApp.DataHelper.QuestionGetFilledAnswers(userId);
-    dsChildrenSchedules = SurveyApp.DataHelper.getChildrenSchedulesByUserId(userId);
-
-
-
-    <style type="text/css">
-        .col-centered {
-            float: none;
-            margin: 0 auto;
-        }
-
-        .schedule {
-            width: 60px;
-            text-align: center;
-            font-style: italic;
-            text-decoration: underline;
-        }
-
-            .schedule.onu {
-                color: #929292;
-            }
-
-            .schedule.dos {
-                color: #aaaaaa;
-            }
-
-            .schedule.tres {
-                color: #6260ca;
-            }
-
-        .percent {
-            font-style: italic;
-            display: inline-block;
-            width: 25px; 
-            font-weight:bold;
-        }
-        .lowFilled span{
-            color: #DE0000 !important; 
-        }
-        .medFilled span{
-            color: #FE1B43 !important;             
-        }
-
-        .text-left {
-            text-align: left;
-            padding-left: 7px;
-        }
-
-        .surveyList {
-            color: #000000;
-            font-size: 14px;
-        }
-        .surveyList div a {
-            display:block;float:right;width:145px;text-align:right;
-        }
-            .surveyList div {
-                border-bottom: dotted 1px #cccccc;
-                padding: 6px;
-            }
-
-        .btnAdd {
-            -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-            -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-            opacity: 0.96;
-            padding: 0px 10px;
-            color: #FFF;
-        }
-        .intake a {
-        color:#ffffff;
-        font-style:normal !important;
-        display:block;
-        text-decoration:underline;
-        padding:3px;
-        }
-            .intake a:hover {
-            background:rgba(255,255,255,.1);
-            }
-    </style>
-
-    @section featured {
-        <section class="featured">
-            <div class="content-wrapper">
-                <hgroup class="title">
-
-                    <h2><i class="ion-ios-information-outline"></i>  Questionnaire for <b>@dschild.Tables[0].Rows[0]["Name"].ToString()</b></h2>
-
-
-                </hgroup>
-            </div>
-        </section>
-    }
-    @functions{
-        DataSet dsQuestionsFilled, dsChildrenSchedules, Ds_othersurvey, ds_advershist, ds_lifevent;
-        int userId;
-        string role = "";
-        public string getPercentCompletion(int surveyId, int childId, string url)
-        {
-
-            var rrr = "";
-            if (surveyId == 16) { rrr = "Parent Intake Form (OHS)"; }
-            if (surveyId == 21) { rrr = "Parent Follow-Up Form (OHS)"; } 
-            string percentage = "0%", schInfo = "";
-
-            if (dsChildrenSchedules != null && dsChildrenSchedules.Tables != null && dsChildrenSchedules.Tables[0] != null && dsChildrenSchedules.Tables[0].Rows != null)
-            {
-                for(int i = 0; i < 2; i++)
-                {
-                    schInfo = getExactInfo(i, surveyId, childId, percentage, rrr, url) + schInfo;
-                }
-
-            }
-
-            return schInfo;
-        }
-
-        public string getExactInfo(int index, int surveyId, int childId, string percentage, string rrr, string url) {
-            string info = "";
-            string condition = " AND ScheduleId" + role + " IS NOT NULL";
-            DataRow[] drSchedules = dsChildrenSchedules.Tables[index].Select("SurveyId = " + surveyId + " AND ChildId = " + childId + "" + condition);
-
-            int i = 0;
-            foreach (DataRow drSchedule in drSchedules)
-            {
-                if(i < 1)
-                {
-                    DateTime endDate = drSchedule["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(drSchedule["ScheuleEndDate"]) : DateTime.MinValue;
-                    if (endDate != DateTime.MinValue)
-                    {
-                        percentage = "0%";
-                        if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
-                        {
-                            DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + surveyId + " AND ChildID = " + childId + " AND ScheduleDate = '" + endDate + "'");
-                            foreach (DataRow dr in drQuestions)
-                            {
-                                percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;
-                            }
-                        }
-
-                        string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
-                        string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
-                        int percInt = Convert.ToInt32(percentage.Replace("%", ""));
-                        info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a class='"+ (percInt < 50 ? "lowFilled" : (percInt < 100 && percInt > 50 ? "medFilled" : "")) +"' href='" + urlForSurvey + "' title='"+ (index == 0 ? "Previously Due" : "Currently Due") +"'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
-                    }
-                    i++;
-                }
-            }
-            return info;
-        }
-
-        public string othersStats()
-        {
-            string format = "MMM d,  yyyy";
-            string returnstring = "";
-            //Ds_othersurvey = SurveyApp.DataHelper.GetOtherSurveyStats(surveyid,"Stats");
-            //if (Ds_othersurvey.Tables[0].Rows.Count >0 )
-            //{
-            //    returnstring = "<span class='schedule dos'>" + Ds_othersurvey.Tables[0].Rows.Count + "  Reported till " + Convert.ToDateTime(Ds_othersurvey.Tables[0].Rows[0][1]).ToString(format) +"</span>";
-            //}
-            //else
-            //{
-            //    returnstring="0 Reported till " + DateTime.Now.Date.ToString(format);
-            //}
-            //ds_advershist = SurveyApp.DataHelper.GetOtherSurveyStats(surveyid, "AdverseRecation");
-
-            return returnstring;
-        }
-
-
-
-    }
-
-
-
-
-
-    <div class="panel-group">
-
-        @if (dschild.Tables[0].Rows.Count > 0)
-        {
-
-
-            foreach (System.Data.DataRow drch in dschild.Tables[0].Rows)
-            {
-
-                var url = Url.Action("Question", "UserQuestion", new { surveyID = "__", ChildId = drch["ID"].ToString(), ChildName = drch["Name"].ToString() });
-                DateTime today = DateTime.Today;
-                DateTime dob = (DateTime)drch["DOB"];
-                int age = today.Year - dob.Year;
-
-                if (dob > today.AddYears(-age)) { age--; }
-
-
-
-                <div class="col-sm-9 surveyList">
-                    <div class="col-md-12" style="font-size:14px;border-bottom:solid 2px #000000;"><i class="ion-clipboard"></i> &nbsp;&nbsp;&nbsp;&nbsp;Surveys</div>
-                    @if (roles[0] == "Teacher")
-                    {
-
-                        var strLanComunication = getPercentCompletion(24, (int)drch["ID"], url.Replace("__", "24"));
-                        if (strLanComunication != "")
-                        {
-                            <div class="col-md-12 text-left">Weekly - Language and Communication, Behavior, Daily Learning @(Html.Raw(strLanComunication))</div>
-                        }
-                        var acadmicprogrss = getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"));
-                        if (acadmicprogrss != "")
-                        {
-                            <div class="col-md-12 text-left">Academic Progress Rating Scales@(Html.Raw(getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"))))</div>
-                        }
-                    }
-                    @{
-                        var abbsensoryprofile = getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
-                        if (abbsensoryprofile != "")
-                        {
-                        <div class="col-md-12 text-left">Abbreviated sensory profile @(Html.Raw(abbsensoryprofile))</div>
-
-                        }
-                        var CaregiverQuestionair = getPercentCompletion(2, (int)drch["ID"], url.Replace("__", "2"));
-                        if (CaregiverQuestionair != "")
-                        {
-                        <div class="col-md-12 text-left">Caregiver Strain Questionnaire@(Html.Raw(CaregiverQuestionair))</div>
-                        }
-                        var GISeverityIndex = getPercentCompletion(3, (int)drch["ID"], url.Replace("__", "3"));
-                        if (GISeverityIndex != "")
-                        {
-                        <div class="col-md-12 text-left">GI Severity Index @(Html.Raw(GISeverityIndex))</div>
-                        }
-                        var abbehaviourchk = getPercentCompletion(4, (int)drch["ID"], url.Replace("__", "4"));
-                        if (abbehaviourchk != "")
-                        {
-                        <div class="col-md-12 text-left">Aberrant Behavior Checklist@(Html.Raw(abbehaviourchk))</div>
-                        }
-
-                        var socialResponsivenies = getPercentCompletion(5, (int)drch["ID"], url.Replace("__", "5"));
-                        if (socialResponsivenies != "")
-                        {
-                        <div class="col-md-12 text-left">Social Responsiveness Scale@(Html.Raw(socialResponsivenies))</div>
-                        }
-
-
-
-                        if (age <= 4 && age >= 2)
-                        {
-                            var pedsqty = getPercentCompletion(6, (int)drch["ID"], url.Replace("__", "6"));
-                            if (pedsqty != "")
-                            {
-                            <div class="col-md-12 text-left">Peds quality of life for 2yrs-4yrs@(Html.Raw(pedsqty))</div>
-                            }
-                        }
-                        else if (age <= 7 && age >= 5)
-                        {
-                            var pdsqtylife = getPercentCompletion(7, (int)drch["ID"], url.Replace("__", "7"));
-                            if (pdsqtylife != "")
-                            {
-                            <div class="col-md-12 text-left">Peds quality of life for 5yrs-7yrs@(Html.Raw(pdsqtylife))</div>
-                            }
-                        }
-                        else if (age <= 12 && age >= 8)
-                        {
-                            var pdsqty8yr = getPercentCompletion(8, (int)drch["ID"], url.Replace("__", "8"));
-                            if (pdsqty8yr != "")
-                            {
-                            <div class="col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(pdsqty8yr))</div>
-                            }
-                        }
-                        else if (age <= 18 && age >= 13)
-                        {
-                            var pdsqty13year = getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "17"));
-                            if (pdsqty13year != "")
-                            {
-                            <div class="col-md-12 text-left">Peds quality of life for 13yrs -18yrs@(Html.Raw(pdsqty13year))</div>
-                            }
-                        }
-                        var shrtlngprofile = getPercentCompletion(10, (int)drch["ID"], url.Replace("__", "10"));
-                        if (shrtlngprofile != "")
-                        {
-                        <div class="col-md-12 text-left">Short language profile @(Html.Raw(shrtlngprofile))</div>
-                        }
-                        var socialcommqstions = getPercentCompletion(11, (int)drch["ID"], url.Replace("__", "11"));
-                        if (socialcommqstions != "")
-                        {
-                        <div class="col-md-12 text-left">Social communication Questionnaire – life time @(Html.Raw(socialcommqstions))</div>
-                        }
-                        var Insomniaseverity = getPercentCompletion(12, (int)drch["ID"], url.Replace("__", "12"));
-                        if (Insomniaseverity != "")
-                        {
-                        <div class="col-md-12 text-left">Insomnia Severity Index@(Html.Raw(Insomniaseverity))</div>
-                        }
-                        var connordavidson = getPercentCompletion(13, (int)drch["ID"], url.Replace("__", "13"));
-                        if (connordavidson != "")
-                        {
-                        <div class="col-md-12 text-left">Connor-Davidson Resilience Scale 10@(Html.Raw(connordavidson))</div>
-                        }
-
-                        var familyempowermentscale = getPercentCompletion(14, (int)drch["ID"], url.Replace("__", "14"));
-                        if (familyempowermentscale != "")
-                        {
-                        <div class="col-md-12 text-left">Family Empowerment Scale@(Html.Raw(familyempowermentscale))</div>
-                        }
-
-                        var feedbackquestionair = getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"));
-                        if (feedbackquestionair != "")
-                        {
-                        <div class="col-md-4 text-left" style="display:none;">Feedback Questionnaire@(Html.Raw(feedbackquestionair))</div>
-
-                        }
-
-                        var monthlyTeacher = getPercentCompletion(37, (int)drch["ID"], url.Replace("__", "37"));
-                        if (monthlyTeacher != "")
-                        {
-                            <div class="col-md-12 text-left">Monthly Teacher@(Html.Raw(monthlyTeacher))</div>
-                        }
-
-                        var vanderbilt = getPercentCompletion(34, (int)drch["ID"], url.Replace("__", "34"));
-                        if (vanderbilt != "")
-                        {
-                            <div class="col-md-12 text-left">Vanderbilt Adhd Diagnostic Teacher Rating Scale@(Html.Raw(vanderbilt))</div>
-                        }
-
-                        var anxiety = getPercentCompletion(35, (int)drch["ID"], url.Replace("__", "35"));
-                        if (anxiety != "")
-                        {
-                            <div class="col-md-12 text-left">Anxiety Depression and Mood Scale@(Html.Raw(anxiety))</div>
-                        }
-                    }
-                </div>
-                <div class="col-sm-3">
-                    @if (roles[0] != "Teacher")
-                    {
-                        <style type="text/css">
-                            .intake .percent {
-                                color: #FFF;
-                            }
-                        </style>
-                        <div style="padding: 0px; background: #3F51B5; color: #ffffff;overflow:auto;margin-bottom:10px;">
-                            <div style="padding: 6px 5px 5px 32px; background: #3F51B5; overflow: auto; text-align: left; position: relative;"> <i class="ion-flag" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i> Parent Intake / Followup</div>
-                            <div style="padding: 5px; background: #4D5EC1; overflow:auto;font-size:12px;" class="intake">
-                                @{string percentGen = getPercentCompletion(16, (int)drch["ID"], url.Replace("__", "16"));}
-                                @if (!String.IsNullOrEmpty(percentGen))
-                                {
-                                    <div class="col-md-12 text-left">@(Html.Raw(percentGen))</div>
-                                } 
-                                @{string percentM = getPercentCompletion(21, (int)drch["ID"], url.Replace("__", "21"));}
-                                @if (!String.IsNullOrEmpty(percentM))
-                                {
-                                    <div class="col-md-12 text-left">@(Html.Raw(percentM))</div>
-                                } 
-                            </div>
-                        </div>
-                                    }
-                    <div class="col-md-12 text-left" style="padding: 0px; background: #999999; color: #ffffff; overflow: auto;margin-bottom:10px;">
-                        <div style="padding: 5px 5px 5px 32px; background: #666666; color: #ffffff; overflow: auto; text-align: center; position: relative;text-align: left;">
-                            <i class="ion-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
-                            @*<span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Add</a></span>*@
-                        </div>
-                        <div style="padding: 5px 5px 5px 5px; background: #999999; overflow:hidden; font-size: 12px;min-height:200px;max-height:250px;">
-                            @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
-                            {
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[2].Rows)
-                                {
-                                    var _qq = dr["Question"].ToString().Split('-')[1].Trim();
-                                    var _aa = dr["Answers"];
-                                    string[] _a = _aa.ToString().Split('|');
-                                    if (_a.Length >= 5)
-                                    {
-                                        if (_a[2].Length > 0 || _a[3].Length > 0)
-                                        {
-
-                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
-                                        <div style="overflow:hidden;" title='@_qq'>
-                                            <b>@_qq (@_a[1] @_a[4])</b>
-                                            <div style=" text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
-                                            
-                                        </div>
-
-
-                                    </div>   
-                                        }
-                                        //Indication|Dosage|02/01/2015|03/02/2015|ug|9|Hour|undefined
-                                        //Indication|5|05/01/2016|05/11/2016|ul|6|Week|undefined
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;"> No history found</div>
-                            }
-                        </div>
-                    </div>
-                    <div class="col-md-12 text-left" style="padding: 0px; background: #E14C3E; color: #ffffff; overflow: auto;margin-bottom:10px;">
-                        <div style="padding: 5px 5px 5px 32px; background: #E14C3E; color: #ffffff; overflow: auto; text-align: center; position: relative;text-align: left;">
-                            <i class="ion-nuclear" style="position:absolute;top:7px;left:12px;font-size:16px;"></i> Adverse Reactions
-                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Add</a></span>
-                        </div>
-                        <div style="padding: 5px 5px 5px 5px; background: #EB6357; overflow:hidden; font-size: 12px;min-height:200px;max-height:250px;">
-                            @if (dsReveseandLiveEvent.Tables[0].Rows.Count > 0)
-                            {
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
-                                {
-                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
-                                        <div style="overflow:hidden;" title='@dr["AdverseReaction"]
-Occured on: @dr["DateOccured"]
-Resolved on: @dr["DateResolved"]
-Medication: @dr["Medication"]
-Started on: @dr["DateStart"]
-Ended on: @dr["DateEnd"]'>
-                                            <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b></div>
-                                            <div style="float:right;"> on @dr["DateOccured"]</div>
-                                        </div>
-                                             
-
-                                        </div>
-                                }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;"> No history found</div>
-                            }
-                        </div>
-                    </div>
-                    <div class="col-md-12 text-left" style="padding: 0px; background: #8BC34A; color: #ffffff; overflow: auto; margin-bottom: 10px;">
-                        <div style="padding: 6px 5px 5px 32px; background: #8BC34A; color: #ffffff; overflow: auto; text-align: left; position: relative; ">
-                            <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Add</a></span>
-                        </div>
-                        <div style="padding: 5px; background: #97C95D; overflow: hidden; font-size: 12px; min-height: 200px; max-height: 250px;">
-                            @if (dsReveseandLiveEvent.Tables[1].Rows.Count > 0)
-                            {
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
-                                {
-                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
-                                        @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
-                                        <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]">
-                                            <div style="float:left;font-weight:bold;">  @dr["EventName"]</div>
-                                            <div style="text-align:right;float:right;@( @dr["EventDate"].ToString() == "" ? "display:none;" : "") "> on @dr["EventDate"]</div>
-                                        </div>                                        
-                                    </div>
-
-                                }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;">No history found</div>
-                            }
-                        </div>
-                    </div>        <div class="col-md-12 text-left" style="display:none;padding: 0px; background: #00ADEE; color: #ffffff; overflow: auto; margin-bottom: 10px;">
-                        <div style="padding: 6px 5px 5px 32px; background: #00ADEE; color: #ffffff; overflow: auto; text-align: left; position: relative;"> <i class="ion-chatbox-working" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Feedback Questionnaire</div>
-                        <div style="padding: 5px; background: #888888; overflow: auto; font-size: 12px;">
-
-                            <div class="col-md-12 text-left">@(Html.Raw(getPercentCompletion(15, (int)drch["ID"], url.Replace("__", "15"))))</div>
-                        </div>
-                    </div>
-                    @*
-                        <div class="col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
-                        <div class="col-md-4 text-left">Life Events@(Html.Raw(getPercentCompletion(29, (int)drch["ID"], url.Replace("__", "29"))))</div>*@
-
-                </div>
-
-
-                                        }
-
-                                    }
-                                    else
-                                    {
-            <div class="alert alert-info">
-                <strong>Info!</strong>No child is assosisated with this @roles[0]
-            </div>
-                                    }
-    </div>
-}
-else
-{
 
     @section featured {
         <section class="featured">
@@ -549,48 +53,83 @@ else
         .tabs .linker{text-decoration:none;padding: 2px 4px;background-color: #333;color: #FFF;margin-top: 4px;display: inline-block;}
     </style>
 
+    <div class="waiting" style="@((Request.Url.ToString().ToLower().Contains("/home/") == true && Request.Url.ToString().ToLower().Contains("/home/about") == false && Request.Url.ToString().ToLower().Contains("/home/contact") == false) || (Request.Url.ToString().ToLower().Contains("/userquestion/") == true && Request.Url.ToString().ToLower().Contains("/userquestion/question") == false && Request.Url.ToString().ToLower().Contains("/userquestion/index?childid=") == false) ? "" : "display:none;")"><div>Please Wait...</div></div> 
     <div class="tabs toptabs" style="display:none;">
         <ul class="tabdashboard">
             <li>
-                <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
+                <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.dashboard-controls').hide(); $('.dashboardDetails').show();">Dashboard</a>
             </li>
             <li>
-                <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
+                <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.quesDetails').show(); $('.dashboard-controls').show();">Assessment</a>
             </li>
+            <li>
+                <a href="#2" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.childrendropdown').show(); $('.graphsDetails').show(); $('.dashboard-controls').show();">Visualization</a>
+            </li>            
         </ul>
     </div>
 
+    <div style="height: 38px;display:none;" class="col-md-12 topControls">
+        <table>
+            <tr>
+                <td>
+                    <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
+                        @foreach (DataRow drStd in dschildren.Tables[1].Rows)
+                        {
+                            <option value="@drStd["Id"]" @(studyId == (int)drStd["Id"] ? "selected=selected" : "")>@drStd["Name"]</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                    <span style="font-size: 24px;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>
+                </td>
+                <td>
+                    <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
+                        <option value="0">All Chlidren</option>
+                        @foreach (System.Data.DataRow drch in dschildren.Tables[0].Rows)
+                        {
+                            <option value="@drch["ID"]" @(childIdts == (int)drch["ID"] ? "selected=selected" : "")>@drch["Name"]</option>
+                        }
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
     <div class="dashboardDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
-        @{Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
-
-        <div class="separator"></div>
-        @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
-    </div>
-    <div class="graphsDetails __tabs" style="opacity:0;">
-        <div class="topControls">
-            <select id="ddlChildren" class="col-sm-9 form-control childrendropdown" onchange="getChildInfo(this);">
-                <option value="0">All Children</option>
-                @foreach (DataRow drChild in dschildren.Tables[0].Rows)
-                {
-                    <option value="@drChild["ChildId"]" @(childIdts == (int)drChild["childId"] ? "selected=selected" : "")>@drChild["Name"]</option>
-                }
-            </select>
+        <div class="col-sm-12">
+            @{Html.RenderPartial("~/Views/Home/_SurveyCompletion.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
         </div>
         <div class="separator"></div>
-        @{Html.RenderPartial("~/Views/Home/_Charts.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childIdts } });}
+        <div class="col-sm-12">
+            @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
+        </div>
+    </div>
+    <div class="graphsDetails __tabs" style="opacity:0;">
+        <div class="separator"></div>
+        <div class="col-sm-12">
+            @{Html.RenderPartial("~/Views/Home/_Charts.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childIdts } });}
+        </div>
+    </div>
+    <div class="quesDetails __tabs" style="opacity:0;">
+        <div class="col-sm-12">
+            @{Html.RenderPartial("_ChildDetails", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childIdts } });}
+        </div>        
     </div>
 
     <script type="text/javascript">
         $(window).load(function () {
             $(".waiting").hide();
             $(".toptabs").show();
+            $(".topControls").show();
 
             var hash = 0;
             if (window.location.hash) {
                 hash = window.location.hash.substring(1);
             }
-            $(".tabdashboard").find("li:eq(" + (hash > 2 ? 1 : hash) + ")").find("a").click();
+            
+            $(".tabdashboard").find("li:eq(" + (hash > 2 ? 2 : hash) + ")").find("a").click();
             if (hash > 2) {
                 $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
             }
@@ -607,6 +146,7 @@ else
             if ($(".gDetails .teacherdiv").is(":visible") == true) { return 4; }
             if ($(".gDetails .parentteacherdiv").is(":visible") == true) { return 5; }
             if ($(".gDetails .weeklydiv").is(":visible") == true) { return 6; }
+            if ($(".gDetails .lifeeventsdiv").is(":visible") == true) { return 7; }
         }
 
         function getChildInfo(elem) {
@@ -614,6 +154,11 @@ else
             var childIdts = $(elem).val();
             location.href = "@Url.Action("Index", "UserQuestion")" + "?studyId=" + @studyId +"&childIdts=" + (childIdts == 0 ? "" : childIdts) + "#" + div;
         }
+
+        function getStudyInfo(elem) {
+            var div = getVisibleDiv();
+            var studyId = $(elem).val();
+            location.href = "@Url.Action("Index", "UserQuestion")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "#" + div;
+        }
     </script>
     
-}

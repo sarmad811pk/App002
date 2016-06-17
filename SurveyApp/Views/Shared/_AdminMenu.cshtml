@@ -1,7 +1,8 @@
 ﻿@*@Html.ActionLink(dr["Title"].ToString(), "Survey",null, new { id = dr["ID"].ToString() },ew with {.class = "tab" })*@
 @using SurveyApp.Models;
 @using System.Data;
-@{
+
+@{    
     var c = ViewContext.RouteData.Values["Controller"].ToString();
     int? childID = (int?)TempData["ChildID"];
     int id = Convert.ToInt32(WebSecurity.CurrentUserId);
@@ -10,53 +11,33 @@
     var userId = WebSecurity.CurrentUserId;
     var role = roles[0];
 
-    int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["studyId"]);
-    string studyName = "";
-    using (StudyContext sContext = new StudyContext())
-    {
-        Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
-        studyId = objStd.Id;
-        studyName = objStd.Name;
-    }
-    System.Data.DataSet dschild = SurveyApp.DataHelper.GetChildbyStudyID(studyId, userId);
-
 }
 <div class="waiting" style="@((Request.Url.ToString().ToLower().Contains("/home/") == true && Request.Url.ToString().ToLower().Contains("/home/about") == false && Request.Url.ToString().ToLower().Contains("/home/contact") == false) || (Request.Url.ToString().ToLower().Contains("/userquestion/") == true && Request.Url.ToString().ToLower().Contains("/userquestion/question") == false && Request.Url.ToString().ToLower().Contains("/userquestion/index?childid=") == false) ? "" : "display:none;")"><div>Please Wait...</div></div> 
-<div class="list-group leftmenu">
+
     <div class="list-group leftmenu">
-        @if (Roles.IsUserInRole("Administrator"))
-        {            
-            <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
-            <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Survey Manager</a>
-            <a class='list-group-item @(c == "School" ? " active" : "")         ' href="@Url.Action("Index", "School", new object { })"><i class='ion-university'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;School Manager</a>
-            <a class='list-group-item @(c == "Schedule" ? " active" : "")       ' href="@Url.Action("Index", "Schedule", new object { })"><i class='ion-calendar'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Schedule Manager</a>
-            <a class='list-group-item @(c == "Study" ? " active" : "")          ' href="@Url.Action("Index", "Study", new object { })"><i class='ion-ios-book-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Study Manager</a>            
-            <a class='list-group-item @(c == "ParentTeacher" ? " active" : "")  ' href="@Url.Action("Index", "ParentTeacher", new object { })"><i class='ion-ios-people'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User Manager</a>
-            <a class='list-group-item @(c == "Child" ? " active" : "")          ' href="@Url.Action("Index", "Child", new object { })"><i class='ion-happy-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Child Manager</a>
-        }
-        else
-        {
-            <a class='list-group-item @(c == "UserQuestion" && childID ==null ? " active" : "") ' href="@Url.Action("Index", "UserQuestion", new { })"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
-            <div class="list-group-item" style="height: 38px;padding:2px;">
-                <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;">
-                    @foreach (DataRow drStd in dschild.Tables[1].Rows)
-                    {
-                        <option value="@drStd["Id"]" @(studyId == (int)drStd["Id"] ? "selected=selected" : "")>@drStd["Name"]</option>
-                    }
-                </select>
-            </div>
-            foreach (System.Data.DataRow drch in dschild.Tables[0].Rows)
+        <div class="list-group leftmenu">
+            @if (Roles.IsUserInRole("Administrator"))
             {
-                <a class='list-group-item @(c == "UserQuestion" && childID==(int?)drch["ID"] ? " active" : "") ' href="@Url.Action("Index", "UserQuestion")?childID=@drch["ID"]&studyId=@studyId"><i class='ion-ios-arrow-forward'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@drch["Name"].ToString()</a>
+                <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Survey Manager</a>
+                <a class='list-group-item @(c == "School" ? " active" : "")         ' href="@Url.Action("Index", "School", new object { })"><i class='ion-university'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;School Manager</a>
+                <a class='list-group-item @(c == "Schedule" ? " active" : "")       ' href="@Url.Action("Index", "Schedule", new object { })"><i class='ion-calendar'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Schedule Manager</a>
+                <a class='list-group-item @(c == "Study" ? " active" : "")          ' href="@Url.Action("Index", "Study", new object { })"><i class='ion-ios-book-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Study Manager</a>
+                <a class='list-group-item @(c == "ParentTeacher" ? " active" : "")  ' href="@Url.Action("Index", "ParentTeacher", new object { })"><i class='ion-ios-people'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User Manager</a>
+                <a class='list-group-item @(c == "Child" ? " active" : "")          ' href="@Url.Action("Index", "Child", new object { })"><i class='ion-happy-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Child Manager</a>
             }
-        }
+            @*else
+                {
+                    <a class='list-group-item @(c == "UserQuestion" && childID ==null ? " active" : "") ' href="@Url.Action("Index", "UserQuestion", new { })"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                }*@
+        </div>
+
     </div>
 
-</div>
+    <script type="text/javascript">
+        function getStudyInfo(elem) {
+            var studyId = $(elem).val();
+            location.href = "@Url.Action("Index", "UserQuestion")" + "?studyId=" + (studyId == 0 ? "" : studyId);
+        }
+    </script>
 
-<script type="text/javascript">
-    function getStudyInfo(elem) {
-        var studyId = $(elem).val();
-        location.href = "@Url.Action("Index", "UserQuestion")" + "?studyId=" + (studyId == 0 ? "" : studyId);
-    }
-</script>

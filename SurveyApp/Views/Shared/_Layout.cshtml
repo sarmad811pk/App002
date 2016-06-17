@@ -116,13 +116,14 @@
         </div>
     </header>
     <div id="body">
+        @if (Roles.IsUserInRole("Administrator") == true)
+        {
+            <div class="col-sm-2 leftsection" style="margin-top:0px;padding:0px;min-height:600px;">
+                @{Html.RenderPartial("~/Views/Shared/_AdminMenu.cshtml");}
+            </div>
+        }
 
-        <div class="col-sm-2 leftsection" style="margin-top:0px;padding:0px;min-height:600px;">
-            @{Html.RenderPartial("~/Views/Shared/_AdminMenu.cshtml");}
-        </div>
-
-
-        <div class="col-sm-10 rightsection" style="margin: 0px; padding: 0px; min-height: 600px;background:#ffffff;">
+        <div class="@(Roles.IsUserInRole("Administrator") == true ? "col-sm-10 rightsection" : "")" style="margin: 0px; padding: 0px; min-height: 600px;background:#ffffff;">
             @RenderSection("featured", required: false)
             <section class="content-wrapper main-content clear-fix" style="padding:10px;">
                 @RenderBody()
