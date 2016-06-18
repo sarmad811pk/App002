@@ -138,6 +138,7 @@
 
         function getVisibleDiv() {
             if ($(".dashboardDetails").is(":visible") == true) { return 0; }
+            if ($(".quesDetails").is(":visible") == true) { return 1; }
             if ($(".graphsDetails").is(":visible") == true) { return getInnerVisibleDiv(); }
         }
 

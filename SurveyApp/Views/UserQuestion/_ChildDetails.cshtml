@@ -94,7 +94,7 @@
                     string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
                     string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
                     int percInt = Convert.ToInt32(percentage.Replace("%", ""));
-                    info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a class='" + (percInt < 50 ? "lowFilled" : (percInt < 100 && percInt > 50 ? "medFilled" : "")) + "' href='" + urlForSurvey + "' title='" + (index == 0 ? "Previously Due" : "Currently Due") + "'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+                    info = (rrr != "" ? "" : "&nbsp;&nbsp;&nbsp;&nbsp;") + "<a data-toggle='tooltip' class='" + (percInt < 50 ? "lowFilled" : (percInt < 100 && percInt > 50 ? "medFilled" : "")) + "' href='" + urlForSurvey + "' title='" + (index == 0 ? "Previously Due" : "Currently Due") + "'><span class='" + (rrr != "" ? "" : "schedule " + cssClass) + "'>" + (rrr != "" ? rrr : endDate.ToString("MMM dd, y")) + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
                 }
                 i++;
             }
@@ -121,8 +121,7 @@
                 text-align: left;
             }
 
-            .childDetailsDiv .boxitem .content {
-                width: 90%;
+            .childDetailsDiv .boxitem .content {                
                 height: 200px;
             }
     </style>
@@ -404,7 +403,7 @@
                     <div style="font-size:14px;border-bottom:solid 2px #000000;margin-bottom: 5px;padding: 6px;"><i class="fa fa-history"></i>&nbsp;Child Statistics&nbsp;(@childName)</div>
                     <div class="col-md-6 text-left lifeevents boxitem" style="background: rgb(151, 201, 93) ;">
                         <div class="boxheading" style="background: rgb(139, 195, 74);">
-                            <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events @*<span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Add</a></span>*@
+                            <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = childID, ChildName = childName })">Add</a></span>
                         </div>
                         <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar">
                             @if (dsReveseandLiveEvent.Tables[1].Rows.Count > 0)
@@ -413,7 +412,7 @@
                                 {
                                     <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
                                         @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
-                                        <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]">
+                                        <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
                                             <div style="float:left;font-weight:bold;">  @dr["EventName"]</div>
                                             <div style="text-align:right;float:right;@( @dr["EventDate"].ToString() == "" ? "display:none;" : "") "> on @dr["EventDate"]</div>
                                         </div>
@@ -429,7 +428,7 @@
                     <div class="col-md-6 text-left adverse boxitem" style="background: rgb(235, 99, 87);">
                         <div class="boxheading" style="background: #E14C3E;">
                             <i class="ion-nuclear" style="position:absolute;top:7px;left:12px;font-size:16px;"></i> Adverse Reactions
-                            <span style="float: right;">@*<a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Add</a>*@</span>
+                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = childID, ChildName = childName })">Add</a></span>
                         </div>
                         <div style="padding: 5px 5px 5px 5px;overflow:hidden; font-size: 12px;" class="content mCustomScrollbar">
                             @if (dsReveseandLiveEvent.Tables[0].Rows.Count > 0)
@@ -437,12 +436,7 @@
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
                                 {
                                     <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
-                                        <div style="overflow:hidden;" title='@dr["AdverseReaction"]
-                                        Occured on: @dr["DateOccured"]
-                                        Resolved on: @dr["DateResolved"]
-                                        Medication: @dr["Medication"]
-                                        Started on: @dr["DateStart"]
-                                        Ended on: @dr["DateEnd"]'>
+                                        <div style="overflow:hidden;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
                                             <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b></div>
                                             <div style="float:right;"> on @dr["DateOccured"]</div>
                                         </div>
@@ -461,7 +455,7 @@
                     <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
                         <div class="boxheading" style="background: #666666;">
                             <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
-                            @*<span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = (int)drch["ID"], ChildName = drch["Name"].ToString() })">Add</a></span>*@
+                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = childID, ChildName = childName })">Add</a></span>
                         </div>
                         <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar">
                             @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
@@ -477,7 +471,7 @@
                                         {
 
                                             <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
-                                                <div style="overflow:hidden;" title='@_qq'>
+                                                <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
                                                     <b>@_qq (@_a[1] @_a[4])</b>
                                                     <div style=" text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
 
@@ -512,10 +506,19 @@
     </div>
 
     <script type="text/javascript">
-        $(".boxitem .content").mCustomScrollbar({
-            scrollButtons: { enable: true },
-            theme: "light-thick",
-            scrollbarPosition: "outside"
+        $(document).ready(function () {
+            $(".boxitem .content").mCustomScrollbar({
+                scrollButtons: { enable: true },
+                theme: "light-thick",
+                scrollInertia: 700,
+                scrollbarPosition: "inside"
+            });
+
+            $('[data-toggle="tooltip"]').tooltip({
+                content: function () {
+                    return $(this).attr('title').replace(/_NEWLINE_/g, "<br/>");
+                },
+            });
         });
     </script>
 }

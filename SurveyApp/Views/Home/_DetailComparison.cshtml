@@ -23,58 +23,65 @@
 
 @functions{
 
-            DataTable dtChildren, dtTeachers, dtSurveys, dtTotalSurveys;
+    DataTable dtChildren, dtTeachers, dtSurveys, dtTotalSurveys;
 
-            public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype)
+    public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype)
+    {
+        string value = "", scheduleDate = "", userId = "";
+        string notstarted = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This survey has not started yet' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
+        string notapplicable = "<span><i class='ion-android-radio-button-off notenrolled' data-toggle='tooltip' title='Not applicable to respond' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
+        string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this survey' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
+
+        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = "+ surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL)");
+        foreach(DataRow drS in drSurveys)
+        {
+            scheduleDate = drS["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(drS["ScheduleDate"]).ToString("MM/dd/yyyy") : "";
+            userId = drS["UserID"] != DBNull.Value ? drS["UserID"].ToString() : "";
+
+            if ((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
             {
-                string value = "";
-                string notstarted = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This survey has not started yet'></i></span>";
-                string notapplicable = "<span><i class='ion-android-radio-button-off notenrolled' data-toggle='tooltip' title='Not applicable to respond'></i></span>";
-                string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this survey'></i></span>";
-
-                DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = "+ surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL)");
-                foreach(DataRow drS in drSurveys)
+                string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
+                string title = (cssClass == "complete" ? "This survey is complete" : (cssClass == "incomplete" ? "This survey is partially complete" : (cssClass == "notstarted" ? "This survey has not started yet" : "Child is not scheduled for this survey")));
+                value = "<span><i data-toggle='tooltip' title='" + title + "' class='ion-record " + cssClass + "' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
+                value = value.Replace("_SCHEDULEDATE_", scheduleDate);
+                value = value.Replace("_USERID_", userId);
+                return value;
+            }
+            else
+            {
+                if(drS["ScheduleDate"] == DBNull.Value && drS["UserID"] == DBNull.Value)
                 {
-                    if((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
+                    if (surveyId == 6 || surveyId == 7 || surveyId == 8 || surveyId == 9)
                     {
-                        string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
-                        string title = (cssClass == "complete" ? "This survey is complete" : (cssClass == "incomplete" ? "This survey is partially complete" : (cssClass == "notstarted" ? "This survey has not started yet" : "Child is not scheduled for this survey")));
-                        value = "<span><i data-toggle='tooltip' title='" + title + "' class='ion-record " + cssClass + "'></i></span>";
-                        return value;
+                        DataRow[] drChildren = dtChildren.Select("ChildId = " + childId);
+                        if(drChildren.Length > 0)
+                        {
+                            int age = DateTime.Today.Year - Convert.ToDateTime(drChildren[0]["dob"]).Year;
+                            if (surveyId == 6) { if (age <= 4 && age >= 2 && surveyId == 6) { value = notstarted; } else { value = notapplicable; } }
+                            if (surveyId == 7) { if (age <= 7 && age >= 5 && surveyId == 7) { value = notstarted; } else { value = notapplicable; } }
+                            if (surveyId == 8) { if (age <= 12 && age >= 8 && surveyId == 8) { value = notstarted; } else { value = notapplicable; } }
+                            if (surveyId == 9) { if (age <= 18 && age >= 13 && surveyId == 9) { value = notstarted; } else { value = notapplicable; } }
+                        }
                     }
                     else
                     {
-                        if(drS["ScheduleDate"] == DBNull.Value && drS["UserID"] == DBNull.Value)
-                        {                            
-                            if (surveyId == 6 || surveyId == 7 || surveyId == 8 || surveyId == 9)
-                            {
-                                DataRow[] drChildren = dtChildren.Select("ChildId = " + childId);
-                                if(drChildren.Length > 0)
-                                {
-                                    int age = DateTime.Today.Year - Convert.ToDateTime(drChildren[0]["dob"]).Year;
-                                    if (surveyId == 6) { if (age <= 4 && age >= 2 && surveyId == 6) { value = notstarted; } else { value = notapplicable; } }
-                                    if (surveyId == 7) { if (age <= 7 && age >= 5 && surveyId == 7) { value = notstarted; } else { value = notapplicable; } }
-                                    if (surveyId == 8) { if (age <= 12 && age >= 8 && surveyId == 8) { value = notstarted; } else { value = notapplicable; } }
-                                    if (surveyId == 9) { if (age <= 18 && age >= 13 && surveyId == 9) { value = notstarted; } else { value = notapplicable; } }
-                                }
-                            }
-                            else
-                            {
-                                value = notstarted;
-                            }
-                        }
-                        else
-                        {
-                            value = notscheduled;
-                        }
+                        value = notstarted;
                     }
                 }
-                if(value == "")
+                else
                 {
-                    value = notapplicable;
+                    value = notscheduled;
                 }
-                return value;
             }
+        }
+        if(value == "")
+        {
+            value = notapplicable;
+        }
+        value = value.Replace("_SCHEDULEDATE_", scheduleDate);
+        value = value.Replace("_USERID_", userId);
+        return value;
+    }
         }
 
 <style type="text/css">
@@ -186,7 +193,7 @@
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
     {
-                                                    <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
+                                                    <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"]);">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                 }
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
@@ -200,7 +207,7 @@
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
     {
-                                                        <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
+                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"]);">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
                                                     }
                                                 </tr>
                                             }
@@ -215,7 +222,7 @@
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
     {
-                                                    <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
+                                                    <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"]);">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
                                                 }                                              
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
@@ -229,7 +236,7 @@
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
     {
-                                                        <td class="dot"><span onclick="window.open('@Url.Action("Survey", "Survey")?SurveyID=@drT["SurveyId"]')">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
+                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"]);">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
                                                     }                                              
                                                 </tr>
                                             }
@@ -392,10 +399,16 @@
                                 },
             error: function (errss) {
                                     result = false;
-                                },            
+                                },
             cache: false,
             processData: false
         });
                         }
     //#FFD740
+
+    function openSurvey(elem, surveyId, childId) {
+        var perioddate = $(elem).find("i").attr("scheuledate");
+        var userId = $(elem).find("i").attr("userid");
+        window.open('@Url.Action("Question", "UserQuestion")?surveyID=' + surveyId + "&ChildId=" + childId + "&userId=" + userId + "&perioddate="  + perioddate);
+    }
 </script>

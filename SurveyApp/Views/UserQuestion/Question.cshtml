@@ -3,7 +3,7 @@
     var chiildid = Request.QueryString["ChildId"];
     DateTime fetchdate = Convert.ToDateTime(Request.QueryString["perioddate"]??DateTime.Now.ToShortDateString());
     System.Data.DataSet dsSurvey = SurveyApp.DataHelper.SurveyGetByID(Model ?? 1);
-    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid), WebSecurity.CurrentUserId, fetchdate);
+    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid), (String.IsNullOrEmpty("userId") == true ? WebSecurity.CurrentUserId : Convert.ToInt32(WebSecurity.CurrentUserId)), fetchdate);
     var qGroup = "";
     var SurveyID = Model ?? 1;
     ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString();
