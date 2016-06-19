@@ -104,7 +104,7 @@
 <div class="form-group" style="position:relative;">
     @if (Roles.IsUserInRole("Administrator"))
     {
-        <div class="disabler" data-toggle='tooltip' title="This questionnaire was filled by another user, you are not authorized to change it." style="cursor:help;opacity: 0.04;background: #000000;top: 0px;left: 0px;right: 0px;bottom: 0px;position: absolute;z-index: 90;height: 100%;"></div>
+        <div class="disabler" data-toggle='tooltip' title="This questionnaire is assigned to another user, you are not authorized to change it." style="cursor:help;opacity: 0.04;background: #000000;top: 0px;left: 0px;right: 0px;bottom: 0px;position: absolute;z-index: 90;height: 100%;"></div>
     }    
         <div class='questions list-group'>
             @{
@@ -215,7 +215,7 @@
             <td style="width:155px;padding:0px;">
                 @if (Roles.IsUserInRole("Administrator"))
                 {
-                    <a href="javascript:void(0);" data-toggle='tooltip' title="This questionnaire was filled by another user, you are not authorized to change it." style="text-transform: uppercase; background-color: #CCC;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;cursor: help;text-decoration: none !important;">@btnsubmit_text</a>
+                    <a href="javascript:void(0);" data-toggle='tooltip' title="This questionnaire is assigned to another user, you are not authorized to change it." style="text-transform: uppercase; background-color: #CCC;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;cursor: help;text-decoration: none !important;">@btnsubmit_text</a>
                 }
                 else
                 {
