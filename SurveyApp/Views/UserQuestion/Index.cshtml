@@ -100,11 +100,11 @@
                     </select>
                 </td>
                 <td>
-                    <span style="font-size: 24px;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>
+                    <span style="font-size: 24px;color: #00adee;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>
                 </td>
                 <td>
                     <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
-                        <option value="0">All Chlidren</option>
+                        <option value="0">All Children</option>
                         @foreach (System.Data.DataRow drch in dschildren.Tables[0].Rows)
                         {
                             <option value="@drch["ID"]" @(childIdts == (int)drch["ID"] ? "selected=selected" : "")>@drch["Name"]</option>

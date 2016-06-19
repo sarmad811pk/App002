@@ -237,9 +237,12 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript">
-    var SurveryID = @SurveyID;
-        $(function () {
+        var SurveryID = @SurveyID;
+        $(window).load(function(){
             setCompletionDiv();
+        });
+        $(function () {
+            
 
             var score;
             $("._datepicker").datepicker(
@@ -253,12 +256,12 @@
                 });
             $("._datepickermed").datepicker(
             {
-                onSelect: function(dateText, inst) { 
+                onSelect: function(dateText, inst) {
                     var date = $(this).val();
                     var qid = $(this).attr("qid");
                     saveTmedValues(qid);
                 }
-               
+
             });
             $("#success-alert").hide();
             //var childname = decodeURI(GetQueryStringValues()['ChildName']);
@@ -304,7 +307,7 @@
                 }
             });
 
-            $("textarea, input[type=text]").blur(function () {                  
+            $("textarea, input[type=text]").blur(function () {
                 if ($(this).hasClass("hasDatepicker") == true || $(this).hasClass("_txtdatepicker")) { return; }
                 if ($(this).attr("data-tmed") == "tmed" || $(this).attr("data-sch") == "tsch" || $(this).attr("data-schdiet") == "tschdiet") {
 
@@ -328,7 +331,7 @@
 
                         var at1 = $('[data-id=t1' + qid + ']').val();
                         var at2 = $('[data-id=t2' + qid + ']').val();
-                        var at3 = $('[data-id=t3' + qid + ']').val(); 
+                        var at3 = $('[data-id=t3' + qid + ']').val();
 
                         var allanst = "|" + at1 + "|" + at2 + "|" + at3;
                         $("#hdn" + $(this).attr("qid")).val(allanst).trigger('change');
@@ -336,7 +339,7 @@
                 }
 
                 else {
-                    
+
                     var oldval = $("#hdn" + $(this).attr("qid")).val();
                     if (this.value != "") {
                         var newval = "|" + this.value;
@@ -554,7 +557,7 @@
             }
         }
 
-        function setCompletionDiv() {
+        function setCompletionDiv() {            
             if (SurveryID == 29 || SurveryID ==28) {return;}
             var noQ = 0, nofQ = 0;
             $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
@@ -563,7 +566,7 @@
                 }
                 noQ++;
             });
-
+            
             var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0));
 
             setCompletionPercentage(percentage);
@@ -571,7 +574,7 @@
 
 
         $("#SurveySubmit").click(function (e) {
-       
+
             e.preventDefault();
 
             var flag = true;
@@ -598,7 +601,7 @@
 
 
                         var childId = GetQueryStringValues()['ChildId'];
-                       
+
                         if (SurID == 28) {
                             savequestionsAdverseReaction(childId);
                         }
@@ -801,7 +804,7 @@
 
 
 
-    </script>
+</script>
 }
 
 @functions{
