@@ -3,10 +3,11 @@
     var chiildid = Request.QueryString["ChildId"];
     DateTime fetchdate = Convert.ToDateTime(Request.QueryString["perioddate"]??DateTime.Now.ToShortDateString());
     System.Data.DataSet dsSurvey = SurveyApp.DataHelper.SurveyGetByID(Model ?? 1);
-    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid), (String.IsNullOrEmpty("userId") == true ? WebSecurity.CurrentUserId : Convert.ToInt32(WebSecurity.CurrentUserId)), fetchdate);
+    int userId = String.IsNullOrEmpty(Request.QueryString["userId"]) == true ? WebSecurity.CurrentUserId : Convert.ToInt32(Request.QueryString["userId"]);
+    System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid), userId, fetchdate);
     var qGroup = "";
     var SurveyID = Model ?? 1;
-    ViewBag.Title = @dsSurvey.Tables[0].Rows[0]["Title"].ToString();
+    ViewBag.Title = dsSurvey.Tables[0].Rows[0]["Title"].ToString();
     Layout = "~/Views/Shared/_Layout.cshtml";
     var childname = Request.QueryString["ChildName"];
 }
@@ -86,6 +87,7 @@
         padding-right: 0px;
         font-weight: bold;
     }
+    .ui-tooltip {min-width: 500px;max-width: 600px;}
 </style>
 
 
@@ -99,86 +101,97 @@
 <p style="font-size:16px;">
     @dsSurvey.Tables[0].Rows[0]["TagLine"].ToString().Replace("[Child]", childname)
 </p>
-<div class="form-group">
-    <div class='questions list-group'>
-      @{
-          var Title = "";
-      }
-        @foreach (System.Data.DataRow q in dsQuestions.Tables[0].Rows)
-        {
-            var Nclass = q["Nclass"].ToString();
-            var Qclass = q["Qclass"].ToString() + " _bold";
-            var Aclass = q["Aclass"].ToString();
-            var title = q["ScoreCategory"].ToString();
-            if (Title == title) {
-                title = "";
-            } 
-            var PAnswers="";
-            if (dsQuestions.Tables[0].Rows.IndexOf(q)==0)
-            { 
-                PAnswers = q["Answer"].ToString(); 
-            } 
-            else
-            { 
-                PAnswers = q["PAnswerLike"].ToString(); 
+<div class="form-group" style="position:relative;">
+    @if (Roles.IsUserInRole("Administrator"))
+    {
+        <div class="disabler" data-toggle='tooltip' title="This questionnaire was filled by another user, you are not authorized to change it." style="cursor:help;opacity: 0.04;background: #000000;top: 0px;left: 0px;right: 0px;bottom: 0px;position: absolute;z-index: 90;height: 100%;"></div>
+    }    
+        <div class='questions list-group'>
+            @{
+                var Title = "";
             }
+            @foreach (System.Data.DataRow q in dsQuestions.Tables[0].Rows)
+            {
+                var Nclass = q["Nclass"].ToString();
+                var Qclass = q["Qclass"].ToString() + " _bold";
+                var Aclass = q["Aclass"].ToString();
+                var title = q["ScoreCategory"].ToString();
+                if (Title == title)
+                {
+                    title = "";
+                }
+                var PAnswers = "";
+                if (dsQuestions.Tables[0].Rows.IndexOf(q) == 0)
+                {
+                    PAnswers = q["Answer"].ToString();
+                }
+                else
+                {
+                    PAnswers = q["PAnswerLike"].ToString();
+                }
+
+
+                //var a = PAnswers.Split('|');
+
+
+                //var Answer = q["Answer"].ToString();
+                //string value = Array.Find(a, element => element.StartsWith(Answer, StringComparison.Ordinal));
+                //var hidden = value != "" ? "visibility:visible" : "visibility:hidden";
+                //var hidden2 = value != "" ? "display:none;" : "display:block;";
+
+                if (title != "" && (SurveyID == 16 || SurveyID == 21 || SurveyID == 24))
+                {
+                    <div class="list-group-item-heading col-sm-12 btn-primary disabled" style="margin-bottom:0px;">
+                        <h4>@title</h4>
+                    </div>
+                }
+                if (q["PID"].ToString() == string.Empty)
+                {
+
+                    <div id="@Html.Raw("q"+q["ID"].ToString())" class="q @Nclass list-group-item">
+
+                        @if (@q["QuestionGroup"].ToString().Trim() != "")
+                    {
+                            <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</h1>
+                            <div style="visibility:hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
+                        }
+
+                        <div class="@Qclass">@q["Question"].ToString().Replace("[Child]", childname) <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
+
+
+
+                        @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass, q["Score"].ToString(), q["Answer"].ToString()))
+                        <input type="hidden" value="@q["Answer"].ToString()" data-possibleanswers="@q["PAnswerLike"].ToString()" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
+
+                    </div>
+                }
+                else
+                {
+
+                    <div style="display:none;" id="@Html.Raw("q"+q["ID"].ToString())" class="q @Nclass showwhen list-group-item" pid="@Html.Raw("q"+q["PID"].ToString())" pans="@Html.Raw(q["PAnswerLike"].ToString())">
+                        @if (@q["QuestionGroup"].ToString().Trim() != "")
+                    {
+                            <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</h1>
+                            <div style="visibility:hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
+                        }
+
+                        <div class="@Qclass">@q["Question"].ToString().Replace("[Child]", childname)  <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
+                        @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass, q["Score"].ToString(), q["Answer"].ToString()))
+                        <input type="hidden" value="@q["Answer"].ToString()" data-possibleanswers="@q["PAnswerLike"].ToString()" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
+
+                    </div>
+                }
+
+                Title = q["ScoreCategory"].ToString();
+            }
+        </div>
+    @if (Roles.IsUserInRole("Administrator"))
+    {
+        <div style="clear:both;"></div>
+    }
         
-
-            //var a = PAnswers.Split('|');
-            
-
-            //var Answer = q["Answer"].ToString();
-            //string value = Array.Find(a, element => element.StartsWith(Answer, StringComparison.Ordinal));
-            //var hidden = value != "" ? "visibility:visible" : "visibility:hidden";
-            //var hidden2 = value != "" ? "display:none;" : "display:block;";       
-
-            if (title != "" && (SurveyID==16 || SurveyID == 21 || SurveyID == 24))
-            { 
-                 <div class="list-group-item-heading col-sm-12 btn-primary disabled" style="margin-bottom:0px;">
-                     <h4>@title</h4>
-                 </div>
-            }
-            if (q["PID"].ToString() == string.Empty)
-            {
-
-                <div id="@Html.Raw("q"+q["ID"].ToString())" class="q @Nclass list-group-item">
-
-                    @if (@q["QuestionGroup"].ToString().Trim() != "")
-                    {
-                        <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</h1>
-                        <div style="visibility:hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
-                    }
-
-                    <div class="@Qclass">@q["Question"].ToString().Replace("[Child]", childname) <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
-                                   
-                   
-
-                    @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass, q["Score"].ToString(), q["Answer"].ToString()))
-                    <input type="hidden" value="@q["Answer"].ToString()" data-possibleanswers="@q["PAnswerLike"].ToString()" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
-
-                </div>
-            }
-            else
-            {
-
-                <div style="display:none;" id="@Html.Raw("q"+q["ID"].ToString())" class="q @Nclass showwhen list-group-item" pid="@Html.Raw("q"+q["PID"].ToString())" pans="@Html.Raw(q["PAnswerLike"].ToString())">
-                    @if (@q["QuestionGroup"].ToString().Trim() != "")
-                    {
-                        <h1 class="_title">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</h1>
-                        <div style="visibility:hidden; min-height: 45px; text-indent: 100%;">@Html.Raw(q["QuestionGroup"].ToString().Trim().Replace("[Child]", childname))</div>
-                    }
-
-                    <div class="@Qclass">@q["Question"].ToString().Replace("[Child]", childname)  <sup style="color:#cccccc;">[@q["ID"]]</sup></div>
-                    @Html.Raw(Option((int)q["ID"], q["PossibleAnswers"].ToString(), q["InputType"].ToString(), Aclass,q["Score"].ToString(),q["Answer"].ToString()))
-                    <input type="hidden" value="@q["Answer"].ToString()" data-possibleanswers="@q["PAnswerLike"].ToString()" qid="@q["ID"]" id="@Html.Raw("hdn"+q["ID"].ToString())" />
-
-                </div>
-            }
-
-            Title = q["ScoreCategory"].ToString();
-        }
     </div>
-</div>
+
 @{
     var btnsubmit_text="";
     if (SurveyID == 28){
@@ -193,12 +206,21 @@
         btnsubmit_text = "Submit Survey";
     }
 }
+
+
 <div style="margin:20px ;">
     &nbsp;
     <table style="width:100%;table-layout:fixed;border-collapse:collapse;">
         <tr>
             <td style="width:155px;padding:0px;">
-                <input id="SurveySubmit" type="submit" value="@btnsubmit_text" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;"  />
+                @if (Roles.IsUserInRole("Administrator"))
+                {
+                    <a href="javascript:void(0);" data-toggle='tooltip' title="This questionnaire was filled by another user, you are not authorized to change it." style="text-transform: uppercase; background-color: #CCC;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;cursor: help;text-decoration: none !important;">@btnsubmit_text</a>
+                }
+                else
+                {
+                    <input id="SurveySubmit" type="submit" value="@btnsubmit_text" style="text-transform: uppercase; background: #4285F4;border-radius:3px;padding:8px 15px;color:#ffffff;border:none;text-shadow:none;font-size:14px;" />
+                }                
             </td>
             <td style="padding: 0px;"></td>
         </tr>
@@ -1107,3 +1129,14 @@
         return temp;
     }
 }
+
+<script type="text/javascript">
+    $(function(){
+        $('[data-toggle="tooltip"]').tooltip({
+            track: true, 
+            content: function () {
+                return $(this).attr('title').replace(/_NEWLINE_/g, "<br/>");
+            },
+        });
+    });
+</script>
