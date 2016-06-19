@@ -28,9 +28,9 @@
     public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype)
     {
         string value = "", scheduleDate = "", userId = "";
-        string notstarted = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This survey has not started yet' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
+        string notstarted = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This questionnaire has not started yet' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
         string notapplicable = "<span><i class='ion-android-radio-button-off notenrolled' data-toggle='tooltip' title='Not applicable to respond' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
-        string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this survey' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
+        string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this questionnaire' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
 
         DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = "+ surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL)");
         foreach(DataRow drS in drSurveys)
@@ -41,7 +41,7 @@
             if ((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
             {
                 string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
-                string title = (cssClass == "complete" ? "This survey is complete" : (cssClass == "incomplete" ? "This survey is partially complete" : (cssClass == "notstarted" ? "This survey has not started yet" : "Child is not scheduled for this survey")));
+                string title = (cssClass == "complete" ? "This questionnaire is complete" : (cssClass == "incomplete" ? "This questionnaire is partially complete" : (cssClass == "notstarted" ? "This questionnaire has not started yet" : "Child is not scheduled for this questionnaire")));
                 value = "<span><i data-toggle='tooltip' title='" + title + "' class='ion-record " + cssClass + "' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
                 value = value.Replace("_SCHEDULEDATE_", scheduleDate);
                 value = value.Replace("_USERID_", userId);
@@ -114,7 +114,7 @@
 </style>
 
 <div class="comparison">
-    <h3 style="text-transform:capitalize;">@studyName - Survey Completion Detail</h3>
+    <h3 style="text-transform:capitalize;">@studyName - Questionnaire Completion Detail</h3>
     <div class="current">
         <div class="tabs" >
             <ul class="tabperiod">
@@ -144,7 +144,7 @@
                 <table cellpadding="0" cellspacing="0" class="tblComparison" style="width:100%">
                     <thead>
                         <tr>
-                            <th class="name hdhelper" data-toggle="tooltip" title="Child enrolled in the specfic survey">Child</th>
+                            <th class="name hdhelper" data-toggle="tooltip" title="Child enrolled in the specfic questionnaire">Child</th>
                             <th>
                                 <table class="dots" style="width:100%">
                                     <tr>
@@ -160,7 +160,7 @@
                                             <input type="checkbox" class="chkCurrent" style="" onclick="checkAll(this);" />
                                             <input type="checkbox" class="chkPrevious" style="display:none;" onclick="checkAll(this);" />
                                         </th>
-                                        <th class="name hdhelper" data-toggle="tooltip" title="The resondents for the respective survey i.e. Teacher/Parent">
+                                        <th class="name hdhelper" data-toggle="tooltip" title="The resondents for the respective questionnaire i.e. Teacher/Parent">
                                             Respondent
                                         </th>
                                         @foreach (DataRow drT in dtTotalSurveys.Rows)
@@ -193,7 +193,7 @@
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
-                                                    <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]));">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
+                                                    <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                 }
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
@@ -207,7 +207,7 @@
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
-                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]));">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
+                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
                                                     }
                                                 </tr>
                                             }
@@ -222,7 +222,7 @@
                                                 </td>
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                 {
-                                                    <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]));">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
+                                                    <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
                                                 }                                              
                                             </tr>
                                             @foreach (DataRow drTeacher in drTeachers)
@@ -236,7 +236,7 @@
                                                     </td>
                                                     @foreach (DataRow drT in dtTotalSurveys.Rows)
                                                     {
-                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]));">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
+                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
                                                     }                                              
                                                 </tr>
                                             }
@@ -391,7 +391,7 @@
             async: true,
             success: function (data) {
                                     if (data.success == true) {
-                                        alert("An email about the survey completion has been sent to the selected respondent(s).");
+                                        alert("An email about the questionnaire completion has been sent to the selected respondent(s).");
                                     }
                                     else {
                                         alert("We are unable to send email at this time, please try again later.");
@@ -406,9 +406,9 @@
                         }
     //#FFD740
 
-    function openSurvey(elem, surveyId, childId, userId) {
+    function openSurvey(elem, surveyId, childId, userId, childName) {
         var perioddate = $(elem).find("i").attr("scheuledate");
         //var userId = $(elem).find("i").attr("userid");
-        window.open('@Url.Action("Question", "UserQuestion")?surveyID=' + surveyId + "&ChildId=" + childId + "&userId=" + userId + "&perioddate="  + perioddate);
+        window.open('@Url.Action("Question", "UserQuestion")?surveyID=' + surveyId + "&ChildId=" + childId + "&userId=" + userId + "&perioddate=" + perioddate + "&ChildName=" + childName);
     }
 </script>

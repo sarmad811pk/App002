@@ -1,7 +1,7 @@
 ﻿@model int?
 @{
     var chiildid = Request.QueryString["ChildId"];
-    DateTime fetchdate = Convert.ToDateTime(Request.QueryString["perioddate"]??DateTime.Now.ToShortDateString());
+    DateTime fetchdate = Convert.ToDateTime(String.IsNullOrEmpty(Request.QueryString["perioddate"]) == false ? Request.QueryString["perioddate"] : DateTime.Now.ToShortDateString());
     System.Data.DataSet dsSurvey = SurveyApp.DataHelper.SurveyGetByID(Model ?? 1);
     int userId = String.IsNullOrEmpty(Request.QueryString["userId"]) == true ? WebSecurity.CurrentUserId : Convert.ToInt32(Request.QueryString["userId"]);
     System.Data.DataSet dsQuestions = SurveyApp.DataHelper.QuestionGetbySurveyID(Model ?? 1, Convert.ToInt32(chiildid), userId, fetchdate);

@@ -19,7 +19,7 @@
             @if (Roles.IsUserInRole("Administrator"))
             {
                 <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
-                <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Survey Manager</a>
+                <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Questionnaire Manager</a>
                 <a class='list-group-item @(c == "School" ? " active" : "")         ' href="@Url.Action("Index", "School", new object { })"><i class='ion-university'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;School Manager</a>
                 <a class='list-group-item @(c == "Schedule" ? " active" : "")       ' href="@Url.Action("Index", "Schedule", new object { })"><i class='ion-calendar'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Schedule Manager</a>
                 <a class='list-group-item @(c == "Study" ? " active" : "")          ' href="@Url.Action("Index", "Study", new object { })"><i class='ion-ios-book-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Study Manager</a>
