@@ -125,9 +125,9 @@
     function getData(elem, type) {
         var studyId, userId, childId, surveyId;
         studyId = $("#ddlStudy option:selected").val();
-        userId = $("#ddlUsers option:selected").val();
-        childId = $("#ddlChildren option:selected").val();
-        surveyId = $("#ddlSurveys option:selected").val();
+        userId = type != 1 ? ($("#ddlUsers option:selected").val() == undefined || $("#ddlUsers option:selected").val() == "undefined" ? 0 : $("#ddlUsers option:selected").val()) : 0;
+        childId = type != 1 ? ($("#ddlChildren option:selected").val() == undefined || $("#ddlChildren option:selected").val() == "undefined" ? 0 : $("#ddlChildren option:selected").val()) : 0;
+        surveyId = type != 1 ? ($("#ddlSurveys option:selected").val() == undefined || $("#ddlSurveys option:selected").val() == "undefined" ? 0 : $("#ddlSurveys option:selected").val()) : 0;
 
         location.href = "@Url.Action("Index", "Data")" + "?studyId=" + studyId + "&userId=" + userId +"&childId=" + childId + "&surveyId=" + surveyId;
     }
