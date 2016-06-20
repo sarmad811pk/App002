@@ -596,7 +596,39 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
         #endregion
-        #endregion        
+        #endregion
 
+        #region DataManager
+        public static DataSet getAllData(int userId, int childId, int surveyId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;            
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);            
+            cmd.Parameters["@ChildID"].Value = childId;
+
+            cmd.Parameters.Add("@SurveyID", SqlDbType.Int);
+            cmd.Parameters["@SurveyID"].Value = surveyId;
+
+
+            cmd.CommandText = "Data_GetAllData";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        public static DataSet getDefaultDataValues(int studyId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;            
+
+            cmd.CommandText = "Data_GetDefaultDataValues";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        #endregion
+        
     }
 }
