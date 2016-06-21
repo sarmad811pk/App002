@@ -7,7 +7,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblStudies").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Studies_List' }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Studies" } });
+        $("#tblStudies").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Studies_List', exportOptions: {  modifier: { search: 'none', order: 'original' }} }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Studies" } });
     });
 </script>
 

@@ -55,7 +55,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#tblSchedules").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Schedules_List' }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Schedules" } });
+        $("#tblSchedules").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Schedules_List', exportOptions: {  modifier: { search: 'none', order: 'original' }} }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Schedules" } });
     });
 </script>
 <div>
