@@ -12,12 +12,20 @@
     int childIdts = String.IsNullOrEmpty(Request.QueryString["childIdts"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childIdts"]);
     int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["studyId"]);
 
-    using (StudyContext sContext = new StudyContext())
+    if (studyId > 0)
     {
-        Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
-        //studyId = objStd.Id;
-        studyName = objStd.Name;
+        using (StudyContext sContext = new StudyContext())
+        {
+            Study objStd = sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
+            studyId = objStd.Id;
+            studyName = objStd.Name;
+        }
     }
+    else
+    {
+        studyName = "All Studies";
+    }
+
     System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, WebSecurity.CurrentUserId);
 
     if(String.IsNullOrEmpty(Request.QueryString["childIdts"]) == true)
@@ -77,7 +85,7 @@
     <div class="tabs toptabs" style="display:none;">
         <ul class="tabdashboard">
             <li>
-                <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.dashboard-controls').hide(); $('.dashboardDetails').show();">Dashboard</a>
+                <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.dashboard-controls').hide(); $('.dashboard-controls').show(); $('.dashboardDetails').show();">Dashboard</a>
             </li>
             <li>
                 <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.quesDetails').show(); $('.dashboard-controls').show();">Assessment</a>

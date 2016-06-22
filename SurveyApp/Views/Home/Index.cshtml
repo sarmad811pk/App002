@@ -82,7 +82,7 @@
                 <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
             </li>
             <li>
-                <a href="#2" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.Adverse').show();">Adverse Reactions & Life Events</a>
+                <a href="#2" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.childrendropdown').show(); $('.Adverse').show();">Adverse Reactions & Life Events</a>
             </li>
         </ul>
     </div>
@@ -118,7 +118,7 @@
         @{Html.RenderPartial("_DetailComparison", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
     </div>
     <div class="Adverse __tabs" style="opacity:0;"> 
-        @{Html.RenderPartial("_AdverseEvent", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
+        @{Html.RenderPartial("_AdverseEvent", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childId } });}
 
 
     </div>

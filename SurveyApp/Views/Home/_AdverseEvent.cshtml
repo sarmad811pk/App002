@@ -7,7 +7,7 @@
     int childId = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
 
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
-    DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, studyId, 0); //Adverse Reaction Survey        
+    DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, studyId, childId); //Adverse Reaction Survey        
 }
 
 <style type="text/css">
