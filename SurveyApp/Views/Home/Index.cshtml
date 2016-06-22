@@ -9,11 +9,19 @@
     string studyName = "";
     string divSelected = String.IsNullOrEmpty(Request.QueryString["div"]) == true ? "" : Request.QueryString["div"].ToString();
 
-    using (StudyContext sContext = new StudyContext())
+
+    if(studyId > 0)
     {
-        Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
-        //studyId = objStd.Id;
-        studyName = objStd.Name;
+        using (StudyContext sContext = new StudyContext())
+        {
+            Study objStd = sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
+            studyId = objStd.Id;
+            studyName = objStd.Name;
+        }
+    }
+    else
+    {
+        studyName = "All Studies";
     }
 
     int childId = String.IsNullOrEmpty(Request.QueryString["childId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childId"]);
