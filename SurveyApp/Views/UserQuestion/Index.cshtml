@@ -15,7 +15,7 @@
     using (StudyContext sContext = new StudyContext())
     {
         Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
-        studyId = objStd.Id;
+        //studyId = objStd.Id;
         studyName = objStd.Name;
     }
     System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, WebSecurity.CurrentUserId);
@@ -84,36 +84,42 @@
             </li>
             <li>
                 <a href="#2" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.childrendropdown').show(); $('.graphsDetails').show(); $('.dashboard-controls').show();">Visualization</a>
-            </li>            
+            </li>    
+            <li style="float:right;">
+                <div style="height: 38px;display:none;" class="col-md-6 topControls">
+                    <table>
+                        <tr>
+                            <td>
+                                <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
+                                    <option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>
+                                    @foreach (DataRow drStd in dschildren.Tables[1].Rows)
+                                    {
+                                        <option value="@drStd["Id"]" @(studyId == (int)drStd["Id"] ? "selected=selected" : "")>@drStd["Name"]</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <span style="font-size: 24px;color: #00adee;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>
+                            </td>
+                            <td>
+                                <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
+                                    <option value="0">All Children</option>
+                                    @foreach (System.Data.DataRow drch in dschildren.Tables[0].Rows)
+                                    {
+                                        <option value="@drch["ID"]" @(childIdts == (int)drch["ID"] ? "selected=selected" : "")>@drch["Name"]</option>
+                                    }
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </li>        
         </ul>
+
+        
     </div>
 
-    <div style="height: 38px;display:none;" class="col-md-12 topControls">
-        <table>
-            <tr>
-                <td>
-                    <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
-                        @foreach (DataRow drStd in dschildren.Tables[1].Rows)
-                        {
-                            <option value="@drStd["Id"]" @(studyId == (int)drStd["Id"] ? "selected=selected" : "")>@drStd["Name"]</option>
-                        }
-                    </select>
-                </td>
-                <td>
-                    <span style="font-size: 24px;color: #00adee;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>
-                </td>
-                <td>
-                    <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
-                        <option value="0">All Children</option>
-                        @foreach (System.Data.DataRow drch in dschildren.Tables[0].Rows)
-                        {
-                            <option value="@drch["ID"]" @(childIdts == (int)drch["ID"] ? "selected=selected" : "")>@drch["Name"]</option>
-                        }
-                    </select>
-                </td>
-            </tr>
-        </table>
-    </div>
+    
 
 
     <div class="dashboardDetails __tabs" style="opacity:0;">
@@ -123,7 +129,7 @@
         </div>
         <div class="separator"></div>
         <div class="col-sm-12">
-            @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
+            @{Html.RenderPartial("~/Views/Home/_AdverseEvent.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childIdts } });}
         </div>
     </div>
     <div class="graphsDetails __tabs" style="opacity:0;">
@@ -144,7 +150,7 @@
             $(".toptabs").show();
             $(".topControls").show();
 
-            var hash = 0;
+            var hash = 1;
             if (window.location.hash) {
                 hash = window.location.hash.substring(1);
             }

@@ -12,7 +12,7 @@
     using (StudyContext sContext = new StudyContext())
     {
         Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
-        studyId = objStd.Id;
+        //studyId = objStd.Id;
         studyName = objStd.Name;
     }
 
@@ -74,7 +74,7 @@
                 <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
             </li>
             <li>
-                <a href="#2" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.Adverse').show();">Adverse Reactions & Life Events</a>
+                <a href="#2" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.Adverse').show();">Adverse Reactions & Life Events</a>
             </li>
         </ul>
     </div>
@@ -89,11 +89,12 @@
             }
         </select>
 
-        <select id="ddlStudy" class="col-sm-9 form-control" style="margin-right: 5px;" onchange="getStudyInfo(this);">            
-        @foreach (Study objStudy in Study.StudyGetAll())
-        {
-            <option value="@objStudy.Id"  @(studyId == objStudy.Id ? "selected=selected" : "")>@objStudy.Name</option>
-        }
+        <select id="ddlStudy" class="col-sm-9 form-control" style="margin-right: 5px;" onchange="getStudyInfo(this);">
+            <option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>            
+            @foreach (Study objStudy in Study.StudyGetAll())
+            {
+                <option value="@objStudy.Id"  @(studyId == objStudy.Id ? "selected=selected" : "")>@objStudy.Name</option>
+            }
         </select>
     </div>
     <div class="separator"></div>
