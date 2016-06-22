@@ -150,7 +150,7 @@
             $(".toptabs").show();
             $(".topControls").show();
 
-            var hash = 1;
+            var hash = @(Roles.IsUserInRole("Parent") == true ? "1" : "0");
             if (window.location.hash) {
                 hash = window.location.hash.substring(1);
             }
