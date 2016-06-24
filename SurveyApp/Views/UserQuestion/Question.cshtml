@@ -97,7 +97,7 @@
    Survey is submitted successfully
 </div>
 
-<h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString().Replace("[Child]",childname)</h2>
+<h2><a href="@Request.UrlReferrer" id="back"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString().Replace("[Child]",childname)</h2>
 <p style="font-size:16px;">
     @dsSurvey.Tables[0].Rows[0]["TagLine"].ToString().Replace("[Child]", childname)
 </p>

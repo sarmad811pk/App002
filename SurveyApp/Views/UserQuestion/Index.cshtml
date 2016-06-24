@@ -26,11 +26,16 @@
         studyName = "All Studies";
     }
 
+    int childrenCount = 0;
     System.Data.DataSet dschildren = SurveyApp.DataHelper.GetChildbyStudyID(studyId, WebSecurity.CurrentUserId);
-
-    if(String.IsNullOrEmpty(Request.QueryString["childIdts"]) == true)
+    if (dschildren != null && dschildren.Tables.Count > 0 && dschildren.Tables[0].Rows.Count > 0)
     {
-        if(dschildren != null && dschildren.Tables.Count > 0 && dschildren.Tables[0].Rows.Count > 0)
+        childrenCount = dschildren.Tables[0].Rows.Count;
+    }
+
+    if(childIdts == 0)
+    {
+        if(dschildren != null && dschildren.Tables.Count > 0 && dschildren.Tables[0].Rows.Count > 0 && Roles.IsUserInRole("Parent") == true)
         {
             childIdts = (int)dschildren.Tables[0].Rows[0]["ChildId"];
         }
@@ -98,7 +103,7 @@
                     <table>
                         <tr>
                             <td>
-                                <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
+                                <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;display:none;">
                                     <option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>
                                     @foreach (DataRow drStd in dschildren.Tables[1].Rows)
                                     {
@@ -107,11 +112,14 @@
                                 </select>
                             </td>
                             <td>
-                                <span style="font-size: 24px;color: #00adee;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>
+                                @*<span style="font-size: 24px;color: #00adee;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>*@
                             </td>
                             <td>
                                 <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
-                                    <option value="0">All Children</option>
+                                    @if (childrenCount >= 1 && Roles.IsUserInRole("Parent") == false)
+                                    {
+                                        <option value="0">All Children</option>
+                                    }                                    
                                     @foreach (System.Data.DataRow drch in dschildren.Tables[0].Rows)
                                     {
                                         <option value="@drch["ID"]" @(childIdts == (int)drch["ID"] ? "selected=selected" : "")>@drch["Name"]</option>
