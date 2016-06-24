@@ -206,6 +206,7 @@
             .intake a:hover {
                 background: rgba(255,255,255,.1);
             }
+        
     </style>
 
     <div style="margin: 0px 0px 20px 0px;" class="childDetailsDiv">
@@ -515,13 +516,19 @@
 }
 else
 {
+    <style type="text/css">
+        .highlightError{
+            background-color: #FFF0F0 !important;
+            color: #444 !important;
+        }
+    </style>
     <div class="alert alert-info" id="alrtNoChildSelected" style="margin-top: 20px;">
         Please select child to view details
     </div>
     <script type="text/javascript">
         $(function () {
-            $("#ddlChildren").css("background-color", "#FFF0F0");
-            $("#ddlChildren").css("color", "#444");
+            $("#ddlChildren").addClass("allchildren");
+            $(".allchildren").addClass("highlightError");
         });
     </script>
 }
