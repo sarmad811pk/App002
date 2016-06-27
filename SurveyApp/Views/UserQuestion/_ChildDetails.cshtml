@@ -110,7 +110,7 @@
             foreach (DataRow dr in drSchedules)
             {
                 string percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : "0%";
-                string urlForSurvey = url + "&perioddate=" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "");
+                string urlForSurvey = url + "&perioddate=" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString() : "");
                 comp += "&nbsp;&nbsp;&nbsp;&nbsp;<a style='color: #000;' data-toggle='tooltip' href='" + urlForSurvey + "'><span class='schedule'>" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MMM dd, y") : "") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
             }
         }
