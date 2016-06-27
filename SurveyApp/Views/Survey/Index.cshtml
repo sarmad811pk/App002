@@ -20,8 +20,11 @@
 <div class="list-group">
     @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
     {
-       <a href="@Url.Action("Survey", "Survey", new { surveyID = dr["ID"].ToString() })" class="list-group-item">
-    <strong>Preview:</strong> @dr["Title"].ToString()</a>  
-        
+        if (dr["ID"] != DBNull.Value && (int)dr["ID"] != 21)
+        {
+            <a href="@Url.Action("Survey", "Survey", new { surveyID = dr["ID"].ToString() })" class="list-group-item">
+                <strong>Preview:</strong> @dr["Title"].ToString()
+            </a>
+        }
     }
 </div>

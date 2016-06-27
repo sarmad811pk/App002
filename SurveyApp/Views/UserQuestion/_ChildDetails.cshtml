@@ -50,7 +50,7 @@
     public string getPercentCompletion(int surveyId, int childId, string url)
     {
 
-        var rrr = "";        
+        var rrr = "";
         string percentage = "0%", schInfo = "";
 
         if (dsChildrenSchedules != null && dsChildrenSchedules.Tables != null && dsChildrenSchedules.Tables[0] != null && dsChildrenSchedules.Tables[0].Rows != null)
@@ -98,6 +98,24 @@
             }
         }
         return info;
+    }
+
+    public string getIntakeCompletion(int childId, string url) {
+        int surveyId = 16;
+        string comp = "";
+
+        if (dsQuestionsFilled != null && dsQuestionsFilled.Tables.Count > 1 && dsQuestionsFilled.Tables[1].Rows.Count > 0)
+        {
+            DataRow[] drSchedules = dsQuestionsFilled.Tables[1].Select("SurveyId = " + surveyId + " AND ChildId = " + childId);
+            foreach (DataRow dr in drSchedules)
+            {
+                string percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : "0%";
+                string urlForSurvey = url + "&perioddate=" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "");
+                comp += "&nbsp;&nbsp;&nbsp;&nbsp;<a style='color: #000;' data-toggle='tooltip' href='" + urlForSurvey + "'><span class='schedule'>" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MMM dd, y") : "") + "</span>&nbsp;-&nbsp;<span class='percent'>" + percentage + "</span></a>";
+            }
+        }
+
+        return comp;
     }
 }
 @if (childID > 0)
@@ -229,6 +247,11 @@
 
                         <div class="surveyList">
                             <div class="col-md-12" style="font-size:14px;border-bottom:solid 2px #000000;"><i class="ion-clipboard"></i>&nbsp;Questionnaires&nbsp;(@childName)</div>
+                            @if (roles[0] != "Teacher")
+                            {
+                                string percentGen = getIntakeCompletion((int)drch["ID"], url.Replace("__", "16"));                                
+                                <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form (OHS)@(Html.Raw(percentGen))</div>               
+                            }
                             @if (roles[0] == "Teacher")
                             {
 
@@ -359,17 +382,17 @@
 
                             @if (roles[0] != "Teacher")
                             {
-                                string percentGen = getPercentCompletion(16, (int)drch["ID"], url.Replace("__", "16"));
+                                @*string percentGen = getIntakeCompletion((int)drch["ID"], url.Replace("__", "16"));
                                 if (!String.IsNullOrEmpty(percentGen))
                                 {
                                     <div class="col-md-12 text-left">Parent Intake Form (OHS)@(Html.Raw(percentGen))</div>
-                                }
+                                }*@
 
-                                string percentM = getPercentCompletion(21, (int)drch["ID"], url.Replace("__", "21"));
+                                @*string percentM = getPercentCompletion(21, (int)drch["ID"], url.Replace("__", "21"));
                                 if (!String.IsNullOrEmpty(percentM))
                                 {
                                     <div class="col-md-12 text-left">Parent Follow-Up Form (OHS)@(Html.Raw(percentM))</div>
-                                }
+                                }*@
                             }
                         </div>
                         <div class="col-sm-5">
@@ -447,7 +470,7 @@
                     <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
                         <div class="boxheading" style="background: #666666;">
                             <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
-                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = childID, ChildName = childName })">Add</a></span>
+                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName })">Add</a></span>
                         </div>
                         <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar">
                             @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
