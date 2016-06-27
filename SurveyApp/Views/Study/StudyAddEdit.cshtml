@@ -14,6 +14,7 @@
     .form-control[disabled] {
         cursor: help;
     }
+    .ui-tooltip {background-color: #333;color:#FFF;}
 </style>
 <br />
 @functions{
@@ -92,7 +93,7 @@
                 </td>
 
                 <td>
-                    <select class="form-control" name="Parent@(index)" disabled="disabled" title="Please select a Survey first to associate this Schedule">
+                    <select class="form-control" name="Parent@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" multiple>
                         <option value="0">---</option>
                         @foreach (System.Data.DataRow drSchedule in ds.Tables[2].Rows)
                         {
@@ -101,7 +102,7 @@
                     </select>
                 </td>
                 <td>
-                    <select class="form-control" name="Teacher@(index)" disabled="disabled" title="Please select a Survey first to associate this Schedule">
+                    <select class="form-control" name="Teacher@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" multiple>
                         <option value="0">---</option>
                         @foreach (System.Data.DataRow drSchedule in ds.Tables[2].Rows)
                         {
@@ -129,7 +130,7 @@
         var isChecked = $(elem)[0].checked;
         
         if (isChecked == true) {
-            $(elem).closest("tr").find("select").removeAttr("disabled").removeAttr("title");
+            $(elem).closest("tr").find("select").removeAttr("disabled").attr("title", "Please use CTRL+Click to multi-select the schedules.");
         }
         else {
             $(elem).closest("tr").find("select").val(0);
@@ -138,6 +139,12 @@
     }
 
     $(function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            content: function () {
+                return $(this).attr('title').replace(/<br\/>/g, "<br/>");
+            },
+        });
+
         $("#tblStudy").find("input[type=checkbox]:checked").each(function (index, obj) {
             if ($(obj)[0].checked == true) {
                 enableDisableSchedule($(obj));

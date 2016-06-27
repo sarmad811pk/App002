@@ -87,8 +87,30 @@ namespace SurveyApp.Controllers
                             {
                                 using (var dbSS = new Study_Survey_ScheduleContext())
                                 {
-                                    Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = Convert.ToInt32(collection["Survey" + i]), ScheduleIdParent = Convert.ToInt32(collection["Parent" + i]), ScheduleIdTeacher = Convert.ToInt32(collection["Teacher" + i]) };
-                                    dbSS.SSSs.Add(sss);
+                                    int[] parentSchedules = collection["Parent" + i] != null ? Array.ConvertAll(collection["Parent" + i].ToString().Split(','), int.Parse) : null;
+                                    int[] teacherSchedules = collection["Teacher" + i] != null ? Array.ConvertAll(collection["Teacher" + i].ToString().Split(','), int.Parse) : null;
+
+                                    int parentSchCount = parentSchedules != null ? parentSchedules.Length : 0;
+                                    int teacherSchCount = teacherSchedules != null ? teacherSchedules.Length : 0;
+                                    int maxSchCount = 0;
+                                    if(parentSchCount > teacherSchCount)
+                                    {
+                                        maxSchCount = parentSchCount;
+                                    }
+                                    else
+                                    {
+                                        maxSchCount = teacherSchCount;
+                                    }
+
+                                    for(int index = 0; index < maxSchCount; index++)
+                                    {
+                                        int pId = parentSchedules.Length > index ? parentSchedules[index] : 0;
+                                        int tId = teacherSchedules.Length > index ? teacherSchedules[index] : 0;
+
+                                        Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = Convert.ToInt32(collection["Survey" + i]), ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
+                                        dbSS.SSSs.Add(sss);
+                                    }
+                                    
                                     dbSS.SaveChanges();
                                 }
                             }
