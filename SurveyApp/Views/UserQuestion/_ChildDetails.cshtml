@@ -474,7 +474,7 @@
                     <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
                         <div class="boxheading" style="background: #666666;">
                             <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
-                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")">Update</a></span>
+                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
                         </div>
                         <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar">
                             @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
@@ -514,9 +514,34 @@
                     <div class="col-md-6 text-left treatment boxitem" style="background: #2daad8;">
                         <div class="boxheading" style="background: #0084b5;">
                             <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Interventions
+                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
                         </div>
                         <div style="padding: 5px;overflow: auto; font-size: 12px;" class="content mCustomScrollbar">
-                            <div style="color:#FFF;text-align:center;"> No history found</div>
+                            @if (dsReveseandLiveEvent.Tables[3].Rows.Count > 0)
+                            {
+                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[3].Rows)
+                                {
+                                    var _qq = dr["Question"].ToString().Trim();
+                                    var _aa = dr["Answers"];
+                                    string[] _a = _aa.ToString().Split('|');
+                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
+                                        <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
+                                            <b>@_qq</b>
+                                            @if (_a.Length >= 4)
+                                            {
+                                                <div>
+                                                    <b>@(String.IsNullOrEmpty(_a[0]) == false ? _a[0] : "-")</b> session(s) of <b>@(String.IsNullOrEmpty(_a[1]) == false ? _a[1] : "-")</b>
+                                                    From @(String.IsNullOrEmpty(_a[2]) == false ? (_a[2].Contains("-") == true ? _a[2].Replace("-", "/") : _a[2]) : "-") To @(String.IsNullOrEmpty(_a[3]) == false ? (_a[3].Contains("-") == true ? _a[3].Replace("-", "/") : _a[3]) : "-")
+                                                </div>
+                                            }                                            
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div style="color:#FFF;text-align:center;"> No history found</div>
+                            }
                         </div>
                     </div>
                 </td>
@@ -534,6 +559,7 @@
             });
 
             $('[data-toggle="tooltip"]').tooltip({
+                //position: { my: "left+15 center", at: "left+15 center" },
                 content: function () {
                     return $(this).attr('title').replace(/_NEWLINE_/g, "<br/>");
                 },
