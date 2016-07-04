@@ -9,6 +9,7 @@
 <head>
     <meta charset="utf-8" />
 <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/css")
@@ -21,6 +22,9 @@
 <script src="~/Scripts/jquery-ui.min.js"></script>
     <script src="~/Scripts/custom.js"></script>
  <style type="text/css">
+     /*body{
+         font-family: 'Open Sans','Noto Sans', Arial, sans-serif !important;
+     }*/
      .container .disabled {
         background-color: #D0D0D0;
         color: #FFF;
@@ -46,7 +50,7 @@
                 <a href="javascript:void(0);"><img src="~/Images/at3logo.png"></a>
             </p>
         </div>
-        <div class="float-left" style="border-left: solid 2px #8e8383;padding: 8px 0px 8px 20px;margin-left: 10px;">
+        <div class="float-left" style="border-left: solid 2px #8e8383;padding: 8px 0px 8px 20px;margin-left: 10px;color: #00a3e2;font-weight: normal;text-shadow: 0px 0px 0.050px #00ACAA;">
             <ul style="margin: 0px 0px 0px 0px;list-style: none;padding: 0px;">
                 <li>Evidence-based care by enabling caregivers to quantify the effects of interventions</li>
                 <li>Integrated care by allowing caregivers to share progress within their network</li>
@@ -72,12 +76,12 @@
     </div>
 </header>
 <div id="body" style="padding-bottom:0px;">
-    <div class="container" style="background:url(../Images/ebitbg.jpg) no-repeat right center;padding-bottom:20px;min-height:420px;width:100%;">
+    <div class="container" style="background:url(../Images/ebitbg.jpg) no-repeat right center;padding-bottom:20px;min-height:420px;width:90%;">
 
  
   
-        <div class="col-sm-5">
-            <div class="col-sm-8">
+        <div class="col-sm-6">
+            <div class="col-sm-7">
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <section>
                     @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
@@ -110,17 +114,19 @@
 }
                 </section>
             </div>
-            <div class="col-sm-11">
+            @*<div class="col-sm-11">
                 <h4>Welcome to eBit</h4>
                 Our mission is to build resilience in children with or at risk of neurodevelopmental disorders through innovative biomedical interventions evaluated in real world settings such as schools.<br /> We work to develop neurodevelopmental, resilience-building interventions and their impact in schools.
-            </div>
+            </div>*@
  </div>
         
 </div>
-    <div class="container" style="margin: 20px 0px 10px 0px;width: 100%;border-top: solid 1px #999;">
-        <h5>Our Approach</h5>
+    <div class="container" style="margin: 0px 0px 10px 0px;width: 100%;border-top: solid 1px #999;color: #666;text-shadow: 0px 0px 0.1px #dadada">
+        <h4>Welcome to eBit</h4>
+        Our mission is to build resilience in children with or at risk of neurodevelopmental disorders through innovative biomedical interventions evaluated in real world settings such as schools.<br /> We work to develop neurodevelopmental, resilience-building interventions and their impact in schools.
+        @*<h4>Our Approach</h4>
         <p>Our research team does grant/gift/industry supported clinical trials of novel pharmacologic, nutraceutical agents and brain training interventions in the laboratory and evaluates the effectiveness of these interventions in outcome studies in school settings and clinical practices. Our research involves autism, ADHD, dyslexia, depression, psychosis and other childhood psychiatric disorders.</p>        
-        <p>Our investigator initiated clinical trials study novel biomedical treatments and the biological effects of alternative treatments for neurodevelopmental disorders such as autism such as vitamin B12, vitamin D3, Omega-3s and hyperbaric oxygen treatment.</p>        
+        <p>Our investigator initiated clinical trials study novel biomedical treatments and the biological effects of alternative treatments for neurodevelopmental disorders such as autism such as vitamin B12, vitamin D3, Omega-3s and hyperbaric oxygen treatment.</p>*@        
     </div>
 </div>
 <footer>

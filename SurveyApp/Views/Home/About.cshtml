@@ -6,7 +6,7 @@
     <section class="featured">
         <div class="content-wrapper" style="position:relative;">
             <hgroup class="title">
-                <h2>@ViewBag.Title.</h2>
+                <h2>@ViewBag.Title</h2>
             </hgroup>
         </div>
     </section>
@@ -34,16 +34,31 @@
     .tabs li a.selected {color: #4d6b8a;background-color: #fff;border: 1px solid #B1B1B1;border-bottom-color: transparent;cursor: default;}
 
     .team table td{vertical-align:top;padding:10px;}
-    .team table .media-element-container{padding-top:25px;}
-    .team table .separator{margin: 10px;border-bottom:solid 1px #333;}
+    .team table .media-element-container{margin-top:12px;border: 1px solid #999;}
+    .team table .media-element-container img{    
+    padding: 5px 5px;
+    width: 100%;}
+    .team table .separator{margin: 10px;border-bottom:solid 1px #CCC;}
+    .featured .content-wrapper{
+        width: 100%;
+    }
+    .featured .content-wrapper h2{
+        background-image: -webkit-linear-gradient(top, #00aaff 0%, #b9def0 100%);
+        background-image: -o-linear-gradient(top, #00aaff 0%, #4b9dc5 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#00aaff), to(#4b9dc5));
+        background-image: linear-gradient(to bottom, #00aaff 0%, #4b9dc5 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffd9edf7', endColorstr='#ffb9def0', GradientType=0);
+        background-repeat: repeat-x;
+        border-color: #000000;
+    }
 </style>
 <div class="tabs toptabs">
     <ul class="tabdashboard">
         <li>
-            <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.research').show();">Research And Collaborators</a>
+            <a class="selected" href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.research').show();">Research And Collaborators</a>
         </li>
         <li>
-            <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.team').show();">Our Research Team</a>
+            <a href="javascript:void(0);" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.team').show();">Our Research Team</a>
         </li>        
     </ul>
 </div>
@@ -92,7 +107,7 @@
                         </div>
                     </td>
                     <td>
-                        <h3>Robert Hendren, DO</h3>
+                        <h4>Robert Hendren, DO</h4>
 
                         <p>Robert L. Hendren, DO, is Professor of Psychiatry and Behavioral Science in the UCSF Department of Psychiatry, Director of the UCSF Autism and Neurodevelopment Program, and Co-Director of the UCSF Dyslexia Center and Vice Chair of the Department of Psychiatry at the University of California, San Francisco. From 2001-2009, he was Professor of Psychiatry and Executive Director and Tsakopoulos-Vismara Chair at the UC Davis MIND Institute (Medical Investigation of Neurodevelopmental Disorders), and from 2009-2015, he served as Vice Chair and Director of Child and Adolescent Psychiatry at the UCSF Department of Psychiatry. Dr. Hendren is Past President of the American Academy of Child and Adolescent Psychiatry (2007-2009). He has published over 100 scientific papers and four books and has been listed in “The Best Doctors in America” each year since it was first published in 1996.</p>
 
@@ -121,7 +136,7 @@
                         </div>
                     </td>
                     <td>
-                        <h3>Stephen Bent, MD</h3>
+                        <h4>Stephen Bent, MD</h4>
 
                         <p>Stephen Bent, MD, is a Professor of Medicine at the UCSF School of Medicine.&nbsp;His main research interest is the evaluation of the safety and efficacy of herbal remedies and dietary supplements. He served as the project director for one of the first large randomized controlled trials of saw palmetto for enlarged prostate, which gained international recognition for demonstrating that this commonly used herb was no more effective than placebo. Dr. Bent has also served as the principal investigator or co-investigator of several other large randomized controlled trials, including a study of a Chinese herbal remedy used to treat fatigue in the elderly and an internet-based study examining the efficacy of the herbs valerian (for sleep) and kava (for anxiety).</p>
 
@@ -153,32 +168,7 @@
             <p>Abram Rosenblatt, PhD, is an Adjunct&nbsp;Professor in the UCSF Department of Psychiatry.&nbsp;He has dedicated much of his career as a researcher to studying outcomes through researching mental health services, children’s mental health, and public policy.</p>
         </td>
     </tr>
-    <tr><td colspan="2"><div class="separator"></div></td></tr>*@
-                <tr>
-                    <td>
-                        <div style="max-width: 200px;" class="media media-element-container media-media-full _none">
-                            <picture>
-                                <!--[if IE 9]><video style="display: none;"><![endif]-->
-                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH 1x" media="(min-width: 536px)">
-                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_half/public/widjaja.jpg?itok=ATcaypnZ 1x" media="(min-width: 380px)">
-                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_third/public/widjaja.jpg?itok=4C33cS80 1x" media="(min-width: 277px)">
-                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_quarter/public/widjaja.jpg?itok=UZ7wwtGj 1x" media="(min-width: 187px)">
-                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_sixth/public/widjaja.jpg?itok=r8o9CZaB 1x" media="(min-width: 0px)"><!--[if IE 9]></video><![endif]-->
-                                <!--[if lt IE 9]>
-                            <img typeof="foaf:Image" src="/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH" alt="Felicia Widjaja, MPH" title="" />
-                            <![endif]-->
-                                <!--[if !lt IE 9]><!-->
-                                <img src="http://hendrenlab.ucsf.edu/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH" srcset="http://hendrenlab.ucsf.edu/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH" alt="Felicia Widjaja, MPH" title=""><!-- <![endif]-->
-                            </picture>
-                        </div>
-                    </td>
-                    <td>
-                        <h3>Felicia Widjaja, MPH</h3>
-
-                        <p>Felicia Widjaja, M.P.H, C.C.R.P., is a senior clinical researcher working at the Neurodevelopmental Translational Outcomes Research Program (NTORP) at the University of California, San Francisco. Ms. Widjaja is a Certified Clinical Research Professional running and managing pediatric and adult autism clinical trials operations and outcome studies. Her current areas of research and publication interests are translational research, public health and autism. She was selected as one of Donald J Cohen fellows in 2012 for the International Association for Child and Adolescent Psychiatry and Allied Professions.</p>
-                    </td>
-                </tr>
-                <tr><td colspan="2"><div class="separator"></div></td></tr>
+    <tr><td colspan="2"><div class="separator"></div></td></tr>*@                
                 <tr>
                     <td>
                         <div style="max-width: 200px;" class="media media-element-container media-media-full _none">
@@ -190,19 +180,45 @@
                                 <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_quarter/public/lawton.jpg?itok=yAzv_ApL 1x" media="(min-width: 187px)">
                                 <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_sixth/public/lawton.jpg?itok=Oao7T9Ur 1x" media="(min-width: 0px)"><!--[if IE 9]></video><![endif]-->
                                 <!--[if lt IE 9]>
-                            <img typeof="foaf:Image" src="/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/lawton.jpg?itok=jh0aDMI0" alt="Brittany Lawton" title="" />
-                            <![endif]-->
+                    <img typeof="foaf:Image" src="/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/lawton.jpg?itok=jh0aDMI0" alt="Brittany Lawton" title="" />
+                    <![endif]-->
                                 <!--[if !lt IE 9]><!-->
                                 <img src="http://hendrenlab.ucsf.edu/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/lawton.jpg?itok=jh0aDMI0" srcset="http://hendrenlab.ucsf.edu/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/lawton.jpg?itok=jh0aDMI0" alt="Brittany Lawton" title=""><!-- <![endif]-->
                             </picture>
                         </div>
                     </td>
                     <td>
-                        <h3>Brittany Lawton</h3>
+                        <h4>Brittany Lawton</h4>
 
                         <p>Brittany Lawton is a clinical research coordinator at the University of California, San Francisco in the Neurodevelopmental Translational Outcomes Research Program. Ms. Lawton conducts clinical trials for individuals with autism as well as outcomes research in schools for children with autism and dyslexia. Her current areas of research and publication interests are outcomes and translational research to improve integrated care and support for children with neurodevelopmental disorders and their families.</p>
                     </td>
                 </tr>
+                <tr><td colspan="2"><div class="separator"></div></td></tr>
+                <tr>
+                    <td>
+                        <div style="max-width: 200px;" class="media media-element-container media-media-full _none">
+                            <picture>
+                                <!--[if IE 9]><video style="display: none;"><![endif]-->
+                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH 1x" media="(min-width: 536px)">
+                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_half/public/widjaja.jpg?itok=ATcaypnZ 1x" media="(min-width: 380px)">
+                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_third/public/widjaja.jpg?itok=4C33cS80 1x" media="(min-width: 277px)">
+                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_quarter/public/widjaja.jpg?itok=UZ7wwtGj 1x" media="(min-width: 187px)">
+                                <source srcset="http://hendrenlab.ucsf.edu//sites/hendrenlab.ucsf.edu/files/styles/starter_kit_sixth/public/widjaja.jpg?itok=r8o9CZaB 1x" media="(min-width: 0px)"><!--[if IE 9]></video><![endif]-->
+                                <!--[if lt IE 9]>
+                    <img typeof="foaf:Image" src="/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH" alt="Felicia Widjaja, MPH" title="" />
+                    <![endif]-->
+                                <!--[if !lt IE 9]><!-->
+                                <img src="http://hendrenlab.ucsf.edu/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH" srcset="http://hendrenlab.ucsf.edu/sites/hendrenlab.ucsf.edu/files/styles/starter_kit_full/public/widjaja.jpg?itok=vqdQPQyH" alt="Felicia Widjaja, MPH" title=""><!-- <![endif]-->
+                            </picture>
+                        </div>
+                    </td>
+                    <td>
+                        <h4>Felicia Widjaja, MPH</h4>
+
+                        <p>Felicia Widjaja, M.P.H, C.C.R.P., is a senior clinical researcher working at the Neurodevelopmental Translational Outcomes Research Program (NTORP) at the University of California, San Francisco. Ms. Widjaja is a Certified Clinical Research Professional running and managing pediatric and adult autism clinical trials operations and outcome studies. Her current areas of research and publication interests are translational research, public health and autism. She was selected as one of Donald J Cohen fellows in 2012 for the International Association for Child and Adolescent Psychiatry and Allied Professions.</p>
+                    </td>
+                </tr>
+                
                 @*<tr><td colspan="2"><div class="separator"></div></td></tr>
                 <tr>
         <td>
