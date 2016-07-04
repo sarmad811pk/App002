@@ -18,14 +18,14 @@
         <div class="list-group leftmenu">
             @if (Roles.IsUserInRole("Administrator"))
             {
-                <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i class='ion-pie-graph'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
+                <a class='list-group-item @(c == "Home" ? " active" : "")           ' href="@Url.Action("Index", "Home", new {})"><i style="font-size: 22px;" class='ion-stats-bars'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard</a>
                 <a class='list-group-item @(c == "Survey" ? " active" : "")         ' href="@Url.Action("Index", "Survey", new object { })"><i class='ion-clipboard'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Questionnaire Manager</a>
                 <a class='list-group-item @(c == "School" ? " active" : "")         ' href="@Url.Action("Index", "School", new object { })"><i class='ion-university'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;School Manager</a>
                 <a class='list-group-item @(c == "Schedule" ? " active" : "")       ' href="@Url.Action("Index", "Schedule", new object { })"><i class='ion-calendar'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Schedule Manager</a>
                 <a class='list-group-item @(c == "Study" ? " active" : "")          ' href="@Url.Action("Index", "Study", new object { })"><i class='ion-ios-book-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Study Manager</a>
                 <a class='list-group-item @(c == "ParentTeacher" ? " active" : "")  ' href="@Url.Action("Index", "ParentTeacher", new object { })"><i class='ion-ios-people'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User Manager</a>
                 <a class='list-group-item @(c == "Child" ? " active" : "")          ' href="@Url.Action("Index", "Child", new object { })"><i class='ion-happy-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Child Manager</a>
-                <a class='list-group-item @(c == "Data" ? " active" : "")          ' href="@Url.Action("Index", "Data", new object { })"><i class='fa fa-database'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Manager</a>
+                <a class='list-group-item @(c == "Data" ? " active" : "")          ' href="@Url.Action("Index", "Data", new object { })"><i class='ion-ios-pie-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Manager</a>
             }
             @*else
                 {
