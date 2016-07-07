@@ -474,7 +474,7 @@
                     <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
                         <div class="boxheading" style="background: #666666;">
                             <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
-                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
+                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, sec = 1 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
                         </div>
                         <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar">
                             @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
@@ -514,7 +514,7 @@
                     <div class="col-md-6 text-left treatment boxitem" style="background: #2daad8;">
                         <div class="boxheading" style="background: #0084b5;">
                             <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Interventions
-                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
+                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, sec = 2 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
                         </div>
                         <div style="padding: 5px;overflow: auto; font-size: 12px;" class="content mCustomScrollbar">
                             @if (dsReveseandLiveEvent.Tables[3].Rows.Count > 0)
