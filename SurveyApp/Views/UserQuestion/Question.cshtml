@@ -240,11 +240,11 @@
         var SurveryID = @SurveyID;
         $(window).load(function(){
             setCompletionDiv();
-            var sec = @Request.QueryString["sec"];
-            if(sec == 1){
+            var sec = "@Request.QueryString["sec"]";
+            if(sec == "1"){
                 $('html, body').animate({ scrollTop: $("#q546").offset().top - 63 }, 2000);
             }
-            else if(sec == 2){
+            else if(sec == "2"){
                 $('html, body').animate({ scrollTop: $("#q1185").offset().top - 63 }, 2000);
             }
         });
@@ -646,7 +646,7 @@
             var prcnt = (Math.round((nofQ / noQ) * 100).toFixed(0)) + "%";
 
             var url = "/UserQuestion/SaveUserQuestion";
-            var period = "@(String.IsNullOrEmpty(Request.QueryString["perioddate"]) == true ? (Request.QueryString["surveyID"].ToString() == "16" ? DateTime.Now.ToString() : "") : Request.QueryString["perioddate"].ToString())";
+            var period = "@(String.IsNullOrEmpty(Request.QueryString["sec"]) == true ? (String.IsNullOrEmpty(Request.QueryString["sec"]) == true ? "" : Request.QueryString["perioddate"].ToString()) : DateTime.Now.ToString())";
 
         $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt, scheduleDate : period }, function (data) {
 
