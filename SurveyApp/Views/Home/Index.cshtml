@@ -76,13 +76,13 @@
     <div class="tabs toptabs" style="display:none;">
         <ul class="tabdashboard">
             <li>
-                <a class="selected" href="#0" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide();$('.childrendropdown').hide(); $('.dashboardDetails').show();">Dashboard</a>
+                <a class="selected" href="#0" onclick="loadDashboard(this);">Dashboard</a>
             </li>
             <li>
-                <a href="#1" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide();$('.childrendropdown').show();$('.graphsDetails').show();">Graphs</a>
+                <a href="#1" onclick="loadCharts(this);">Graphs</a>
             </li>
             <li>
-                <a href="#2" onclick="$('.tabdashboard a').removeClass('selected'); $(this).addClass('selected'); $('.__tabs').hide(); $('.childrendropdown').hide(); $('.childrendropdown').show(); $('.Adverse').show();">Adverse Reactions & Life Events</a>
+                <a href="#2" onclick="loadAdverseEvents(this);">Adverse Reactions & Life Events</a>
             </li>
         </ul>
     </div>
@@ -91,10 +91,13 @@
 
         <select id="ddlChildren" class="col-sm-9 form-control childrendropdown" onchange="getChildInfo(this);">
             <option value="0">All Children</option>
-            @foreach (DataRow drChild in dschildren.Tables[0].Rows)
+            @if (dschildren != null && dschildren.Tables.Count > 0)
             {
-                <option value="@drChild["ChildId"]"  @(childId == (int)drChild["childId"] ? "selected=selected" : "")>@drChild["Name"]</option>
-            }
+                foreach (DataRow drChild in dschildren.Tables[0].Rows)
+                {
+                    <option value="@drChild["ChildId"]" @(childId == (int)drChild["childId"] ? "selected=selected" : "")>@drChild["Name"]</option>
+                }
+            }            
         </select>
 
         <select id="ddlStudy" class="col-sm-9 form-control" style="margin-right: 5px;" onchange="getStudyInfo(this);">
@@ -108,23 +111,26 @@
     <div class="separator"></div>
 
     <div class="dashboardDetails __tabs" style="opacity:0;">
-        @{Html.RenderPartial("_ChildrenCounts", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
-
-
-        <div class="separator"></div>
-        @{Html.RenderPartial("_SurveyCompletion", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
+        @*@{Html.RenderPartial("_ChildrenCounts", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}*@
+        <div id="divChildrenCount"></div>
 
         <div class="separator"></div>
-        @{Html.RenderPartial("_DetailComparison", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}
+        @*@{Html.RenderPartial("_SurveyCompletion", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}*@
+        <div id="divSurveyCompletion"></div>
+
+        <div class="separator"></div>
+        @*@{Html.RenderPartial("_DetailComparison", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName } });}*@
+        <div id="divDetailComparison"></div>
+
     </div>
     <div class="Adverse __tabs" style="opacity:0;"> 
-        @{Html.RenderPartial("_AdverseEvent", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childId } });}
+        @*@{Html.RenderPartial("_AdverseEvent", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childId } });}*@
 
 
     </div>
     <div class="graphsDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
-        @{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "studyName", studyName }, { "childIdts", childId } });}
+        @*@{Html.RenderPartial("_Charts", new ViewDataDictionary { { "studyId" , studyId }, { "studyName", studyName }, { "childIdts", childId } });}*@
     </div>
     <div class="WeeklyGraph __tabs">
         
@@ -132,8 +138,8 @@
 </div>
  
 
-<script type="text/javascript">    
-    $(window).load(function () {        
+<script type="text/javascript">
+    $(window).load(function () {
         $(".waiting").hide();
         $(".toptabs").show();
         $(".topControls").show();
@@ -143,20 +149,20 @@
             hash = window.location.hash.substring(1);
         }
         $(".tabdashboard").find("li:eq(" + (hash > 2 ? 1 : hash) + ")").find("a").click();
-        if (hash > 2) {            
+        if (hash > 2) {
             $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
         }
         $(".__tabs").css("opacity", "1");
-        
+
     });
 
-    function getVisibleDiv() {        
+    function getVisibleDiv() {
         if ($(".dashboardDetails").is(":visible") == true) { return 0; }
         if ($(".graphsDetails").is(":visible") == true) { return getInnerVisibleDiv(); }
-        if ($(".Adverse").is(":visible") == true) { return 2; } 
+        if ($(".Adverse").is(":visible") == true) { return 2; }
     }
 
-    function getInnerVisibleDiv() {        
+    function getInnerVisibleDiv() {
         if ($(".gDetails .parentdiv").is(":visible") == true) { return 3; }
         if ($(".gDetails .teacherdiv").is(":visible") == true) { return 4; }
         if ($(".gDetails .parentteacherdiv").is(":visible") == true) { return 5; }
@@ -164,7 +170,7 @@
         if ($(".gDetails .lifeeventsdiv").is(":visible") == true) { return 7; }
     }
 
-    function getStudyInfo(elem) {        
+    function getStudyInfo(elem) {
         var div = getVisibleDiv();
         var studyId = $(elem).val();
         location.href = "@Url.Action("Index", "Home")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&childId=" + @childId + "#" + div;
@@ -173,5 +179,84 @@
         var div = getVisibleDiv();
         var childId = $(elem).val();
         location.href = "@Url.Action("Index", "Home")" + "?studyId=" + @studyId +"&childId=" + (childId == 0 ? "" : childId) + "#" + div;
+    }
+
+    function loadDashboard(elem) {
+        $('.tabdashboard a').removeClass('selected');
+        $(elem).addClass('selected');
+        $('.__tabs').hide();
+        $('.childrendropdown').hide();
+        $('.dashboardDetails').show();
+
+        if ($(".dashboardDetails").hasClass("loaded") == false)
+        {
+            $.ajax({
+                url: "@Url.Action("_ChildrenCounts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                dataType: "html",
+                success: function (data) {
+                    $("#divChildrenCount").html(data);
+                }
+            });
+
+            $.ajax({
+                url: "@Url.Action("_SurveyCompletion", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                dataType: "html",
+                success: function (data) {
+                    $("#divSurveyCompletion").html(data);
+                }
+            });
+
+            $.ajax({
+                url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                dataType: "html",
+                success: function (data) {
+                    $("#divDetailComparison").html(data);
+                }
+            });
+
+
+            $(".dashboardDetails").addClass("loaded");
+        }
+    }
+
+    function loadCharts(elem) {
+        $('.tabdashboard a').removeClass('selected');
+        $(elem).addClass('selected'); $('.__tabs').hide();
+        $('.childrendropdown').hide();
+        $('.childrendropdown').show();
+        $('.graphsDetails').show();
+
+        if ($(".graphsDetails").hasClass("loaded") == false)
+        {
+            $.ajax({
+                url: "@Url.Action("_Charts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                dataType: "html",
+                success: function (data) {
+                    $(".graphsDetails").addClass("loaded");
+                    $(".graphsDetails").html(data);
+                }
+            });
+        }
+    }
+
+    function loadAdverseEvents(elem) {
+        $('.tabdashboard a').removeClass('selected');
+        $(elem).addClass('selected');
+        $('.__tabs').hide();
+        $('.childrendropdown').hide();
+        $('.childrendropdown').show();
+        $('.Adverse').show();
+
+        if ($(".Adverse").hasClass("loaded") == false)
+        {
+            $.ajax({
+                url: "@Url.Action("_AdverseEvent", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                dataType: "html",
+                success: function (data) {
+                    $(".Adverse").addClass("loaded");
+                    $(".Adverse").html(data);
+                }
+            });
+        }
     }
 </script>

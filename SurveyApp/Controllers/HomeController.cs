@@ -252,6 +252,27 @@ namespace SurveyApp.Controllers
             
             return Json(new { success = isSuccess });
         }
+
+        public ActionResult _Charts()
+        {            
+            return PartialView("_Charts");
+        }
+        public ActionResult _AdverseEvent()
+        {
+            return PartialView("_AdverseEvent");
+        }
+        public ActionResult _ChildrenCounts()
+        {
+            return PartialView("_ChildrenCounts");
+        }
+        public ActionResult _SurveyCompletion()
+        {
+            return PartialView("_SurveyCompletion");
+        }
+        public ActionResult _DetailComparison()
+        {
+            return PartialView("_DetailComparison");
+        }
     }
 
     

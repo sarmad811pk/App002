@@ -270,6 +270,8 @@
     <Content Include="bootstrap\js\bootstrap.js" />
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="bootstrap\js\npm.js" />
+    <Content Include="bootstrap\css\combinedcss.css" />
+    <Content Include="Content\combinecontentcss.css" />
     <Content Include="Content\dataTables.bootstrap.min.css" />
     <Content Include="Content\awsm\css\font-awesome.min.css" />
     <Content Include="Content\awsm\fonts\fontawesome-webfont.svg" />
@@ -374,6 +376,8 @@
     <Content Include="Images\hendren.jpg" />
     <Content Include="Images\lawton.jpg" />
     <Content Include="Scripts\buttons.html5.min.js" />
+    <Content Include="Scripts\combineddatatablejs.js" />
+    <Content Include="Scripts\combinedjs.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
     <Content Include="Scripts\dataTables.buttons.min.js" />
@@ -398,6 +402,7 @@
     <Content Include="Scripts\r\g.pie-min.js" />
     <Content Include="Scripts\r\g.raphael.js" />
     <Content Include="Scripts\r\raphael.js" />
+    <Content Include="Scripts\smoothscroll.js" />
     <Content Include="Scripts\zxcvbn.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

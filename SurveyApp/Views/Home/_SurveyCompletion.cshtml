@@ -3,8 +3,8 @@
 
 @{
 
-    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
-    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+    int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
+    string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
 
     DataSet dsCompletion;    
     string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
@@ -181,8 +181,6 @@
 }
 
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 @if(userType == 0)
 {

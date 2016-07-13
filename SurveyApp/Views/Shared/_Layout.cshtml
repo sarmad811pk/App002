@@ -32,10 +32,16 @@
 
     <link href="~/Content/awsm/css/font-awesome.min.css" rel="stylesheet" />
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
     <style>
          /*body{
             font-family: 'Open Sans','Noto Sans', Arial, sans-serif !important;
-        }*/         
+        }*/
+         .highcharts-button{
+             display:none;
+         }        
         .form-group {
             margin-bottom: 5px;
         }
@@ -87,8 +93,8 @@
     </style>
     <script type="text/javascript">
         $(function () {
-            $(document).ajaxStart(function () { $(".loading").show(); $(".disablebackground").show(); });
-            $(document).ajaxStop(function () { $(".loading").hide(); $(".disablebackground").hide(); });
+            $(document).ajaxStart(function () { $(".loading").show(); /*$(".disablebackground").show();*/ });
+            $(document).ajaxStop(function () { $(".loading").hide(); /*$(".disablebackground").hide();*/ });
         });
     </script>
     @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")

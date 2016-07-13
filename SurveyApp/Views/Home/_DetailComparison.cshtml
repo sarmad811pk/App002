@@ -2,8 +2,8 @@
 @using System.Data;
 
 @{ 
-    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
-    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+    int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
+    string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
     
     int children = 0;
     DataSet dsComparison = SurveyApp.DataHelper.DashboardGetDetailComparison(studyId);

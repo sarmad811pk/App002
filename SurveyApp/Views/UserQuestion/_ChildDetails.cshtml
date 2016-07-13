@@ -2,9 +2,9 @@
 @using System.Data;
 
 @{
-    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
-    int childID = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
-    string studyName = ViewData["studyName"] != null ? ViewData["studyName"].ToString() : "";
+    int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
+    int childID = String.IsNullOrEmpty(Request.QueryString["childIdts"]) != true ? Convert.ToInt32(Request.QueryString["childIdts"]) : 0;
+    string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
     int userId = WebSecurity.CurrentUserId;
     inPer = "";
 

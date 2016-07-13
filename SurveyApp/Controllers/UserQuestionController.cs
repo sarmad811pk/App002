@@ -99,6 +99,11 @@ namespace SurveyApp.Controllers
 
             }
             
-        } 
+        }
+        
+        public ActionResult _ChildDetails()
+        {
+            return PartialView("_ChildDetails");
+        }
     }
 }
