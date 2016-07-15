@@ -174,8 +174,9 @@
         if (window.location.hash) {
             hash = window.location.hash.substring(1);
         }
-            
+
         $(".tabdashboard").find("li:eq(" + (hash > 2 ? 2 : hash) + ")").find("a").click();
+
         if (hash > 2) {
             $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
         }
@@ -209,11 +210,11 @@
     }
 
     function loadDashboard(elem) {
-        $('.tabdashboard a').removeClass('selected'); 
-        $(elem).addClass('selected'); 
-        $('.__tabs').hide(); 
-        $('.dashboard-controls').hide(); 
-        $('.dashboard-controls').show(); 
+        $('.tabdashboard a').removeClass('selected');
+        $(elem).addClass('selected');
+        $('.__tabs').hide();
+        $('.dashboard-controls').hide();
+        $('.dashboard-controls').show();
         $('.dashboardDetails').show();
         $('.allchildren').removeClass('highlightError');
 
@@ -236,16 +237,16 @@
             });
 
             $(".dashboardDetails").addClass("loaded");
-        }           
+        }
     }
 
     function loadCharts(elem) {
-        $('.tabdashboard a').removeClass('selected'); 
-        $(elem).addClass('selected'); 
-        $('.__tabs').hide(); 
-        $('.childrendropdown').hide(); 
-        $('.childrendropdown').show(); 
-        $('.graphsDetails').show(); 
+        $('.tabdashboard a').removeClass('selected');
+        $(elem).addClass('selected');
+        $('.__tabs').hide();
+        $('.childrendropdown').hide();
+        $('.childrendropdown').show();
+        $('.graphsDetails').show();
         $('.dashboard-controls').show();
         $('.allchildren').removeClass('highlightError');
 
@@ -257,17 +258,23 @@
                 success: function (data) {
                     $(".graphsDetails").addClass("loaded");
                     $("#divCharts").html(data);
+                    if (window.location.hash) {
+                        hash = window.location.hash.substring(1);
+                    }
+                    if (hash > 2) {
+                        $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
+                    }
                 }
             });
         }
     }
 
     function loadQuestionDetails(elem){
-        $('.tabdashboard a').removeClass('selected'); 
-        $(elem).addClass('selected'); 
-        $('.__tabs').hide(); 
-        $('.childrendropdown').hide(); 
-        $('.quesDetails').show(); 
+        $('.tabdashboard a').removeClass('selected');
+        $(elem).addClass('selected');
+        $('.__tabs').hide();
+        $('.childrendropdown').hide();
+        $('.quesDetails').show();
         $('.dashboard-controls').show();
         $('.allchildren').addClass('highlightError');
 

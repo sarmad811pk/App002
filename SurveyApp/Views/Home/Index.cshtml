@@ -234,6 +234,13 @@
                 success: function (data) {
                     $(".graphsDetails").addClass("loaded");
                     $(".graphsDetails").html(data);
+                    if (window.location.hash) {
+                        hash = window.location.hash.substring(1);
+                    }
+                    
+                    if (hash > 2) {
+                        $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
+                    }
                 }
             });
         }
