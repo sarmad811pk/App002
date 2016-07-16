@@ -104,11 +104,23 @@ namespace SurveyApp.Controllers
 
                                     for(int index = 0; index < maxSchCount; index++)
                                     {
-                                        int pId = parentSchedules.Length > index ? parentSchedules[index] : 0;
-                                        int tId = teacherSchedules.Length > index ? teacherSchedules[index] : 0;
+                                        int pId = parentSchedules != null && parentSchedules.Length > index ? parentSchedules[index] : 0;
+                                        int tId = teacherSchedules != null && teacherSchedules.Length > index ? teacherSchedules[index] : 0;
 
-                                        Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = Convert.ToInt32(collection["Survey" + i]), ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
-                                        dbSS.SSSs.Add(sss);
+                                        int surveyId = Convert.ToInt32(collection["Survey" + i]);
+                                        if(surveyId == 6)
+                                        {
+                                            for(int pedsIndex = 6; pedsIndex <= 9; pedsIndex++)
+                                            {
+                                                Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = pedsIndex, ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
+                                                dbSS.SSSs.Add(sss);
+                                            }                                            
+                                        }
+                                        else
+                                        {
+                                            Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = surveyId, ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
+                                            dbSS.SSSs.Add(sss);
+                                        }                                        
                                     }
                                     
                                     dbSS.SaveChanges();
