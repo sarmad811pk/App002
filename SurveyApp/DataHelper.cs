@@ -510,7 +510,7 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetSurveyQAInfo";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static DataSet DashboardGetSchedulesForUserRoles(int? studyId = 0, int? userId = 0)
+        public static DataSet DashboardGetSchedulesForUserRoles(int? studyId = 0, int? userId = 0, int? childIdts = 0)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -521,6 +521,16 @@ namespace SurveyApp
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
             cmd.Parameters["@UserID"].Value = userId;
 
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            if(childIdts == 0)
+            {
+                cmd.Parameters["@ChildId"].Value = DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters["@ChildId"].Value = childIdts;
+            }            
+
             cmd.CommandText = "Dashboard_GetSchedulesForUserRoles";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
@@ -528,6 +538,9 @@ namespace SurveyApp
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            cmd.Parameters["@StudyId"].Value = studyId;
 
             cmd.Parameters.Add("@ChildId", SqlDbType.Int);
             if(childId == 0)
@@ -537,10 +550,7 @@ namespace SurveyApp
             else
             {
                 cmd.Parameters["@ChildId"].Value = childId;
-            }
-
-            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
-            cmd.Parameters["@StudyId"].Value = studyId;
+            }            
 
             cmd.CommandText = "Dashboard_GetDetailComparison";
             return DataHelper.ExecuteCommandAsDataSet(cmd);

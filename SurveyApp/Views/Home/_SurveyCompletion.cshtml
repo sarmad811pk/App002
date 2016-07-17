@@ -5,8 +5,9 @@
 
     int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
     string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
+    int childIdts = String.IsNullOrEmpty(Request.QueryString["childIdts"]) != true ? Convert.ToInt32(Request.QueryString["childIdts"]) : 0;
 
-    DataSet dsCompletion;    
+    DataSet dsCompletion;
     string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
     var Title = "";
@@ -19,7 +20,7 @@
     else{
         Title="";
     }
-    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(studyId, WebSecurity.CurrentUserId);
+    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(studyId, WebSecurity.CurrentUserId, childIdts);
 
 
     #region CurrentPrriod
