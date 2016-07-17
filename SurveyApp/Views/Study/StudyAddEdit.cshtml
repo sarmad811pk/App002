@@ -54,18 +54,18 @@
 
 }
 
-@using (Html.BeginForm("StudyAddEdit", "Study", FormMethod.Post, new { style = "padding-left: 24px;" }))
+@using (Html.BeginForm("StudyAddEdit", "Study", FormMethod.Post, new { style = "padding-left: 24px;", id = "frmStudyAdd" }))
 {
     @Html.ValidationSummary();
     @Html.HiddenFor(s => s.Id, new { name = "hdnStudyId", value = Model.Id })
     <div class="form-group">
         <label class="control-label col-sm-2">Study:</label>
         <div class="col-sm-4">
-            @Html.TextBoxFor(s => s.Name, new { id = "txtStudyName", @class = "form-control", placeholder = "Study Name" })            
+            @Html.TextBoxFor(s => s.Name, new { id = "txtStudyName", @class = "form-control", placeholder = "Study Name", onkeyup = "$(this).removeClass('inerror');" })            
         </div>        
         <label class="control-label col-sm-1">Status:</label>
         <div class="col-sm-2">
-            @Html.DropDownListFor(s => s.Status, new SelectList(StudyStatus.GetAllStatus(), "StatusId", "StatusOption"), "Select status", new { id = "ddlStudies", @class = "form-control", })            
+            @Html.DropDownListFor(s => s.Status, new SelectList(StudyStatus.GetAllStatus(), "StatusId", "StatusOption"), "Select status", new { id = "ddlStudies", @class = "form-control", onchange = "$(this).removeClass('inerror');" })            
         </div>
         <div class="col-sm-2">@Html.ActionLink("Add Schedule Template", "Index", "Schedule", new object { }, new { @class = "btn btn-link" }) </div>
     </div>
@@ -93,7 +93,7 @@
                 </td>
 
                 <td>
-                    <select class="form-control" name="Parent@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" multiple>
+                    <select class="form-control ddlParent" name="Parent@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" onchange="$(this).removeClass('inerror');" multiple>
                         <option value="0">---</option>
                         @foreach (System.Data.DataRow drSchedule in ds.Tables[2].Rows)
                         {
@@ -102,7 +102,7 @@
                     </select>
                 </td>
                 <td>
-                    <select class="form-control" name="Teacher@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" multiple>
+                    <select class="form-control ddlTeacher" name="Teacher@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" onchange="$(this).removeClass('inerror');" multiple>
                         <option value="0">---</option>
                         @foreach (System.Data.DataRow drSchedule in ds.Tables[2].Rows)
                         {
@@ -139,6 +139,46 @@
     }
 
     $(function () {
+        $("#frmStudyAdd").submit(function () {
+            var isValid = true;
+            $("#tblStudy").find("select").removeClass("inerror");
+
+            var errors = "";
+            if ($("#txtStudyName").val() == "") {
+                $("#txtStudyName").addClass("inerror");
+                errors += "Please enter name for the study \n";
+            }
+            if ($("#ddlStudies").val() == "") {
+                errors += "Please select status for the study \n";
+                $("#ddlStudies").addClass("inerror");
+            }
+
+            $("#tblStudy").find("input[type=checkbox]").each(function (index, obj) {
+                var isParentSelected = true;
+                var isTeacherSelected = true;
+                if ($(obj)[0].checked == true) {
+                    var survey = $($(obj).closest("tr").find("td")[0]).find("label").text();                    
+                    if ($(obj).closest("tr").find(".ddlParent").val() == "" || $(obj).closest("tr").find(".ddlParent").val() == null || $(obj).closest("tr").find(".ddlParent").val() == "0") {
+                        $(obj).closest("tr").find(".ddlParent").addClass("inerror");
+                        isParentSelected = false;
+                    }
+                    if ($(obj).closest("tr").find(".ddlTeacher").val() == "" || $(obj).closest("tr").find(".ddlTeacher").val() == null || $(obj).closest("tr").find(".ddlTeacher").val() == "0") {
+                        $(obj).closest("tr").find(".ddlTeacher").addClass("inerror");
+                        isTeacherSelected = false;
+                    }
+                    if (isParentSelected == false && isTeacherSelected == false) {
+                        errors += "Please select atealst one schedule for " + survey.trim() + " \n";
+                        isValid = false;
+                    }
+                }
+            });
+
+            if (isValid == false) {
+                alert(errors);
+                return false;
+            }
+        });
+
         $('[data-toggle="tooltip"]').tooltip({
             content: function () {
                 return $(this).attr('title').replace(/<br\/>/g, "<br/>");
