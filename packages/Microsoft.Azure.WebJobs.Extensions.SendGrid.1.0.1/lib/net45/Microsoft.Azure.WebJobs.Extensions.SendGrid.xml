@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Azure.WebJobs.Extensions.SendGrid</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Azure.WebJobs.Extensions.SendGrid.SendGridConfiguration">
+            <summary>
+            Defines the configuration options for the SendGrid binding.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.Extensions.SendGrid.SendGridConfiguration.#ctor">
+            <summary>
+            Constructs a new instance.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.Extensions.SendGrid.SendGridConfiguration.ApiKey">
+            <summary>
+            Gets or sets the SendGrid ApiKey. If not explicitly set, the value will be defaulted
+            to the value specified via the 'AzureWebJobsSendGridApiKey' app setting or the
+            'AzureWebJobsSendGridApiKey' environment variable.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.Extensions.SendGrid.SendGridConfiguration.ToAddress">
+            <summary>
+            Gets or sets the default "to" address that will be used for messages.
+            This value can be overridden by job functions.
+            </summary>
+            <remarks>
+            An example of when it would be useful to provide a default value for 'to' 
+            would be for emailing your own admin account to notify you when particular
+            jobs are executed. In this case, job functions can specify minimal info in
+            their bindings, for example just a Subject and Text body.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.Extensions.SendGrid.SendGridConfiguration.FromAddress">
+            <summary>
+            Gets or sets the default "from" address that will be used for messages.
+            This value can be overridden by job functions.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Azure.WebJobs.SampleJobHostConfigurationExtensions">
+            <summary>
+            Extension methods for SendGrid integration
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.SampleJobHostConfigurationExtensions.UseSendGrid(Microsoft.Azure.WebJobs.JobHostConfiguration,Microsoft.Azure.WebJobs.Extensions.SendGrid.SendGridConfiguration)">
+            <summary>
+            Enables use of the SendGrid extensions
+            </summary>
+            <param name="config">The <see cref="T:Microsoft.Azure.WebJobs.JobHostConfiguration"/> to configure.</param>
+            <param name="sendGridConfig">The <see cref="T:Microsoft.Azure.WebJobs.Extensions.SendGrid.SendGridConfiguration"/> to use.</param>
+        </member>
+        <member name="T:Microsoft.Azure.WebJobs.SendGridAttribute">
+            <summary>
+            Attribute used to binds a parameter to a SendGridMessage that will automatically be
+            sent when the function completes.
+            </summary>
+            <remarks>
+            The method parameter can be of type <see cref="T:SendGrid.SendGridMessage"/> or a reference
+            to one ('ref' parameter). When using a reference parameter, you can indicate that the message
+            should not be sent by setting it to <see langword="null"/> before your job function returns.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.SendGridAttribute.To">
+            <summary>
+            Gets or sets the message "To" field. May include binding parameters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.SendGridAttribute.From">
+            <summary>
+            Gets or sets the message "From" field. May include binding parameters.
+            <remarks>
+            The string must include a From address, and can also include an optional DisplayName,
+            separated by a colon. Example: "orders@acme.net:Order Processor".
+            </remarks>
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.SendGridAttribute.Subject">
+            <summary>
+            Gets or sets the message "Subject" field. May include binding parameters.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.SendGridAttribute.Text">
+            <summary>
+            Gets or sets the message "Text" field. May include binding parameters.
+            </summary>
+        </member>
+    </members>
+</doc>

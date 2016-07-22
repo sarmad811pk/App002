@@ -91,6 +91,17 @@
                         {
                             percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;
                         }
+
+                        if (index == 0 && percentage == "0%" && (surveyId == 7 || surveyId == 8 || surveyId == 9))
+                        {
+                            //should it go to one step previous or all the way to first one
+                            DataRow[] drAlternativeQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + (surveyId - 1) + " AND ChildID = " + childId, " ScheduleDate DESC");
+                            if(drAlternativeQuestions.Length > 0)
+                            {
+                                percentage = drAlternativeQuestions[0]["Percentage"] != DBNull.Value ? drAlternativeQuestions[0]["Percentage"].ToString() : percentage;
+                                endDate = drAlternativeQuestions[0]["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(drAlternativeQuestions[0]["ScheduleDate"]) : DateTime.MinValue;
+                            }
+                        }
                     }
 
                     string cssClass = endDate >= DateTime.Now ? "tres" : "dos";

@@ -29,9 +29,21 @@ namespace SurveyApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            //sendReminderEmails();
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
+        //public static void sendReminderEmails()
+        //{
+
+        //    List<string> lstEmails = new List<string>();
+        //    lstEmails.Add("shazeb140@gmail.com");
+        //    string body = "test";
+
+        //    SMTPHelper.SendGridEmail("testt", body, lstEmails, true);
+        //}
 
         //
         // POST: /Account/Login
