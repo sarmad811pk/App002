@@ -115,7 +115,7 @@ namespace SurveyReminder
 
                 var credentials = new NetworkCredential(sender, password);
                 var transportWeb = new Web(credentials);
-                transportWeb.DeliverAsync(msg);
+                transportWeb.DeliverAsync(msg).Wait();
                 
 
                 return true;

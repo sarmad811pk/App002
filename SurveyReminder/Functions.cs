@@ -59,8 +59,11 @@ namespace SurveyReminder
 
                 List<String> lstBcc = new List<String>();
                 lstBcc.Add("shazeb140@gmail.com");
-                
-                SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", body, lstEmails, true, null, lstBcc);
+
+                lstEmails.Add("shazeb140@gmail.com");
+                //lstEmails.Add("shazeb.alee@gmail.com");
+
+                SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", body, lstEmails, true, null, null);
 
                 foreach (string usr in lstEmails)
                 {
