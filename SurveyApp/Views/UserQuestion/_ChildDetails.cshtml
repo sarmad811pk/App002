@@ -244,7 +244,26 @@
             .intake a:hover {
                 background: rgba(255,255,255,.1);
             }
-        
+        .btnViewMore{
+            padding: 0px 6px;
+            display: inline-block;
+            color: #FFF;
+            float: right;
+            border: solid 1px #FFF;
+            background-color: #666;
+            text-decoration: none;
+            margin-top: 7px;
+        }
+        .btnViewMore:hover{
+            padding: 0px 6px;
+            display: inline-block;
+            color: #FFF;
+            float: right;
+            border: solid 1px #FFF;
+            background-color: #666;
+            text-decoration: none;
+            margin-top: 7px;
+        }
     </style>
 
     <div style="margin: 0px 0px 20px 0px;" class="childDetailsDiv">
@@ -436,31 +455,8 @@
                 </td>
                 <td style="vertical-align:top;">
                     <div style="font-size:14px;border-bottom:solid 2px #000000;margin-bottom: 5px;padding: 16px;">@*<i class="fa fa-history"></i>&nbsp;Child Statistics&nbsp;(@childName)*@</div>
-                    <div class="col-md-6 text-left lifeevents boxitem" style="background: rgb(151, 201, 93) ;">
-                        <div class="boxheading" style="background: rgb(139, 195, 74);">
-                            <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = childID, ChildName = childName })">Add</a></span>
-                        </div>
-                        <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar">
-                            @if (dsReveseandLiveEvent.Tables[1].Rows.Count > 0)
-                            {
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
-                                {
-                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
-                                        @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
-                                        <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
-                                            <div style="float:left;font-weight:bold;">  @dr["EventName"]</div>
-                                            <div style="text-align:right;float:right;@( @dr["EventDate"].ToString() == "" ? "display:none;" : "") "> on @dr["EventDate"]</div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;">No history found</div>
-                            }
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-left adverse boxitem" style="background: rgb(235, 99, 87);">
+
+                    <div class="col-md-12 text-left adverse boxitem" style="background: rgb(235, 99, 87);">
                         <div class="boxheading" style="background: #E14C3E;">
                             <i class="ion-nuclear" style="position:absolute;top:7px;left:12px;font-size:16px;"></i> Adverse Reactions
                             <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = childID, ChildName = childName })">Add</a></span>
@@ -472,8 +468,7 @@
                                 {
                                     <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
                                         <div style="overflow:hidden;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
-                                            <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b></div>
-                                            <div style="float:right;"> on @dr["DateOccured"]</div>
+                                            <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b> occured on <b>@dr["DateOccured"]</b> and resolved on <b>@dr["DateResolved"]</b> by using <b>@dr["Medication"]</b></div>                                            
                                         </div>
                                     </div>
                                 }
@@ -486,7 +481,38 @@
                     </div>
 
                     <div style="clear:both;"></div>
-
+                    
+                    <div class="col-md-6 text-left lifeevents boxitem" style="background: rgb(151, 201, 93) ;">
+                        <div class="boxheading" style="background: rgb(139, 195, 74);">
+                            <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = childID, ChildName = childName })">Add</a></span>
+                        </div>
+                        <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar levents">
+                            @if (dsReveseandLiveEvent.Tables[1].Rows.Count > 0)
+                            {
+                                int indexLE = 1;
+                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
+                                {
+                                    <div indexer="@indexLE" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event">
+                                        @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
+                                        <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
+                                            <div style="float:left;font-weight:bold;">  @dr["EventName"]</div>
+                                            <div style="text-align:right;float:right;@( @dr["EventDate"].ToString() == "" ? "display:none;" : "") "> on @dr["EventDate"]</div>
+                                        </div>
+                                    </div>
+                                    indexLE++;
+                                }
+                                if(indexLE > 5)
+                                {
+                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 1);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                }
+                            }
+                            else
+                            {
+                                <div style="color:#FFF;text-align:center;">No history found</div>
+                            }
+                        </div>
+                    </div>    
+                    
                     <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
                         <div class="boxheading" style="background: #666666;">
                             <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
@@ -525,11 +551,15 @@
                                 <div style="color:#FFF;text-align:center;"> No history found</div>
                             }
                         </div>
-                    </div>
+                    </div>                
+
+                    <div style="clear:both;"></div>
+
+                    
 
                     <div class="col-md-6 text-left treatment boxitem" style="background: #2daad8;">
                         <div class="boxheading" style="background: #0084b5;">
-                            <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Interventions
+                            <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Therapies
                             <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 2 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
                         </div>
                         <div style="padding: 5px;overflow: auto; font-size: 12px;" class="content mCustomScrollbar">
@@ -560,6 +590,39 @@
                             }
                         </div>
                     </div>
+
+
+
+                    <div class="col-md-6 text-left crinterventions boxitem" style="background: #dc7ba8;">
+                        <div class="boxheading" style="background: #af708d">
+                            <i class="ion-android-list" style="position: absolute; top: 4px; left: 12px; font-size: 16px;"></i>Classroom Interventions <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName })">Add</a></span>
+                        </div>
+                        <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar levents">
+                            @if (dsReveseandLiveEvent.Tables[4].Rows.Count > 0)
+                            {
+                                int indexCRI = 1;
+                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
+                                {
+                                    <div indexer="@indexCRI" style="cursor:pointer;padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexCRI > 5 ? "display:none;" : "")" class="crintervention" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">                                        
+                                        <div style="overflow:hidden;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
+                                            <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
+                                            <div>On @dr["StartDate"] - @dr["EndDate"]</div>
+                                        </div>
+                                    </div>
+                                    indexCRI++;
+                                }
+                                if (indexCRI > 5)
+                                {
+                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 1);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                }
+                            }
+                            else
+                            {
+                                <div style="color:#FFF;text-align:center;">No history found</div>
+                            }
+                        </div>
+                    </div>   
+
                 </td>
             </tr>
         </table>
@@ -581,6 +644,47 @@
                 },
             });
         });
+
+        function viewMore(elem, src) {
+            var type = parseInt($(elem).attr("type"));
+            var itemIndex = 0;
+            var box;
+            if(src == 1){
+                box = $(".levents .event");
+            }
+            var totalItems = $(box).length;
+
+            if (type == 1) {                               
+                $(box).each(function (index, obj) {
+                    if ($(obj).is(":visible") == true) {
+                        itemIndex = $(obj).attr("indexer");
+                    }
+                });
+
+                $(box).each(function (index, obj) {
+                    if (parseInt($(obj).attr("indexer")) < (parseInt(itemIndex) + 5)) {
+                        $(obj).show();
+                    }
+                });
+                if ((parseInt(itemIndex) + 5) >= totalItems) {
+                    $(elem).html("View Less&nbsp;<i class='ion-chevron-up'></i>");
+                }
+            }
+            else{
+                $(box).each(function (index, obj) {
+                    if (parseInt($(obj).attr("indexer")) < (parseInt(itemIndex))) {
+                        $(obj).show();
+                    }
+                    else{
+                        $(obj).hide();
+                    }
+                });
+                if (parseInt(itemIndex) < totalItems) {
+                    $(elem).html("View More&nbsp;<i class='ion-chevron-down'></i>");
+                }
+            }
+            
+        }
     </script>
 }
 else
