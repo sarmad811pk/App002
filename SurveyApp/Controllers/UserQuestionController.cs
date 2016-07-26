@@ -66,6 +66,28 @@ namespace SurveyApp.Controllers
                 userID);
 
         }
+
+        [HttpPost]
+        public void savequestionsCI(
+                string title,
+                string startDate,
+                string endDate,
+                string entryDate,
+                int childId,
+                int classroomIID)
+        {
+            var userID = WebSecurity.CurrentUserId;
+
+            int rsl = SurveyApp.DataHelper.savequestionsCI(title,
+                startDate,
+                endDate,
+                entryDate,
+                childId,
+                userID,
+                classroomIID);
+
+        }
+        
         [HttpPost]
         public void savequestionsLifeEvent(
                 string LifeEvent,

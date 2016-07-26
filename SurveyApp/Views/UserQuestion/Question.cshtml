@@ -10,6 +10,13 @@
     ViewBag.Title = dsSurvey.Tables[0].Rows[0]["Title"].ToString();
     Layout = "~/Views/Shared/_Layout.cshtml";
     var childname = Request.QueryString["ChildName"];
+
+    int criid = String.IsNullOrEmpty(Request.QueryString["criid"]) == false ? Convert.ToInt32(Request.QueryString["criid"]) : 0;
+    System.Data.DataSet dsCRIs = null;
+    if (SurveyID == 44 && criid > 0)
+    {
+        dsCRIs = SurveyApp.DataHelper.getClassroomInterventions(criid);
+    }
 }
 
 <style type="text/css">
@@ -94,7 +101,7 @@
 <div class="alert alert-success" id="success-alert" hidden="hidden">
     <button type="button" class="close" data-dismiss="alert">x</button>
     <strong>Success! </strong>
-   Survey is submitted successfully
+   @(SurveyID == 28 ? "Adverse Reaction" : (SurveyID == 29 ? "Life Event" : (SurveyID == 44 ? "Intervention" : "Survey"))) is submitted successfully
 </div>
 
 <h2><a href="@Request.UrlReferrer#1" id="back"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString().Replace("[Child]",childname)</h2>
@@ -201,6 +208,10 @@
     {
         btnsubmit_text = "Submit Life Events";
     }
+    else if (SurveyID == 44)
+    {
+        btnsubmit_text = "Submit Intervention";
+    }
     else
     {
         btnsubmit_text = "Submit Survey";
@@ -230,7 +241,7 @@
 </div>
 
 @{
-    if (SurveyID != 28 && SurveyID != 29) { 
+    if (SurveyID != 28 && SurveyID != 29 && SurveyID != 44) { 
     Html.RenderPartial("~/Views/Survey/_PercentCompletion.cshtml");}
     }
 @section scripts{
@@ -249,7 +260,7 @@
             }
         });
         $(function () {
-            
+
 
             var score;
             $("._datepicker").datepicker(
@@ -564,8 +575,8 @@
             }
         }
 
-        function setCompletionDiv() {            
-            if (SurveryID == 29 || SurveryID ==28) {return;}
+        function setCompletionDiv() {
+            if (SurveryID == 29 || SurveryID ==28 || SurveryID ==44) {return;}
             var noQ = 0, nofQ = 0;
             $(".questions").find(".q:visible").find("input[type=hidden]").each(function(index, obj){
                 if($(obj).val() != ""){
@@ -573,7 +584,7 @@
                 }
                 noQ++;
             });
-            
+
             var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0));
 
             setCompletionPercentage(percentage);
@@ -586,7 +597,7 @@
 
             var flag = true;
             var SurID = GetQueryStringValues()['surveyID'];
-            if(SurID !=28 && SurID!=29){
+            if(SurID !=28 && SurID!=29 && SurID != 44){
                 $(".questions").find(".q:visible").find("input[type=hidden]").each(function (index, obj) {
 
                     if ($(obj).val() != "") {
@@ -603,7 +614,7 @@
             $('#b1').closest('li').css('background', '#FCD6DF').css('border-right', 'solid 5px #cc0000;');
 
             if (flag) {
-                bootbox.confirm("Are you sure to submit this Survey?", function (confirmed) {
+                bootbox.confirm("Are you sure to submit this @(SurveyID == 28 ? "Adverse Reaction" : (SurveyID == 29 ? "Life Event" : (SurveyID == 44 ? "Intervention" : "Survey")))?", function (confirmed) {
                     if (confirmed == true) {
 
 
@@ -614,6 +625,9 @@
                         }
                         else if(SurID == 29){
                             savequestionsLifeEvents(childId);
+                        }
+                        else if(SurID == 44){
+                            savequestionsCI(childId, @criid);
                         }
                         else {
                             savequestions(null, null, null, childId, SurID, "SubmitStatus")
@@ -675,6 +689,29 @@
 
             });
     }
+
+        function savequestionsCI(cid, criid){
+            var title = $("#q1581_0").val().trim();
+            var startDate = $("#q1582_0").val().trim();
+            var endDate = $("#q1583_0").val().trim();
+            var entryDate = '@DateTime.Now.ToShortDateString()';
+            var childId = cid;
+            var criid = criid;
+
+            var url = "/UserQuestion/savequestionsCI";
+
+            $.post(url, { title: title,
+                startDate: startDate,
+                endDate: endDate,
+                entryDate: entryDate,
+                childId: childId,
+                classroomIID : criid }, function (data) {
+
+                });
+        }
+
+
+
     function savequestionsLifeEvents(cid){
         var ChildID = cid;
         var q869g="School Event",q869="Teacher Change",d869=$('#q869_1').val();
@@ -1155,3 +1192,14 @@
         });
     });
 </script>
+
+@if(SurveyID == 44 && dsCRIs != null && dsCRIs.Tables.Count > 0 && dsCRIs.Tables[0].Rows.Count > 0)
+{
+    <script type="text/javascript">
+        $(function(){
+            $("#q1581_0").val("@dsCRIs.Tables[0].Rows[0]["Title"]");
+            $("#q1582_0").val("@(dsCRIs.Tables[0].Rows[0]["StartDate"] != DBNull.Value ? Convert.ToDateTime(dsCRIs.Tables[0].Rows[0]["StartDate"]).ToString("MM/dd/yyyy") : "")");
+            $("#q1583_0").val("@(dsCRIs.Tables[0].Rows[0]["EndDate"] != DBNull.Value ? Convert.ToDateTime(dsCRIs.Tables[0].Rows[0]["EndDate"]).ToString("MM/dd/yyyy") : "")");
+        });
+    </script>
+}

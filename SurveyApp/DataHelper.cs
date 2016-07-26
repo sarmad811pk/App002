@@ -326,6 +326,43 @@ namespace SurveyApp
 
 
         }
+
+        public static int savequestionsCI(
+                string title,
+                string startDate,
+                string endDate,
+                string entryDate,
+                int childId,
+                int userId,
+                int classroomIID)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+
+            cmd.Parameters.Add("@Title", SqlDbType.NVarChar);
+            cmd.Parameters.Add("@StartDate", SqlDbType.DateTime);
+            cmd.Parameters.Add("@EndDate", SqlDbType.DateTime);
+            cmd.Parameters.Add("@EntryDate", SqlDbType.DateTime);
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters.Add("@ClassroomIID", SqlDbType.Int);
+
+            cmd.Parameters["@Title"].Value = title;
+            cmd.Parameters["@StartDate"].Value = IfDBNULL(startDate);
+            cmd.Parameters["@EndDate"].Value = IfDBNULL(endDate);
+            cmd.Parameters["@EntryDate"].Value = IfDBNULL(entryDate);
+            cmd.Parameters["@ChildID"].Value = childId;
+            cmd.Parameters["@UserID"].Value = userId;
+            cmd.Parameters["@ClassroomIID"].Value = classroomIID;
+
+            cmd.CommandText = "ClassroomIntervention_Add";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+
+
+
+        }
+
         public static int savequestionsLifeEvent(
                 string EventCategory,
                 string EventName,
@@ -639,6 +676,25 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
         #endregion
+
+        public static DataSet getClassroomInterventions(int criId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@CriID", SqlDbType.Int);
+            if(criId == 0)
+            {
+                cmd.Parameters["@CriID"].Value = DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters["@CriID"].Value = criId;
+            }            
+
+            cmd.CommandText = "GetClassroomInterventions";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         
     }
 }

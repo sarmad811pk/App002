@@ -253,6 +253,7 @@
             background-color: #666;
             text-decoration: none;
             margin-top: 7px;
+            margin-top: 2px;
         }
         .btnViewMore:hover{
             padding: 0px 6px;
@@ -263,6 +264,7 @@
             background-color: #666;
             text-decoration: none;
             margin-top: 7px;
+            margin-top: 2px;
         }
     </style>
 
@@ -461,16 +463,22 @@
                             <i class="ion-nuclear" style="position:absolute;top:7px;left:12px;font-size:16px;"></i> Adverse Reactions
                             <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = childID, ChildName = childName })">Add</a></span>
                         </div>
-                        <div style="padding: 5px 5px 5px 5px;overflow:hidden; font-size: 12px;" class="content mCustomScrollbar">
+                        <div style="padding: 5px 5px 5px 5px;overflow:hidden; font-size: 12px;" class="content mCustomScrollbar adversereactions">
                             @if (dsReveseandLiveEvent.Tables[0].Rows.Count > 0)
                             {
+                                int indexAR = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
                                 {
-                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
+                                    <div indexer="@indexAR" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexAR > 5 ? "display:none;" : "")" class="item">
                                         <div style="overflow:hidden;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
                                             <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b> occured on <b>@dr["DateOccured"]</b> and resolved on <b>@dr["DateResolved"]</b> by using <b>@dr["Medication"]</b></div>                                            
                                         </div>
                                     </div>
+                                    indexAR++;
+                                }
+                                if (indexAR > 5)
+                                {
+                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 3);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
                                 }
                             }
                             else
@@ -492,7 +500,7 @@
                                 int indexLE = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
                                 {
-                                    <div indexer="@indexLE" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event">
+                                    <div indexer="@indexLE" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event item">
                                         @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
                                         <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
                                             <div style="float:left;font-weight:bold;">  @dr["EventName"]</div>
@@ -518,9 +526,10 @@
                             <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
                             <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 1 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
                         </div>
-                        <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar">
+                        <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar medicationhistory">
                             @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
                             {
+                                int indexMH = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[2].Rows)
                                 {
                                     var _qq = dr["Question"].ToString().Split('-')[1].Trim();
@@ -531,7 +540,7 @@
                                         if (_a[2].Length > 0 || _a[3].Length > 0)
                                         {
 
-                                            <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
+                                            <div indexer="@indexMH" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexMH > 5 ? "display:none;" : "")" class="item">
                                                 <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
                                                     <b>@_qq (@_a[1] @_a[4])</b>
                                                     <div style=" text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
@@ -544,6 +553,11 @@
                                         //Indication|Dosage|02/01/2015|03/02/2015|ug|9|Hour|undefined
                                         //Indication|5|05/01/2016|05/11/2016|ul|6|Week|undefined
                                     }
+                                    indexMH++;
+                                }
+                                if (indexMH > 5)
+                                {
+                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 4);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
                                 }
                             }
                             else
@@ -562,15 +576,16 @@
                             <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Therapies
                             <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 2 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
                         </div>
-                        <div style="padding: 5px;overflow: auto; font-size: 12px;" class="content mCustomScrollbar">
+                        <div style="padding: 5px;overflow: auto; font-size: 12px;" class="content mCustomScrollbar therapies">
                             @if (dsReveseandLiveEvent.Tables[3].Rows.Count > 0)
                             {
+                                int indexTherapy = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[3].Rows)
                                 {
                                     var _qq = dr["Question"].ToString().Trim();
                                     var _aa = dr["Answers"];
                                     string[] _a = _aa.ToString().Split('|');
-                                    <div style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;">
+                                    <div indexer="@indexTherapy" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexTherapy > 5 ? "display:none;" : "")" class="item">
                                         <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
                                             <b>@_qq</b>
                                             @if (_a.Length >= 4)
@@ -582,6 +597,11 @@
                                             }                                            
                                         </div>
                                     </div>
+                                    indexTherapy++;
+                                }
+                                if (indexTherapy > 5)
+                                {
+                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 5);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
                                 }
                             }
                             else
@@ -597,13 +617,13 @@
                         <div class="boxheading" style="background: #af708d">
                             <i class="ion-android-list" style="position: absolute; top: 4px; left: 12px; font-size: 16px;"></i>Classroom Interventions <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName })">Add</a></span>
                         </div>
-                        <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar levents">
+                        <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar classroominterventions">
                             @if (dsReveseandLiveEvent.Tables[4].Rows.Count > 0)
                             {
                                 int indexCRI = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
                                 {
-                                    <div indexer="@indexCRI" style="cursor:pointer;padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexCRI > 5 ? "display:none;" : "")" class="crintervention" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">                                        
+                                    <div indexer="@indexCRI" style="cursor:pointer;padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">                                        
                                         <div style="overflow:hidden;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
                                             <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
                                             <div>On @dr["StartDate"] - @dr["EndDate"]</div>
@@ -613,7 +633,7 @@
                                 }
                                 if (indexCRI > 5)
                                 {
-                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 1);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 2);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
                                 }
                             }
                             else
@@ -649,39 +669,34 @@
             var type = parseInt($(elem).attr("type"));
             var itemIndex = 0;
             var box;
-            if(src == 1){
-                box = $(".levents .event");
-            }
-            var totalItems = $(box).length;
+            if(src == 1){ box = $(".levents"); }
+            if(src == 2){ box = $(".classroominterventions"); }
+            if (src == 3) { box = $(".adversereactions"); }
+            if (src == 4) { box = $(".medicationhistory"); }
+            if (src == 5) { box = $(".therapies"); }
+            
+            var totalItems = $(box).find(".item").length;
 
-            if (type == 1) {                               
-                $(box).each(function (index, obj) {
-                    if ($(obj).is(":visible") == true) {
-                        itemIndex = $(obj).attr("indexer");
-                    }
+            if (type == 1) {
+                $(box).find(".item").each(function (index, obj) {                    
+                    $(obj).show();
                 });
-
-                $(box).each(function (index, obj) {
-                    if (parseInt($(obj).attr("indexer")) < (parseInt(itemIndex) + 5)) {
-                        $(obj).show();
-                    }
-                });
-                if ((parseInt(itemIndex) + 5) >= totalItems) {
-                    $(elem).html("View Less&nbsp;<i class='ion-chevron-up'></i>");
-                }
+                
+                $(elem).html("View Less&nbsp;<i class='ion-chevron-up'></i>");
+                $(elem).attr("type", "2");
             }
             else{
-                $(box).each(function (index, obj) {
-                    if (parseInt($(obj).attr("indexer")) < (parseInt(itemIndex))) {
+                $(box).find(".item").each(function (index, obj) {
+                    if (parseInt($(obj).attr("indexer")) <= 5) {
                         $(obj).show();
                     }
                     else{
                         $(obj).hide();
                     }
                 });
-                if (parseInt(itemIndex) < totalItems) {
-                    $(elem).html("View More&nbsp;<i class='ion-chevron-down'></i>");
-                }
+                
+                $(elem).html("View More&nbsp;<i class='ion-chevron-down'></i>");                
+                $(elem).attr("type", "1");
             }
             
         }
