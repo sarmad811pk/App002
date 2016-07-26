@@ -571,7 +571,7 @@
 
                     
 
-                    <div class="col-md-6 text-left treatment boxitem" style="background: #2daad8;">
+                    <div class="col-md-@(roles[0] == "Teacher" ? "6" : "12") text-left treatment boxitem" style="background: #2daad8;">
                         <div class="boxheading" style="background: #0084b5;">
                             <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Therapies
                             <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 2 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "alert('Please complete the Intake Form first.');")">Update</a></span>
@@ -612,36 +612,39 @@
                     </div>
 
 
-
-                    <div class="col-md-6 text-left crinterventions boxitem" style="background: #dc7ba8;">
-                        <div class="boxheading" style="background: #af708d">
-                            <i class="ion-android-list" style="position: absolute; top: 4px; left: 12px; font-size: 16px;"></i>Classroom Interventions <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName })">Add</a></span>
-                        </div>
-                        <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar classroominterventions">
-                            @if (dsReveseandLiveEvent.Tables[4].Rows.Count > 0)
-                            {
-                                int indexCRI = 1;
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
+                    @if (roles[0] == "Teacher")
+                    {
+                        <div class="col-md-6 text-left crinterventions boxitem" style="background: #dc7ba8;">
+                            <div class="boxheading" style="background: #af708d">
+                                <i class="ion-android-list" style="position: absolute; top: 4px; left: 12px; font-size: 16px;"></i>Classroom Interventions <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName })">Add</a></span>
+                            </div>
+                            <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar classroominterventions">
+                                @if (dsReveseandLiveEvent.Tables[4].Rows.Count > 0)
                                 {
-                                    <div indexer="@indexCRI" style="cursor:pointer;padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">                                        
-                                        <div style="overflow:hidden;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
-                                            <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
-                                            <div>On @dr["StartDate"] - @dr["EndDate"]</div>
+                                    int indexCRI = 1;
+                                    foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
+                                    {
+                                        <div indexer="@indexCRI" style="cursor:pointer;padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">
+                                            <div style="overflow:hidden;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
+                                                <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
+                                                <div>On @dr["StartDate"] - @dr["EndDate"]</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    indexCRI++;
+                                        indexCRI++;
+                                    }
+                                    if (indexCRI > 5)
+                                    {
+                                        <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 2);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                    }
                                 }
-                                if (indexCRI > 5)
+                                else
                                 {
-                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 2);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                    <div style="color:#FFF;text-align:center;">No history found</div>
                                 }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;">No history found</div>
-                            }
+                            </div>
                         </div>
-                    </div>   
+                    }
+                    
 
                 </td>
             </tr>
