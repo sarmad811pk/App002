@@ -159,7 +159,7 @@
             @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Model.vw_ParentTeacher.Id })
             <div class="form-group">
                 <label class="control-label col-sm-3" for="teacher">Study:</label>
-                <div class="col-sm-9">
+                <div class="col-sm-9" style="max-height: 220px;overflow-y: auto;">
                     <div class="checklist">
                         @foreach (Study std in Study.StudyGetAll())
                         {
