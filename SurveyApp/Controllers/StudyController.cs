@@ -48,6 +48,13 @@ namespace SurveyApp.Controllers
                 return View(studyModel);
             }
 
+            if (doesStudyExist(studyModel.Name))
+            {
+                ModelState.AddModelError("", "This study already exists, please provide different details.");
+                return View(studyModel);
+            }
+            
+
             int newStudyId = 0;
             
             try
@@ -137,6 +144,21 @@ namespace SurveyApp.Controllers
             }
 
             return RedirectToAction("Index", "Study");
+        }
+
+        public bool doesStudyExist(string name)
+        {
+            bool result = false;
+            using (var cContext = new StudyContext())
+            {
+                Study objStudy = cContext.Studies.Where(s => s.Name == name).FirstOrDefault();
+                if (objStudy != null && objStudy.Id > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -42,6 +42,13 @@ namespace SurveyApp.Controllers
             {
                 return View(model);
             }
+
+            if (doesSchoolExist(model.Name))
+            {
+                ModelState.AddModelError("", "This school already exists, please provide different details.");
+                return View(model);
+            }
+
             using (var db = new SchoolContext())
             {
                 School school = null;
@@ -93,6 +100,21 @@ namespace SurveyApp.Controllers
             }
 
             return Json(new { success = newId > 0 ? true : false, schoolId = newId, msg = msg });
+        }
+
+        public bool doesSchoolExist(string name)
+        {
+            bool result = false;
+            using (var cContext = new SchoolContext())
+            {
+                School objSchool = cContext.Schools.Where(s => s.Name == name).FirstOrDefault();
+                if (objSchool != null && objSchool.SchoolId > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }

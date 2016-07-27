@@ -92,6 +92,12 @@ namespace SurveyApp.Controllers
             {
                 ModelState.AddModelError("", "Please select at least one study.");
                 return View(parentTeacher_RegisterModel);
+            }
+
+            if (doesUserExist(parentTeacherModel.Name))
+            {
+                ModelState.AddModelError("", "This user already exists in the system, please provide different details.");
+                return View(parentTeacher_RegisterModel);
             }            
 
             int ptId = 0, schoolId = 0;
@@ -203,6 +209,21 @@ namespace SurveyApp.Controllers
 
             return View(parentTeacher_RegisterModel);
         }
-        
+
+        public bool doesUserExist(string name)
+        {
+            bool result = false;
+            using (var cContext = new UsersContext())
+            {
+                UserProfile objUP = cContext.UserProfiles.Where(u => u.FullName == name).FirstOrDefault();
+                if (objUP != null && objUP.UserId > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
     }
 }

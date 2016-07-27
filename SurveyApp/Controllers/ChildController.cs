@@ -86,6 +86,12 @@ namespace SurveyApp.Controllers
                     return View(childModel);
                 }
 
+                if(doesChildExist(childModel.Name, childModel.dob))
+                {
+                    ModelState.AddModelError("", "This child already exists in the system, please provide different details.");
+                    return View(childModel);
+                }
+
                 int cId = 0;
                 DateTime? dtEnrollment = null;
                 using (var cContext = new ChildContext())
@@ -561,6 +567,19 @@ namespace SurveyApp.Controllers
             }
 
             return Json(new { success = newId > 0 ? true : false, UserId = newId, msg = msg });
+        }
+
+        public bool doesChildExist(string name, DateTime dob) {
+            bool result = false;
+            using (var cContext = new ChildContext()) {
+                Child objChild = cContext.Children.Where(c => c.Name == name && c.dob == dob).FirstOrDefault();
+                if(objChild != null && objChild.Id > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }

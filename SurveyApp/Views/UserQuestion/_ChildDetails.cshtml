@@ -137,6 +137,18 @@
 
         return comp;
     }
+
+
+    public bool checkDateValidity(string date)
+    {
+        bool isValidDate = false;
+        DateTime dtEvent;
+        if (DateTime.TryParse(date, out dtEvent)) {
+            isValidDate = true;
+        }
+
+        return isValidDate;
+    }
 }
 @if (childID > 0)
 {
@@ -469,7 +481,7 @@
                                 int indexAR = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
                                 {
-                                    <div indexer="@indexAR" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexAR > 5 ? "display:none;" : "")" class="item">
+                                    <div indexer="@indexAR" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["DateResolved"] != DBNull.Value && Convert.ToDateTime(dr["DateResolved"]) < DateTime.Now ? "color: #111;" : "")@(indexAR > 5 ? "display:none;" : "")" class="item">
                                         <div style="overflow:hidden;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
                                             <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b> occured on <b>@dr["DateOccured"]</b> and resolved on <b>@dr["DateResolved"]</b> by using <b>@dr["Medication"]</b></div>                                            
                                         </div>
@@ -500,7 +512,7 @@
                                 int indexLE = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
                                 {
-                                    <div indexer="@indexLE" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event item">
+                                    <div indexer="@indexLE" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event item">
                                         @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
                                         <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
                                             <div style="float:left;font-weight:bold;">  @dr["EventName"]</div>
@@ -540,7 +552,7 @@
                                         if (_a[2].Length > 0 || _a[3].Length > 0)
                                         {
 
-                                            <div indexer="@indexMH" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexMH > 5 ? "display:none;" : "")" class="item">
+                                            <div indexer="@indexMH" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexMH > 5 ? "display:none;" : "")" class="item">
                                                 <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
                                                     <b>@_qq (@_a[1] @_a[4])</b>
                                                     <div style=" text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
@@ -585,7 +597,7 @@
                                     var _qq = dr["Question"].ToString().Trim();
                                     var _aa = dr["Answers"];
                                     string[] _a = _aa.ToString().Split('|');
-                                    <div indexer="@indexTherapy" style="padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexTherapy > 5 ? "display:none;" : "")" class="item">
+                                    <div indexer="@indexTherapy" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(_a[3] != "" && checkDateValidity(_a[3]) && Convert.ToDateTime(_a[3]) < DateTime.Now ? "color: #111;" : "")@(indexTherapy > 5 ? "display:none;" : "")" class="item">
                                         <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
                                             <b>@_qq</b>
                                             @if (_a.Length >= 4)
@@ -624,7 +636,7 @@
                                     int indexCRI = 1;
                                     foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
                                     {
-                                        <div indexer="@indexCRI" style="cursor:pointer;padding-bottom:5px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">
+                                        <div indexer="@indexCRI" style="cursor:pointer;padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["EndDate"] != DBNull.Value && Convert.ToDateTime(dr["EndDate"]) < DateTime.Now ? "color: #111;" : "")@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">
                                             <div style="overflow:hidden;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
                                                 <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
                                                 <div>On @dr["StartDate"] - @dr["EndDate"]</div>

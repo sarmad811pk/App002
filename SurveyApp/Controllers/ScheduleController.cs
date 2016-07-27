@@ -71,6 +71,13 @@ namespace SurveyApp.Controllers
                 ModelState.AddModelError("", "Please specify period.");
                 return View(mSchedule);
             }
+
+            if (doesScheduleExist(mSchedule.Title))
+            {
+                ModelState.AddModelError("", "This schedule already exists, please provide different details.");
+                return View(mSchedule);
+            }
+            
             #endregion
 
 
@@ -162,6 +169,21 @@ namespace SurveyApp.Controllers
 
 
             return Json(new { success = newId > 0 ? true : false, scheduleid = newId });
+        }
+
+        public bool doesScheduleExist(string name)
+        {
+            bool result = false;
+            using (var cContext = new ScheduleContext())
+            {
+                Schedule objSchedule = cContext.Schedules.Where(s => s.Title == name).FirstOrDefault();
+                if (objSchedule != null && objSchedule.Id > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
 
     }
