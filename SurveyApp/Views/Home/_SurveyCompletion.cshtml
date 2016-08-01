@@ -32,7 +32,7 @@
         if (userType == 0 || userType == 1)
         {
             int completed = 0, partial = 0, notstarted = 0;
-            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  < ScheduleDate");
+            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate");
             if (drCount.Length > 0)
             {
                 foreach (DataRow dr in drCount)
@@ -68,7 +68,7 @@
         if (userType == 0 || userType == 2)
         {
             int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  < ScheduleDate");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate");
             if (drTeacherCount.Length > 0)
             {
                 foreach (DataRow dr in drTeacherCount)
@@ -110,7 +110,7 @@
         if (userType == 0 || userType == 1)
         {
             int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0;
-            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' >= ScheduleDate");
+            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate");
             if (drCount.Length > 0)
             {
                 foreach (DataRow dr in drCount)
@@ -146,7 +146,7 @@
         if (userType == 0 || userType == 2)
         {
             int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' >= ScheduleDate");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate");
             if (drTeacherCount.Length > 0)
             {
                 foreach (DataRow dr in drTeacherCount)

@@ -101,4 +101,11 @@ namespace SurveyApp.Models
 
         public DbSet<Respondent> Respondents { get; set; }
     }
+
+    public class RespondentEmail
+    {
+        public int userId { get; set; }
+        public string email { get; set; }
+        public string name { get; set; }
+    }
 }

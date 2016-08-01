@@ -513,33 +513,76 @@ namespace SurveyApp.Controllers
                 #endregion
 
                 #region Emails
-                List<string> lstEmails = new List<string>();
-                List<UserProfile> lstUsers = new List<UserProfile>();
-                using (var cUP = new UsersContext())
+                DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(cId);
+                List<RespondentEmail> lstRespos = new List<RespondentEmail>();
+                
+                if (dsSurveys != null && dsSurveys.Tables[0].Rows.Count > 0 && dsSurveys.Tables[1].Rows.Count > 0)
                 {
-                    lstUsers = cUP.UserProfiles.ToList();
-                }
-
-                foreach (int id in lstTeacherIds)
-                {
-                    foreach(UserProfile objUP in lstUsers)
+                    foreach(DataRow drRespo in dsSurveys.Tables[0].Rows)
                     {
-                        if(objUP.UserId == id)
-                        {
-                            lstEmails.Add(objUP.UserName);
-                        }
-                    }   
+                        lstRespos.Add(new RespondentEmail { userId = (int)drRespo["UserId"], email = drRespo["UserName"].ToString(), name = (drRespo["FullName"] != DBNull.Value ? drRespo["FullName"] : drRespo["UserName"]).ToString() });
+                    }
                 }
 
                 string body = "";
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Child_Teacher_Assignment.html")))
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Survey_Assignment.html")))
                 {
                     body = reader.ReadToEnd();
                 }
                 body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
-                body = body.Replace("_CHIDLREN_", childModel.Name);
 
-                SMTPHelper.SendGridEmail("USFEBIT SurveyApp - Child_Assignment", body, lstEmails, true, null, null);
+                foreach (RespondentEmail objRE in lstRespos)
+                {
+                    List<string> lstEmails = new List<string>();
+                    lstEmails.Add(objRE.email);
+
+                    string newBody = body.Replace("_FULLNAME_", objRE.name);
+                    newBody = newBody.Replace("_USERNAME_", objRE.email);
+
+                    string surveys = "";
+                    if (dsSurveys.Tables[1].Rows.Count > 0)
+                    {
+                        surveys = "<table style='border:none;'>";
+                        int i = 1;
+                        foreach (DataRow dr in dsSurveys.Tables[1].Rows)
+                        {
+                            surveys += "<tr><td>" + i + " : </td><td>" + dr["Title"] + "</td></tr>";
+                            i++;
+                        }
+                        surveys += "</table>";
+                    }
+                    newBody = newBody.Replace("_SURVEYS_", surveys);
+                    
+                    SMTPHelper.SendGridEmail("eBit - Assessment Surveys", newBody, lstEmails, true, null, null);
+                }
+
+                //List<stri>ng lstEmails = new List<string>();
+                //List<UserProfile> lstUsers = new List<UserProfile>();
+                //using (var cUP = new UsersContext())
+                //{
+                //    lstUsers = cUP.UserProfiles.ToList();
+                //}
+
+                //foreach (int id in lstTeacherIds)
+                //{
+                //    foreach(UserProfile objUP in lstUsers)
+                //    {
+                //        if(objUP.UserId == id)
+                //        {
+                //            lstEmails.Add(objUP.UserName);
+                //        }
+                //    }   
+                //}
+
+                //string body = "";
+                //using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Child_Teacher_Assignment.html")))
+                //{
+                //    body = reader.ReadToEnd();
+                //}
+                //body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
+                //body = body.Replace("_CHIDLREN_", childModel.Name);
+
+                //SMTPHelper.SendGridEmail("USFEBIT SurveyApp - Child_Assignment", body, lstEmails, true, null, null);
                 #endregion
 
             }

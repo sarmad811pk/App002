@@ -695,6 +695,20 @@ namespace SurveyApp
             cmd.CommandText = "GetClassroomInterventions";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static DataSet getRespondentsAndSurveys(int childId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@childId", SqlDbType.Int);            
+            cmd.Parameters["@ChildId"].Value = childId;            
+
+            cmd.CommandText = "Child_GetRespondentsAndSurveys";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
         
+
     }
 }

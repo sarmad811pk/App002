@@ -231,6 +231,7 @@
     <Content Include="Attachments\Child_Teacher_Assignment.html" />
     <Content Include="Attachments\Reminder.html" />
     <Content Include="Attachments\Account_Update.html" />
+    <Content Include="Attachments\Survey_Assignment.html" />
     <Content Include="bootstrap\css\components.css" />
     <Content Include="bootstrap\css\core.css" />
     <Content Include="bootstrap\css\icons.css" />

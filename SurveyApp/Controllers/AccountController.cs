@@ -162,7 +162,15 @@ namespace SurveyApp.Controllers
                 }
                 body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
                 body = body.Replace("_USERNAME_", newUserName);
-                body = body.Replace("_PASSWORD_", password);
+                if (updatePassword == true)
+                {
+                    body = body.Replace("_PASSWORDIS_", "Password is: " + password);
+                }
+                else
+                {
+                    body = body.Replace("_PASSWORDIS_", "");
+                }
+                
 
                 isSuccess = SMTPHelper.SendGridEmail("eBit - Account Updated", body, lstEmails, true);
             }

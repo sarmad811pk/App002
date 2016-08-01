@@ -86,7 +86,7 @@
                     percentage = "0%";
                     if (dsQuestionsFilled != null && dsQuestionsFilled.Tables != null && dsQuestionsFilled.Tables[0] != null && dsQuestionsFilled.Tables[0].Rows != null)
                     {
-                        DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + surveyId + " AND ChildID = " + childId + " AND ScheduleDate = '" + endDate + "'");
+                        DataRow[] drQuestions = dsQuestionsFilled.Tables[0].Select("SurveyID = " + surveyId + " AND ChildID = " + childId + " AND ScheduleDate = '" + endDate.ToString("MM/dd/yyyy") + "'");
                         foreach (DataRow dr in drQuestions)
                         {
                             percentage = dr["Percentage"] != DBNull.Value ? dr["Percentage"].ToString() : percentage;
