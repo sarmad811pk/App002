@@ -51,19 +51,27 @@ namespace SurveyReminder
                     }
                 }
 
+                string body = "";
+                string path = System.IO.Directory.GetCurrentDirectory().Replace(@"\bin\Debug", @"\Attachments\Reminder.html");
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(path))
+                {
+                    body = reader.ReadToEnd();
+                }
+                body = body.Replace("_ROOTPATH_", System.Configuration.ConfigurationManager.AppSettings["_RootPath"].ToString());
 
-                string body = "Hi,<br /><br />"
-                + "Please <a href = '" + System.Configuration.ConfigurationManager.AppSettings["_RootPath"].ToString() + "'>login</a> to UCSFEBIT Survey app and complete the surveys. <br /><br />"
-                + "Regards,<br />"
-                + "UCSFEBIT Team";
+
+                //string body = "Hi,<br /><br />"
+                //+ "Please <a href = '" + System.Configuration.ConfigurationManager.AppSettings["_RootPath"].ToString() + "'>login</a> to UCSFEBIT Survey app and complete the surveys. <br /><br />"
+                //+ "Regards,<br />"
+                //+ "UCSFEBIT Team";
 
                 List<String> lstBcc = new List<String>();
                 lstBcc.Add("shazeb140@gmail.com");
 
-                lstEmails.Add("shazeb140@gmail.com");
+                //lstEmails.Add("shazeb140@gmail.com");
                 //lstEmails.Add("shazeb.alee@gmail.com");
 
-                SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", body, lstEmails, true, null, null);
+                SMTPHelper.SendGridEmail("eBit - Reminder", body, lstEmails, true, null, lstBcc);
 
                 foreach (string usr in lstEmails)
                 {

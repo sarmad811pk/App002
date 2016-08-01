@@ -81,37 +81,31 @@ namespace SurveyReminder
                 if (isEmailEnabled)
                 {
                     msg.AddTo(TOs);
-                    MailAddress[] ccEmails = null;
-                    MailAddress[] bccEmails = null;
+                    List<MailAddress> ccEmails = new List<MailAddress>();
+                    List<MailAddress> bccEmails = new List<MailAddress>();
 
                     if (CCs != null)
                     {
-
-                        int i = 0;
                         foreach (var c in CCs)
                         {
-                            ccEmails[i] = new MailAddress(c);
-                            i++;
+                            ccEmails.Add(new MailAddress(c));                            
                         }
-                        msg.Cc = ccEmails;
+                        msg.Cc = ccEmails.ToArray();
                     }
 
                     if (BCCs != null)
                     {
-
-                        int i = 0;
                         foreach (var c in BCCs)
                         {
-                            bccEmails[i] = new MailAddress(c);
-                            i++;
+                            bccEmails.Add(new MailAddress(c));                            
                         }
-                        msg.Bcc = bccEmails;
+                        msg.Bcc = bccEmails.ToArray();
                     }
                 }
                 else
                 {
                     msg.AddTo(System.Configuration.ConfigurationManager.AppSettings["TestEmailAddress"].ToString());
-                }                
+                }
 
                 var credentials = new NetworkCredential(sender, password);
                 var transportWeb = new Web(credentials);
