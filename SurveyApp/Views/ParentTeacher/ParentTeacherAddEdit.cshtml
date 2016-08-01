@@ -28,7 +28,7 @@
         {
             foreach (ParentTeacher_Study objPTS in lstPTS)
 			{
-				if (objPTS.StudyId == studyId)
+				if (objPTS.StudyId == studyId && objPTS.ParentTeacherId == Model.vw_ParentTeacher.Id)
 				{
 					return "checked='checked'";
 				}
@@ -121,6 +121,17 @@
     }
 
     function changeRole(roleType) {
+        if (roleType == "@SurveyApp.Models.SurveyAppRoles.Parent") {
+            $('.divSchool').hide();
+            $("#addSchool").hide();
+        }
+        else if (roleType == "@SurveyApp.Models.SurveyAppRoles.Teacher") {            
+            $('.divSchool').show();
+            if ($("#ddlSchools").val() == -1) {
+                $("#addSchool").show();
+            }
+        }
+        @*
         return true;
         if (roleType == "@SurveyApp.Models.SurveyAppRoles.Parent") {
             var goOn = confirm("Changing the role may affect the children enrollment. Do you wish to continue?");
@@ -145,7 +156,7 @@
                 $(".roles").find("input[type=radio]")[1].checked = false;
                 $(".roles").find("input[type=radio]")[0].checked = true;
             }
-        }
+        }*@
     }
 
 </script>

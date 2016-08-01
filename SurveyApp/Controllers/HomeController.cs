@@ -230,7 +230,7 @@ namespace SurveyApp.Controllers
                 }
                 body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());               
 
-                bool isSent = SMTPHelper.SendGridEmail("UCSFEBIT Survey Reminder", body, lstEmails, true);
+                bool isSent = SMTPHelper.SendGridEmail("eBit - Reminder", body, lstEmails, true);
 
                 if(isSent == true)
                 {                    

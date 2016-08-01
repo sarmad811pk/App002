@@ -4,6 +4,8 @@
     ViewBag.Title = "Child Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    string datepick = Model.Id <= 0 ? "$('#dob').val('');" : "";
+
     if (Model.Id > 0)
     {
         DataSet ds = SurveyApp.DataHelper.Child_Study_TeacherGetAll(Model.Id);
@@ -101,7 +103,7 @@
                 <div class="col-sm-9">
                     <div class="checklist">
                     @foreach (Study std in Study.StudyGetAll())
-                        {
+                    {
                             <div class="checker">
                                 <label onclick="setDeviation(this);" class="study">
                                     <input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@std.Id" value="@std.Id" /> @std.Name
@@ -185,7 +187,7 @@
                                     }
                                 </div>
                             </div>
-                        }
+                                        }
                     </div>
                     @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-link" })
                 </div>
@@ -349,9 +351,10 @@
 
 <script type="text/javascript">
     $(function () {
+        @Html.Raw(datepick)
         $("#frmAddChild").find("input[type=text], input[type=password], select").on("change", function () { resetErrorStatus(this); });
         $("#frmAddChild").find("input[type=text], input[type=password]").on("keyup", function () { resetErrorStatus(this); });
-        $(".datepicker").datepicker();
+        $(".datepicker").datepicker({ maxDate : @(DateTime.Now.ToString("MM/dd/yyyy")), changeYear: true, yearRange: "-120:+0" });
 
         $(".checklist").find("label.study").each(function (index, obj) {
             setDeviation(obj);
@@ -518,7 +521,7 @@
         var isChecked = $(elem).find("input[type=checkbox]")[0].checked;
         if (isChecked == true) {
             $(elem).siblings("label.deviation").fadeIn();
-            
+
             $(elem).siblings(".studyInfo").find("input[type=radio]").each(function (index, obj) {
                 if ($(obj)[0].checked == true) {
                     $(elem).siblings("label").find("input[type=checkbox]")[0].checked = true;
@@ -576,7 +579,7 @@
                 });
             });
         }
-        else {            
+        else {
             showChildInfo(id, 2);
             $(elem).siblings("#divStudy" + id).slideUp();
         }
