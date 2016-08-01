@@ -94,7 +94,7 @@ namespace SurveyApp.Controllers
                 return View(parentTeacher_RegisterModel);
             }
 
-            if (doesUserExist(parentTeacherModel.Name))
+            if (parentTeacherModel.Id <= 0 && doesUserExist(parentTeacherModel.Name))
             {
                 ModelState.AddModelError("", "This user already exists in the system, please provide different details.");
                 return View(parentTeacher_RegisterModel);
@@ -141,6 +141,29 @@ namespace SurveyApp.Controllers
                             UserProfile objUP = uContext.UserProfiles.Find(parentTeacherModel.Id);
                             objUP.FullName = parentTeacherModel.Name;
                             uContext.SaveChanges();
+
+                            try
+                            {
+                                List<string> lstEmails = new List<string>();
+                                lstEmails.Add(registerModel.UserName);
+
+                                string body = "";
+                                using (System.IO.StreamReader reader = new System.IO.StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Attachments/Account_Update.html")))
+                                {
+                                    body = reader.ReadToEnd();
+                                }
+                                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
+                                body = body.Replace("_USERNAME_", registerModel.UserName);
+                                //body = body.Replace("_PASSWORD_", Membership.GetUser(registerModel.UserName, false).GetPassword());
+                                body = body.Replace("_FULLNAME_", registerModel.FullName);
+
+                                SMTPHelper.SendGridEmail("eBIT - Account Updated", body, lstEmails, true);
+                            }
+                            catch(Exception ex)
+                            {
+                                ModelState.AddModelError("", ex.Message);
+                                return View(parentTeacher_RegisterModel);
+                            }
                         }
                         ptId = parentTeacherModel.Id;
                     }

@@ -72,7 +72,7 @@ namespace SurveyApp.Controllers
                 return View(mSchedule);
             }
 
-            if (doesScheduleExist(mSchedule.Title))
+            if (mSchedule.Id <= 0 && doesScheduleExist(mSchedule.Title))
             {
                 ModelState.AddModelError("", "This schedule already exists, please provide different details.");
                 return View(mSchedule);

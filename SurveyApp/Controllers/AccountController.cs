@@ -156,7 +156,7 @@ namespace SurveyApp.Controllers
                 List<string> lstEmails = new List<string>();
                 lstEmails.Add(newUserName);
                 string body = "";
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Account_Update.html")))
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Account_Update_UP.html")))
                 {
                     body = reader.ReadToEnd();
                 }
@@ -164,7 +164,7 @@ namespace SurveyApp.Controllers
                 body = body.Replace("_USERNAME_", newUserName);
                 body = body.Replace("_PASSWORD_", password);
 
-                isSuccess = SMTPHelper.SendGridEmail("UCSFEBIT SurveyApp - Update Account", body, lstEmails, true);
+                isSuccess = SMTPHelper.SendGridEmail("eBit - Account Updated", body, lstEmails, true);
             }
             catch(Exception ex) {
                 isSuccess = false;
@@ -202,7 +202,7 @@ namespace SurveyApp.Controllers
                 body = body.Replace("_PASSWORD_", model.Password);
                 body = body.Replace("_FULLNAME_", model.FullName);
 
-                isSuccess = SMTPHelper.SendGridEmail("UCSFEBIT SurveyApp - New Account", body, lstEmails, true);                
+                isSuccess = SMTPHelper.SendGridEmail("eBIT - Account Created", body, lstEmails, true);                
             }
             catch (Exception ex)
             {

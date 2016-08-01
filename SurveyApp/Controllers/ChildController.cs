@@ -86,7 +86,7 @@ namespace SurveyApp.Controllers
                     return View(childModel);
                 }
 
-                if(doesChildExist(childModel.Name, childModel.dob))
+                if(childModel.Id <= 0 && doesChildExist(childModel.Name, childModel.dob))
                 {
                     ModelState.AddModelError("", "This child already exists in the system, please provide different details.");
                     return View(childModel);

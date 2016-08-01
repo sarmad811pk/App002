@@ -43,7 +43,7 @@ namespace SurveyApp.Controllers
                 return View(model);
             }
 
-            if (doesSchoolExist(model.Name))
+            if (model.SchoolId <= 0 && doesSchoolExist(model.Name))
             {
                 ModelState.AddModelError("", "This school already exists, please provide different details.");
                 return View(model);

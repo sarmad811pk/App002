@@ -121,6 +121,7 @@
     }
 
     function changeRole(roleType) {
+        return true;
         if (roleType == "@SurveyApp.Models.SurveyAppRoles.Parent") {
             var goOn = confirm("Changing the role may affect the children enrollment. Do you wish to continue?");
             if (goOn == true) {

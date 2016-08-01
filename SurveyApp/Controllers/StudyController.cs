@@ -48,7 +48,7 @@ namespace SurveyApp.Controllers
                 return View(studyModel);
             }
 
-            if (doesStudyExist(studyModel.Name))
+            if (studyModel.Id <= 0 && doesStudyExist(studyModel.Name))
             {
                 ModelState.AddModelError("", "This study already exists, please provide different details.");
                 return View(studyModel);

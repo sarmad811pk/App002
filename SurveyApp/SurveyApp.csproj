@@ -226,6 +226,7 @@
       <DependentUpon>aspnet-SurveyApp-20160130102437.mdf</DependentUpon>
     </Content>
     <Content Include="Attachments\Account_Add.html" />
+    <Content Include="Attachments\Account_Update_UP.html" />
     <Content Include="Attachments\Child_Study_Assignment.html" />
     <Content Include="Attachments\Child_Teacher_Assignment.html" />
     <Content Include="Attachments\Reminder.html" />
