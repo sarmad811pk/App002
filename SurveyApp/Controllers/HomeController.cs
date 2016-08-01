@@ -216,21 +216,54 @@ namespace SurveyApp.Controllers
             bool isSuccess = false;
             try
             {
-                SurveyApp.Models.Respondent[] objRespos = JsonConvert.DeserializeObject<SurveyApp.Models.Respondent[]>(respos);
-                List<string> lstEmails = new List<string>();
-                foreach (Respondent objRp in objRespos)
-                { 
-                    lstEmails.Add(objRp.Email);
-                }
-
                 string body = "";
                 using (System.IO.StreamReader reader = new System.IO.StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Attachments/Reminder.html")))
                 {
                     body = reader.ReadToEnd();
                 }
-                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());               
+                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
 
-                bool isSent = SMTPHelper.SendGridEmail("eBit - Reminder", body, lstEmails, true);
+                bool isSent = true;
+
+                SurveyApp.Models.Respondent[] objRespos = JsonConvert.DeserializeObject<SurveyApp.Models.Respondent[]>(respos);
+
+                List<UserProfile> lstUsers = new List<UserProfile>();
+                using (var upContext = new UsersContext())
+                {
+                    lstUsers = upContext.UserProfiles.ToList();
+                }
+
+                foreach (Respondent objRp in objRespos)
+                {
+                    string fullname = "";
+                    if(lstUsers != null && lstUsers.Count > 0) { 
+                        foreach (UserProfile objUP in lstUsers)
+                        {
+                            if(objUP.UserName == objRp.Email)
+                            {
+                                fullname = objUP.FullName;
+                            }
+                        }
+                    }
+
+                    List<string> lstEmails = new List<string>();
+                    string newBody = body.Replace("_USERNAME_", objRp.Email);
+                    if(fullname != "")
+                    {
+                        newBody = newBody.Replace("_FULLNAME_", "Dear " + fullname);
+                    }
+                    else
+                    {
+                        newBody = newBody.Replace("_FULLNAME_", "Hi");
+                    }
+
+                    lstEmails.Add(objRp.Email);
+                    isSent = SMTPHelper.SendGridEmail("eBit - Reminder", newBody, lstEmails, true);
+                    if(isSent == false)
+                    {
+                        break;
+                    }
+                }
 
                 if(isSent == true)
                 {                    
