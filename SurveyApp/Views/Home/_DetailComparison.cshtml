@@ -128,6 +128,7 @@
     .comparison .nodata{margin: 25px;text-align: center;}
     .comparison .linker.disabled{background-color: #CCC;cursor: help;}
     .ui-tooltip {max-width: 400px;}
+    .notasoc{}
 </style>
 
 <div class="comparison">
@@ -212,12 +213,26 @@
                                     <td>
                                         <table class="dots tblCurrent" style="width: 100%;">
                                             <tr>
-                                                <td class="dot">
-                                                    <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                <td class="dot" @(drChild["Email"] == DBNull.Value ? "notasoc" : "")>
+                                                    @if (drChild["Email"] != DBNull.Value)
+                                                    {
+                                                        <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drChild["Email"]" onclick="setReminderOption(this);" userid="@drChild["ParentId"]" email="@drChild["Email"]" />
+                                                    }
                                                 </td>
-                                                <td class="name">
-                                                   <i class="ion-home"></i> @drChild["Parent"] @if (@drChild["ReminderDate"] != DBNull.Value)
-                                                   { <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
+                                                <td class="name @(drChild["Email"] == DBNull.Value ? "notasoc" : "")">                                                   
+                                                   @if (drChild["Email"] != DBNull.Value)
+                                                   {
+                                                    <i class="ion-home"></i>
+                                                         @drChild["Parent"] 
+                                                        if (@drChild["ReminderDate"] != DBNull.Value)
+                                                        { 
+                                                           <span data-toggle="tooltip" title="Last Reminder Sent On: @drChild["ReminderDate"]"><i class="fa fa-clock-o"></i></span>
+                                                       }
+                                                   }
+                                                   else
+                                                   {
+                                                    <i class="ion-home" style="color: #EE0000;" title="Parent association has been removed for this child" data-toggle="tooltip"></i>
+                                                   }
                                                 </td>
                                                 @{bool pedsTD = false; }
                                                 @foreach (DataRow drT in dtTotalSurveys.Rows)
@@ -225,11 +240,11 @@
                                                     if ((((int)drT["SurveyId"] == 6 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 7 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 8 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 9 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true)) && pedsTD == false)
                                                     {
                                                         pedsTD = true;
-                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
+                                                        <td class="dot @(drChild["Email"] == DBNull.Value ? "notasoc" : "")"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                     }
                                                     else if ((int)drT["SurveyId"] != 6 && (int)drT["SurveyId"] != 7 && (int)drT["SurveyId"] != 8 && (int)drT["SurveyId"] != 9)
                                                     {
-                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
+                                                        <td class="dot @(drChild["Email"] == DBNull.Value ? "notasoc" : "")"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
                                                     }
                                                 }
                                             </tr>
