@@ -286,6 +286,9 @@
             top: 4px;
             font-size: 32px;
         }
+        a.redCross:hover, a.redCross:visited{
+            font-size: 32px !important;
+        }
     </style>
 
     <div style="margin: 0px 0px 20px 0px;" class="childDetailsDiv">
@@ -526,7 +529,7 @@
                                         <div style="overflow:hidden;position:relative;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>                                            
                                             <div style="float:left;font-weight:bold;">@dr["EventName"]</div>
                                             <div style="text-align:right;float:left;@(@dr["EventDate"].ToString() == "" ? "display:none;" : "") ">&nbsp;on @dr["EventDate"]</div>
-                                            <a href="javascript:void(0);" style="color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeenvent', '@dr["EventName"]');"></a>                  
+                                            <a href="javascript:void(0);" style="color: #FFF;top:0px;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeenvent', '@dr["EventName"]');"></a>                  
                                         </div>
                                     </div>
                                     indexLE++;

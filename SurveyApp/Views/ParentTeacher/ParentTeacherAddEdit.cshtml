@@ -40,6 +40,8 @@
 }
 <script src="~/Scripts/zxcvbn.js"></script>
 <script src="~/Scripts/pwstrength.js"></script>
+<link href="~/Content/scroller/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+<script src="~/Content/scroller/jquery.mCustomScrollbar.concat.min.js"></script>
 
 <h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;User Information Editor</h2>
 
@@ -109,6 +111,14 @@
             };
             $("#txtPassword").pwstrength(options);
         }
+
+
+        $(".checklist").mCustomScrollbar({
+            scrollButtons: { enable: true },
+            theme: "dark-thick",
+            scrollInertia: 700,
+            scrollbarPosition: "inside"
+        });
         
     });
 
@@ -171,8 +181,8 @@
             @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Model.vw_ParentTeacher.Id })
             <div class="form-group">
                 <label class="control-label col-sm-3" for="teacher">Study:</label>
-                <div class="col-sm-9" style="max-height: 220px;overflow-y: auto;">
-                    <div class="checklist">
+                <div class="col-sm-9">
+                    <div class="checklist" style="max-height: 220px;">
                         @foreach (Study std in Study.StudyGetAll())
                         {
                             <div class="checker"><label><input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
