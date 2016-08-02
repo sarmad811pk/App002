@@ -94,11 +94,18 @@ namespace SurveyApp.Controllers
                 return View(parentTeacher_RegisterModel);
             }
 
-            if (parentTeacherModel.Id <= 0 && doesUserExist(parentTeacherModel.Name))
+            bool doesUserExists = false;
+            MembershipUser objUser = Membership.GetUser(registerModel.UserName);
+            if(objUser != null)
+            {
+                doesUserExists = true;
+            }
+
+            if (parentTeacherModel.Id <= 0 && (doesUserExist(parentTeacherModel.Name) || doesUserExists == true))
             {
                 ModelState.AddModelError("", "This user already exists in the system, please provide different details.");
                 return View(parentTeacher_RegisterModel);
-            }            
+            }
 
             int ptId = 0, schoolId = 0;
             try
