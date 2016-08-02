@@ -104,7 +104,7 @@
    @(SurveyID == 28 ? "Adverse Reaction" : (SurveyID == 29 ? "Life Event" : (SurveyID == 44 ? "Intervention" : "Survey"))) is submitted successfully
 </div>
 
-<h2><a href="@Request.UrlReferrer#1" id="back"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString().Replace("[Child]",childname)</h2>
+<h2><a href="javascript:void(0);" id="back" onclick="goBack(this);"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString().Replace("[Child]",childname)</h2>
 <p style="font-size:16px;">
     @dsSurvey.Tables[0].Rows[0]["TagLine"].ToString().Replace("[Child]", childname)
 </p>
@@ -638,6 +638,9 @@
                             location.href = "@Url.Action("Index", "UserQuestion")?childIdts="+childId +"#1";
                         });
 
+                    }
+                    else{
+                        location.href = "@Html.Raw(Request.UrlReferrer != null && Request.UrlReferrer.ToString() != "" ? Request.UrlReferrer.ToString() : Url.Action("Index", "UserQuestion") + "?childIdts=" + chiildid)#1";
                     }
                 });
             }
@@ -1185,12 +1188,22 @@
         });
 
         $('[data-toggle="tooltip"]').tooltip({
-            track: true, 
+            track: true,
             content: function () {
                 return $(this).attr('title').replace(/_NEWLINE_/g, "<br/>");
             },
         });
     });
+
+    function goBack(elem){
+        var prcnt = $("#divCompletion").find("span:last-child").text();
+        if(prcnt == "100%"){
+            $("#SurveySubmit").click();            
+        }
+        else{
+            location.href = "@Html.Raw(Request.UrlReferrer)#1";
+        }
+    }
 </script>
 
 @if(SurveyID == 44 && dsCRIs != null && dsCRIs.Tables.Count > 0 && dsCRIs.Tables[0].Rows.Count > 0)

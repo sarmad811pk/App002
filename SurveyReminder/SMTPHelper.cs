@@ -75,8 +75,8 @@ namespace SurveyReminder
                 msg.Subject = subject;
                 msg.Html = body;
 
-                msg.From = new MailAddress(sender);
-                                
+                msg.From = new MailAddress("no-reply@ucsfebit.azurewebsites.net");
+
                 bool isEmailEnabled = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["SendEmails"]);
                 if (isEmailEnabled)
                 {

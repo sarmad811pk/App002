@@ -392,7 +392,7 @@
         $("#divErrors").hide();
         $("#divErrors ul").empty();
 
-        if (userName == "") {
+        if (newUserName == "") {
             $("#divErrors ul").append("<li>Please provide User Name</li>");
             $("#divErrors").show();
             return false;
@@ -408,7 +408,12 @@
             return false;
         }
         if (password != confirmPassword) {
-            $("#divErrors ul").append("<li>Both password do not match</li>");
+            $("#divErrors ul").append("<li>Both passwords do not match</li>");
+            $("#divErrors").show();
+            return false;
+        }
+        if (validateEmail(newUserName) == false) {
+            $("#divErrors ul").append("<li>Please provide valid User Name(email address)</li>");
             $("#divErrors").show();
             return false;
         }

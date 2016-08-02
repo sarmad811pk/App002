@@ -73,7 +73,7 @@ namespace SurveyApp
                 msg.Subject = subject;
                 msg.Html = body;
 
-                msg.From = new MailAddress(sender);
+                msg.From = new MailAddress("no-reply@ucsfebit.azurewebsites.net");
 
                 bool isEmailEnabled = Convert.ToBoolean(System.Web.Configuration.WebConfigurationManager.AppSettings["SendEmails"]);
                 if (isEmailEnabled)
