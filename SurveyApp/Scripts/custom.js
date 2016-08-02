@@ -14,7 +14,12 @@
         async: false,
         success: function (data) {
             if (data.success == true) {
-                $(elem).closest("tr").remove();
+                if (type == "crintervention" || type == "adversereaction" || type == "lifeenvent") {
+                    $(elem).closest(".item").remove();
+                }
+                else {
+                    $(elem).closest("tr").remove();
+                }
                 result = true;                
                 if (callback != null && callback != undefined && callback != "undefined") {
                     callback();

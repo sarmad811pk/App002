@@ -708,7 +708,41 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
-        
+        public static int deleteCRIntervention(int criId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@CriId", SqlDbType.Int);
+            cmd.Parameters["@CriId"].Value = criId;
+
+            cmd.CommandText = "Assessment_DeleteCRIntervention";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+        }
+
+        public static int deleteAdverseReaction(int arId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ArId", SqlDbType.Int);
+            cmd.Parameters["@ArId"].Value = arId;
+
+            cmd.CommandText = "Assessment_DeleteAdverseReaction";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+        }
+
+        public static int deleteLifeEvent(int leId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@LeId", SqlDbType.Int);
+            cmd.Parameters["@LeId"].Value = leId;
+
+            cmd.CommandText = "Assessment_DeleteLifeEvent";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+        }
 
     }
 }

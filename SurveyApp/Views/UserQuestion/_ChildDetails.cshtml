@@ -278,6 +278,14 @@
             margin-top: 7px;
             margin-top: 2px;
         }
+        a.redCross{
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            font-size: 32px;
+        }
     </style>
 
     <div style="margin: 0px 0px 20px 0px;" class="childDetailsDiv">
@@ -481,9 +489,10 @@
                                 int indexAR = 1;
                                 foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
                                 {
-                                    <div indexer="@indexAR" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["DateResolved"] != DBNull.Value && Convert.ToDateTime(dr["DateResolved"]) < DateTime.Now ? "color: #111;" : "")@(indexAR > 5 ? "display:none;" : "")" class="item">
-                                        <div style="overflow:hidden;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
+                                    <div id="ad@(indexAR)" indexer="@indexAR" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["DateResolved"] != DBNull.Value && Convert.ToDateTime(dr["DateResolved"]) < DateTime.Now ? "color: #111;" : "")@(indexAR > 5 ? "display:none;" : "")" class="item">
+                                        <div style="overflow:hidden;position:relative;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
                                             <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b> occured on <b>@dr["DateOccured"]</b> and resolved on <b>@dr["DateResolved"]</b> by using <b>@dr["Medication"]</b></div>                                            
+                                            <span><a href="javascript:void(0);" style="top: -2px;color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'adversereaction', '@dr["AdverseReaction"]');"></a></span>
                                         </div>
                                     </div>
                                     indexAR++;
@@ -514,9 +523,10 @@
                                 {
                                     <div indexer="@indexLE" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event item">
                                         @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
-                                        <div style="overflow:hidden;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
-                                            <div style="float:left;font-weight:bold;">  @dr["EventName"]</div>
-                                            <div style="text-align:right;float:right;@( @dr["EventDate"].ToString() == "" ? "display:none;" : "") "> on @dr["EventDate"]</div>
+                                        <div style="overflow:hidden;position:relative;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>                                            
+                                            <div style="float:left;font-weight:bold;">@dr["EventName"]</div>
+                                            <div style="text-align:right;float:left;@(@dr["EventDate"].ToString() == "" ? "display:none;" : "") ">&nbsp;on @dr["EventDate"]</div>
+                                            <a href="javascript:void(0);" style="color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeenvent', '@dr["EventName"]');"></a>                  
                                         </div>
                                     </div>
                                     indexLE++;
@@ -555,7 +565,7 @@
                                             <div indexer="@indexMH" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexMH > 5 ? "display:none;" : "")" class="item">
                                                 <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
                                                     <b>@_qq (@_a[1] @_a[4])</b>
-                                                    <div style=" text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
+                                                    <div style="text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
 
                                                 </div>
 
@@ -637,10 +647,11 @@
                                     foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
                                     {
                                         <div indexer="@indexCRI" style="cursor:pointer;padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["EndDate"] != DBNull.Value && Convert.ToDateTime(dr["EndDate"]) < DateTime.Now ? "color: #111;" : "")@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">
-                                            <div style="overflow:hidden;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
+                                            <div style="overflow:hidden;position: relative;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
                                                 <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
                                                 <div>On @dr["StartDate"] - @dr["EndDate"]</div>
-                                            </div>
+                                                <span><a href="javascript:void(0);" style="color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'crintervention', '@dr["Title"]', function(){ location.href = location.href; });"></a></span>
+                                            </div>                                            
                                         </div>
                                         indexCRI++;
                                     }

@@ -516,7 +516,7 @@ namespace SurveyApp.Controllers
                 DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(cId);
                 List<RespondentEmail> lstRespos = new List<RespondentEmail>();
                 
-                if (dsSurveys != null && dsSurveys.Tables[0].Rows.Count > 0 && dsSurveys.Tables[1].Rows.Count > 0)
+                if (dsSurveys != null && dsSurveys.Tables[0].Rows.Count > 0)
                 {
                     foreach(DataRow drRespo in dsSurveys.Tables[0].Rows)
                     {
@@ -531,30 +531,48 @@ namespace SurveyApp.Controllers
                 }
                 body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
 
-                foreach (RespondentEmail objRE in lstRespos)
+                if(lstRespos.Count > 0)
                 {
-                    List<string> lstEmails = new List<string>();
-                    lstEmails.Add(objRE.email);
-
-                    string newBody = body.Replace("_FULLNAME_", objRE.name);
-                    newBody = newBody.Replace("_USERNAME_", objRE.email);
-
-                    string surveys = "";
-                    if (dsSurveys.Tables[1].Rows.Count > 0)
+                    foreach (RespondentEmail objRE in lstRespos)
                     {
-                        surveys = "<table style='border:none;'>";
-                        int i = 1;
-                        foreach (DataRow dr in dsSurveys.Tables[1].Rows)
+                        List<string> lstEmails = new List<string>();
+                        lstEmails.Add(objRE.email);
+
+                        string newBody = body.Replace("_FULLNAME_", objRE.name);
+                        newBody = newBody.Replace("_USERNAME_", objRE.email);
+
+                        string surveys = "";
+                        if (dsSurveys.Tables[1].Rows.Count > 0)
                         {
-                            surveys += "<tr><td>" + i + " : </td><td>" + dr["Title"] + "</td></tr>";
-                            i++;
+                            surveys = "<table style='border:none;'>";
+                            int i = 1;
+                            bool isSelected = false;
+                            foreach (DataRow dr in dsSurveys.Tables[1].Rows)
+                            {
+                                string title = dr["Title"].ToString();                                
+                                if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9) && isSelected == false)
+                                {
+                                    title = getPEDsqlTitle(childModel.dob);
+                                    isSelected = true;
+                                    surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
+                                    i++;
+                                }
+                                else
+                                {                                    
+                                    if((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
+                                    {
+                                        surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
+                                        i++;
+                                    }
+                                }                                
+                            }
+                            surveys += "</table>";
                         }
-                        surveys += "</table>";
+                        newBody = newBody.Replace("_SURVEYS_", surveys);
+
+                        SMTPHelper.SendGridEmail("eBit - Assessment Surveys" + (String.IsNullOrEmpty(childModel.Name) == false ? " - " + childModel.Name : ""), newBody, lstEmails, true, null, null);
                     }
-                    newBody = newBody.Replace("_SURVEYS_", surveys);
-                    
-                    SMTPHelper.SendGridEmail("eBit - Assessment Surveys", newBody, lstEmails, true, null, null);
-                }
+                }                
 
                 //List<stri>ng lstEmails = new List<string>();
                 //List<UserProfile> lstUsers = new List<UserProfile>();
@@ -624,6 +642,31 @@ namespace SurveyApp.Controllers
             }
 
             return result;
+        }
+
+        public string getPEDsqlTitle(DateTime dob) {
+            DateTime today = DateTime.Today;
+            int age = today.Year - dob.Year;
+
+            string title = "";
+            if (age <= 4 && age >= 2)
+            {
+                title = "Peds quality of life for 2yrs-4yrs";
+            }
+            else if (age <= 7 && age >= 5)
+            {
+                title = "Peds quality of life for 5yrs-7yrs";
+            }
+            else if (age <= 12 && age >= 8)
+            {
+                title = "Peds quality of life for 8yrs-12yrs";
+            }
+            else if (age <= 18 && age >= 13)
+            {
+                title = "Peds quality of life for 13yrs -18yrs";
+            }
+
+            return title;
         }
     }
 }

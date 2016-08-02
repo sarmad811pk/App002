@@ -145,7 +145,7 @@ namespace SurveyApp.Controllers
 
                     using (var childContext = new ChildContext())
                     {
-                            Child objChild = childContext.Children.SingleOrDefault(c => c.Id == idToBeDeleted);
+                        Child objChild = childContext.Children.SingleOrDefault(c => c.Id == idToBeDeleted);
                         childContext.Children.Remove(objChild);
                         childContext.SaveChanges();
                     }
@@ -155,7 +155,44 @@ namespace SurveyApp.Controllers
                 {
                         isSuccessful = RemoveUser(idToBeDeleted);
                     }
+                    else if (type == "crintervention")
+                    {
+                        try {
+                            DataHelper.deleteCRIntervention(idToBeDeleted);
+                            isSuccessful = true;
+                        }
+                        catch(Exception ex)
+                        {
+                            isSuccessful = false;
+                        }
+                    }
+                    else if (type == "adversereaction")
+                    {
+                        try
+                        {
+                            DataHelper.deleteAdverseReaction(idToBeDeleted);
+                            isSuccessful = true;
+                        }
+                        catch(Exception ex)
+                        {
+                            isSuccessful = false;
+                        }
+                        
+                    }
+                    else if (type == "lifeenvent")
+                    {
+                        try
+                        {
+                            DataHelper.deleteLifeEvent(idToBeDeleted);
+                            isSuccessful = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            isSuccessful = false;
+                        }
+                    }
                 }
+                
                 catch (Exception ex)
                 {
                     isSuccessful = false;
