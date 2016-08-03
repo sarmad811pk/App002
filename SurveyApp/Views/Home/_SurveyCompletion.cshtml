@@ -32,7 +32,7 @@
         if (userType == 0 || userType == 1)
         {
             int completed = 0, partial = 0, notstarted = 0;
-            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate");
+            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate AND UserType = 1");
             if (drCount.Length > 0)
             {
                 foreach (DataRow dr in drCount)
@@ -59,6 +59,10 @@
                     }
                 }
             }
+            else
+            {
+                notstarted++;
+            }
             currParent = "['Completed', " + completed + "], ['Partially Completed', " + partial + "],['Not Started', " + notstarted + "]";
         }
         #endregion
@@ -68,7 +72,7 @@
         if (userType == 0 || userType == 2)
         {
             int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate AND UserType = 2");
             if (drTeacherCount.Length > 0)
             {
                 foreach (DataRow dr in drTeacherCount)
@@ -95,6 +99,10 @@
                     }
                 }
             }
+            else
+            {
+                notstartedTeacher++;
+            }
             currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "]";
         }
         #endregion
@@ -110,7 +118,7 @@
         if (userType == 0 || userType == 1)
         {
             int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0;
-            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate");
+            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND UserType = 2");
             if (drCount.Length > 0)
             {
                 foreach (DataRow dr in drCount)
@@ -137,6 +145,10 @@
                     }
                 }
             }
+            else
+            {
+                notstartedPrevious++;
+            }
             prevParent = "['Completed', " + completedPrevious + "], ['Partially Completed', " + partialPrevious + "],['Not Started', " + notstartedPrevious + "]";
         }
         #endregion
@@ -146,7 +158,7 @@
         if (userType == 0 || userType == 2)
         {
             int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND UserType = 1");
             if (drTeacherCount.Length > 0)
             {
                 foreach (DataRow dr in drTeacherCount)
@@ -172,6 +184,10 @@
                         notstartedTeacherPrevious++;
                     }
                 }
+            }
+            else
+            {
+                notstartedTeacherPrevious++;
             }
             prevTeacher = "['Completed', " + completedTeacherPrevious + "], ['Partially Completed', " + partialTeacherPrevious + "],['Not Started', " + notstartedTeacherPrevious + "]";
         }
