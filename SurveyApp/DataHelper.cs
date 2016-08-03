@@ -743,6 +743,34 @@ namespace SurveyApp
             cmd.CommandText = "Assessment_DeleteLifeEvent";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);
         }
+        #region cred
+        public static int saveCred(string em, string pwd)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            
+            cmd.Parameters.Add("@em", SqlDbType.NVarChar);
+            cmd.Parameters["@em"].Value = em;
+
+            cmd.Parameters.Add("@pwd", SqlDbType.NVarChar);
+            cmd.Parameters["@pwd"].Value = pwd;
+
+            cmd.CommandText = "saveCred";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+        }
+
+        public static DataSet getCred(string em)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@em", SqlDbType.NVarChar);
+            cmd.Parameters["@em"].Value = em.Trim();
+            
+            cmd.CommandText = "GetGred";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        #endregion
 
     }
 }

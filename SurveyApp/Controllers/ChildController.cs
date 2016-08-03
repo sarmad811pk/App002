@@ -540,6 +540,7 @@ namespace SurveyApp.Controllers
 
                         string newBody = body.Replace("_FULLNAME_", objRE.name);
                         newBody = newBody.Replace("_USERNAME_", objRE.email);
+                        newBody = newBody.Replace("_PASSWORD_", AccountController.getPwd(objRE.email));
 
                         string surveys = "";
                         if (dsSurveys.Tables[1].Rows.Count > 0)
@@ -569,6 +570,7 @@ namespace SurveyApp.Controllers
                             surveys += "</table>";
                         }
                         newBody = newBody.Replace("_SURVEYS_", surveys);
+                        newBody = newBody.Replace("_CHILDNAME_", (String.IsNullOrEmpty(childModel.Name) == false ? " for <b>" + childModel.Name + "</b>" : ""));
 
                         SMTPHelper.SendGridEmail("eBit - Assessment Surveys" + (String.IsNullOrEmpty(childModel.Name) == false ? " - " + childModel.Name : ""), newBody, lstEmails, true, null, null);
                     }

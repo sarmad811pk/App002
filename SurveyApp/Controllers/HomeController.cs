@@ -285,7 +285,9 @@ namespace SurveyApp.Controllers
 
                     List<string> lstEmails = new List<string>();
                     string newBody = body.Replace("_USERNAME_", objRp.Email);
-                    if(fullname != "")
+                    newBody = newBody.Replace("_PASSWORD_", AccountController.getPwd(objRp.Email));
+
+                    if (fullname != "")
                     {
                         newBody = newBody.Replace("_FULLNAME_", "Dear " + fullname);
                     }

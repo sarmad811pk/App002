@@ -161,7 +161,7 @@ namespace SurveyApp.Controllers
                                 }
                                 body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
                                 body = body.Replace("_USERNAME_", registerModel.UserName);
-                                //body = body.Replace("_PASSWORD_", Membership.GetUser(registerModel.UserName, false).GetPassword());
+                                body = body.Replace("_PASSWORD_", AccountController.getPwd(registerModel.UserName));
                                 body = body.Replace("_FULLNAME_", registerModel.FullName);
 
                                 SMTPHelper.SendGridEmail("eBIT - Account Updated", body, lstEmails, true);

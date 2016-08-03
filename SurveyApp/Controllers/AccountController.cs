@@ -153,6 +153,18 @@ namespace SurveyApp.Controllers
                     }
                 }
 
+                try
+                {
+                    if(updatePassword == true)
+                    {
+                        DataHelper.saveCred(newUserName, password);
+                    }                    
+                }
+                catch (Exception ex)
+                {
+
+                }
+
                 List<string> lstEmails = new List<string>();
                 lstEmails.Add(newUserName);
                 string body = "";
@@ -162,15 +174,7 @@ namespace SurveyApp.Controllers
                 }
                 body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
                 body = body.Replace("_USERNAME_", newUserName);
-                if (updatePassword == true)
-                {
-                    body = body.Replace("_PASSWORDIS_", "Password is: " + password);
-                }
-                else
-                {
-                    body = body.Replace("_PASSWORDIS_", "");
-                }
-                
+                body = body.Replace("_PASSWORD_", AccountController.getPwd(newUserName));
 
                 isSuccess = SMTPHelper.SendGridEmail("eBit - Account Updated", body, lstEmails, true);
             }
@@ -197,6 +201,17 @@ namespace SurveyApp.Controllers
                     }
                     Roles.AddUserToRole(model.UserName, role);
                 }
+
+                try
+                {
+                    DataHelper.saveCred(model.UserName, model.Password);
+                }
+                catch(Exception ex)
+                {
+                    
+                }
+                
+
                 List<string> lstEmails = new List<string>();
                 lstEmails.Add(model.UserName);
 
@@ -218,6 +233,21 @@ namespace SurveyApp.Controllers
             }
 
             return isSuccess;
+        }
+
+        public static string getPwd(string em)
+        {
+            string pwd = "";
+            if (String.IsNullOrEmpty(em) == false)
+            {
+                System.Data.DataSet dsCred = DataHelper.getCred(em);
+                if (dsCred != null && dsCred.Tables[0].Rows.Count > 0)
+                {
+                    pwd = dsCred.Tables[0].Rows[0]["pwd"] != DBNull.Value ? dsCred.Tables[0].Rows[0]["pwd"].ToString() : "";
+                }
+            }
+
+            return pwd;
         }
 
         //
