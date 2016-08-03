@@ -40,15 +40,18 @@
         {
             foreach (DataRow dr in dsUsers.Tables[0].Rows)
             {
-                <tr onclick="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "alert('You are not authorized to edit Administrator account');return false;" : "")location.href = '@Url.Action("ParentTeacherAddEdit", "ParentTeacher", new { id = dr["UserId"] })';">
-                    <td>@dr["FullName"]</td>
-                    <td>@dr["SchoolName"]</td>
-                    <td>@dr["RoleName"]</td>
-                    <td>@dr["UserName"]</td>
-                    <td>@dr["Children"]</td>
-                    <td class="text-success">@dr["LastLoginDate"]</td>
-                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" style="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "display:none;" : "")" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["UserId"], 'user', '@(dr["FullName"] == DBNull.Value ? dr["UserName"].ToString() : dr["FullName"].ToString())');"></a></td>
-                </tr>
+                if (Convert.ToBoolean(dr["IsAdmin"]) == false)
+                {
+                    <tr onclick="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "alert('You are not authorized to edit Administrator account');return false;" : "")location.href = '@Url.Action("ParentTeacherAddEdit", "ParentTeacher", new { id = dr["UserId"] })';">
+                        <td>@dr["FullName"]</td>
+                        <td>@dr["SchoolName"]</td>
+                        <td>@dr["RoleName"]</td>
+                        <td>@dr["UserName"]</td>
+                        <td>@dr["Children"]</td>
+                        <td class="text-success">@dr["LastLoginDate"]</td>
+                        <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" style="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "display:none;" : "")" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["UserId"], 'user', '@(dr["FullName"] == DBNull.Value ? dr["UserName"].ToString() : dr["FullName"].ToString())');"></a></td>
+                    </tr>
+                }
             }
         }
     </tbody>
