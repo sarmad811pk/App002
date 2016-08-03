@@ -11,39 +11,45 @@
     int childId = String.IsNullOrEmpty(Request.QueryString["childId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childId"]);
     int surveyId = String.IsNullOrEmpty(Request.QueryString["surveyId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["surveyId"]);
 
-    DataTable dtUsers, dtChildren, dtSurveys;
+    DataTable dtUsers = null, dtChildren = null, dtSurveys = null;
 
     using (var sContext = new StudyContext())
     {
-        Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
-        studyId = objStd.Id;
-    }
-
-    DataSet dsDefaultDataValues = SurveyApp.DataHelper.getDefaultDataValues(studyId);
-    dtUsers = dsDefaultDataValues.Tables[0];
-    dtChildren = dsDefaultDataValues.Tables[1];
-    dtSurveys = dsDefaultDataValues.Tables[2];
-
-    if(userId <= 0 && dtUsers.Rows.Count > 0)
-    {
-        userId = Convert.ToInt32(dtUsers.Rows[0]["UserId"]);
-    }
-
-    if (childId <= 0 && dtChildren.Rows.Count > 0)
-    {
-        childId = Convert.ToInt32(dtChildren.Rows[0]["ChildId"]);
-    }
-
-    if (surveyId <= 0 && dtSurveys.Rows.Count > 0)
-    {
-        surveyId = Convert.ToInt32(dtSurveys.Rows[0]["SurveyId"]);
+        if(sContext.Studies.FirstOrDefault() != null)
+        {
+            Study objStd = studyId == 0 ? sContext.Studies.OrderBy(s => s.Id).FirstOrDefault() : sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
+            studyId = objStd.Id;
+        }
     }
 
     string childName = "";
-    DataRow[] drs = dtChildren.Select("ChildId = " + childId);
-    if(drs.Length > 0)
+    if (studyId != 0)
     {
-        childName = drs[0]["Name"].ToString();
+        DataSet dsDefaultDataValues = SurveyApp.DataHelper.getDefaultDataValues(studyId);
+        dtUsers = dsDefaultDataValues.Tables[0];
+        dtChildren = dsDefaultDataValues.Tables[1];
+        dtSurveys = dsDefaultDataValues.Tables[2];
+
+        if (userId <= 0 && dtUsers.Rows.Count > 0)
+        {
+            userId = Convert.ToInt32(dtUsers.Rows[0]["UserId"]);
+        }
+
+        if (childId <= 0 && dtChildren.Rows.Count > 0)
+        {
+            childId = Convert.ToInt32(dtChildren.Rows[0]["ChildId"]);
+        }
+
+        if (surveyId <= 0 && dtSurveys.Rows.Count > 0)
+        {
+            surveyId = Convert.ToInt32(dtSurveys.Rows[0]["SurveyId"]);
+        }
+
+        DataRow[] drs = dtChildren.Select("ChildId = " + childId);
+        if (drs.Length > 0)
+        {
+            childName = drs[0]["Name"].ToString();
+        }
     }
 
     DataSet dsData = SurveyApp.DataHelper.getAllData(userId, childId, surveyId);
@@ -107,24 +113,33 @@
     </select>
 
     <select id="ddlUsers" class="col-sm-9 form-control" onchange="getData(this, 2);">
-        @foreach(DataRow dr in dtUsers.Rows)
+        @if (dtUsers != null && dtUsers.Rows.Count > 0)
         {
-            <option value="@dr["UserId"]" @((int)dr["UserId"] == userId ? "selected='selected'" : "")>@dr["UserName"]</option>
+            foreach (DataRow dr in dtUsers.Rows)
+            {
+                <option value="@dr["UserId"]" @((int)dr["UserId"] == userId ? "selected='selected'" : "")>@dr["UserName"]</option>
+            }
         }
     </select>
 
     <select id="ddlChildren" class="col-sm-9 form-control" onchange="getData(this, 3);">
-        @foreach (DataRow dr in dtChildren.Rows)
+        @if (dtChildren != null && dtChildren.Rows.Count > 0)
         {
-            <option value="@dr["ChildId"]" @((int)dr["ChildId"] == childId ? "selected='selected'" : "")>@dr["Name"]</option>
-        }
+            foreach (DataRow dr in dtChildren.Rows)
+            {
+                <option value="@dr["ChildId"]" @((int)dr["ChildId"] == childId ? "selected='selected'" : "")>@dr["Name"]</option>
+            }
+        }        
     </select>
 
     <select id="ddlSurveys" class="col-sm-9 form-control" onchange="getData(this, 4);">
-        @foreach (DataRow dr in dtSurveys.Rows)
+        @if (dtSurveys != null && dtSurveys.Rows.Count > 0)
         {
-            <option value="@dr["SurveyId"]" @((int)dr["SurveyId"] == surveyId ? "selected='selected'" : "")>@dr["Title"]</option>
-        }
+            foreach (DataRow dr in dtSurveys.Rows)
+            {
+                <option value="@dr["SurveyId"]" @((int)dr["SurveyId"] == surveyId ? "selected='selected'" : "")>@dr["Title"]</option>
+            }
+        }        
     </select>
 
     <div style="clear:both;"></div>
