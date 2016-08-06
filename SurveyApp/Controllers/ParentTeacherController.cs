@@ -80,7 +80,7 @@ namespace SurveyApp.Controllers
                 return View(parentTeacher_RegisterModel);
             }
 
-            int studyCount = 0;
+            int studyCount = 0;            
             foreach (var key in collection.Keys)
             {
                 if (key.ToString().Contains("StudyId_"))
@@ -108,8 +108,10 @@ namespace SurveyApp.Controllers
             }
 
             int ptId = 0, schoolId = 0;
+            bool isEmailSent = false;
             try
             {
+                isEmailSent = collection["hdnIsEmailSent"] != null ? Convert.ToBoolean(collection["hdnIsEmailSent"]) : false;
                 //save school info
                 if (parentTeacherModel.Role == teacherRoleId)
                 {
@@ -151,20 +153,23 @@ namespace SurveyApp.Controllers
 
                             try
                             {
-                                List<string> lstEmails = new List<string>();
-                                lstEmails.Add(registerModel.UserName);
-
-                                string body = "";
-                                using (System.IO.StreamReader reader = new System.IO.StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Attachments/Account_Update.html")))
+                                if(isEmailSent == false)
                                 {
-                                    body = reader.ReadToEnd();
-                                }
-                                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
-                                body = body.Replace("_USERNAME_", registerModel.UserName);
-                                body = body.Replace("_PASSWORD_", AccountController.getPwd(registerModel.UserName));
-                                body = body.Replace("_FULLNAME_", registerModel.FullName);
+                                    List<string> lstEmails = new List<string>();
+                                    lstEmails.Add(registerModel.UserName);
 
-                                SMTPHelper.SendGridEmail("eBIT - Account Updated", body, lstEmails, true);
+                                    string body = "";
+                                    using (System.IO.StreamReader reader = new System.IO.StreamReader(System.Web.HttpContext.Current.Server.MapPath("~/Attachments/Account_Update.html")))
+                                    {
+                                        body = reader.ReadToEnd();
+                                    }
+                                    body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
+                                    body = body.Replace("_USERNAME_", registerModel.UserName);
+                                    body = body.Replace("_PASSWORD_", AccountController.getPwd(registerModel.UserName));
+                                    body = body.Replace("_FULLNAME_", parentTeacherModel.Name);
+
+                                    SMTPHelper.SendGridEmail("eBIT - Account Updated", body, lstEmails, true);
+                                }                                
                             }
                             catch(Exception ex)
                             {
@@ -229,6 +234,28 @@ namespace SurveyApp.Controllers
 
                     ptsContext.SaveChanges();
                 }
+
+                //string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+                //List<Child> lstChildren = new List<Child>();
+                //using (var cContext = new ChildContext())
+                //{
+                //    lstChildren = cContext.Children.ToList();
+                //}
+
+                //DataSet ds = DataHelper.getAssignedChildrenByUserId(ptId);
+                //if(ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                //{
+                //    foreach (DataRow drChild in ds.Tables[0].Rows)
+                //    {
+                //        foreach (Child objChild in lstChildren)
+                //        {
+                //            if (objChild.Id == (int)drChild["Id"])
+                //            {
+                //                ChildController.setChildSchedules(objChild, path);
+                //            }
+                //        }
+                //    }
+                //}
 
                 return RedirectToAction("Index", "ParentTeacher");
                 

@@ -5,6 +5,7 @@
     int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
     int childID = String.IsNullOrEmpty(Request.QueryString["childIdts"]) != true ? Convert.ToInt32(Request.QueryString["childIdts"]) : 0;
     string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
+    string childNamets = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
     int userId = WebSecurity.CurrentUserId;
     inPer = "";
 

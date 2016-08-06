@@ -772,5 +772,17 @@ namespace SurveyApp
         }
         #endregion
 
+        public static DataSet getAssignedChildrenByUserId(int userId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.CommandText = "Child_getAssignedChildrenByUserId";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
     }
 }

@@ -228,8 +228,83 @@ namespace SurveyApp.Controllers
                     ctContext.SaveChanges();
                 }
 
+                string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+                setChildSchedules(childModel, path);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(childModel);
+            }
+            
+            return RedirectToAction("Index", "Child");
+        }
+
+        public ActionResult AddParentTeacher(string objUser, string role)
+        {
+            int newId = 0;
+            string msg = "";
+            try
+            {
+                RegisterModel registerModel = JsonConvert.DeserializeObject<RegisterModel>(objUser);
+                AccountController.CreateAccount(registerModel, role);
+                newId = WebSecurity.GetUserId(registerModel.UserName);
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+            }
+
+            return Json(new { success = newId > 0 ? true : false, UserId = newId, msg = msg });
+        }
+
+        public bool doesChildExist(string name, DateTime dob) {
+            bool result = false;
+            using (var cContext = new ChildContext()) {
+                Child objChild = cContext.Children.Where(c => c.Name == name && c.dob == dob).FirstOrDefault();
+                if(objChild != null && objChild.Id > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        public static string getPEDsqlTitle(DateTime dob) {
+            DateTime today = DateTime.Today;
+            int age = today.Year - dob.Year;
+
+            string title = "";
+            if (age <= 4 && age >= 2)
+            {
+                title = "Peds quality of life for 2yrs-4yrs";
+            }
+            else if (age <= 7 && age >= 5)
+            {
+                title = "Peds quality of life for 5yrs-7yrs";
+            }
+            else if (age <= 12 && age >= 8)
+            {
+                title = "Peds quality of life for 8yrs-12yrs";
+            }
+            else if (age <= 18 && age >= 13)
+            {
+                title = "Peds quality of life for 13yrs -18yrs";
+            }
+
+            return title;
+        }
+
+        public static bool setChildSchedules(Child childModel, string path)
+        {
+            bool isSet = false;
+            DateTime? dtEnrollment = null;
+            try
+            {
+                dtEnrollment = childModel.EnrollmentDate;
                 #region Child_Survey_Schedule
-                if(dtEnrollment != null && dtEnrollment.HasValue && dtEnrollment.Value != DateTime.MinValue)
+                if (dtEnrollment != null && dtEnrollment.HasValue && dtEnrollment.Value != DateTime.MinValue)
                 {
                     using (var cssContext = new Child_Survey_ScheduleContext())
                     {
@@ -250,11 +325,11 @@ namespace SurveyApp.Controllers
                                 using (var sssContext = new Study_Survey_ScheduleContext())
                                 {
                                     studySchedules = sssContext.SSSs.Where(ss => ss.StudyId == objCS.StudyId).ToArray();
-                                    
+
                                     #region ParentSchedules
                                     foreach (Study_Survey_Schedule objSSS in studySchedules)
                                     {
-                                        if(objSSS.ScheduleIdParent > 0)
+                                        if (objSSS.ScheduleIdParent > 0)
                                         {
                                             using (var scContext = new ScheduleContext())
                                             {
@@ -285,9 +360,9 @@ namespace SurveyApp.Controllers
                                                     using (var cCSS = new Child_Study_ScheduleContext())
                                                     {
                                                         Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
-                                                        foreach(Child_Study_Schedule css in cStudySchedules)
+                                                        foreach (Child_Study_Schedule css in cStudySchedules)
                                                         {
-                                                            if(css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
                                                             {
                                                                 DateTime weekday = DateTime.MinValue;
                                                                 if (css.Weekday > 0)
@@ -374,13 +449,13 @@ namespace SurveyApp.Controllers
                                                     }
                                                 }
                                             }
-                                        }                                        
+                                        }
                                     }
                                     #endregion
                                     #region TeacherSchedules
                                     foreach (Study_Survey_Schedule objSSS in studySchedules)
                                     {
-                                        if(objSSS.ScheduleIdTeacher > 0)
+                                        if (objSSS.ScheduleIdTeacher > 0)
                                         {
                                             using (var scContext = new ScheduleContext())
                                             {
@@ -500,7 +575,7 @@ namespace SurveyApp.Controllers
                                                     }
                                                 }
                                             }
-                                        }                                        
+                                        }
                                     }
                                     #endregion
                                 }
@@ -513,25 +588,25 @@ namespace SurveyApp.Controllers
                 #endregion
 
                 #region Emails
-                DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(cId);
+                DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(childModel.Id);
                 List<RespondentEmail> lstRespos = new List<RespondentEmail>();
-                
+
                 if (dsSurveys != null && dsSurveys.Tables[0].Rows.Count > 0)
                 {
-                    foreach(DataRow drRespo in dsSurveys.Tables[0].Rows)
+                    foreach (DataRow drRespo in dsSurveys.Tables[0].Rows)
                     {
                         lstRespos.Add(new RespondentEmail { userId = (int)drRespo["UserId"], email = drRespo["UserName"].ToString(), name = (drRespo["FullName"] != DBNull.Value ? drRespo["FullName"] : drRespo["UserName"]).ToString() });
                     }
                 }
 
                 string body = "";
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(Server.MapPath("~/Attachments/Survey_Assignment.html")))
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(path))
                 {
                     body = reader.ReadToEnd();
                 }
                 body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
 
-                if(lstRespos.Count > 0)
+                if (lstRespos.Count > 0)
                 {
                     foreach (RespondentEmail objRE in lstRespos)
                     {
@@ -550,7 +625,7 @@ namespace SurveyApp.Controllers
                             bool isSelected = false;
                             foreach (DataRow dr in dsSurveys.Tables[1].Rows)
                             {
-                                string title = dr["Title"].ToString();                                
+                                string title = dr["Title"].ToString();
                                 if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9) && isSelected == false)
                                 {
                                     title = getPEDsqlTitle(childModel.dob);
@@ -559,13 +634,13 @@ namespace SurveyApp.Controllers
                                     i++;
                                 }
                                 else
-                                {                                    
-                                    if((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
+                                {
+                                    if ((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
                                     {
                                         surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
                                         i++;
                                     }
-                                }                                
+                                }
                             }
                             surveys += "</table>";
                         }
@@ -574,7 +649,7 @@ namespace SurveyApp.Controllers
 
                         SMTPHelper.SendGridEmail("eBit - Assessment Surveys" + (String.IsNullOrEmpty(childModel.Name) == false ? " - " + childModel.Name : ""), newBody, lstEmails, true, null, null);
                     }
-                }                
+                }
 
                 //List<stri>ng lstEmails = new List<string>();
                 //List<UserProfile> lstUsers = new List<UserProfile>();
@@ -605,70 +680,14 @@ namespace SurveyApp.Controllers
                 //SMTPHelper.SendGridEmail("USFEBIT SurveyApp - Child_Assignment", body, lstEmails, true, null, null);
                 #endregion
 
+                isSet = true;
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                return View(childModel);
+                isSet = false;
+                throw ex;
             }
-            
-            return RedirectToAction("Index", "Child");
-        }
-
-        public ActionResult AddParentTeacher(string objUser, string role)
-        {
-            int newId = 0;
-            string msg = "";
-            try
-            {
-                RegisterModel registerModel = JsonConvert.DeserializeObject<RegisterModel>(objUser);
-                AccountController.CreateAccount(registerModel, role);
-                newId = WebSecurity.GetUserId(registerModel.UserName);
-            }
-            catch (Exception ex)
-            {
-                msg = ex.Message;
-            }
-
-            return Json(new { success = newId > 0 ? true : false, UserId = newId, msg = msg });
-        }
-
-        public bool doesChildExist(string name, DateTime dob) {
-            bool result = false;
-            using (var cContext = new ChildContext()) {
-                Child objChild = cContext.Children.Where(c => c.Name == name && c.dob == dob).FirstOrDefault();
-                if(objChild != null && objChild.Id > 0)
-                {
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        public string getPEDsqlTitle(DateTime dob) {
-            DateTime today = DateTime.Today;
-            int age = today.Year - dob.Year;
-
-            string title = "";
-            if (age <= 4 && age >= 2)
-            {
-                title = "Peds quality of life for 2yrs-4yrs";
-            }
-            else if (age <= 7 && age >= 5)
-            {
-                title = "Peds quality of life for 5yrs-7yrs";
-            }
-            else if (age <= 12 && age >= 8)
-            {
-                title = "Peds quality of life for 8yrs-12yrs";
-            }
-            else if (age <= 18 && age >= 13)
-            {
-                title = "Peds quality of life for 13yrs -18yrs";
-            }
-
-            return title;
+            return isSet;
         }
     }
 }

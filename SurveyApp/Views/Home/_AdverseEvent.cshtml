@@ -5,6 +5,7 @@
     int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
     string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
     int childId = String.IsNullOrEmpty(Request.QueryString["childIdts"]) != true ? Convert.ToInt32(Request.QueryString["childIdts"]) : 0;
+    string childName = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
 
     int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
     DataSet dsReaction = SurveyApp.DataHelper.GetAdverseReaction(userType != 0 ? WebSecurity.CurrentUserId : 0, studyId, childId); //Adverse Reaction Survey        
@@ -24,7 +25,7 @@
 </style>
 
 <div class="adverseReaction">
-    <h3 style="text-transform:capitalize;">@studyName - Adverse Reaction</h3>
+    <h3 style="text-transform:capitalize;">@studyName @(childName != "" ? "(" + childName + ")" : "") - Adverse Reaction</h3>
 
     <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
         <table id="tblAdverse" cellpadding="0" cellspacing="0" style="width:100%;" class="table table-striped table-hover">
@@ -66,7 +67,7 @@
 
     </div>
 
-    <h3 style="text-transform:capitalize;">@studyName - Life Events</h3>
+    <h3 style="text-transform:capitalize;">@studyName @(childName != "" ? "(" + childName + ")" : "") - Life Events</h3>
     <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
             <table id="tblLifeEvents" cellpadding="0" cellspacing="0" style="width:100%;" class="table table-striped table-hover">
                 <thead>

@@ -17,6 +17,7 @@ namespace SurveyApp.Controllers
         // GET: /Study/
         public StudyController() {
             Database.SetInitializer<StudyContext>(null);
+            Database.SetInitializer<Child_Survey_ScheduleContext>(null);
         }
 
         public ActionResult Index()
@@ -136,7 +137,46 @@ namespace SurveyApp.Controllers
                         }
                     }                    
                 }
-                
+
+                try
+                {
+                    string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+                    List<Child> lstChildren = new List<Child>();
+                    using (var cContext = new ChildContext())
+                    {
+                        lstChildren = cContext.Children.ToList();
+                    }
+
+                    List<ParentTeacher_Study> lstPTStudies = new List<ParentTeacher_Study>();
+                    using (var ptsContext = new ParentTeacher_StudyContext())
+                    {
+                        lstPTStudies = ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == newStudyId).ToList();
+                    }
+
+                    foreach (ParentTeacher_Study objPTStudy in lstPTStudies)
+                    {
+                        DataSet ds = DataHelper.getAssignedChildrenByUserId(objPTStudy.ParentTeacherId);
+                        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                        {
+                            foreach (DataRow drChild in ds.Tables[0].Rows)
+                            {
+                                foreach (Child objChild in lstChildren)
+                                {
+                                    if (objChild.Id == (int)drChild["Id"])
+                                    {
+                                        ChildController.setChildSchedules(objChild, path);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return View(studyModel);
+                }
+
             }
             catch (Exception ex){
                 ModelState.AddModelError("", ex.Message);

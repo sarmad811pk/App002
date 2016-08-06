@@ -179,6 +179,7 @@
         <div style="width: 600px; height: 510px;">
             @Html.ValidationSummary()
             @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Model.vw_ParentTeacher.Id })
+            <input type="hidden" id="hdnIsEmailSent" name="hdnIsEmailSent" value="false"/>
             <div class="form-group">
                 <label class="control-label col-sm-3" for="teacher">Study:</label>
                 <div class="col-sm-9">
@@ -442,6 +443,7 @@
                 if (data.success == true) {
                     $("#txtUserName").val(newUserName);
                     showUserInfo();
+                    $("#hdnIsEmailSent").val(true);
                 }
                 else {
                     $("#divErrors ul").append("<li>We are unable to process your request at this time, please try again or contact our support team.</li>");

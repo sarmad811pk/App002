@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     int studyId = Model == null ? 0 : (int)Model;
-    string studyName = "";
+    string studyName = "", childName = "";
     string divSelected = String.IsNullOrEmpty(Request.QueryString["div"]) == true ? "" : Request.QueryString["div"].ToString();
 
 
@@ -34,13 +34,16 @@
         DataRow[] drChildrenAssigned = dschildren.Tables[0].Select("childId = " + childId);
         if (drChildrenAssigned.Length > 0)
         {
+            childName = drChildrenAssigned[0]["Name"].ToString();
             isChildAssigned = true;
         }
     }
 
+
     if(isChildAssigned == false)
     {
         childId = 0;
+        childName = "All Children";
     }
 }
 
@@ -191,7 +194,7 @@
         if ($(".dashboardDetails").hasClass("loaded") == false)
         {
             $.ajax({
-                url: "@Url.Action("_ChildrenCounts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                url: "@Url.Action("_ChildrenCounts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     $("#divChildrenCount").html(data);
@@ -199,7 +202,7 @@
             });
 
             $.ajax({
-                url: "@Url.Action("_SurveyCompletion", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                url: "@Url.Action("_SurveyCompletion", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     $("#divSurveyCompletion").html(data);
@@ -207,7 +210,7 @@
             });
 
             $.ajax({
-                url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     $("#divDetailComparison").html(data);
@@ -229,7 +232,7 @@
         if ($(".graphsDetails").hasClass("loaded") == false)
         {
             $.ajax({
-                url: "@Url.Action("_Charts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                url: "@Url.Action("_Charts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     $(".graphsDetails").addClass("loaded");
@@ -257,7 +260,7 @@
         if ($(".Adverse").hasClass("loaded") == false)
         {
             $.ajax({
-                url: "@Url.Action("_AdverseEvent", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId",
+                url: "@Url.Action("_AdverseEvent", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     $(".Adverse").addClass("loaded");

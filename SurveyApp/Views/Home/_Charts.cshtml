@@ -6,16 +6,17 @@
     int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
     int childId = String.IsNullOrEmpty(Request.QueryString["childIdts"]) != true ? Convert.ToInt32(Request.QueryString["childIdts"]) : 0;
     string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
+    string childNamets = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
 
-    string childName = "";
-    if(childId > 0)
-    {
-        using (var cChild = new ChildContext())
-        {
-            Child objChildTS = cChild.Children.Where(c => c.Id == childId).FirstOrDefault();
-            childName = objChildTS.Name;
-        }
-    }
+    //string childName = "";
+    //if(childId > 0)
+    //{
+    //    using (var cChild = new ChildContext())
+    //    {
+    //        Child objChildTS = cChild.Children.Where(c => c.Id == childId).FirstOrDefault();
+    //        childName = objChildTS.Name;
+    //    }
+    //}
 
 
     DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts(studyId, WebSecurity.CurrentUserId, childId);
@@ -1707,7 +1708,7 @@
     }
 </style>
 
-<h3 style="text-transform:capitalize;">@studyName @(childName != "" ? "(" + childName + ")" : "") - Statistical Analysis</h3>
+<h3 style="text-transform:capitalize;">@studyName @(childNamets != "" ? "(" + childNamets + ")" : "") - Statistical Analysis</h3>
 
 @if (childId == 0 || childId != 0)
 {

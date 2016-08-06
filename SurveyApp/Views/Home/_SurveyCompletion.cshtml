@@ -6,6 +6,7 @@
     int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
     string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
     int childIdts = String.IsNullOrEmpty(Request.QueryString["childIdts"]) != true ? Convert.ToInt32(Request.QueryString["childIdts"]) : 0;
+    string childName = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
 
     DataSet dsCompletion;
     string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
@@ -219,7 +220,7 @@ else
 </style>
 
 <div class="completion">
-    <h3 style="text-transform:capitalize;">@studyName - Questionnaire Completion @Title</h3>
+    <h3 style="text-transform:capitalize;">@studyName @(childName != "" ? "(" + childName + ")" : "") - Questionnaire Completion @Title</h3>
     <div style="border:solid 1px #CCC;">
         <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
             <tr>
