@@ -153,6 +153,8 @@ namespace SurveyApp.Controllers
                         lstPTStudies = ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == newStudyId).ToList();
                     }
 
+                    List<int> lstChildrenUpdated = new List<int>();
+
                     foreach (ParentTeacher_Study objPTStudy in lstPTStudies)
                     {
                         DataSet ds = DataHelper.getAssignedChildrenByUserId(objPTStudy.ParentTeacherId);
@@ -163,8 +165,12 @@ namespace SurveyApp.Controllers
                                 foreach (Child objChild in lstChildren)
                                 {
                                     if (objChild.Id == (int)drChild["Id"])
-                                    {
-                                        ChildController.setChildSchedules(objChild, path);
+                                    {                                        
+                                        if(lstChildrenUpdated.Contains(objChild.Id) == false)
+                                        {
+                                            ChildController.setChildSchedules(objChild, path);
+                                            lstChildrenUpdated.Add(objChild.Id);
+                                        }                                        
                                     }
                                 }
                             }

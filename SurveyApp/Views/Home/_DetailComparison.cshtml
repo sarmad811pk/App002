@@ -59,10 +59,10 @@
                         if(drChildren.Length > 0)
                         {
                             int age = DateTime.Today.Year - Convert.ToDateTime(drChildren[0]["dob"]).Year;
-                            if (surveyId == 6) { if (age <= 4 && age >= 2 && surveyId == 6) { value = notstarted; } else { value = notapplicable; } }
+                            if (surveyId == 6) { if (age <= 4 && surveyId == 6) { value = notstarted; } else { value = notapplicable; } }
                             if (surveyId == 7) { if (age <= 7 && age >= 5 && surveyId == 7) { value = notstarted; } else { value = notapplicable; } }
                             if (surveyId == 8) { if (age <= 12 && age >= 8 && surveyId == 8) { value = notstarted; } else { value = notapplicable; } }
-                            if (surveyId == 9) { if (age <= 18 && age >= 13 && surveyId == 9) { value = notstarted; } else { value = notapplicable; } }
+                            if (surveyId == 9) { if (age >= 13 && surveyId == 9) { value = notstarted; } else { value = notapplicable; } }
                         }
                     }
                     else
@@ -92,10 +92,10 @@
         if (drChildren.Length > 0)
         {
             age = DateTime.Today.Year - Convert.ToDateTime(drChildren[0]["dob"]).Year;
-            if (surveyId == 6) { if (age <= 4 && age >= 2 && surveyId == 6) { isPeds = true; } else { isPeds = false; } }
+            if (surveyId == 6) { if (age <= 4 && surveyId == 6) { isPeds = true; } else { isPeds = false; } }
             if (surveyId == 7) { if (age <= 7 && age >= 5 && surveyId == 7) { isPeds = true; } else { isPeds = false; } }
             if (surveyId == 8) { if (age <= 12 && age >= 8 && surveyId == 8) { isPeds = true; } else { isPeds = false; } }
-            if (surveyId == 9) { if (age <= 18 && age >= 13 && surveyId == 9) { isPeds = true; } else { isPeds = false; } }
+            if (surveyId == 9) { if (age >= 13 && surveyId == 9) { isPeds = true; } else { isPeds = false; } }
         }
 
         return isPeds;

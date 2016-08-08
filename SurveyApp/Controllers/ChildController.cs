@@ -276,7 +276,7 @@ namespace SurveyApp.Controllers
             int age = today.Year - dob.Year;
 
             string title = "";
-            if (age <= 4 && age >= 2)
+            if (age <= 4)
             {
                 title = "Peds quality of life for 2yrs-4yrs";
             }
@@ -288,7 +288,7 @@ namespace SurveyApp.Controllers
             {
                 title = "Peds quality of life for 8yrs-12yrs";
             }
-            else if (age <= 18 && age >= 13)
+            else if (age >= 13)
             {
                 title = "Peds quality of life for 13yrs -18yrs";
             }

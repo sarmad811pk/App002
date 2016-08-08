@@ -360,7 +360,7 @@
                                     <div class="col-md-12 text-left">Social Responsiveness Scale@(Html.Raw(socialResponsivenies))</div>
                                 }
 
-                                if (age <= 4 && age >= 2)
+                                if (age <= 4)
                                 {
                                     var pedsqty = getPercentCompletion(6, (int)drch["ID"], url.Replace("__", "6"));
                                     if (pedsqty != "")
@@ -384,7 +384,7 @@
                                         <div class="col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(pdsqty8yr))</div>
                                     }
                                 }
-                                else if (age <= 18 && age >= 13)
+                                else if (age >= 13)
                                 {
                                     var pdsqty13year = getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "9"));
                                     if (pdsqty13year != "")
