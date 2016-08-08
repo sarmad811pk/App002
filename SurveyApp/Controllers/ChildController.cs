@@ -228,8 +228,14 @@ namespace SurveyApp.Controllers
                     ctContext.SaveChanges();
                 }
 
-                string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
-                setChildSchedules(childModel, path);
+                bool sendEmail = true;
+                sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
+                if (sendEmail == true)
+                {
+                    string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+                    setChildSchedules(childModel, path);
+                }
+                
             }
             catch (Exception ex)
             {

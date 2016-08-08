@@ -378,12 +378,15 @@
     <Content Include="Images\Felicia.jpg" />
     <Content Include="Images\hendren.jpg" />
     <Content Include="Images\lawton.jpg" />
+    <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\buttons.html5.min.js" />
     <Content Include="Scripts\combineddatatablejs.js" />
     <Content Include="Scripts\combinedjs.js" />
     <Content Include="Scripts\custom.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
     <Content Include="Scripts\dataTables.buttons.min.js" />
+    <Content Include="Scripts\HighCharts\exporting.js" />
+    <Content Include="Scripts\HighCharts\highcharts.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Scripts\jquery-ui.min.js" />

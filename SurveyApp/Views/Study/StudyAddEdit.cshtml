@@ -16,6 +16,8 @@
     }
     .ui-tooltip {background-color: #333;color:#FFF;}
 </style>
+<script src="~/Scripts/bootbox.min.js"></script>
+
 <br />
 @functions{
     public DataSet ds = null;
@@ -58,6 +60,8 @@
 {
     @Html.ValidationSummary();
     @Html.HiddenFor(s => s.Id, new { name = "hdnStudyId", value = Model.Id })
+    <input type="hidden" id="hdnSendEmail" name="hdnSendEmail" value="true" />
+
     <div class="form-group">
         <label class="control-label col-sm-2">Study:</label>
         <div class="col-sm-4">
@@ -120,7 +124,7 @@
         <div class="col-sm-4">
             @Html.Hidden("SurveyCount", ds.Tables[1].Rows.Count)
             @Html.Hidden("StudyId", Model.Id)
-            <button type="submit" class="btn btn-default" onclick="$('.loading').show(); $('.disablebackground').show();">Save Information</button>
+            <button type="submit" id="btnSubmitStudy" class="btn btn-default">Save Information</button>
         </div>
     </div>
 }
@@ -128,7 +132,7 @@
 <script type="text/javascript">
     function enableDisableSchedule(elem) {
         var isChecked = $(elem)[0].checked;
-        
+
         if (isChecked == true) {
             $(elem).closest("tr").find("select").removeAttr("disabled").attr("title", "Please use CTRL+Click to multi-select the schedules.");
         }
@@ -157,7 +161,7 @@
                 var isParentSelected = true;
                 var isTeacherSelected = true;
                 if ($(obj)[0].checked == true) {
-                    var survey = $($(obj).closest("tr").find("td")[0]).find("label").text();                    
+                    var survey = $($(obj).closest("tr").find("td")[0]).find("label").text();
                     if ($(obj).closest("tr").find(".ddlParent").val() == "" || $(obj).closest("tr").find(".ddlParent").val() == null || $(obj).closest("tr").find(".ddlParent").val() == "0") {
                         $(obj).closest("tr").find(".ddlParent").addClass("inerror");
                         isParentSelected = false;
@@ -179,6 +183,8 @@
                 alert(errors);
                 return false;
             }
+
+            
         });
 
         $('[data-toggle="tooltip"]').tooltip({
@@ -192,5 +198,36 @@
                 enableDisableSchedule($(obj));
             }
         });
+
+        $("#btnSubmitStudy").click(function (e) {
+            e.preventDefault();
+            $('.loading').show();
+            $('.disablebackground').show();
+
+            bootbox.dialog({
+                message: "Do you want to send an email to respondents regarding assessment surveys?",
+                title: "Email Confirmation",
+                buttons: {
+                    success: {
+                            label: "Send Email",
+                            className: "btn-primary",
+                            callback: function() {
+                                $("#hdnSendEmail").val(true);
+                                $("#frmStudyAdd").submit();
+                            }
+                    },
+                    danger: {
+                        label: "Skip Email",
+                        className: "btn-default",
+                        callback: function() {
+                            $("#hdnSendEmail").val(false);
+                            $("#frmStudyAdd").submit();
+                        }
+                    }
+                }
+            });
+        });
     });
+
+    
 </script>

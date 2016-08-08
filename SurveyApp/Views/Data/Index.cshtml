@@ -137,9 +137,9 @@
         {
             foreach (DataRow dr in dtSurveys.Rows)
             {
-                <option value="@dr["SurveyId"]" @((int)dr["SurveyId"] == surveyId ? "selected='selected'" : "")>@dr["Title"]</option>
+                <option value="@dr["SurveyId"]" @((int)dr["SurveyId"] == surveyId ? "selected='selected'" : "")>@dr["Title"]&nbsp;@((int)dr["SurveyId"] == 6 ? " for 2yrs - 4yrs" : ((int)dr["SurveyId"] == 7 ? " for 5yrs - 7yrs" : ((int)dr["SurveyId"] == 8 ? " for 8yrs - 12yrs" : ((int)dr["SurveyId"] == 9 ? " for 13yrs - 18yrs" : ""))))</option>
             }
-        }        
+        }
     </select>
 
     <div style="clear:both;"></div>

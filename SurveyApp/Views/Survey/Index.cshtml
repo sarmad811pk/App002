@@ -5,6 +5,21 @@
     var ds = Model;
 }
 
+<style type="text/css">
+    a.list-group-item:first-child, a.list-group-item:last-child{
+        padding: 10px 15px;
+    }
+    .featured .content-wrapper h2 {
+        background-image: -webkit-linear-gradient(top, #0af 0%, #b9def0 100%);
+        background-image: -o-linear-gradient(top, #00aaff 0%, #4b9dc5 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#0af), to(#4b9dc5));
+        background-image: linear-gradient(to bottom, #0af 0%, #4b9dc5 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffd9edf7', endColorstr='#ffb9def0', GradientType=0);
+        background-repeat: repeat-x;
+        border-color: #000;
+    }
+</style>
+
 @section featured {
     <section class="featured">
         <div class="content-wrapper">
