@@ -81,7 +81,7 @@
 <script src="~/Content/scroller/jquery.mCustomScrollbar.concat.min.js"></script>
 <script src="~/Scripts/bootbox.min.js"></script>
 
-<h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;Child Information Editor</h2>
+<h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;Child Information Editor</h2>
 
 <style>
     ._panel { background: #fafafa; border: solid 1px #cccccc; padding: 10px; border-radius: 6px; }
@@ -347,8 +347,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-9">
+                <div class="col-sm-offset-3 col-sm-9" style="margin-top:10px;">
                     <button type="submit" id="btnSaveChild" class="btn btn-default">Save Child Information</button>
+                    <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index", "Child")';">Cancel</button>
                 </div>
             </div>
             </div>
@@ -379,11 +380,16 @@
             $('.disablebackground').show();
 
             bootbox.dialog({
-                message: "Do you want to send an email to respondents regarding assessment surveys?",
+                message: "Would you like to send “assessment assignment” email to respondents?",
                 title: "Email Confirmation",
+                closeButton: false,
+                onEscape: function() {
+                    $("#hdnSendEmail").val(false);
+                    $("#frmAddChild").submit();
+                },
                 buttons: {
                     success: {
-                        label: "Send Email",
+                        label: "Send",
                         className: "btn-primary",
                         callback: function() {
                             $("#hdnSendEmail").val(true);
@@ -391,11 +397,38 @@
                         }
                     },
                     danger: {
-                        label: "Skip Email",
+                        label: "Don't Send",
                         className: "btn-default",
                         callback: function() {
                             $("#hdnSendEmail").val(false);
                             $("#frmAddChild").submit();
+                        }
+                    }
+                }
+            });
+        });
+
+        $(".btnBack").click(function(){
+            bootbox.dialog({
+                message: "Would you like to save the changes?",
+                title: "Save Changes!",
+                closeButton: false,
+                onEscape: function() {
+                    location.href = "@Url.Action("Index", "Child")";
+                },
+                buttons: {
+                    success: {
+                        label: "Yes",
+                        className: "btn-primary",
+                        callback: function() {
+                            $("#btnSaveChild").click();
+                        }
+                    },
+                    danger: {
+                        label: "No",
+                        className: "btn-default",
+                        callback: function() {
+                            location.href = "@Url.Action("Index", "Child")";
                         }
                     }
                 }

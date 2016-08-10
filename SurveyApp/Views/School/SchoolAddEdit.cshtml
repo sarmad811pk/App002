@@ -4,7 +4,9 @@
 }
 @model SurveyApp.Models.School
 
-<h2><a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;School Information Editor</h2>
+<script src="~/Scripts/bootbox.min.js"></script>
+
+<h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;School Information Editor</h2>
 
 <style>
     ._panel { background: #fafafa; border: solid 1px #cccccc; padding: 10px; border-radius: 6px; }
@@ -21,9 +23,42 @@
     <div class="form-group">
         <label class="control-label col-sm-3">School Name</label>
         <div class="col-sm-9">            
-            @Html.TextBoxFor(m => m.Name, null, new { id = "txtName", @class = "form-control", placeholder = "School Name" })
-            <br />
-            <button type="submit" class="btn btn-default">Save Information</button>
+            @Html.TextBoxFor(m => m.Name, null, new { id = "txtName", @class = "form-control", placeholder = "School Name" })            
+        </div>
+        <div class="col-sm-offset-3 col-sm-9" style="margin-top:10px;">
+            <button type="submit" id="btnSaveSchool" class="btn btn-default">Save Information</button>
+            <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index", "School")';">Cancel</button>
         </div>
     </div>
 }
+
+<script type="text/javascript">
+    $(function () {
+        $(".btnBack").click(function(){
+            bootbox.dialog({
+                message: "Would you like to save the changes?",
+                title: "Save Changes!",
+                closeButton: false,
+                onEscape: function() {
+                    location.href = "@Url.Action("Index", "School")";
+                },
+                buttons: {
+                    success: {
+                        label: "Yes",
+                        className: "btn-primary",
+                        callback: function() {
+                            $("#btnSaveSchool").click();
+                        }
+                    },
+                    danger: {
+                        label: "No",
+                        className: "btn-default",
+                        callback: function() {
+                            location.href = "@Url.Action("Index", "School")";
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>
