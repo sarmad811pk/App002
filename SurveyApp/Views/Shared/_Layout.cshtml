@@ -99,7 +99,7 @@
             $(document).ajaxStop(function () { $(".loading").hide(); /*$(".disablebackground").hide();*/ });
         });
     </script>
-    @Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")
+    @*@Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")*@
 </head>
 <body>
     <header>

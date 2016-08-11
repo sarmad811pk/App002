@@ -2,9 +2,88 @@
 
 @{
     ViewBag.Title = "Error";
+    Layout = null;
 }
 
-<hgroup class="title">
-    <h1 class="error">Error.</h1>
-    <h2 class="error">An error occurred while processing your request.</h2>
-</hgroup>
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
+<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+@Styles.Render("~/Content/css")
+@Scripts.Render("~/bundles/modernizr")
+<link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<link href="~/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.2.0.min.js"></script>
+<script src="~/bootstrap/js/bootstrap.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/custom.js"></script>
+<style type="text/css">
+    /*body{
+         font-family: 'Open Sans','Noto Sans', Arial, sans-serif !important;
+     }*/
+    .container .disabled {
+        background-color: #D0D0D0;
+        color: #FFF;
+        border: solid 1px #AAA;
+        cursor: default;
+    }
+
+    .container .btn-primary.disabled:hover, .btn-primary.disabled:focus {
+        background-color: #D0D0D0;
+        background-position: 0 -15px;
+        border-color: #AAA;
+    }
+
+    .container .btn-primary.disabled:hover {
+        color: #fff;
+        background-color: #D0D0D0;
+        border-color: #AAA;
+    }
+</style>
+
+<div>
+    <header>
+        <div class="content-wrapper" style="overflow:auto;padding:10px;">
+            <div class="float-left">
+                <p class="site-title">
+                    <a href="javascript:void(0);"><img src="/Images/at3logo.png"></a>
+                </p>
+            </div>
+            <div class="float-left" style="border-left: solid 2px #00a3e2;padding: 8px 0px 8px 20px;margin-left: 10px;color: #00a3e2;font-weight: normal;text-shadow: 0px 0px 0.050px #00ACAA;">
+                <ul style="margin: 0px 0px 0px 0px;list-style: none;padding: 0px;">
+                    <li>Evidence-based care by enabling caregivers to quantify the effects of interventions</li>
+                    <li>Integrated care by allowing caregivers to share progress within their network</li>
+                </ul>
+            </div>
+            <div class="float-right">
+
+                &nbsp;
+
+            </div>
+        </div>
+    </header>
+    <div id="body" style="padding-bottom:0px;">
+        <div class="container" style="background:url(../Images/ebitbg.jpg) no-repeat right center;padding-bottom:20px;min-height:420px;width:90%;">
+            <span style="display:none;">8/11/2016 7:31:25 PM</span>
+            <div style="display: inline-block;background-color: #fff;margin-top: 41px;padding: 10px;border: solid 1px #333;">
+                <h4>Oops! </h4>
+                <h4>The system has encountered a problem, our support team is working on it.</h4>
+                <h5>If you continue to have this problem, kindly let us know here:&nbsp;<a href="mailto:support@ucsfebit.azurewebsites.net" style="color: #337ab7;">support@ucsfebit.azurewebsites.net</a></h5>
+                <br />
+                <div style="text-align: center;"><button class="btn btn-primary">Home</button></div>
+            </div>
+        </div>
+        <div class="container" style="margin: 0px 0px 10px 0px;width: 100%;border-top: solid 1px #999;color: #333;text-shadow: 0px 0px 0.1px #222">
+            <h4>Welcome to eBit</h4>
+            Our mission is to build resilience in children with or at risk of neurodevelopmental disorders through innovative biomedical interventions evaluated in real world settings such as schools.<br> We work to develop neurodevelopmental, resilience-building interventions and their impact in schools.
+
+        </div>
+    </div>
+    <footer>
+        <div class="content-wrapper" style="padding:20px;">
+            <div class="float-left">
+                <p>© 2016 - eBit (Evidence Based Intervention and Treatment)</p>
+            </div>
+        </div>
+    </footer>
+</div>

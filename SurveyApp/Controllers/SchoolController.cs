@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace SurveyApp.Controllers
 {
+    [Authorize]
     public class SchoolController : Controller
     {
         //

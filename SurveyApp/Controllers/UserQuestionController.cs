@@ -9,6 +9,7 @@ using WebMatrix.WebData;
 
 namespace SurveyApp.Controllers
 {
+    [Authorize]
     public class UserQuestionController : Controller
     {
         //

@@ -10,6 +10,7 @@ using System.Data.Entity;
 
 namespace SurveyApp.Controllers
 {
+    [Authorize]
     public class ScheduleController : Controller
     {
         //

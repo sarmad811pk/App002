@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace SurveyApp.Controllers
 {
+    [System.Web.Mvc.Authorize]
     public class DataController : Controller
     {
         public ActionResult Index()

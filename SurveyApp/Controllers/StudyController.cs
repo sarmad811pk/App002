@@ -10,7 +10,8 @@ using System.Web.Mvc;
 using System.Web.Security;
 
 namespace SurveyApp.Controllers
-{    
+{
+    [Authorize]
     public class StudyController : Controller
     {
         //
