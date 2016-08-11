@@ -66,6 +66,15 @@ namespace SurveyReminder
             cmd.CommandText = "GetScheduleReminders";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        
+
+        public static DataSet getScheduleRemindersFixed()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "GetScheduleRemindersFixed";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
     }
 }
