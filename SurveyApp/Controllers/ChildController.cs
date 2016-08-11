@@ -230,11 +230,10 @@ namespace SurveyApp.Controllers
 
                 bool sendEmail = true;
                 sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
-                if (sendEmail == true)
-                {
-                    string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
-                    setChildSchedules(childModel, path);
-                }
+                
+                string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+                setChildSchedules(childModel, path, sendEmail);
+                
                 
             }
             catch (Exception ex)
@@ -302,7 +301,7 @@ namespace SurveyApp.Controllers
             return title;
         }
 
-        public static bool setChildSchedules(Child childModel, string path)
+        public static bool setChildSchedules(Child childModel, string path, bool sendEmail)
         {
             bool isSet = false;
             DateTime? dtEnrollment = null;
@@ -594,68 +593,72 @@ namespace SurveyApp.Controllers
                 #endregion
 
                 #region Emails
-                DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(childModel.Id);
-                List<RespondentEmail> lstRespos = new List<RespondentEmail>();
-
-                if (dsSurveys != null && dsSurveys.Tables[0].Rows.Count > 0)
+                if(sendEmail == true)
                 {
-                    foreach (DataRow drRespo in dsSurveys.Tables[0].Rows)
+                    DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(childModel.Id);
+                    List<RespondentEmail> lstRespos = new List<RespondentEmail>();
+
+                    if (dsSurveys != null && dsSurveys.Tables[0].Rows.Count > 0)
                     {
-                        lstRespos.Add(new RespondentEmail { userId = (int)drRespo["UserId"], email = drRespo["UserName"].ToString(), name = (drRespo["FullName"] != DBNull.Value ? drRespo["FullName"] : drRespo["UserName"]).ToString() });
-                    }
-                }
-
-                string body = "";
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(path))
-                {
-                    body = reader.ReadToEnd();
-                }
-                body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
-
-                if (lstRespos.Count > 0)
-                {
-                    foreach (RespondentEmail objRE in lstRespos)
-                    {
-                        List<string> lstEmails = new List<string>();
-                        lstEmails.Add(objRE.email);
-
-                        string newBody = body.Replace("_FULLNAME_", objRE.name);
-                        newBody = newBody.Replace("_USERNAME_", objRE.email);
-                        newBody = newBody.Replace("_PASSWORD_", AccountController.getPwd(objRE.email));
-
-                        string surveys = "";
-                        if (dsSurveys.Tables[1].Rows.Count > 0)
+                        foreach (DataRow drRespo in dsSurveys.Tables[0].Rows)
                         {
-                            surveys = "<table style='border:none;'>";
-                            int i = 1;
-                            bool isSelected = false;
-                            foreach (DataRow dr in dsSurveys.Tables[1].Rows)
+                            lstRespos.Add(new RespondentEmail { userId = (int)drRespo["UserId"], email = drRespo["UserName"].ToString(), name = (drRespo["FullName"] != DBNull.Value ? drRespo["FullName"] : drRespo["UserName"]).ToString() });
+                        }
+                    }
+
+                    string body = "";
+                    using (System.IO.StreamReader reader = new System.IO.StreamReader(path))
+                    {
+                        body = reader.ReadToEnd();
+                    }
+                    body = body.Replace("_ROOTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString());
+
+                    if (lstRespos.Count > 0)
+                    {
+                        foreach (RespondentEmail objRE in lstRespos)
+                        {
+                            List<string> lstEmails = new List<string>();
+                            lstEmails.Add(objRE.email);
+
+                            string newBody = body.Replace("_FULLNAME_", objRE.name);
+                            newBody = newBody.Replace("_USERNAME_", objRE.email);
+                            newBody = newBody.Replace("_PASSWORD_", AccountController.getPwd(objRE.email));
+
+                            string surveys = "";
+                            if (dsSurveys.Tables[1].Rows.Count > 0)
                             {
-                                string title = dr["Title"].ToString();
-                                if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9) && isSelected == false)
+                                surveys = "<table style='border:none;'>";
+                                int i = 1;
+                                bool isSelected = false;
+                                foreach (DataRow dr in dsSurveys.Tables[1].Rows)
                                 {
-                                    title = getPEDsqlTitle(childModel.dob);
-                                    isSelected = true;
-                                    surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
-                                    i++;
-                                }
-                                else
-                                {
-                                    if ((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
+                                    string title = dr["Title"].ToString();
+                                    if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9) && isSelected == false)
                                     {
+                                        title = getPEDsqlTitle(childModel.dob);
+                                        isSelected = true;
                                         surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
                                         i++;
                                     }
+                                    else
+                                    {
+                                        if ((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
+                                        {
+                                            surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
+                                            i++;
+                                        }
+                                    }
                                 }
+                                surveys += "</table>";
                             }
-                            surveys += "</table>";
-                        }
-                        newBody = newBody.Replace("_SURVEYS_", surveys);
-                        newBody = newBody.Replace("_CHILDNAME_", (String.IsNullOrEmpty(childModel.Name) == false ? " for <b>" + childModel.Name + "</b>" : ""));
+                            newBody = newBody.Replace("_SURVEYS_", surveys);
+                            newBody = newBody.Replace("_CHILDNAME_", (String.IsNullOrEmpty(childModel.Name) == false ? " for <b>" + childModel.Name + "</b>" : ""));
 
-                        SMTPHelper.SendGridEmail("eBit - Assessment Surveys" + (String.IsNullOrEmpty(childModel.Name) == false ? " - " + childModel.Name : ""), newBody, lstEmails, true, null, null);
+                            SMTPHelper.SendGridEmail("eBit - Assessment Surveys" + (String.IsNullOrEmpty(childModel.Name) == false ? " - " + childModel.Name : ""), newBody, lstEmails, true, null, null);
+                        }
                     }
                 }
+                
 
                 //List<stri>ng lstEmails = new List<string>();
                 //List<UserProfile> lstUsers = new List<UserProfile>();

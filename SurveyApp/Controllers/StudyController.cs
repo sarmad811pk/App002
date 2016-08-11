@@ -140,53 +140,52 @@ namespace SurveyApp.Controllers
 
                 bool sendEmail = true;
                 sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
-                if (sendEmail == true)
+                
+                try
                 {
-                    try
+                    string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+                    List<Child> lstChildren = new List<Child>();
+                    using (var cContext = new ChildContext())
                     {
-                        string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
-                        List<Child> lstChildren = new List<Child>();
-                        using (var cContext = new ChildContext())
-                        {
-                            lstChildren = cContext.Children.ToList();
-                        }
+                        lstChildren = cContext.Children.ToList();
+                    }
 
-                        List<ParentTeacher_Study> lstPTStudies = new List<ParentTeacher_Study>();
-                        using (var ptsContext = new ParentTeacher_StudyContext())
-                        {
-                            lstPTStudies = ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == newStudyId).ToList();
-                        }
+                    List<ParentTeacher_Study> lstPTStudies = new List<ParentTeacher_Study>();
+                    using (var ptsContext = new ParentTeacher_StudyContext())
+                    {
+                        lstPTStudies = ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == newStudyId).ToList();
+                    }
 
-                        List<int> lstChildrenUpdated = new List<int>();
+                    List<int> lstChildrenUpdated = new List<int>();
 
-                        foreach (ParentTeacher_Study objPTStudy in lstPTStudies)
+                    foreach (ParentTeacher_Study objPTStudy in lstPTStudies)
+                    {
+                        DataSet ds = DataHelper.getAssignedChildrenByUserId(objPTStudy.ParentTeacherId);
+                        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                         {
-                            DataSet ds = DataHelper.getAssignedChildrenByUserId(objPTStudy.ParentTeacherId);
-                            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                            foreach (DataRow drChild in ds.Tables[0].Rows)
                             {
-                                foreach (DataRow drChild in ds.Tables[0].Rows)
+                                foreach (Child objChild in lstChildren)
                                 {
-                                    foreach (Child objChild in lstChildren)
+                                    if (objChild.Id == (int)drChild["Id"])
                                     {
-                                        if (objChild.Id == (int)drChild["Id"])
+                                        if (lstChildrenUpdated.Contains(objChild.Id) == false)
                                         {
-                                            if (lstChildrenUpdated.Contains(objChild.Id) == false)
-                                            {
-                                                ChildController.setChildSchedules(objChild, path);
-                                                lstChildrenUpdated.Add(objChild.Id);
-                                            }
+                                            ChildController.setChildSchedules(objChild, path, sendEmail);
+                                            lstChildrenUpdated.Add(objChild.Id);
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        ModelState.AddModelError("", ex.Message);
-                        return View(studyModel);
-                    }
                 }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return View(studyModel);
+                }
+                
             }
             catch (Exception ex){
                 ModelState.AddModelError("", ex.Message);
