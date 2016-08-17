@@ -130,7 +130,7 @@ namespace SurveyApp.Controllers
 
                     cContext.SaveChanges();
                     cId = childModel.Id > 0 ? childModel.Id : cContext.Children.Max(item => item.Id);
-                    
+                    childModel.EnrollmentDate = dtEnrollment;
                 }
 
                 //deviations
@@ -494,7 +494,7 @@ namespace SurveyApp.Controllers
                                                         Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
                                                         foreach (Child_Study_Schedule css in cStudySchedules)
                                                         {
-                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdTeacher)
                                                             {
                                                                 DateTime weekday = DateTime.MinValue;
                                                                 if (css.Weekday > 0)
