@@ -82,7 +82,7 @@
         <div class="col-sm-6">
             @if (String.IsNullOrEmpty(Request.QueryString["ar"]) == false && Convert.ToBoolean(Request.QueryString["ar"]) == true)
             {
-                <div class="col-sm-12 alert-success" style="margin: 20px 0px 0px 0px;">
+                <div class="col-sm-12 alert alert-success" style="margin: 20px 0px 0px 0px;">
                     <p>We have received your request for an eBit account. We'll send you an email when your account is ready.</p>
                 </div>
                 <br />
@@ -117,7 +117,7 @@
                         </fieldset>
                         <p style="margin-top: 20px;">
                             @*@Html.ActionLink("Register", "Register") if you don't have an account.*@
-                            <a href="@Url.Action("RequestAccount", "RequestAccount")" style="color: #6260ca;">Request</a> an eBit account if you don't have one.
+                            <a href="@Url.Action("RequestAccount", "RequestAccount")" style="color: #6260ca;text-decoration: underline;">Request</a> an eBit account if you don't have one.
                         </p>
 }
                 </section>
