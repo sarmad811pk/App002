@@ -101,6 +101,36 @@ namespace SurveyApp.Models
         public string FullName { get; set; }
     }
 
+    [Table("AccountRequest")]
+    public class AccountRequest
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required(ErrorMessage = "Please provide email")]
+        [Display(Name = "Email")]
+        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "Email is not valid")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "Please provide Full Name")]
+        [Display(Name = "Full Name")]
+        public string FullName { get; set; }
+        [Display(Name = "School Name")]
+        public string SchoolName { get; set; }
+        public string Comments { get; set; }
+        //public bool? AccountCreated { get; set; }
+    }
+
+    public class AccountRequestContext : DbContext
+    {
+        public AccountRequestContext()
+            : base("DefaultConnection")
+        {
+
+        }
+
+        public DbSet<AccountRequest> AccountRequests { get; set; }
+    }
+
     public class ExternalLogin
     {
         public string Provider { get; set; }

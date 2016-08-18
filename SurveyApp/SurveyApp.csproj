@@ -219,6 +219,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DataController.cs" />
+    <Compile Include="Controllers\RequestAccountController.cs" />
     <Compile Include="Models\LifeEvent.cs" />
     <Compile Include="SMTPHelper.cs" />
     <Content Include="App_Data\aspnet-SurveyApp-20160130102437.mdf" />
@@ -479,6 +480,7 @@
     <Content Include="Views\Home\_LifeEventsChart.cshtml" />
     <Content Include="Views\UserQuestion\_ChildDetails.cshtml" />
     <Content Include="Views\Data\Index.cshtml" />
+    <Content Include="Views\RequestAccount\RequestAccount.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

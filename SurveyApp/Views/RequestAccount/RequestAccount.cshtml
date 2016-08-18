@@ -1,0 +1,124 @@
+﻿@model SurveyApp.Models.AccountRequest
+
+@{
+    ViewBag.Title = "Request an account";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Request an account</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="~/bootstrap/js/bootstrap.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/custom.js"></script>
+    <style type="text/css">
+           /*body{
+            font-family: 'Open Sans','Noto Sans', Arial, sans-serif !important;
+        }*/
+           .container .disabled {
+               background-color: #D0D0D0;
+               color: #FFF;
+               border: solid 1px #AAA;
+               cursor: default;
+           }
+
+           .container .btn-primary.disabled:hover, .btn-primary.disabled:focus {
+               background-color: #D0D0D0;
+               background-position: 0 -15px;
+               border-color: #AAA;
+           }
+
+           .container .btn-primary.disabled:hover {
+               color: #fff;
+               background-color: #D0D0D0;
+               border-color: #AAA;
+           }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="content-wrapper" style="overflow:auto;padding:10px;">
+            <div class="float-left">
+                <p class="site-title">
+                    <a href="@(System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString())"><img src="~/Images/at3logo.png"></a>
+                </p>
+            </div>
+            <div class="float-left" style="border-left: solid 2px #00a3e2;padding: 8px 0px 8px 20px;margin-left: 10px;color: #00a3e2;font-weight: normal;text-shadow: 0px 0px 0.050px #00ACAA;">
+                <ul style="margin: 0px 0px 0px 0px;list-style: none;padding: 0px;">
+                    <li>Evidence-based care by enabling caregivers to quantify the effects of interventions</li>
+                    <li>Integrated care by allowing caregivers to share progress within their network</li>
+                </ul>
+            </div>            
+        </div>
+    </header>
+    <div id="body" style="padding-bottom:0px;">
+        <div class="container" style="background:url(../Images/ebitbg.jpg) no-repeat right center;padding-bottom:20px;min-height:420px;width:90%;">
+            <div class="col-sm-6">
+                <div class="col-sm-8">
+                    <h2 class="form-signin-heading">Request an account</h2>
+                    <h4>Please provide following details for an account on eBit.</h4>
+                    <section>
+                        @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+                        {
+                            @Html.ValidationSummary(true)
+
+                            <fieldset>
+                                <legend>Log in Form</legend>
+                                <ol>
+                                    <li>
+                                        @Html.LabelFor(m => m.Email)
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.Email)
+                                    </li>
+                                    <li>
+                                        @Html.LabelFor(m => m.FullName)
+                                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.FullName)
+                                    </li>
+                                    <li>
+                                        @Html.LabelFor(m => m.SchoolName)
+                                        @Html.TextBoxFor(m => m.SchoolName, new { @class = "form-control", autocomplete = "off" })                                        
+                                    </li>
+                                    <li>
+                                        @Html.LabelFor(m => m.Comments)
+                                        @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", autocomplete = "off" })                                        
+                                    </li>
+                                </ol>
+                                <input type="submit" value="Request Account" id="btnAccountRequest" class="btn btn-primary" />
+                                <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Login", "Account")';">Cancel</button>
+                            </fieldset>
+                    }
+                    </section>
+
+                </div>
+
+            </div>            
+        </div>
+        <div class="container" style="margin: 0px 0px 10px 0px;width: 100%;border-top: solid 1px #999;color: #333;text-shadow: 0px 0px 0.1px #222">
+            <h4>Welcome to eBit</h4>
+            Our mission is to build resilience in children with or at risk of neurodevelopmental disorders through innovative biomedical interventions evaluated in real world settings such as schools.<br /> We work to develop neurodevelopmental, resilience-building interventions and their impact in schools.
+        </div>
+    </div>
+    <footer>
+        <div class="content-wrapper" style="padding:20px;">
+            <div class="float-left">
+                <p>&copy; @DateTime.Now.Year - eBit (Evidence Based Intervention and Treatment)</p>
+            </div>
+        </div>
+    </footer>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+</body>
+</html>
+

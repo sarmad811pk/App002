@@ -8,12 +8,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="google-site-verification" content="SMAwJkKzNtZv3wEFlsIyVn93BxpV5Da2640hBh-CpW0" />
 <title>Login</title>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/modernizr")<meta name="google-site-verification" content="SMAwJkKzNtZv3wEFlsIyVn93BxpV5Da2640hBh-CpW0" />
     <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
 <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
@@ -47,7 +48,7 @@
     <div class="content-wrapper" style="overflow:auto;padding:10px;">
         <div class="float-left">
             <p class="site-title">
-                <a href="javascript:void(0);"><img src="~/Images/at3logo.png"></a>
+                <a href="@(System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString())"><img src="~/Images/at3logo.png"></a>
             </p>
         </div>
         <div class="float-left" style="border-left: solid 2px #00a3e2;padding: 8px 0px 8px 20px;margin-left: 10px;color: #00a3e2;font-weight: normal;text-shadow: 0px 0px 0.050px #00ACAA;">
@@ -78,9 +79,15 @@
 <div id="body" style="padding-bottom:0px;">
     <div class="container" style="background:url(../Images/ebitbg.jpg) no-repeat right center;padding-bottom:20px;min-height:420px;width:90%;">
         <span style="display:none;">@System.DateTime.Now</span>
- 
-  
         <div class="col-sm-6">
+            @if (String.IsNullOrEmpty(Request.QueryString["ar"]) == false && Convert.ToBoolean(Request.QueryString["ar"]) == true)
+            {
+                <div class="col-sm-12 alert-success" style="margin: 20px 0px 0px 0px;">
+                    <p>We have received your request for an eBit account. We'll send you an email when your account is ready.</p>
+                </div>
+                <br />
+            }
+
             <div class="col-sm-7">
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <section>
@@ -110,6 +117,7 @@
                         </fieldset>
                         <p style="margin-top: 20px;">
                             @*@Html.ActionLink("Register", "Register") if you don't have an account.*@
+                            <a href="@Url.Action("RequestAccount", "RequestAccount")" style="color: #6260ca;">Request</a> an eBit account if you don't have one.
                         </p>
 }
                 </section>

@@ -93,6 +93,7 @@
         color: #cc0000;
         margin: 0px 0px 6px 0px;
     }
+    .ui-tooltip {min-width:420px; max-width: 500px;background-color: #333; color: #FFF;}
 </style>
 <br />
 
@@ -107,7 +108,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3" for="teacher">Study:</label>
                 <div class="col-sm-9">
-                    <div class="checklist" style="max-height: 220px;">
+                    <div class="checklist" style="max-height: 250px;">
                     @foreach (Study std in Study.StudyGetAll())
                     {
                             <div class="checker">
@@ -138,15 +139,15 @@
                                             </div>
 
                                             <div id="divSpecify_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" class="form-group specifyParent" style="display:none;">
-                                                <label class="control-label col-sm-3">Specify Period:</label>
-                                                <div class="col-sm-9">
-                                                    <div class="specify">
+                                                <label class="control-label col-sm-4">Specify Period:</label>
+                                                <div class="col-sm-8">
+                                                    <div class="specify" data-toggle="tooltip" title="Please note this selection will be applicable for the future dates.">
                                                         <table cellpadding="0" cellspacing="0" style="width:100%;">
                                                             <tbody>
                                                                 <tr>
                                                                     <td>
                                                                         <div class="monthly">
-                                                                            <select class="form-control specification inerror" id="ddlDays" name="ddlDays_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification(this, '_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 1);" style="width: 47%;display: inline-block;">
+                                                                            <select class="form-control specification inerror" id="ddlDays" name="ddlDays_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])" onchange="setPeriodSpecification(this, '_StudyId_@(std.Id)_ScheduleId_@(drSchedule["ScheduleID"])', 1);" style="width: 44%;display: inline-block;">
                                                                                 <option value="0" @getScheduleStatus(std.Id, (int)drSchedule["ScheduleID"], "Day", "select", 0)>Day</option>
                                                                                 @foreach (ScheduleDay objSD in ScheduleDay.GetScheduleDays())
                                                                                 {
@@ -358,6 +359,12 @@
 
 <script type="text/javascript">
     $(function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            content: function () {
+                return $(this).attr('title').replace(/<br\/>/g, "<br/>");
+            },
+        });
+
         @Html.Raw(datepick)
         $("#frmAddChild").find("input[type=text], input[type=password], select").on("change", function () { resetErrorStatus(this); });
         $("#frmAddChild").find("input[type=text], input[type=password]").on("keyup", function () { resetErrorStatus(this); });

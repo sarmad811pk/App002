@@ -316,7 +316,7 @@ namespace SurveyApp.Controllers
                     {
                         if (childModel.Id > 0)
                         {
-                            cssContext.Child_Survey_Schedules.RemoveRange(cssContext.Child_Survey_Schedules.Where(ct => ct.ChildId == childModel.Id));
+                            cssContext.Child_Survey_Schedules.RemoveRange(cssContext.Child_Survey_Schedules.Where(ct => ct.ChildId == childModel.Id && ct.ScheuleEndDate > DateTime.Now));
                             cssContext.SaveChanges();
                         }
 
@@ -539,7 +539,7 @@ namespace SurveyApp.Controllers
                                                         Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
                                                         foreach (Child_Study_Schedule css in cStudySchedules)
                                                         {
-                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                            if (css.StudyId == objCS.StudyId && css.ScheduleId == objSSS.ScheduleIdTeacher)
                                                             {
                                                                 DateTime weekday = DateTime.MinValue;
                                                                 if (css.Weekday > 0)
