@@ -18,6 +18,7 @@ namespace SurveyApp.Controllers
         public ScheduleController()
         {         
             Database.SetInitializer<ScheduleContext>(null);
+            Database.SetInitializer<Child_Survey_ScheduleContext>(null);            
         }
 
         public ActionResult Index()
@@ -84,12 +85,14 @@ namespace SurveyApp.Controllers
 
             try
             {
+                int scheduleId = 0;
                 using (var cSchedule = new ScheduleContext())
                 {
                     Schedule objSchedule = new Schedule();
                     if (mSchedule.Id > 0)
                     {
                         objSchedule = cSchedule.Schedules.Find(mSchedule.Id);
+                        scheduleId = mSchedule.Id;
                     }
                     objSchedule.ActiveOn = mSchedule.ActiveOn;
                     objSchedule.AvailableUntil = mSchedule.AvailableUntil;
@@ -121,9 +124,16 @@ namespace SurveyApp.Controllers
                     if (mSchedule.Id <= 0)
                     {
                         cSchedule.Schedules.Add(objSchedule);
+                        scheduleId = cSchedule.Schedules.Max(item => item.Id);
                     }
                     cSchedule.SaveChanges();
                 }
+
+                bool sendEmail = true;
+                sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
+                string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+
+                setChildSchedulesInformation(path, sendEmail, scheduleId);
             }
             catch (Exception ex)
             {
@@ -185,6 +195,65 @@ namespace SurveyApp.Controllers
             }
 
             return result;
+        }
+
+        public bool setChildSchedulesInformation(string path, bool sendEmail, int scheduleId)
+        {
+            bool isSet = false;
+            try
+            {
+                List<Child> lstChildren = new List<Child>();
+                using (var cContext = new ChildContext())
+                {
+                    lstChildren = cContext.Children.ToList();
+                }
+
+                DataSet dsStudies = DataHelper.getStudiesByScheduleId(scheduleId);
+                if(dsStudies != null && dsStudies.Tables.Count > 0 && dsStudies.Tables[0].Rows.Count > 0)
+                {
+                    List<ParentTeacher_Study> lstPTStudies = new List<ParentTeacher_Study>();
+                    using (var ptsContext = new ParentTeacher_StudyContext())
+                    {
+                        foreach (DataRow drStudy in dsStudies.Tables[0].Rows)
+                        {
+                            int stuId = (int)drStudy["StudyId"];
+                            lstPTStudies = ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == stuId).ToList();
+                            List<int> lstChildrenUpdated = new List<int>();
+
+                            foreach (ParentTeacher_Study objPTStudy in lstPTStudies)
+                            {
+                                DataSet ds = DataHelper.getAssignedChildrenByUserId(objPTStudy.ParentTeacherId);
+                                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                                {
+                                    foreach (DataRow drChild in ds.Tables[0].Rows)
+                                    {
+                                        foreach (Child objChild in lstChildren)
+                                        {
+                                            if (objChild.Id == (int)drChild["Id"])
+                                            {
+                                                if (lstChildrenUpdated.Contains(objChild.Id) == false)
+                                                {
+                                                    ChildController.setChildSchedules(objChild, path, sendEmail);
+                                                    lstChildrenUpdated.Add(objChild.Id);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                isSet = true;
+            }
+            catch (Exception ex)
+            {
+                isSet = false;
+                throw ex;
+            }
+
+            return isSet;
         }
 
     }

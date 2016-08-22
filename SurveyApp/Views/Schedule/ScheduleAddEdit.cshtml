@@ -54,6 +54,8 @@
 {
     @Html.ValidationSummary();
     @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Model.Id })
+    <input type="hidden" id="hdnSendEmail" name="hdnSendEmail" value="true" />
+
     <div class="form-group">
         <label class="control-label col-sm-3">Title:</label>
         <div class="col-sm-9">
@@ -162,6 +164,41 @@
             script = "$(\"#frmAddSchedule\").find(\"input[type=text]\").val(\"\")";
         }
         @Html.Raw(script);
+
+
+        $("#btnSaveSchedule").click(function (e) {
+            e.preventDefault();
+            $('.loading').show();
+            $('.disablebackground').show();
+
+            bootbox.dialog({
+                message: "Would you like to send “assessment assignment” email to respondents?",
+                title: "Email Confirmation",
+                closeButton: false,
+                onEscape: function () {
+                    $("#hdnSendEmail").val(false);
+                    $("#frmAddSchedule").submit();
+                },
+                buttons: {
+                    success: {
+                        label: "Send",
+                        className: "btn-primary",
+                        callback: function () {
+                            $("#hdnSendEmail").val(true);
+                            $("#frmAddSchedule").submit();
+                        }
+                    },
+                    danger: {
+                        label: "Don't Send",
+                        className: "btn-default",
+                        callback: function () {
+                            $("#hdnSendEmail").val(false);
+                            $("#frmAddSchedule").submit();
+                        }
+                    }
+                }
+            });
+        });
 
         $(".btnBack").click(function(){
             bootbox.dialog({

@@ -696,13 +696,16 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
-        public static DataSet getRespondentsAndSurveys(int childId)
+        public static DataSet getRespondentsAndSurveys(int childId, bool newChild)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@childId", SqlDbType.Int);            
-            cmd.Parameters["@ChildId"].Value = childId;            
+            cmd.Parameters["@ChildId"].Value = childId;
+
+            cmd.Parameters.Add("@NewChild", SqlDbType.Bit);
+            cmd.Parameters["@NewChild"].Value = newChild;
 
             cmd.CommandText = "Child_GetRespondentsAndSurveys";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
@@ -781,6 +784,18 @@ namespace SurveyApp
             cmd.Parameters["@UserID"].Value = userId;
 
             cmd.CommandText = "Child_getAssignedChildrenByUserId";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
+        public static DataSet getStudiesByScheduleId(int scheduleId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ScheduleID", SqlDbType.Int);
+            cmd.Parameters["@ScheduleID"].Value = scheduleId;
+
+            cmd.CommandText = "Schedule_getStudiesByScheduleId";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 

@@ -233,7 +233,9 @@ namespace SurveyApp.Controllers
                 sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
                 
                 string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
-                setChildSchedules(childModel, path, sendEmail);
+                bool isNewChild = childModel.Id <= 0 ? true : false;
+                childModel.Id = cId;
+                setChildSchedules(childModel, path, sendEmail, isNewChild);
                 
                 
             }
@@ -302,7 +304,7 @@ namespace SurveyApp.Controllers
             return title;
         }
 
-        public static bool setChildSchedules(Child childModel, string path, bool sendEmail)
+        public static bool setChildSchedules(Child childModel, string path, bool sendEmail, bool? isNewChild = false)
         {
             bool isSet = false;
             DateTime? dtEnrollment = null;
@@ -596,14 +598,14 @@ namespace SurveyApp.Controllers
                 #region Emails
                 if(sendEmail == true)
                 {
-                    DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(childModel.Id);
+                    DataSet dsSurveys = DataHelper.getRespondentsAndSurveys(childModel.Id, isNewChild.Value);
                     List<RespondentEmail> lstRespos = new List<RespondentEmail>();
 
                     if (dsSurveys != null && dsSurveys.Tables[0].Rows.Count > 0)
                     {
                         foreach (DataRow drRespo in dsSurveys.Tables[0].Rows)
                         {
-                            lstRespos.Add(new RespondentEmail { userId = (int)drRespo["UserId"], email = drRespo["UserName"].ToString(), name = (drRespo["FullName"] != DBNull.Value ? drRespo["FullName"] : drRespo["UserName"]).ToString() });
+                            lstRespos.Add(new RespondentEmail { userId = (int)drRespo["UserId"], email = drRespo["UserName"].ToString(), name = (drRespo["FullName"] != DBNull.Value ? drRespo["FullName"] : drRespo["UserName"]).ToString(), userType = (int)drRespo["UserType"] });
                         }
                     }
 
@@ -633,20 +635,23 @@ namespace SurveyApp.Controllers
                                 bool isSelected = false;
                                 foreach (DataRow dr in dsSurveys.Tables[1].Rows)
                                 {
-                                    string title = dr["Title"].ToString();
-                                    if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9) && isSelected == false)
+                                    if(objRE.userType == (int)dr["UserType"])
                                     {
-                                        title = getPEDsqlTitle(childModel.dob);
-                                        isSelected = true;
-                                        surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
-                                        i++;
-                                    }
-                                    else
-                                    {
-                                        if ((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
+                                        string title = dr["Title"].ToString();
+                                        if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9) && isSelected == false)
                                         {
+                                            title = getPEDsqlTitle(childModel.dob);
+                                            isSelected = true;
                                             surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
                                             i++;
+                                        }
+                                        else
+                                        {
+                                            if ((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
+                                            {
+                                                surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
+                                                i++;
+                                            }
                                         }
                                     }
                                 }
@@ -698,6 +703,6 @@ namespace SurveyApp.Controllers
                 throw ex;
             }
             return isSet;
-        }
+        }        
     }
 }

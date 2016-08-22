@@ -107,5 +107,6 @@ namespace SurveyApp.Models
         public int userId { get; set; }
         public string email { get; set; }
         public string name { get; set; }
+        public int userType { get; set; }
     }
 }
