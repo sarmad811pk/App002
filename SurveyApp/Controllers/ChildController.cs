@@ -318,8 +318,7 @@ namespace SurveyApp.Controllers
                     {
                         if (childModel.Id > 0)
                         {
-                            cssContext.Child_Survey_Schedules.RemoveRange(cssContext.Child_Survey_Schedules.Where(ct => ct.ChildId == childModel.Id && ct.ScheuleEndDate > DateTime.Now));
-                            cssContext.SaveChanges();
+                            DataHelper.removePreviousScheduleDates(childModel.Id);                            
                         }
 
 

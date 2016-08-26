@@ -67,7 +67,7 @@ namespace SurveyApp.Models
         
         public static List<StudyStatus> GetAllStatus()
         {
-            return new List<StudyStatus>() { new StudyStatus() { StatusId = 1, StatusOption = "Active" }, new StudyStatus() { StatusId = 2, StatusOption = "Inactive" }, new StudyStatus() { StatusId = 3, StatusOption = "Incomplete" } };
+            return new List<StudyStatus>() { new StudyStatus() { StatusId = 1, StatusOption = "Active" }, new StudyStatus() { StatusId = 2, StatusOption = "Inactive" }/*, new StudyStatus() { StatusId = 3, StatusOption = "Incomplete" }*/ };
         }
     }
 

@@ -799,5 +799,18 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
+        public static DataSet removePreviousScheduleDates(int childId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            cmd.Parameters["@ChildID"].Value = childId;
+
+            cmd.CommandText = "Schedule_RemovePreviousScheduleDates";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        
+
     }
 }

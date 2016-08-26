@@ -56,6 +56,12 @@
 <script type="text/javascript">
     $(function () {
         $("#tblSchedules").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Schedules_List', exportOptions: {  modifier: { search: 'none', order: 'original' }} }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Schedules" } });
+
+        $('[data-toggle="tooltip"]').tooltip({
+            content: function () {
+                return $(this).attr('title').replace(/<br\/>/g, "<br/>");
+            },
+        });
     });
 </script>
 <div>
@@ -69,6 +75,7 @@
     .table-hover tbody tr {
         cursor: pointer;
     }
+    .ui-tooltip {max-width: 400px;background-color: #333;color:#FFF;}
 </style>
 <table class="table table-striped table-hover" id="tblSchedules">
     <thead>
@@ -92,7 +99,7 @@
                     <td>@getFrequency(dr["Frequency"], dr["DaysToRepeat"])</td>
                     <td>@getActivationType(dr["ActiveOn"], dr["Day"], dr["Month"], dr["Weekday"])</td>
                     <td>@dr["AvailableUntil"] day(s)</td>
-                    <td>Every @dr["ReminderFrequency"] day(s)</td>
+                    <td data-toggle='tooltip' title="A reminder will be sent to respondent @dr["ReminderFrequency"] time(s) in questionaire duration.">@dr["ReminderFrequency"] time(s)</td>
                     <td>-@dr["LastReminder"] day(s) from last day</td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'schedule', '@dr["Title"]');"></a></td>
                 </tr>
