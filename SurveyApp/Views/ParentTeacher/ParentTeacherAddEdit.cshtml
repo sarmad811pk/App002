@@ -229,7 +229,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3">Name</label>
                 <div class="col-sm-9">
-                    @Html.TextBoxFor(m => m.vw_ParentTeacher.Name, new { @class = "form-control", id = "parent", placeholder = "User Name" })
+                    @Html.TextBoxFor(m => m.vw_ParentTeacher.Name, new { @class = "form-control", id = "parent", placeholder = "User Name", @maxlength = "100" })
                 </div>
             </div>
             <div class="form-group">
@@ -275,7 +275,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.vw_Register.UserName, new { @class = "control-label col-sm-3" })
                 <div class="col-sm-9">
-                    @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off" })
+                    @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off", @maxlength = "100" })
                 </div>
             </div>
 

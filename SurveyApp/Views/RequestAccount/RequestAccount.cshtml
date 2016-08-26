@@ -77,21 +77,21 @@
                                 <ol>
                                     <li>
                                         @Html.LabelFor(m => m.Email)
-                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", autocomplete = "off" })
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", autocomplete = "off", @maxlength = "100" })
                                         @Html.ValidationMessageFor(m => m.Email)
                                     </li>
                                     <li>
                                         @Html.LabelFor(m => m.FullName)
-                                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", autocomplete = "off" })
+                                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", autocomplete = "off", @maxlength = "100" })
                                         @Html.ValidationMessageFor(m => m.FullName)
                                     </li>
                                     <li>
                                         @Html.LabelFor(m => m.SchoolName)
-                                        @Html.TextBoxFor(m => m.SchoolName, new { @class = "form-control", autocomplete = "off" })                                        
+                                        @Html.TextBoxFor(m => m.SchoolName, new { @class = "form-control", autocomplete = "off", @maxlength = "100" })                                        
                                     </li>
                                     <li>
                                         @Html.LabelFor(m => m.Comments)
-                                        @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", autocomplete = "off" })                                        
+                                        @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", autocomplete = "off", @maxlength = "1000" })                                        
                                     </li>
                                 </ol>
                                 <input type="submit" value="Request Account" id="btnAccountRequest" class="btn btn-primary" />
