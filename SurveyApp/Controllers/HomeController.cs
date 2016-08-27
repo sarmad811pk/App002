@@ -142,8 +142,9 @@ namespace SurveyApp.Controllers
                             csContext.Child_Studies.RemoveRange(csContext.Child_Studies.Where(css => css.ChildId == idToBeDeleted));
                             csContext.SaveChanges();
                         }
+                        SurveyApp.DataHelper.removePreviousScheduleDates(idToBeDeleted);
 
-                    using (var childContext = new ChildContext())
+                        using (var childContext = new ChildContext())
                     {
                         Child objChild = childContext.Children.SingleOrDefault(c => c.Id == idToBeDeleted);
                         childContext.Children.Remove(objChild);
