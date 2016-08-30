@@ -54,6 +54,7 @@
 {
     @Html.ValidationSummary();
     @Html.HiddenFor(m => m.Id, new { name = "hdnScheduleId", value = Model.Id })
+    <div id="divValidation" style="display:none;" class="validation-summary-errors"><ul></ul></div>
     <input type="hidden" id="hdnSendEmail" name="hdnSendEmail" value="true" />
 
     <div class="form-group">
@@ -66,7 +67,7 @@
     <div class="form-group">
         <label class="control-label col-sm-3">Frequency:</label>
         <div class="col-sm-9">
-            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "1", new { name = "optradio", onclick = "$('#divDays').hide();" })Once</label></div>
+            <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "1", new { name = "optradio", onclick = "$('#divDays').hide();$('#DaysToRepeat').removeClass('inerror');" })Once</label></div>
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "2", new { name = "optradio", onclick = "$('#divDays').show();" })Repeat</label></div>
         </div>
     </div>
@@ -152,6 +153,10 @@
             },
         });
 
+        $("input[type=text]").keyup(function () {
+            $(this).removeClass("inerror");
+        });
+
         $("#frmAddSchedule").find("input[type='radio']").each(function (index, obj) {
             if ($(obj)[0].checked == true) {
                 $(obj)[0].click();
@@ -167,6 +172,10 @@
 
 
         $("#btnSaveSchedule").click(function (e) {
+            if (validateSchedule() == false) {
+                return false;
+            }
+
             e.preventDefault();
             $('.loading').show();
             $('.disablebackground').show();
@@ -236,5 +245,60 @@
             $("#ddlDays").val("");
             $("#ddlMonths").val("");
         }
+    }
+
+    function validateSchedule() {
+        /* SCHEDULE VALIDATION */
+        var errors = "";
+        if ($("#Title").val() == "") {            
+            $("#Title").addClass("inerror");
+            errors += "<li>Please enter title.</li>";
+        }
+
+        if (document.getElementsByName("Frequency")[0].checked == false && document.getElementsByName("Frequency")[1].checked == false) {
+            //$(document.getElementsByName("Frequency")[0]).closest("div.radio-inline").addClass("inerror");
+            //$(document.getElementsByName("Frequency")[1]).closest("div.radio-inline").addClass("inerror");
+            errors += "<li>Please select frequency.</li>";
+        }
+
+        if ($("#divDays").is(":visible") == true) {
+            if ($("#DaysToRepeat").val() == "") {
+                $("#DaysToRepeat").addClass("inerror");
+                errors += "<li>Please enter no. of days to repeat the schedule.</li>";
+            }
+            if ($("#DaysToRepeat").val() != "" && parseInt(("#DaysToRepeat").val()) <= 0) {
+                $("#DaysToRepeat").addClass("inerror");
+                errors += "<li>Please enter valid no. of days to repeat the schedule.</li>";
+            }
+        }
+
+        if (document.getElementsByName("ActiveOn")[0].checked == false && document.getElementsByName("ActiveOn")[1].checked == false) {
+            //$(document.getElementsByName("ActiveOn")[0]).closest("div.radio-inline").addClass("inerror");
+            //$(document.getElementsByName("ActiveOn")[1]).closest("div.radio-inline").addClass("inerror");
+            errors += "<li>Please select activation type.</li>";
+        }
+
+        if ($("#AvailableUntil").val() == "") {
+            $("#AvailableUntil").addClass("inerror");
+            errors += "<li>Please enter no. of days for schedule availability.</li>";
+        }
+        if ($("#ReminderFrequency").val() == "") {
+            $("#ReminderFrequency").addClass("inerror");
+            errors += "<li>Please enter no. of days for reminder frequency.</li>";
+        }
+        if ($("#LastReminder").val() == "") {
+            $("#LastReminder").addClass("inerror");
+            errors += "<li>Please enter no. of days for last reminder.</li>";
+        }
+
+        if (errors != "") {
+            $("#divValidation").find("ul").empty();
+            $("#divValidation").find("ul").append(errors);
+            $("#divValidation").show();
+            $("#frmAddSchedule").find(".inerror:first").focus();
+            return false;
+        }
+
+        return true;
     }
 </script>

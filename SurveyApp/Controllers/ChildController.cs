@@ -434,12 +434,12 @@ namespace SurveyApp.Controllers
 
                                                     if (activeOn == 1)
                                                     {
-                                                        dtStartDate = dtEnrollment.Value.AddDays(-objSchedule.AvailableUntil);
+                                                        dtStartDate = dtEnrollment.Value;//.AddDays(-objSchedule.AvailableUntil);
 
                                                     }
                                                     if (activeOn == 2)
                                                     {
-                                                        dtStartDate = specificDate.AddDays(-objSchedule.AvailableUntil);
+                                                        dtStartDate = specificDate;//.AddDays(-objSchedule.AvailableUntil);
                                                     }
                                                     for (int i = 0; i < noi; i++)
                                                     {
@@ -449,7 +449,10 @@ namespace SurveyApp.Controllers
                                                         objChildSurveySchedule.ScheduleIdTeacher = null;
                                                         objChildSurveySchedule.StudyId = objCS.StudyId;
                                                         objChildSurveySchedule.SurveyId = objSSS.SurveyId;
-                                                        dtStartDate = dtStartDate.AddDays(objSchedule.DaysToRepeat.HasValue ? objSchedule.DaysToRepeat.Value : 0);
+                                                        if(i != 0)
+                                                        {
+                                                            dtStartDate = dtStartDate.AddDays(objSchedule.DaysToRepeat.HasValue ? objSchedule.DaysToRepeat.Value : 0);
+                                                        }                                                        
                                                         objChildSurveySchedule.ScheuleStartDate = dtStartDate;
                                                         objChildSurveySchedule.ScheuleEndDate = dtStartDate.AddDays(objSchedule.AvailableUntil);
                                                         cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
@@ -560,12 +563,12 @@ namespace SurveyApp.Controllers
 
                                                     if (activeOn == 1)
                                                     {
-                                                        dtStartDate = dtEnrollment.Value.AddDays(-objSchedule.AvailableUntil);
+                                                        dtStartDate = dtEnrollment.Value;//.AddDays(-objSchedule.AvailableUntil);
 
                                                     }
                                                     if (activeOn == 2)
                                                     {
-                                                        dtStartDate = specificDate.AddDays(-objSchedule.AvailableUntil);
+                                                        dtStartDate = specificDate;//.AddDays(-objSchedule.AvailableUntil);
                                                     }
                                                     for (int i = 0; i < noi; i++)
                                                     {
@@ -575,7 +578,10 @@ namespace SurveyApp.Controllers
                                                         objChildSurveySchedule.ScheduleIdTeacher = objSSS.ScheduleIdTeacher;
                                                         objChildSurveySchedule.StudyId = objCS.StudyId;
                                                         objChildSurveySchedule.SurveyId = objSSS.SurveyId;
-                                                        dtStartDate = dtStartDate.AddDays(objSchedule.DaysToRepeat.HasValue ? objSchedule.DaysToRepeat.Value : 0);
+                                                        if(i != 0)
+                                                        {
+                                                            dtStartDate = dtStartDate.AddDays(objSchedule.DaysToRepeat.HasValue ? objSchedule.DaysToRepeat.Value : 0);
+                                                        }                                                        
                                                         objChildSurveySchedule.ScheuleStartDate = dtStartDate;
                                                         objChildSurveySchedule.ScheuleEndDate = dtStartDate.AddDays(objSchedule.AvailableUntil);
                                                         cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);

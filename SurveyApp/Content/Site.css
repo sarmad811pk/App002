@@ -832,6 +832,7 @@ div.checklist div.checker:last-child{
 /* VALIDATION */
 .inerror {
         background-color: #FFE9E9 !important;
+        border: 1px solid #e80c4d !important;
     }
 
 .loading, .waiting{    

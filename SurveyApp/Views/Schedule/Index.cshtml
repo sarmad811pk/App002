@@ -99,7 +99,7 @@
                     <td>@getFrequency(dr["Frequency"], dr["DaysToRepeat"])</td>
                     <td>@getActivationType(dr["ActiveOn"], dr["Day"], dr["Month"], dr["Weekday"])</td>
                     <td>@dr["AvailableUntil"] day(s)</td>
-                    <td data-toggle='tooltip' title="A reminder will be sent to respondent @dr["ReminderFrequency"] time(s) in questionaire duration.">@dr["ReminderFrequency"] time(s)</td>
+                    <td data-toggle='tooltip' title="A reminder will be sent to respondent @dr["ReminderFrequency"] time(s) in questionnaire duration.">@dr["ReminderFrequency"] time(s)</td>
                     <td>-@dr["LastReminder"] day(s) from last day</td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'schedule', '@dr["Title"]');"></a></td>
                 </tr>

@@ -74,6 +74,12 @@ namespace SurveyApp.Controllers
                 return View(mSchedule);
             }
 
+            if (mSchedule.DaysToRepeat < mSchedule.AvailableUntil)
+            {
+                ModelState.AddModelError("", "Survey should be repeated after finishing the current iteration i.e. number of days to repeat should be more than available until days.");
+                return View(mSchedule);
+            }
+
             if (mSchedule.Id <= 0 && doesScheduleExist(mSchedule.Title))
             {
                 ModelState.AddModelError("", "This schedule already exists, please provide different details.");
