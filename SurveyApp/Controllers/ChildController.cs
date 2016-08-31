@@ -229,6 +229,40 @@ namespace SurveyApp.Controllers
                     ctContext.SaveChanges();
                 }
 
+                /*
+                using (var cStudy = new Child_StudyContext())
+                {
+                    List<Child_Study> objCStudies = cStudy.Child_Studies.ToList();
+                    using (var ptsContext = new ParentTeacher_StudyContext())
+                    {
+                        foreach (Child_Study objCS in objCStudies)
+                        {
+                            List<ParentTeacher_Study> objptS = ptsContext.ParentTeacher_Studys.Where(pts => pts.ParentTeacherId == childModel.ParentId && pts.StudyId == objCS.StudyId).ToList();
+                            if(objptS.Count <= 0)
+                            {
+                                ParentTeacher_Study obj = new ParentTeacher_Study();
+                                obj.StudyId = objCS.StudyId;
+                                obj.ParentTeacherId = childModel.ParentId;
+                                ptsContext.ParentTeacher_Studys.Add(obj);
+                            }
+
+                            foreach(int teacherId in lstTeacherIds)
+                            {
+                                List<ParentTeacher_Study> objptSTeacher = ptsContext.ParentTeacher_Studys.Where(pts => pts.ParentTeacherId == teacherId && pts.StudyId == objCS.StudyId).ToList();
+                                if (objptSTeacher.Count <= 0)
+                                {
+                                    ParentTeacher_Study obj = new ParentTeacher_Study();
+                                    obj.StudyId = objCS.StudyId;
+                                    obj.ParentTeacherId = teacherId;
+                                    ptsContext.ParentTeacher_Studys.Add(obj);
+                                }
+                            }
+                        }
+                        ptsContext.SaveChanges();
+                    }                        
+                }
+                */
+
                 bool sendEmail = true;
                 sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
                 
