@@ -327,7 +327,9 @@
                             @if (roles[0] != "Teacher")
                             {
                                 string percentGen = getIntakeCompletion((int)drch["ID"], url.Replace("__", "16"));                                
-                                <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form (OHS)@(Html.Raw(percentGen))</div>               
+                                <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGen))</div>
+                                string percentGenCAS = getIntakeCompletion((int)drch["ID"], url.Replace("__", "43"));
+                                <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGenCAS))</div>
                             }
                             @if (roles[0] == "Teacher")
                             {
@@ -340,7 +342,12 @@
                                 var acadmicprogrss = getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"));
                                 if (showHideSurvey(acadmicprogrss) == true)
                                 {
-                                    <div class="col-md-12 text-left">Academic Progress Rating Scales@(Html.Raw(getPercentCompletion(27, (int)drch["ID"], url.Replace("__", "27"))))</div>
+                                    <div class="col-md-12 text-left">Academic Progress Rating Scales@(Html.Raw(acadmicprogrss))</div>
+                                }
+                                var testReportCard = getPercentCompletion(42, (int)drch["ID"], url.Replace("__", "42"));
+                                if (showHideSurvey(testReportCard) == true)
+                                {
+                                    <div class="col-md-12 text-left">Teacher Test Report Card@(testReportCard))</div>
                                 }
                             }
                             @{
@@ -471,13 +478,13 @@
                                     <div class="col-md-12 text-left">Parent Follow-Up Form (OHS)@(Html.Raw(percentM))</div>
                                 }*@
                             }
-                        </div>
-                        <div class="col-sm-5">
-                            
+    </div>
+    <div class="col-sm-5">
 
-                                            @*
-                                                <div class="col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
-                                                <div class="col-md-4 text-left">Life Events@(Html.Raw(getPercentCompletion(29, (int)drch["ID"], url.Replace("__", "29"))))</div>*@
+
+                        @*
+                            <div class="col-md-4 text-left">Adverse Reaction@(Html.Raw(getPercentCompletion(28, (int)drch["ID"], url.Replace("__", "28"))))</div>
+                            <div class="col-md-4 text-left">Life Events@(Html.Raw(getPercentCompletion(29, (int)drch["ID"], url.Replace("__", "29"))))</div>*@
 
                                         </div>
 

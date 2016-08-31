@@ -123,7 +123,10 @@ namespace SurveyApp.Controllers
                                             {
                                                 Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = pedsIndex, ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
                                                 dbSS.SSSs.Add(sss);
-                                            }                                            
+                                            }
+
+                                            Study_Survey_Schedule s45 = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = 45, ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
+                                            dbSS.SSSs.Add(s45);
                                         }
                                         else
                                         {

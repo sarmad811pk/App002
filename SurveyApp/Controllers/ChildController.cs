@@ -643,7 +643,7 @@ namespace SurveyApp.Controllers
                                     if(objRE.userType == (int)dr["UserType"])
                                     {
                                         string title = dr["Title"].ToString();
-                                        if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9) && isSelected == false)
+                                        if (((int)dr["ID"] == 6 || (int)dr["ID"] == 7 || (int)dr["ID"] == 8 || (int)dr["ID"] == 9 || (int)dr["ID"] == 45) && isSelected == false)
                                         {
                                             title = getPEDsqlTitle(childModel.dob);
                                             isSelected = true;
@@ -652,7 +652,7 @@ namespace SurveyApp.Controllers
                                         }
                                         else
                                         {
-                                            if ((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9)
+                                            if ((int)dr["ID"] != 6 && (int)dr["ID"] != 7 && (int)dr["ID"] != 8 && (int)dr["ID"] != 9 && (int)dr["ID"] != 45)
                                             {
                                                 surveys += "<tr><td>" + i + " : </td><td>" + title + "</td></tr>";
                                                 i++;
