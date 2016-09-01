@@ -795,12 +795,17 @@ tr.pager td {
         background-size: auto 30px;
     }
 
-a.redCross{    
+a.redCross i{
+    color:#EE0000;
+    font-size: 18px;
+}
+/*a.redCross{
+    /*    
     color: red;
     font-size: 40px;
     line-height: 12px;
-    -ms-transform: rotate(45deg); /* IE 9 */
-    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+    -ms-transform: rotate(45deg); /* IE 9 *//*
+    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera *//*
     transform: rotate(45deg);
     display: block;
 }
@@ -812,7 +817,7 @@ a.redCross:hover, a.redCross:visited{
     font-size: 42px !important;
     text-decoration: none !important;
     background-color: transparent !important;
-}
+}*/
 div.checklist{    
     width:100%;
     background-color: #FFF;
@@ -828,6 +833,20 @@ div.checklist div.checker{
 div.checklist div.checker:last-child{
     border-bottom: none;
 }
+div.innerchecklist{    
+    width: 95%;
+    background-color: #f9f9f9;
+    border: solid 1px #CCC;
+    margin: 0px 0px 10px 22px;
+}
+div.innerchecklist div.innerchecker{
+    border-bottom: solid 1px #CCC;
+    padding: 6px 10px 0px 10px;
+}
+div.innerchecklist div.innerchecker:last-child{
+    border-bottom: none;
+}
+
 
 /* VALIDATION */
 .inerror {

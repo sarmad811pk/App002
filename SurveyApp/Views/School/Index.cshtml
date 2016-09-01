@@ -36,7 +36,7 @@
                 <td class="name">@dr["Name"]</td>
                 <td>@dr["Children"]</td>
                 <td>@dr["Teachers"]</td>
-                <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["SchoolId"], 'school', '@dr["Name"]', function(){ location.href = location.href; });"></a></td>
+                <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["SchoolId"], 'school', '@dr["Name"]', function(){ location.href = location.href; });"><i class="ion-close"></i></a></td>
             </tr>
         }
     </tbody>

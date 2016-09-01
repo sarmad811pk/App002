@@ -65,7 +65,7 @@
                     <td>@dr["Teacher"]</td>
                     <td>@dr["Study"]</td>
                     <td class="text-success">@getStatusDescription((int)dr["StatusId"])</td>
-                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"></a></td>
+                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"><i class="ion-close"></i></a></td>
                 </tr>
             }
         }

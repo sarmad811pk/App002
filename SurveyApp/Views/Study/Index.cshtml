@@ -43,7 +43,7 @@
                 <td>@dr["Teachers"]</td>
                 <td>@dr["Parents"]</td>                
                 <td class="@(Convert.ToInt32(dr["Status"]) == 2 ? "text-danger" : "text-success")">@(Convert.ToInt32(dr["Status"]) == 1 ? "Active" : (Convert.ToInt32(dr["Status"]) == 2 ? "InActive" : (Convert.ToInt32(dr["Status"]) == 3 ? "Incomplete" : "-")))</td>
-                <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'study', '@dr["Name"]');"></a></td>
+                <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'study', '@dr["Name"]');"><i class="ion-close"></i></a></td>
             </tr>
         }
 

@@ -403,12 +403,20 @@
                                         <div class="col-md-12 text-left">Peds quality of life for 8yrs -12yrs@(Html.Raw(pdsqty8yr))</div>
                                     }
                                 }
-                                else if (age >= 13)
+                                else if (age >= 13 && age <= 18)
                                 {
                                     var pdsqty13year = getPercentCompletion(9, (int)drch["ID"], url.Replace("__", "9"));
                                     if (showHideSurvey(pdsqty13year) == true)
                                     {
                                         <div class="col-md-12 text-left">Peds quality of life for 13yrs -18yrs@(Html.Raw(pdsqty13year))</div>
+                                    }
+                                }
+                                else if (age >= 19)
+                                {
+                                    var pdsqty19year = getPercentCompletion(45, (int)drch["ID"], url.Replace("__", "45"));
+                                    if (showHideSurvey(pdsqty19year) == true)
+                                    {
+                                        <div class="col-md-12 text-left">Peds quality of life for 19yrs and older@(Html.Raw(pdsqty19year))</div>
                                     }
                                 }
                                 var shrtlngprofile = getPercentCompletion(10, (int)drch["ID"], url.Replace("__", "10"));
