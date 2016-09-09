@@ -1,5 +1,5 @@
 ﻿@{    
-    ViewBag.Title = "_WeeklyChart";
+    ViewBag.Title = "eBit - _WeeklyChart";
     int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
     int childId = ViewData["childIdts"] != null ? Convert.ToInt32(ViewData["childIdts"]) : 0;
     System.Data.DataSet ds = SurveyApp.DataHelper.GetWeeklyProgressForGraph(studyId, childId, WebSecurity.CurrentUserId);

@@ -78,21 +78,7 @@ namespace SurveyApp.Controllers
             {
                 ModelState.AddModelError("", "Please select a school for the teacher.");
                 return View(parentTeacher_RegisterModel);
-            }
-
-            int studyCount = 0;            
-            foreach (var key in collection.Keys)
-            {
-                if (key.ToString().Contains("StudyId_"))
-                {
-                    studyCount++;
-                }
-            }
-            if (studyCount == 0)
-            {
-                ModelState.AddModelError("", "Please select at least one study.");
-                return View(parentTeacher_RegisterModel);
-            }
+            }            
 
             bool doesUserExists = false;
             MembershipUser objUser = Membership.GetUser(registerModel.UserName);
@@ -192,8 +178,7 @@ namespace SurveyApp.Controllers
                     return View(parentTeacher_RegisterModel);
                 }
 
-                //save parent teacher school relationship info
-                
+                //save parent teacher school relationship info                
                 using (var ptScContext = new PParentTeacher_SchoolContext())
                 {
                     if ((parentTeacherModel.SchoolId.HasValue == true || schoolId > 0) && parentTeacherModel.Id > 0)
@@ -210,52 +195,7 @@ namespace SurveyApp.Controllers
                         ptScContext.ParentTeacher_Schools.Add(objPTS);
                         ptScContext.SaveChanges();
                     }
-                }
-
-                //save parent teacher study relationship info                
-                using (var ptsContext = new ParentTeacher_StudyContext())
-                {
-                    if (parentTeacherModel.Id > 0 && studyCount > 0)
-                    {
-                        ptsContext.ParentTeacher_Studys.RemoveRange(ptsContext.ParentTeacher_Studys.Where(pts => pts.ParentTeacherId == parentTeacherModel.Id));
-                        ptsContext.SaveChanges();
-                    }
-                    foreach (Study objStudy in Study.StudyGetAll())
-                    {
-                        if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id]))
-                        {                            
-                            ParentTeacher_Study objPTS = new ParentTeacher_Study();
-                            objPTS.ParentTeacherId = ptId;
-                            objPTS.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
-
-                            ptsContext.ParentTeacher_Studys.Add(objPTS);
-                        }
-                    }
-
-                    ptsContext.SaveChanges();
-                }
-
-                //string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
-                //List<Child> lstChildren = new List<Child>();
-                //using (var cContext = new ChildContext())
-                //{
-                //    lstChildren = cContext.Children.ToList();
-                //}
-
-                //DataSet ds = DataHelper.getAssignedChildrenByUserId(ptId);
-                //if(ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                //{
-                //    foreach (DataRow drChild in ds.Tables[0].Rows)
-                //    {
-                //        foreach (Child objChild in lstChildren)
-                //        {
-                //            if (objChild.Id == (int)drChild["Id"])
-                //            {
-                //                ChildController.setChildSchedules(objChild, path);
-                //            }
-                //        }
-                //    }
-                //}
+                }                
 
                 return RedirectToAction("Index", "ParentTeacher");
                 

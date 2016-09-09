@@ -19,6 +19,7 @@ namespace SurveyApp.Controllers
         public StudyController() {
             Database.SetInitializer<StudyContext>(null);
             Database.SetInitializer<Child_Survey_ScheduleContext>(null);
+            Database.SetInitializer<Child_Study_RespondentContext>(null);
         }
 
         public ActionResult Index()
@@ -154,31 +155,24 @@ namespace SurveyApp.Controllers
                         lstChildren = cContext.Children.ToList();
                     }
 
-                    List<ParentTeacher_Study> lstPTStudies = new List<ParentTeacher_Study>();
-                    using (var ptsContext = new ParentTeacher_StudyContext())
+                    List<Child_Study_Respondent> lstPTStudies = new List<Child_Study_Respondent>();
+                    using (var ptsContext = new Child_Study_RespondentContext())
                     {
-                        lstPTStudies = ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == newStudyId).ToList();
+                        lstPTStudies = ptsContext.Child_Study_Respondents.Where(pts => pts.StudyId == newStudyId).ToList();
                     }
 
                     List<int> lstChildrenUpdated = new List<int>();
 
-                    foreach (ParentTeacher_Study objPTStudy in lstPTStudies)
+                    foreach (Child_Study_Respondent objPTStudy in lstPTStudies)
                     {
-                        DataSet ds = DataHelper.getAssignedChildrenByUserId(objPTStudy.ParentTeacherId);
-                        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                        foreach (Child objChild in lstChildren)
                         {
-                            foreach (DataRow drChild in ds.Tables[0].Rows)
+                            if (objChild.Id == objPTStudy.ChildId)
                             {
-                                foreach (Child objChild in lstChildren)
+                                if (lstChildrenUpdated.Contains(objChild.Id) == false)
                                 {
-                                    if (objChild.Id == (int)drChild["Id"])
-                                    {
-                                        if (lstChildrenUpdated.Contains(objChild.Id) == false)
-                                        {
-                                            ChildController.setChildSchedules(objChild, path, sendEmail);
-                                            lstChildrenUpdated.Add(objChild.Id);
-                                        }
-                                    }
+                                    ChildController.setChildSchedules(objChild, path, sendEmail, newStudyId);
+                                    lstChildrenUpdated.Add(objChild.Id);
                                 }
                             }
                         }

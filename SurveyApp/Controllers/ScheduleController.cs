@@ -18,7 +18,8 @@ namespace SurveyApp.Controllers
         public ScheduleController()
         {         
             Database.SetInitializer<ScheduleContext>(null);
-            Database.SetInitializer<Child_Survey_ScheduleContext>(null);            
+            Database.SetInitializer<Child_Survey_ScheduleContext>(null);
+            Database.SetInitializer<Child_Study_RespondentContext>(null);
         }
 
         public ActionResult Index()
@@ -217,32 +218,25 @@ namespace SurveyApp.Controllers
                 DataSet dsStudies = DataHelper.getStudiesByScheduleId(scheduleId);
                 if(dsStudies != null && dsStudies.Tables.Count > 0 && dsStudies.Tables[0].Rows.Count > 0)
                 {
-                    List<ParentTeacher_Study> lstPTStudies = new List<ParentTeacher_Study>();
-                    using (var ptsContext = new ParentTeacher_StudyContext())
+                    List<Child_Study_Respondent> lstPTStudies = new List<Child_Study_Respondent>();
+                    using (var ptsContext = new Child_Study_RespondentContext())
                     {
                         foreach (DataRow drStudy in dsStudies.Tables[0].Rows)
                         {
                             int stuId = (int)drStudy["StudyId"];
-                            lstPTStudies = ptsContext.ParentTeacher_Studys.Where(pts => pts.StudyId == stuId).ToList();
+                            lstPTStudies = ptsContext.Child_Study_Respondents.Where(pts => pts.StudyId == stuId).ToList();
                             List<int> lstChildrenUpdated = new List<int>();
 
-                            foreach (ParentTeacher_Study objPTStudy in lstPTStudies)
+                            foreach (Child_Study_Respondent objPTStudy in lstPTStudies)
                             {
-                                DataSet ds = DataHelper.getAssignedChildrenByUserId(objPTStudy.ParentTeacherId);
-                                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                                foreach (Child objChild in lstChildren)
                                 {
-                                    foreach (DataRow drChild in ds.Tables[0].Rows)
+                                    if (objChild.Id == objPTStudy.ChildId)
                                     {
-                                        foreach (Child objChild in lstChildren)
+                                        if (lstChildrenUpdated.Contains(objChild.Id) == false)
                                         {
-                                            if (objChild.Id == (int)drChild["Id"])
-                                            {
-                                                if (lstChildrenUpdated.Contains(objChild.Id) == false)
-                                                {
-                                                    ChildController.setChildSchedules(objChild, path, sendEmail);
-                                                    lstChildrenUpdated.Add(objChild.Id);
-                                                }
-                                            }
+                                            ChildController.setChildSchedules(objChild, path, sendEmail, stuId);
+                                            lstChildrenUpdated.Add(objChild.Id);
                                         }
                                     }
                                 }

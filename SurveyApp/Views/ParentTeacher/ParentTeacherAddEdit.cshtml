@@ -1,16 +1,12 @@
 ﻿@using SurveyApp.Models;
 @using System.Data;
 @{
-    ViewBag.Title = "Parent/Teacher Information Editor";
+    ViewBag.Title = "eBit - Respondent Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     int roleId = 0, teacherRoleId = 0, parentRoleId = 0;
-    lstPTS = new List<ParentTeacher_Study>();
-    if(Model.vw_ParentTeacher.Id > 0){
-        using (var ptsContext = new ParentTeacher_StudyContext())
-        {
-            lstPTS = ptsContext.ParentTeacher_Studys.ToList();
-        }
+    
+    if(Model.vw_ParentTeacher.Id > 0){        
         roleId = Model.vw_ParentTeacher.Role;
     }
     DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
@@ -21,22 +17,7 @@
 @model SurveyApp.Models.ParentTeacher_Register
 
 @functions{
-    List<ParentTeacher_Study> lstPTS;
-    public string getStudyStatus(int studyId)
-    {
-        if (lstPTS.Count > 0)
-        {
-            foreach (ParentTeacher_Study objPTS in lstPTS)
-			{
-				if (objPTS.StudyId == studyId && objPTS.ParentTeacherId == Model.vw_ParentTeacher.Id)
-				{
-					return "checked='checked'";
-				}
-			}
-		}
-        return "";
-    }   
-    
+        
 }
 <script src="~/Scripts/zxcvbn.js"></script>
 <script src="~/Scripts/pwstrength.js"></script>
@@ -208,18 +189,7 @@
             @Html.ValidationSummary()
             @Html.HiddenFor(m => m.vw_ParentTeacher.Id, new { name = "hdnParentTeacherId", id = "hdnParentTeacherId", value = Model.vw_ParentTeacher.Id })
             <input type="hidden" id="hdnIsEmailSent" name="hdnIsEmailSent" value="false"/>
-            <div class="form-group">
-                <label class="control-label col-sm-3" for="teacher">Study:</label>
-                <div class="col-sm-9">
-                    <div class="checklist" style="max-height: 220px;">
-                        @foreach (Study std in Study.StudyGetAll())
-                        {
-                            <div class="checker"><label><input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@(std.Id)" value="@std.Id" /> @std.Name</label></div>
-                        }
-                        @*@Html.ListBoxFor(m => m.stds, new MultiSelectList(Study.StudyGetAll(), "Id", "Name"))*@
-                    </div>
-                </div>
-            </div>
+
             <div class="form-group">
                 <label class="control-label col-sm-3"> </label>
                 <div class="col-sm-9" style="text-align: right;">

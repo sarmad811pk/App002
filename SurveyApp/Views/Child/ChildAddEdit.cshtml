@@ -1,7 +1,7 @@
 ﻿@using SurveyApp.Models;
 @using System.Data;
 @{
-    ViewBag.Title = "Child Information Editor";
+    ViewBag.Title = "eBit - Child Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     string datepick = Model.Id <= 0 ? "$('#dob').val('');" : "";
@@ -13,6 +13,8 @@
         dtTeachers = ds != null && ds.Tables[1].Rows.Count > 0 ? ds.Tables[1] : null;
         dtSchedules = ds != null && ds.Tables[2].Rows.Count > 0 ? ds.Tables[2] : null;
     }
+
+    DataSet dsTeachers = Child_Teacher.Child_TeacherGetAll();
 }
 @model SurveyApp.Models.Child
 
@@ -34,13 +36,13 @@
         return "";
     }
 
-    public string getTeacherStatus(int UserId)
+    public string getTeacherStatus(int UserId, int studyId)
     {
         if (dtTeachers != null)
         {
             foreach (DataRow dr in dtTeachers.Rows)
             {
-                if (Convert.ToInt32(dr["TeacherId"]) == UserId)
+                if (Convert.ToInt32(dr["RespondentId"]) == UserId && Convert.ToInt32(dr["StudyId"]) == studyId)
                 {
                     return "checked='checked'";
                 }
@@ -48,6 +50,38 @@
         }
 
         return "";
+    }
+
+    public string getParentStatus(int studyId)
+    {
+        if (dtStudies != null)
+        {
+            foreach (DataRow dr in dtStudies.Rows)
+            {
+                if (Convert.ToInt32(dr["StudyId"]) == studyId && Convert.ToBoolean(dr["IncludeParent"]) == true)
+                {
+                    return "checked='checked'";
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public int getParentStatusValue(int studyId)
+    {
+        if (dtStudies != null)
+        {
+            foreach (DataRow dr in dtStudies.Rows)
+            {
+                if (Convert.ToInt32(dr["StudyId"]) == studyId && Convert.ToBoolean(dr["IncludeParent"]) == true)
+                {
+                    return 1;
+                }
+            }
+        }
+
+        return 0;
     }
 
     public string getScheduleStatus(int studyId, int scheduleId, string col, string type, int value) {
@@ -68,11 +102,11 @@
                             return "selected='selected'";
                         }
                     }
-                }                
+                }
             }
         }
-        
-        return "";   
+
+        return "";
     }
 
 }
@@ -93,6 +127,11 @@
         color: #cc0000;
         margin: 0px 0px 6px 0px;
     }
+    a.viewResp{
+        color: #23527c;
+        text-decoration: underline;
+        font-size: 12px;
+    }
     .ui-tooltip {min-width:420px; max-width: 500px;background-color: #333; color: #FFF;}
 </style>
 <br />
@@ -104,22 +143,58 @@
             @Html.ValidationSummary()
             @Html.HiddenFor(m => m.Id, new { name = "hdnChildId", value = Model.Id })
             <input type="hidden" id="hdnSendEmail" name="hdnSendEmail" value="true" />
+            
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="email">Name:</label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.Name, new { placeholder = "Enter Name", @class = "form-control", @maxlength = "100" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="pwd">Date of Birth:</label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.dob, "{0:MM/dd/yyyy}", new { type = "text", placeholder = "Enter DOB", @class = "form-control datepicker", max = @DateTime.Now.ToString(@"MM/dd/yyyy") })
+                </div>
+                <div style="display:none;">, "{0:yyyy-MM-dd}"</div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="gender">Gender:</label>
+                <div class="col-sm-9">
+                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Gender, "1", new { name = "optradio" })Male</label></div>
+                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Gender, "2", new { name = "optradio" })Female</label></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="school">Status:</label>
+                <div class="col-sm-9">
+                    @Html.DropDownListFor(m => m.StatusId, new SelectList(EnrollmentStatus.EnrollmentStatus_GetAll(), "Id", "Status"), "Select Status", new { id = "ddlEnrollmentStatus", @class = "form-control" })
+                </div>
+            </div>
+
+
+            <!-- INTERESTING STUFF STARTS HERE -->
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="school">School:</label>
+                <div class="col-sm-9">
+                    @Html.DropDownListFor(m => m.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select School", new { id = "ddlSchools", @class = "form-control" })
+                </div>
+            </div>
 
             <div class="form-group">
                 <label class="control-label col-sm-3" for="teacher">Study:</label>
                 <div class="col-sm-9">
                     <div class="checklist" style="max-height: 250px;">
-                    @foreach (Study std in Study.StudyGetAll())
-                    {
-                            <div class="checker">
+                        @foreach (Study std in Study.StudyGetAll())
+                        {
+                            <div class="checker" id="studyId_@std.Id">
                                 <label onclick="setDeviation(this);" class="study">
                                     <input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@std.Id" value="@std.Id" /> @std.Name
+                                    <a href="javasctipt:void(0);" onclick="showRespondents(this, @std.Id, '@std.Name.Replace("\'", "").Replace("\"", "")');" class="viewResp">Respondents</a>
                                 </label>
                                 <label style="float: right;padding: 0px 6px 0px 0px;" class="deviation" onchange="showScheduleInfo(this, @std.Id);">
                                     <input type="checkbox" name="StudyIdDeviate_@std.Id" value="@std.Id" />Deviate
                                 </label>
-
-
+                                                                
                                 <div id="divStudy@(std.Id)" style="display:none;" class="studyInfo">
                                     @{ DataSet dsSchedules = SurveyApp.DataHelper.ScheduleDeviationGetSchedules(std.Id); }
                                     @foreach (DataRow drSchedule in dsSchedules.Tables[0].Rows)
@@ -189,171 +264,48 @@
                                         <div class="form-group">
                                             <div class="col-sm-offset-0 col-sm-9" style="color: #E4002E;">
                                                 There is not schedule associated with this study.
-                                            </div>                                            
+                                            </div>
                                         </div>
                                     }
                                 </div>
-                            </div>
+
+                                <div class="teachers" style="max-height: 220px;display:none;">
+                                    <div class="studyTeachers">
+                                        <div><input type="text" id="txtSearch" style="margin-bottom: 10px;" class="form-control" onkeyup="searchTeachers(this);" placeholder="Search Respondents"/></div>
+                                        @{ int index = 0; }
+                                        @foreach (System.Data.DataRow dr in dsTeachers.Tables[0].Rows)
+                                        {
+                                            if (index == 0)
+                                            {
+                                                <div class="resp"><label><input type="checkbox" @getParentStatus(std.Id) id="StudyId_@(std.Id)_IncludeParent" name="StudyId_@(std.Id)_IncludeParent" value="@getParentStatusValue(std.Id)" /> Include Parent?</label></div>
+                                            }
+                                            <div class="resp"><label><input type="checkbox" @getTeacherStatus((int)dr["UserId"], std.Id) id="StudyId_@(std.Id)_TeacherId_@dr["UserId"]" name="StudyId_@(std.Id)_TeacherId_@dr["UserId"]" value="@dr["UserId"]" /> @(dr["FullName"])</label></div>
+                                            index++;
                                         }
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
                     </div>
                     @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-link" })
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-3" for="email">Name:</label>
-                <div class="col-sm-9">
-                    @Html.TextBoxFor(m => m.Name, new { placeholder = "Enter Name", @class = "form-control", @maxlength = "100" })
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3" for="pwd">Date of Birth:</label>
-                <div class="col-sm-9">
-                    @Html.TextBoxFor(m => m.dob, "{0:MM/dd/yyyy}", new { type = "text", placeholder = "Enter DOB", @class = "form-control datepicker", max = @DateTime.Now.ToString(@"MM/dd/yyyy") })
-                </div>
-                <div style="display:none;">, "{0:yyyy-MM-dd}"</div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3" for="gender">Gender:</label>
-                <div class="col-sm-9">
-                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Gender, "1", new { name = "optradio" })Male</label></div>
-                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Gender, "2", new { name = "optradio" })Female</label></div>
-                </div>
-            </div>
-            <div class="form-group">
                 <label class="control-label col-sm-3" for="parent">Parent:</label>
                 <div class="col-sm-9">
-                    @Html.DropDownListFor(m => m.ParentId, new SelectList(SurveyApp.DataHelper.Parent_GetAll(), "UserId", "FullName"), "Select Parent", new { id = "ddlParents", @class = "form-control" })
-                    <div>
-                        <a href="javascript:void(0);" class="btn btn-link" onclick="$('#addParent').slideDown();">Add Parent</a>
-                    </div>
+                    @Html.DropDownListFor(m => m.ParentId, new SelectList(SurveyApp.DataHelper.Parent_GetAll(), "UserId", "FullName"), "Select Parent", new { id = "ddlParents", @class = "form-control" })                    
                 </div>
             </div>
-            <div id="addParent" class="_panel form-group" style="display:none;">
-                <div class="msg"></div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3">Parent Name</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control txtFullName" placeholder="Parent Name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="gender">Email:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control txtUserName" placeholder="Email">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="parent">Password:</label>
-                    <div class="col-sm-9">
-
-                        <input type="password" class="form-control txtPassword" placeholder="Password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="parent">Confirm Password:</label>
-                    <div class="col-sm-9">
-                        <input type="password" class="form-control txtConfirmPassword" placeholder="Confirm Password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3"> </label>
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <button type="button" class="btn btn-default" onclick="addParentTeacher('Parent');">Add Parent</button>
-                        <button type="button" class="btn btn-default" onclick="$('#addParent').slideUp();">Cancel</button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3" for="school">School:</label>
-                <div class="col-sm-9">
-                    @Html.DropDownListFor(m => m.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select School", new { id = "ddlSchools", @class = "form-control" })
-                    <div>
-                        <a href="javascript:void(0);" class="btn btn-link" onclick="$('#addSchool').slideDown();">Add School</a>
-                    </div>
-                </div>
-            </div>
-
-            <div id="addSchool" class="_panel form-group" style="display:none;">
-                <div class="msg"></div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3">School Name</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control txtSchoolName" placeholder="School Name" maxlength="100">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3"> </label>
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <button type="button" class="btn btn-default" onclick="addSchool();">Add School</button>
-                        <button type="button" class="btn btn-default" onclick="$('#addSchool').slideUp();">Cancel</button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-3" for="teacher">Teacher:</label>
-                <div class="col-sm-9">
-                    <div class="checklist teachers" style="max-height: 220px;">
-                        @foreach (System.Data.DataRow dr in Child_Teacher.Child_TeacherGetAll().Tables[0].Rows)
-                        {
-                            <div class="checker"><label><input type="checkbox" @getTeacherStatus((int)dr["UserId"]) name="TeacherId_@dr["UserId"]" value="@dr["UserId"]" /> @(dr["FullName"])</label></div>
-                        }
-                    </div>
-                    <a href="javascript:void(0);" class="btn btn-link" onclick="$('#addTeacher').slideDown();">Add Teacher</a>
-                </div>
-            </div>
-            <div id="addTeacher" class="_panel form-group" style="display:none;">
-                <div class="msg"></div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3">Teacher Name:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control txtFullName" placeholder="Teacher Name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="gender">Email:</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control txtUserName" placeholder="Email">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="parent">Password:</label>
-                    <div class="col-sm-9">
-
-                        <input type="password" class="form-control txtPassword" placeholder="Password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3" for="parent">Confirm Password:</label>
-                    <div class="col-sm-9">
-
-                        <input type="password" class="form-control txtConfirmPassword" placeholder="Confirm Password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-3"> </label>
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <button type="button" class="btn btn-default" onclick="addParentTeacher('Teacher');">Add Teacher</button>
-                        <button type="button" class="btn btn-default" onclick="$('#addTeacher').slideUp();">Cancel</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-sm-3" for="school">Status:</label>
-                <div class="col-sm-9">
-                    @Html.DropDownListFor(m => m.StatusId, new SelectList(EnrollmentStatus.EnrollmentStatus_GetAll(), "Id", "Status"), "Select Status", new { id = "ddlEnrollmentStatus", @class = "form-control" })
-                </div>
-            </div>
+                                  
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9" style="margin-top:10px;">
                     <button type="submit" id="btnSaveChild" class="btn btn-default">Save Child Information</button>
                     <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index", "Child")';">Cancel</button>
                 </div>
             </div>
-            </div>
+        </div>
     </div>
 }
 
@@ -408,6 +360,11 @@
                         className: "btn-default",
                         callback: function() {
                             $("#hdnSendEmail").val(false);
+                            $("#frmAddChild").find("input[type=checkbox]").each(function(index, obj){
+                                if($(obj).attr("checked") == "checked"){
+                                    $(obj)[0].checked = true;
+                                }
+                            });
                             $("#frmAddChild").submit();
                         }
                     }
@@ -640,12 +597,17 @@
                     }
                 }
             });
+
+            $(elem).find(".viewResp").fadeIn();
         }
         else {
             $(elem).siblings("label").find("input[type=checkbox]")[0].checked = false;
             $(elem).siblings("label.deviation").fadeOut();
+
+            $(elem).find(".viewResp").fadeOut();
         }
     }
+
 
     function showScheduleInfo(elem, id) {
         var isChecked = false;
@@ -704,5 +666,72 @@
             $("#divSpecify" + id).find("#ddlDays").removeClass("inerror");
             $("#divSpecify" + id).find("#ddlMonths").removeClass("inerror");
         }
+    }
+</script>
+<script type="text/javascript">
+    function showRespondents(elem, studyId, studyName){
+        var childId = @Model.Id;
+        var html = $("#studyId_" + studyId).find(".teachers").html();
+        $(".studyTeachers").find(".resp").show();
+
+        bootbox.dialog({
+            title: "<span style='text-transform:capitalize;'>" + studyName + " - Respondents</span>",
+            closeButton: false,
+            onEscape: function() {
+
+            },
+            buttons: {
+                success: {
+                    label: "Save Changes",
+                    className: "btn-primary",
+                    callback: function() {
+                        $(".bootbox-body .studyTeachers input").each(function(){                            
+                            if($(this)[0].checked == true){
+                                $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).attr("checked", "checked");
+                                if($(this).attr("id").indexOf("_IncludeParent") >= 0){
+                                    $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("1");
+                                }                                
+                            }
+                            else{
+                                $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).removeAttr("checked");
+                                if($(this).attr("id").indexOf("_IncludeParent") >= 0){
+                                    $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("0");
+                                }
+                            }                            
+                        });
+                    }
+                },
+                danger: {
+                    label: "Cancel",
+                    className: "btn-default",
+                    callback: function() {
+
+                    }
+                }
+            },
+            message: html
+        });
+
+        //$(".bootbox-body .studyTeachers input").each(function(){
+        //    var ischecked = $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0].checked;
+        //    if(ischecked == false){
+        //        var isSet = $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).attr("teacherselected");
+        //        $(".bootbox-body .studyTeachers").find($(this))[0].checked = isSet == "true" ? true : false;            
+        //    }
+        //});
+    }
+
+    function searchTeachers(elem){
+        var key = $(elem).val().toLowerCase();
+        $(elem).closest(".studyTeachers").find(".resp").each(function(index, obj){
+            var txt = $(obj).find("label").text().toLowerCase();
+            
+            if(txt.indexOf(key) >= 0 || txt.indexOf("include parent") == true || key == ""){
+                $(obj).show();
+            }
+            else{
+                $(obj).hide();
+            }
+        });
     }
 </script>

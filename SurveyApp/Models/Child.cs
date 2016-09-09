@@ -168,4 +168,43 @@ namespace SurveyApp.Models
         }
         public DbSet<Child_Survey_Schedule> Child_Survey_Schedules { get; set; }
     }
+
+    public class Child_Study_Respondent
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int ChildId { get; set; }
+        public int StudyId { get; set; }
+        public int RespondentId { get; set; }    
+        public bool IncludeParent { get; set; }    
+    }
+
+    public class Child_Study_RespondentContext : DbContext
+    {
+        public Child_Study_RespondentContext()
+            : base("DefaultConnection")
+        {
+        }
+        public DbSet<Child_Study_Respondent> Child_Study_Respondents { get; set; }
+
+        public static List<int> Child_GetStudies(int childId)
+        {
+            Child_Study_Respondent[] studies = null;
+            List<int> lstStudies = new List<int>();
+            List<int> lstStudiesDistinct = new List<int>();
+            using (var csContext = new Child_Study_RespondentContext())
+            {
+                studies = csContext.Child_Study_Respondents.Where(cs => cs.ChildId == childId).ToArray();
+                foreach (Child_Study_Respondent objCSR in studies)
+                {
+                    lstStudies.Add(objCSR.StudyId);
+                }
+                lstStudiesDistinct = lstStudies.Distinct().ToList();
+                csContext.Dispose();
+            }
+                        
+            return lstStudiesDistinct;
+        }
+    }
 }

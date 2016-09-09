@@ -696,13 +696,16 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
-        public static DataSet getRespondentsAndSurveys(int childId, bool newChild)
+        public static DataSet getRespondentsAndSurveys(int childId, int studyId, bool newChild)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@childId", SqlDbType.Int);            
             cmd.Parameters["@ChildId"].Value = childId;
+
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            cmd.Parameters["@StudyId"].Value = studyId;
 
             cmd.Parameters.Add("@NewChild", SqlDbType.Bit);
             cmd.Parameters["@NewChild"].Value = newChild;
@@ -775,13 +778,16 @@ namespace SurveyApp
         }
         #endregion
 
-        public static DataSet getAssignedChildrenByUserId(int userId)
+        public static DataSet getAssignedChildrenByUserId(int userId, int studyId)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
             cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;
 
             cmd.CommandText = "Child_getAssignedChildrenByUserId";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
@@ -810,7 +816,24 @@ namespace SurveyApp
             cmd.CommandText = "Schedule_RemovePreviousScheduleDates";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        
+
+        #region Child_Study_Respondents        
+        public static DataSet getRespondents(int studyId, int childId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            cmd.Parameters["@ChildID"].Value = childId;
+
+            cmd.CommandText = "Child_GetRespondents";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        #endregion
+
 
     }
 }
