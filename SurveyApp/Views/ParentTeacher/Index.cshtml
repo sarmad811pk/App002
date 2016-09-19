@@ -32,6 +32,7 @@
             <th>Email</th>
             <th>Children</th>
             <th>Last Login</th>
+            <th style="width: 50px;">Consent</th>
             <th style="width: 50px;">Action</th>
         </tr>
     </thead>
@@ -49,6 +50,7 @@
                         <td>@dr["UserName"]</td>
                         <td>@dr["Children"]</td>
                         <td class="text-success">@dr["LastLoginDate"]</td>
+                        <td style="text-align: center;vertical-align:middle;"><i class="ion-eye @(dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye")"></i></td>
                         <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" style="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "display:none;" : "")" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["UserId"], 'user', '@(dr["FullName"] == DBNull.Value ? dr["UserName"].ToString() : dr["FullName"].ToString())');"><i class="ion-close"></i></a></td>
                     </tr>
                 }

@@ -7,6 +7,7 @@
     string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
     string childNamets = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
     int userId = WebSecurity.CurrentUserId;
+
     inPer = "";
 
     DataSet dschild = SurveyApp.DataHelper.GetChildbyUserID(userId);
@@ -326,10 +327,13 @@
                             <div class="col-md-12" style="font-size:14px;border-bottom:solid 2px #000000;"><i class="ion-clipboard"></i>&nbsp;Questionnaires&nbsp;(@childName)<a href="javascript:void(0);" style="text-decoration:none !important;background-color:#FFF !important;cursor:default;color: #00ADEE;font-weight: bold;">Currently Due</a><a href="javascript:void(0);" style="text-decoration:none !important;background-color:#FFF !important;cursor:default;color: #00ADEE;font-weight: bold;">Previously Due</a></div>
                             @if (roles[0] != "Teacher")
                             {
+
                                 string percentGen = getIntakeCompletion((int)drch["ID"], url.Replace("__", "16"));                                
                                 <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGen))</div>
+
                                 string percentGenCAS = getIntakeCompletion((int)drch["ID"], url.Replace("__", "43"));
                                 <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGenCAS))</div>
+
                             }
                             @if (roles[0] == "Teacher")
                             {

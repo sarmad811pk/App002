@@ -11,6 +11,7 @@ using WebMatrix.WebData;
 using SurveyApp.Filters;
 using SurveyApp.Models;
 using System.Web.UI;
+using System.Data.Entity;
 
 namespace SurveyApp.Controllers
 {
@@ -18,6 +19,10 @@ namespace SurveyApp.Controllers
     //[InitializeSimpleMembership]
     public class AccountController : Controller
     {
+        public AccountController()
+        {
+            Database.SetInitializer<UsersContext>(null);
+        }
         //
         // GET: /Account/Login
 
@@ -51,10 +56,34 @@ namespace SurveyApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginModel model, string returnUrl)
+        public ActionResult Login(LoginModel model, string returnUrl, FormCollection frm)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid)
             {
+                bool isAgreed = frm["hdnIsAgreed"] != null ? Convert.ToBoolean(frm["hdnIsAgreed"]) : false;
+                
+                if(isAgreed == false)
+                {
+                    UserProfile objUser = DataHelper.UserProfileGetUserByUserName(model.UserName);
+                    if (objUser.Agreed == false)
+                    {
+                        model.Consent = true;
+                        return View(model);
+                    }
+                }
+                
+                if(isAgreed == true)
+                {
+                    using (var uContext = new UsersContext())
+                    {
+                        UserProfile objUP = uContext.UserProfiles.Find(WebSecurity.GetUserId(model.UserName));
+                        objUP.Agreed = true;
+                        uContext.SaveChanges();
+                    }
+                }
+            }
+            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            {                
                 using (var acContext = new ActivityLogContext())
                 {
                     ActivityLog objALog = new ActivityLog();
@@ -66,6 +95,7 @@ namespace SurveyApp.Controllers
                     acContext.Activities.Add(objALog);
                     acContext.SaveChanges();
                 }
+                
                 return RedirectToLocal(returnUrl);
             }
 
@@ -494,7 +524,7 @@ namespace SurveyApp.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");                
             }
         }
 

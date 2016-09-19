@@ -192,6 +192,30 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
+        public static Models.UserProfile UserProfileGetUserByUserName(string userName)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserName", SqlDbType.NVarChar);
+            cmd.Parameters["@UserName"].Value = userName;
+
+            cmd.CommandText = "UserProfile_GetUserByName";
+
+            Models.UserProfile objUser = new Models.UserProfile();
+            DataSet dsUser = DataHelper.ExecuteCommandAsDataSet(cmd);
+
+            if(dsUser != null && dsUser.Tables.Count > 0 && dsUser.Tables[0].Rows.Count > 0)
+            {
+                objUser.FullName = dsUser.Tables[0].Rows[0]["FullName"] != DBNull.Value ? dsUser.Tables[0].Rows[0]["FullName"].ToString() : "";
+                objUser.UserId = Convert.ToInt32(dsUser.Tables[0].Rows[0]["UserId"]);
+                objUser.UserName = dsUser.Tables[0].Rows[0]["UserName"].ToString();
+                objUser.Agreed = Convert.ToBoolean(dsUser.Tables[0].Rows[0]["Agreed"]);
+            }
+
+            return objUser;
+        }
+
         public static List<SurveyApp.Models.UserProfile> Parent_GetAll()
         {
             SqlCommand cmd = new SqlCommand();
