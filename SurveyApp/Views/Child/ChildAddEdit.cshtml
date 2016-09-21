@@ -170,6 +170,18 @@
                     @Html.DropDownListFor(m => m.StatusId, new SelectList(EnrollmentStatus.EnrollmentStatus_GetAll(), "Id", "Status"), "Select Status", new { id = "ddlEnrollmentStatus", @class = "form-control" })
                 </div>
             </div>
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="school">Consent Required?:</label>
+                <div class="col-sm-9">
+                    @Html.CheckBoxFor(m => m.Consent, new { name = "chkConsent", onclick = "setConsentEmail(this);", @style = "margin-top: 9px;" })
+                </div>
+            </div>
+            <div class="form-group email" style="display:none;">
+                <label class="control-label col-sm-3" for="school">Email:</label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.Email, new { placeholder = "Email address for consent", @class = "form-control", @maxlength = "100" })
+                </div>
+            </div>
 
 
             <!-- INTERESTING STUFF STARTS HERE -->
@@ -316,6 +328,8 @@
                 return $(this).attr('title').replace(/<br\/>/g, "<br/>");
             },
         });
+
+        setConsentEmail($("#Consent"));
 
         @Html.Raw(datepick)
         $("#frmAddChild").find("input[type=text], input[type=password], select").on("change", function () { resetErrorStatus(this); });
@@ -600,10 +614,14 @@
 
             $(elem).find(".viewResp").fadeIn();
         }
-        else {
+        else {            
             $(elem).siblings("label").find("input[type=checkbox]")[0].checked = false;
+            $(elem).siblings(".teachers").find("input[type=checkbox]").each(function(index, obj){
+                $(obj)[0].checked = false;
+                $(obj).removeAttr("checked");
+            });
+            
             $(elem).siblings("label.deviation").fadeOut();
-
             $(elem).find(".viewResp").fadeOut();
         }
     }
@@ -665,6 +683,17 @@
 
             $("#divSpecify" + id).find("#ddlDays").removeClass("inerror");
             $("#divSpecify" + id).find("#ddlMonths").removeClass("inerror");
+        }
+    }
+
+    function setConsentEmail(elem){        
+        if($(elem)[0].checked == true){
+            $(".email").slideDown();
+        }
+        else{            
+            $(".email").slideUp();
+            $(elem).removeAttr("checked");
+            $("#Email").val("");
         }
     }
 </script>

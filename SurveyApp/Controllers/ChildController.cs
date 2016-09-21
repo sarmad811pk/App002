@@ -59,6 +59,14 @@ namespace SurveyApp.Controllers
                     ModelState.AddModelError("", "Please select enrollment status.");
                     return View(childModel);
                 }
+                if (childModel.Consent == true)
+                {
+                    if (String.IsNullOrEmpty(childModel.Email))
+                    {
+                        ModelState.AddModelError("", "Please provide email address for consent.");
+                        return View(childModel);
+                    }
+                }
 
                 int studyCount = 0;
                 foreach (var key in collection.Keys)
@@ -82,11 +90,11 @@ namespace SurveyApp.Controllers
                         teacherCount++;
                     }
                 }
-                if (teacherCount == 0)
-                {
-                    ModelState.AddModelError("", "Please select at least one teacher.");
-                    return View(childModel);
-                }
+                //if (teacherCount == 0)
+                //{
+                //    ModelState.AddModelError("", "Please select at least one teacher.");
+                //    return View(childModel);
+                //}
 
 
                 if(childModel.Id <= 0 && doesChildExist(childModel.Name, childModel.dob))
@@ -97,9 +105,9 @@ namespace SurveyApp.Controllers
 
                 int cId = 0;
                 DateTime? dtEnrollment = null;
+                Child objChild = new Child();
                 using (var cContext = new ChildContext())
-                {
-                    Child objChild = new Child();
+                {                    
                     if (childModel.Id > 0)
                     {
                         objChild = cContext.Children.Find(childModel.Id);
@@ -122,10 +130,14 @@ namespace SurveyApp.Controllers
                             objChild.EnrollmentDate = null;
                         }
                     }
+                    objChild.Consent = childModel.Consent;                    
+                    objChild.Email = childModel.Email;
+
                     dtEnrollment = objChild.EnrollmentDate;
 
                     if (childModel.Id <= 0)
                     {
+                        objChild.Agreed = false;
                         cContext.Children.Add(objChild);
                     }
 
@@ -150,6 +162,7 @@ namespace SurveyApp.Controllers
                     {
                         if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id]))
                         {
+                            List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
                             foreach (DataRow drTeacher in dsTeachers.Tables[0].Rows)
                             {                                
                                 if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_TeacherId_" + drTeacher["UserId"]]))
@@ -159,15 +172,44 @@ namespace SurveyApp.Controllers
                                     objCSR.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
                                     objCSR.RespondentId = Convert.ToInt32(collection["StudyId_" + objStudy.Id + "_TeacherId_" + drTeacher["UserId"]]);
 
-                                    if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
+                                    if(!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
                                     {
                                         objCSR.IncludeParent = collection["StudyId_" + objStudy.Id + "_IncludeParent"] == "1" ? true : false;
+                                        if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id])))
+                                        {
+                                            Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
+                                            objCSRParent.ChildId = cId;
+                                            objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
+                                            objCSRParent.RespondentId = objChild.ParentId;
+                                            objCSRParent.IncludeParent = true;
+                                            lstCSRs.Add(objCSRParent);
+                                        }
                                     }
 
-                                    csrConext.Child_Study_Respondents.Add(objCSR);
+                                    lstCSRs.Add(objCSR);
                                 }
                             }
-                        }
+
+
+                            if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
+                            {
+                                if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id])))
+                                {
+                                    Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
+                                    objCSRParent.ChildId = cId;
+                                    objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
+                                    objCSRParent.RespondentId = objChild.ParentId;
+                                    objCSRParent.IncludeParent = true;
+                                    lstCSRs.Add(objCSRParent);
+                                }
+                            }
+
+                            foreach (Child_Study_Respondent obj in lstCSRs)
+                            {
+                                csrConext.Child_Study_Respondents.Add(obj);
+                            }
+
+                        }                       
 
                         #region deviations
                         //save deviations
@@ -207,12 +249,19 @@ namespace SurveyApp.Controllers
                             }
                         }
                         #endregion
-
                     }
                     csrConext.SaveChanges();
                 }
 
-                
+
+                #endregion
+
+                #region Consent
+                if (objChild.Agreed == false && childModel.Id <= 0)
+                {
+                    string consentPath = Server.MapPath("~/Attachments/Child_Consent.html");
+                    sendConsentEmail(objChild, consentPath);
+                }
                 #endregion
 
                 bool sendEmail = true;
@@ -223,7 +272,7 @@ namespace SurveyApp.Controllers
                 childModel.Id = cId;
                 int studId = 0;
                 setChildSchedules(childModel, path, sendEmail, studId, isNewChild);
-                
+
                 
             }
             catch (Exception ex)
@@ -736,5 +785,42 @@ namespace SurveyApp.Controllers
             return Json(new { success = true, Respondents = lstRespos, msg = msg });
         }        
         #endregion
+
+        public static bool sendConsentEmail(Child objChild, string path)
+        {
+            string body = "";
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(path))
+            {
+                body = reader.ReadToEnd();
+            }
+            body = body.Replace("_CONSENTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString() + "Consent/Index?cid=" + HttpUtility.HtmlEncode(Encryption.Encrypt(objChild.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false)));
+            body = body.Replace("_CHILDNAME_", objChild.Name);
+
+            string studies = String.Empty;
+            using (var csrConsent = new Child_Study_RespondentContext())
+            {
+                List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
+                lstCSRs = csrConsent.Child_Study_Respondents.Where(c => c.ChildId == objChild.Id).ToList();
+                studies += "<table style='border:none;'>";
+                int serialNumber = 1;
+                using (var sContext = new StudyContext())
+                {
+                    foreach (Child_Study_Respondent objCSR in lstCSRs)
+                    {   
+                        studies += "<tr><td>" + serialNumber + " : </td><td>" + sContext.Studies.Find(objCSR.StudyId).Name + "</td></tr>";
+                        serialNumber++;
+                    }
+                }
+                studies += "</table>";
+            }
+            body = body.Replace("_STUDIES_", studies);
+
+            List<string> lstEmails = new List<string>();
+            lstEmails.Add(objChild.Email);
+
+            SMTPHelper.SendGridEmail("eBit - Consent for Study", body, lstEmails, true, null, null);
+
+            return true;
+        }
     }
 }

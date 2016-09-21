@@ -49,6 +49,7 @@
             <th>Teacher(s)</th>
             <th>Study(s)</th>
             <th>Status</th>
+            <th style="width: 50px;">Consent</th>
             <th style="width: 50px;">Action</th>
         </tr>
     </thead>
@@ -65,6 +66,9 @@
                     <td>@dr["Teacher"]</td>
                     <td>@dr["Study"]</td>
                     <td class="text-success">@getStatusDescription((int)dr["StatusId"])</td>
+                    <td style="text-align: center;vertical-align:middle;" title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Child has not given consent yet." : "Child has already given the consent") : "") : "Consent is not required for this child.")">                    
+                        <i class="ion-eye @(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye") : "")"></i>
+                    </td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"><i class="ion-close"></i></a></td>
                 </tr>
             }

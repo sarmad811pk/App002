@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
@@ -34,7 +35,17 @@ namespace SurveyApp.Models
         public int StatusId { get; set; }
 
         public DateTime? EnrollmentDate { get; set; }
-        
+
+        [DefaultValue(false)]
+        public bool Consent { get; set; }
+
+        [DefaultValue(false)]
+        public bool Agreed { get; set; }
+
+        [DefaultValue(null)]
+        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "Email is not valid")]
+        public string Email { get; set; }
+
     }
 
     public class ChildContext : DbContext

@@ -218,6 +218,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ConsentController.cs" />
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\RequestAccountController.cs" />
     <Compile Include="Models\ErrorLog.cs" />
@@ -229,6 +230,7 @@
     </Content>
     <Content Include="Attachments\Account_Add.html" />
     <Content Include="Attachments\Account_Update_UP.html" />
+    <Content Include="Attachments\Child_Consent.html" />
     <Content Include="Attachments\Child_Study_Assignment.html" />
     <Content Include="Attachments\Child_Teacher_Assignment.html" />
     <Content Include="Attachments\Reminder.html" />
@@ -482,6 +484,7 @@
     <Content Include="Views\UserQuestion\_ChildDetails.cshtml" />
     <Content Include="Views\Data\Index.cshtml" />
     <Content Include="Views\RequestAccount\RequestAccount.cshtml" />
+    <Content Include="Views\Consent\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
