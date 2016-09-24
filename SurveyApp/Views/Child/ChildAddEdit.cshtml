@@ -113,7 +113,7 @@
 
 <link href="~/Content/scroller/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <script src="~/Content/scroller/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="~/Scripts/bootbox.min.js"></script>
+
 
 <h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;Child Information Editor</h2>
 
@@ -282,8 +282,29 @@
                                 </div>
 
                                 <div class="teachers" style="max-height: 220px;display:none;">
-                                    <div class="studyTeachers">
-                                        <div><input type="text" id="txtSearch" style="margin-bottom: 10px;" class="form-control" onkeyup="searchTeachers(this);" placeholder="Search Respondents"/></div>
+                                    @{ int conCount = 0;}
+                                    @using (var conContext = new ConsentContext())
+                                    {
+                                        List<Consent> lstConsents = conContext.Consents.Where(con => con.StudyId == std.Id).ToList();
+                                        conCount = lstConsents.Count;
+                                        if (conCount > 0)
+                                        {
+                                            <div class="conditions col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-2" for="Condition">Condition:</label>
+                                                    <div class="col-sm-10">
+                                                        @foreach (Consent obj in lstConsents)
+                                                        {
+                                                            <div class="radio-inline"><label><input id="Condition_@(obj.Id)_StudyId_@std.Id" name="Condition_StudyId_@std.Id" type="radio" value="Condition_@(obj.Id)_StudyId_@std.Id">@obj.Title</label></div>
+                                                        }                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                    <div class="studyTeachers" concount="@conCount">
+                                        <div><input type="text" id="txtSearch" style="margin-bottom: 10px;" class="form-control" onkeyup="searchTeachers(this);" placeholder="Search Respondents" /></div>
                                         @{ int index = 0; }
                                         @foreach (System.Data.DataRow dr in dsTeachers.Tables[0].Rows)
                                         {
@@ -714,20 +735,39 @@
                     label: "Save Changes",
                     className: "btn-primary",
                     callback: function() {
-                        $(".bootbox-body .studyTeachers input").each(function(){                            
-                            if($(this)[0].checked == true){
-                                $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).attr("checked", "checked");
-                                if($(this).attr("id").indexOf("_IncludeParent") >= 0){
-                                    $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("1");
-                                }                                
-                            }
-                            else{
-                                $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).removeAttr("checked");
-                                if($(this).attr("id").indexOf("_IncludeParent") >= 0){
-                                    $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("0");
+                        var isValid = true;
+                        if($(".bootbox-body .studyTeachers").attr("concount") > 0){
+                            isValid = false;
+                            $(".bootbox-body .conditions input[type=radio]").each(function(){                                
+                                if($(this)[0].checked == true){
+                                    $("#studyId_" + studyId).find(".conditions").find("#" + $(this).attr("id")).attr("checked", "checked")
+                                    isValid = true;
+                                    return false;
                                 }
-                            }                            
-                        });
+                            });
+                        }
+
+                        if(isValid == true) {
+                            $(".bootbox-body .studyTeachers input").each(function(){                            
+                                if($(this)[0].checked == true){
+                                    $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).attr("checked", "checked");
+                                    if($(this).attr("id").indexOf("_IncludeParent") >= 0){
+                                        $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("1");
+                                    }                                
+                                }
+                                else{
+                                    $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).removeAttr("checked");
+                                    if($(this).attr("id").indexOf("_IncludeParent") >= 0){
+                                        $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("0");
+                                    }
+                                }                            
+                            });
+                        }
+                        else{
+                            bootbox.alert("Please select at least one condition.");
+                            return false;
+                        }
+                        
                     }
                 },
                 danger: {

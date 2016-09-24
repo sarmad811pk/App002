@@ -210,7 +210,6 @@ namespace SurveyApp
                 objUser.FullName = dsUser.Tables[0].Rows[0]["FullName"] != DBNull.Value ? dsUser.Tables[0].Rows[0]["FullName"].ToString() : "";
                 objUser.UserId = Convert.ToInt32(dsUser.Tables[0].Rows[0]["UserId"]);
                 objUser.UserName = dsUser.Tables[0].Rows[0]["UserName"].ToString();
-                objUser.Agreed = Convert.ToBoolean(dsUser.Tables[0].Rows[0]["Agreed"]);
             }
 
             return objUser;
@@ -854,6 +853,28 @@ namespace SurveyApp
             cmd.Parameters["@ChildID"].Value = childId;
 
             cmd.CommandText = "Child_GetRespondents";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        #endregion
+
+        #region Consents
+        public static DataSet Consent_GetAll()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            
+            cmd.CommandText = "Consent_GetAll";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        public static DataSet Consent_GetByUserName(string userName)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@UserName", SqlDbType.NVarChar);
+            cmd.Parameters["@UserName"].Value = userName;
+
+            cmd.CommandText = "Consent_GetByUserName";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
         #endregion

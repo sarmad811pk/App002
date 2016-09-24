@@ -189,6 +189,9 @@ namespace SurveyApp.Models
         public int StudyId { get; set; }
         public int RespondentId { get; set; }    
         public bool IncludeParent { get; set; }    
+        public int? ConsentId { get; set; }
+        [DefaultValue(false)]
+        public bool Agreed { get; set; }
     }
 
     public class Child_Study_RespondentContext : DbContext

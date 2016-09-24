@@ -7,7 +7,6 @@
     ds = SurveyApp.DataHelper.StudyGetByID(Model.Id > 0 ? Model.Id : 0);
 }
 
-<script src="~/Scripts/bootbox.min.js"></script>
 
 <h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;Study Information Editor</h2>
 
@@ -18,7 +17,6 @@
     }
     .ui-tooltip {background-color: #333;color:#FFF;}
 </style>
-<script src="~/Scripts/bootbox.min.js"></script>
 
 <br />
 @functions{
@@ -183,7 +181,7 @@
             if (isValid == false) {
                 $('.loading').hide();
                 $('.disablebackground').hide();
-                alert(errors);
+                bootbox.alert(errors);
                 return false;
             }
 

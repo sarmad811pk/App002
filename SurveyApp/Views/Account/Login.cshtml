@@ -97,7 +97,7 @@
                     @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true)
-                        <input type="hidden" id="hdnIsAgreed" name="hdnIsAgreed" value="false" />
+                        
                         <fieldset>
                             <legend>Log in Form</legend>
                             <ol>
@@ -116,7 +116,8 @@
                                     @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox", autocomplete = "off" })
                                 </li>
                             </ol>
-                            <input type="submit" value="Log in" id="btnLogin" class="btn btn-primary" />
+                            <input type="submit" value="Log in" id="btnLogin" class="btn btn-primary" style="display:none;" />
+                            <input type="button" value="Log in" id="btnSignIn" class="btn btn-primary" onclick="validateUser(this);" />
                         </fieldset>
                         <p style="margin-top: 20px;">
                             @*@Html.ActionLink("Register", "Register") if you don't have an account.*@
@@ -147,56 +148,134 @@
         </div>
     </div>
 </footer>
+    <div class="loading" style="display: none;"><div>Please Wait...</div></div>
+    <div class="disablebackground"></div>
+
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-    <script type="text/javascript">
+
+<script type="text/javascript">
         $(function () {
             $("form").submit(function () {
                 if ($("#btnLogin").hasClass("disabled") == true) {
                     return false;
                 }
                 $("#btnLogin").addClass("disabled");
-
             });
         });
-    </script>
-    @if (Model != null && Model.Consent == true)
-    {
-        <div class="disablebackground"></div>
-        <script type="text/javascript">            
-            $(".disablebackground").show();
+        function ConsentUser(){
+            this.studyId;
+            this.Title;
+            this.Consent;
+            this.isAgreed;
+        }
+        var arrConsents = new Array();
 
-            bootbox.dialog({
-                message: "Do you accept the terms and conditions of eBit?",
-                title: "eBit - Consent!",
+        function validateUser(elem) {
+            $(".disablebackground").show();
+            $(".loading").show();
+
+            var txtUserName = $("#UserName").val();
+            var txtPassword = $("#Password").val();
+
+            $.ajax({
+                url: '@Url.Action("User_GetConsents", "Condition")',
+                data: "{'userName': '" + txtUserName + "', 'password': '" + txtPassword + "' }",
+                type: 'POST',
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.success == true) {
+                        if (data.Consents != null && data.Consents.length > 0) {
+                            arrConsents = data.Consents;
+                            for (var i = 0; i < arrConsents.length; i++) {
+                                $(".loading").hide();
+                                $(".disablebackground").hide();
+                                showConditions(arrConsents[i].Title, arrConsents[i].Consent, i);
+                            }
+                        }
+                        else {
+                            $("#btnLogin").click();
+                        }
+                    }
+                    else {
+                        $(".loading").hide();
+                        $(".disablebackground").hide();
+                        alert(data.msg);
+                    }
+                },
+
+                //Options to tell JQuery not to process data or worry about content-type
+                cache: false,
+                processData: false
+            });
+        }
+
+        function showConditions(title, html, index) {
+            bootbox.dialog({                
+                message : html,
+                title: title,
                 closeButton: false,
                 onEscape: function () {
-                    $("#hdnIsAgreed").val(false);
-                    $("#btnLogin").click();
+
                 },
                 buttons: {
                     success: {
                         label: "Yes",
                         className: "btn-primary",
-                        callback: function() {
-                            $("#hdnIsAgreed").val(true);
-                            $("#btnLogin").click();
+                        callback: function () {
+                            arrConsents[index].isAgreed = true;
+                            var isSuccess = true;
+                            for (var i = 0; i < arrConsents.length; i++) {
+                                if (arrConsents[i].isAgreed == false) {
+                                    isSuccess = false;
+                                }
+                            }
+                            if (isSuccess == true) {
+                                $(".disablebackground").show();
+                                $(".loading").show();
+                                updateConsents();
+                            }
                         }
                     },
                     danger: {
                         label: "No",
                         className: "btn-default",
-                        callback: function() {
-                            $("#hdnIsAgreed").val(false);
-                            $("#btnLogin").click();
+                        callback: function () {
+                            
                         }
                     }
                 }
             });
-        </script>
-    }
+        }
+
+        function updateConsents() {
+            var txtUserName = $("#UserName").val();
+            var txtPassword = $("#Password").val();
+
+            $.ajax({
+                url: '@Url.Action("User_UpdateConsents", "Condition")',
+                data: "{'userName': '" + txtUserName + "', 'password': '" + txtPassword + "' }",
+                type: 'POST',
+                async: true,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.success == true && data.msg == "") {
+                        $("#btnLogin").click();
+                    }
+                    else {
+                        alert(data.msg);
+                    }
+                },
+
+                cache: false,
+                processData: false
+            });
+        }
+    </script>
 </body>
 
 </html>

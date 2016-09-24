@@ -1,0 +1,341 @@
+﻿@using SurveyApp.Models;
+@{
+    ViewBag.Title = "eBit - Consent Information Editor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    int studyId = Model;
+    string studyName = "";
+    using (StudyContext sContext = new StudyContext())
+    {
+        Study objStd = sContext.Studies.Where(s => s.Id == studyId).FirstOrDefault();
+        studyName = objStd.Name;
+    }
+
+    List<Consent> lstConsents = new List<Consent>();
+    using (var cContext = new ConsentContext())
+    {
+        lstConsents = cContext.Consents.Where(c => c.StudyId == studyId).ToList();
+    }
+}
+
+
+
+<link href="~/Content/awsm/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Content/summernote/summernote.css" rel="stylesheet" />
+<script src="~/Content/summernote/summernote.min.js"></script>
+
+<style type="text/css">
+    h2{
+        text-transform: capitalize;
+    }
+    .condition {
+        margin: 10px auto 0px auto;
+        min-height: 347px;
+        border-bottom: solid 1px #CCC;
+    }
+
+        .condition a {
+            display: inline-block;
+            margin-top: 7px;
+        }
+        .condition .saved{
+            display:none;
+        }
+
+    i.ion-plus {
+        font-size: 18px;
+        color: #0000ee;
+    }
+
+    .tabs ul {
+        margin: 0px;
+        list-style: none;
+        padding: 0px;
+    }
+
+    .tabs li {
+        float: left;
+    }
+
+        .tabs li a {
+            text-align: center;
+            margin-right: 2px;
+            border: 1px solid transparent;
+            padding: 10px 15px;
+            display: block;
+            position: relative;
+            text-shadow: none;
+            text-decoration: none;
+            color: #333;
+            min-width: 141px;
+        }
+
+            .tabs li a:hover {
+                border-color: #FEFEFE;
+                cursor: pointer;
+            }
+
+            .tabs li a.selected {
+                color: #4d6b8a;
+                background-color: #f9f9f9;
+                border: 1px solid #B1B1B1;
+                border-bottom-color: transparent;
+                cursor: default;
+            }
+    .ui-tooltip {max-width: 400px;background-color: #333;color:#FFF;}
+</style>
+
+<div class="col-sm-12">
+
+    <div>
+        <h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;Consent Information Editor - @studyName</h2>
+    </div>
+    <div class="studies">
+        <div class="study">
+            <div id="divConditions" class="conditions">
+                @if (lstConsents.Count > 0)
+                {
+                    foreach (Consent obj in lstConsents)
+                    {
+                        <div class="condition col-sm-12" id="@obj.Id">
+                            <div class="col-sm-11">
+                                <input type="text" class="form-control title" maxlength="200" placeholder="Consent Title" value="@obj.Title" />
+                            </div>
+                            <div class="col-sm-1">
+                                <a href="javascript:void(0);" class="redCross" data-toggle="tooltip" title="Remove this consent" onclick="removeCondition(this);"><i class="ion-close"></i></a>
+                                <a href="javascript:void(0);" class="blue" data-toggle="tooltip" title="Add another consent" onclick="addCondition(this);"><i class="ion-plus"></i></a>
+                            </div>
+                            <div class="col-sm-12 types">
+                                <div class="tabs">
+                                    <ul>
+                                        <li><a class="selected" href="javascript:void(0);" onclick="setConsentForm(this, 1);" data-toggle="tooltip" title="Consent text for parents">Parent</a></li>
+                                        <li><a href="javascript:void(0);" onclick="setConsentForm(this, 2);" data-toggle="tooltip" title="Consent text for teachers">Teacher</a></li>
+                                        <li><a href="javascript:void(0);" onclick="setConsentForm(this, 3);" data-toggle="tooltip" title="Consent text for children">Child</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="con-sm-12 consents">
+                                <div class="col-sm-12">
+                                    <div class="parent respotype"><div class="consent"></div><div class="saved">@Html.Raw(obj.ParentConsent)</div></div>
+                                    <div class="teacher respotype" style="display:none;"><div class="consent"></div><div class="saved">@Html.Raw(obj.TeacherConsent)</div></div>
+                                    <div class="child respotype" style="display:none;"><div class="consent"></div><div class="saved">@Html.Raw(obj.ChildConsent)</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="condition col-sm-12">
+                        <div class="col-sm-11">
+                            <input type="text" class="form-control title" maxlength="200" placeholder="Consent Title" />
+                        </div>
+                        <div class="col-sm-1">
+                            <a href="javascript:void(0);" class="redCross" data-toggle="tooltip" title="Remove this consent" onclick="removeCondition(this);"><i class="ion-close"></i></a>
+                            <a href="javascript:void(0);" class="blue" data-toggle="tooltip" title="Add another consent" onclick="addCondition(this);"><i class="ion-plus"></i></a>
+                        </div>
+                        <div class="col-sm-12 types">
+                            <div class="tabs">
+                                <ul>
+                                    <li><a class="selected" href="javascript:void(0);" onclick="setConsentForm(this, 1);" data-toggle="tooltip" title="Consent text for parents">Parent</a></li>
+                                    <li><a href="javascript:void(0);" onclick="setConsentForm(this, 2);" data-toggle="tooltip" title="Consent text for teachers">Teacher</a></li>
+                                    <li><a href="javascript:void(0);" onclick="setConsentForm(this, 3);" data-toggle="tooltip" title="Consent text for children">Child</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="con-sm-12 consents">
+                            <div class="col-sm-12">
+                                <div class="parent respotype"><div class="consent"></div></div>
+                                <div class="teacher respotype" style="display:none;"><div class="consent"></div></div>
+                                <div class="child respotype" style="display:none;"><div class="consent"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="temp" style="display:none;">
+        <div class="condition col-sm-12">
+            <div class="col-sm-11">
+                <input type="text" class="form-control title" maxlength="200" placeholder="Consent Title" />
+            </div>
+            <div class="col-sm-1">
+                <a href="javascript:void(0);" class="redCross" data-toggle="tooltip" title="Remove this consent" onclick="removeCondition(this);"><i class="ion-close"></i></a>
+                <a href="javascript:void(0);" class="blue" data-toggle="tooltip" title="Add another consent" onclick="addCondition(this);"><i class="ion-plus"></i></a>
+            </div>
+            <div class="col-sm-12 types">
+                <div class="tabs">
+                    <ul>
+                        <li><a class="selected" href="javascript:void(0);" onclick="setConsentForm(this, 1);" data-toggle="tooltip" title="Consent text for parents">Parent</a></li>
+                        <li><a href="javascript:void(0);" onclick="setConsentForm(this, 2);" data-toggle="tooltip" title="Consent text for teachers">Teacher</a></li>
+                        <li><a href="javascript:void(0);" onclick="setConsentForm(this, 3);" data-toggle="tooltip" title="Consent text for children">Child</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="con-sm-12 consents">
+                <div class="col-sm-12">
+                    <div class="parent respotype"><div class="consent"></div></div>
+                    <div class="teacher respotype" style="display:none;"><div class="consent"></div></div>
+                    <div class="child respotype" style="display:none;"><div class="consent"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="clear:both;"></div>
+<div class="col-sm-9" style="margin-top:20px;">
+    <button type="button" id="btnSaveConsent" class="btn btn-default" onclick="saveConsent();">Save Information</button>
+    <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index", "Condition")';">Cancel</button>
+</div>
+
+<script type="text/javascript">
+    function Consent() {
+        this.Id = 0;
+        this.StudyId = @studyId;
+        this.Title = "";
+        this.ParentConsent = "";
+        this.TeacherConsent = "";
+        this.ChildConsent = "";
+    }
+
+    $(function () {
+        var consents = @lstConsents.Count;
+        if(consents > 0){
+            $(".studies .consent").each(function(index, obj){
+                var html = $(obj).siblings(".saved").html();
+                $(obj).summernote({ height: 200 });
+                $(obj).summernote("code", html);
+            });
+
+        }
+        else{
+            $(".studies .consent").summernote({ height: 200 });
+        }
+
+        setTooltips();
+    });
+    function setTooltips() {
+        $('[data-toggle="tooltip"]').tooltip({
+            content: function () {
+                return $(this).attr('title').replace(/<br\/>/g, "<br/>");
+            },
+        });
+    }
+    function addCondition(elem) {
+        //$(elem).closest(".conditions").append($(".temp").html());
+        $(".temp").find(".condition").clone().insertAfter($(elem).closest(".condition"));
+
+        generateConsentArea();
+    }
+    function removeCondition(elem) {
+        $(elem).closest(".condition").remove();
+    }
+    function setConsentForm(elem, type) {
+        $(elem).closest(".tabs").find("a").removeClass("selected");
+        $(elem).addClass("selected");
+
+        var consents = $(elem).closest(".types").siblings(".consents");
+        consents.find(".respotype").hide();
+        consents.find((type == 1 ? ".parent" : (type == 2 ? ".teacher" : (type == 3 ? ".child" : "")))).show();
+    }
+
+    function generateConsentArea() {
+        $(".consent").summernote({
+            height: 200
+        });
+        setTooltips();
+    }
+</script>
+
+<script type="text/javascript">
+    function saveConsent(){
+        $('.disablebackground').show();
+        var isValid = true;
+
+        var arrConsents = new Array();
+        $(".studies .conditions .condition").each(function(index, obj){
+            $(obj).find(".title").removeClass("inerror");
+            var title = $(obj).find(".title").val();
+            if(title == ""){
+                $(obj).find(".title").addClass("inerror");
+                isValid = false;
+            }
+
+            var id = $(obj).attr("id");
+            var txtParent = $(obj).find(".consents .parent").find(".consent").summernote('code');
+            var txtTeacher = $(obj).find(".consents .teacher").find(".consent").summernote('code');
+            var txtChild = $(obj).find(".consents .child").find(".consent").summernote('code');
+
+            var objConsent = new Consent();
+            objConsent.Id = id == "" ? 0 : id;
+            objConsent.Title = title;
+            objConsent.StudyId = @studyId;
+            objConsent.ParentConsent = escape(txtParent);
+            objConsent.TeacherConsent = escape(txtTeacher);
+            objConsent.ChildConsent = escape(txtChild);
+
+            arrConsents.push(objConsent);
+        });
+
+        if(isValid == false){            
+            bootbox.alert("Please provide the required information");
+            $('.disablebackground').hide();
+            return false;
+        }
+
+
+        $.ajax({
+            url: '@Url.Action("ConsentAddUpdate", "Condition")',
+            data: "{'consents': '" + JSON.stringify(arrConsents) + "', 'studyId': '" + @studyId + "' }",
+            type: 'POST',
+            async: true,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.success == true) {
+                    location.href = "@Url.Action("Index", "Condition")";
+                }
+                else {
+                    bootbox.alert(data.msg);
+                }
+            },
+
+            //Options to tell JQuery not to process data or worry about content-type
+            cache: false,
+            processData: false
+        });
+    }
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $(".btnBack").click(function(){
+            bootbox.dialog({
+                message: "Would you like to save the changes?",
+                title: "Save Changes!",
+                closeButton: false,
+                onEscape: function() {
+                    location.href = "@Url.Action("Index", "Condition")";
+                },
+                buttons: {
+                    success: {
+                        label: "Yes",
+                        className: "btn-primary",
+                        callback: function() {
+                            saveConsent();
+                        }
+                    },
+                    danger: {
+                        label: "No",
+                        className: "btn-default",
+                        callback: function() {
+                            location.href = "@Url.Action("Index", "Condition")";
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>

@@ -184,6 +184,23 @@ namespace SurveyApp.Controllers
                             isSuccessful = false;
                         }
                     }
+                    else if(type == "consent")
+                    {
+                        try
+                        {
+                            using (var cContext = new ConsentContext())
+                            {
+                                cContext.Consents.RemoveRange(cContext.Consents.Where(c => c.StudyId == idToBeDeleted));
+                                cContext.SaveChanges();
+                                cContext.Dispose();
+                            }
+                            isSuccessful = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            isSuccessful = false;
+                        }
+                    }
                 }
 
                 catch (Exception ex)

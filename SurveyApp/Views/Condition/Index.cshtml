@@ -1,0 +1,52 @@
+﻿@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "eBit - Consent Manager";
+    DataSet ds = SurveyApp.DataHelper.Consent_GetAll();
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#tblConsents").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Shools_List', exportOptions: { modifier: { search: 'none', order: 'original' } } }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Studies" } });
+    });
+</script>
+<div>
+    <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Consent Manager</h2>    
+</div>
+<div style="clear:both;"></div>
+<br />
+<style>
+    .table-hover tbody tr {
+        cursor: pointer;
+    }
+    .name{
+        text-transform:capitalize;
+    }
+</style>
+<table class="table table-striped table-hover" id="tblConsents">
+    <thead>
+        <tr>
+            <th>Stduy</th>
+            <th>Status</th>
+            <th>Consent(s)</th>            
+            <th style="width: 50px;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow dr in ds.Tables[0].Rows)
+        {
+            <tr onclick="location.href = '@Url.Action("ConditionAddEdit", "Condition", new { sid = dr["Id"] })';">
+                <td class="name">@dr["Name"]</td>
+                <td class="@(Convert.ToInt32(dr["Status"]) == 2 ? "text-danger" : "text-success")">@(Convert.ToInt32(dr["Status"]) == 1 ? "Active" : (Convert.ToInt32(dr["Status"]) == 2 ? "InActive" : (Convert.ToInt32(dr["Status"]) == 3 ? "Incomplete" : "-")))</td>
+                <td class="name">@dr["Consent"]</td>
+                <td style="text-align: center;vertical-align:middle;">
+                    @if (String.IsNullOrEmpty(dr["Consent"].ToString()) == false)
+                    {
+                        <a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'consent', '@dr["Consent"]', function(){ location.href = location.href; });" title="Remove Consent(s)"><i class="ion-close"></i></a>
+                    }                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

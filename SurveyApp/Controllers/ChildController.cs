@@ -144,7 +144,7 @@ namespace SurveyApp.Controllers
                     cContext.SaveChanges();
                     cId = childModel.Id > 0 ? childModel.Id : cContext.Children.Max(item => item.Id);
                     childModel.EnrollmentDate = dtEnrollment;
-                }
+                }                
 
                 #region Child_Study_Respondents
                 List<Study> lstStidues = Study.StudyGetAll();
@@ -156,12 +156,30 @@ namespace SurveyApp.Controllers
                     csrConext.Dispose();
                 }
 
-                using(var csrConext = new Child_Study_RespondentContext())
+                List<Consent> lstConsents = new List<Consent>();                
+                using (var csrConext = new Child_Study_RespondentContext())
                 {
                     foreach (Study objStudy in lstStidues)
                     {
+                        int conId = 0;
                         if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id]))
                         {
+                            using (var conContext = new ConsentContext())
+                            {
+                                lstConsents = conContext.Consents.Where(con => con.StudyId == objStudy.Id).ToList();
+                                if (lstConsents.Count > 0)
+                                {
+                                    string consentId = collection["Condition_StudyId_" + objStudy.Id].ToString();
+                                    foreach (Consent obj in lstConsents)
+                                    {
+                                        if ("Condition_" + obj.Id + "_StudyId_" + objStudy.Id == consentId)
+                                        {
+                                            conId = obj.Id;
+                                        }
+                                    }
+                                }
+                            }
+
                             List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
                             foreach (DataRow drTeacher in dsTeachers.Tables[0].Rows)
                             {                                
@@ -171,17 +189,20 @@ namespace SurveyApp.Controllers
                                     objCSR.ChildId = cId;
                                     objCSR.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
                                     objCSR.RespondentId = Convert.ToInt32(collection["StudyId_" + objStudy.Id + "_TeacherId_" + drTeacher["UserId"]]);
+                                    objCSR.ConsentId = conId;
 
-                                    if(!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
+                                    if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
                                     {
                                         objCSR.IncludeParent = collection["StudyId_" + objStudy.Id + "_IncludeParent"] == "1" ? true : false;
-                                        if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id])))
+                                        if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
                                         {
                                             Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
                                             objCSRParent.ChildId = cId;
                                             objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
                                             objCSRParent.RespondentId = objChild.ParentId;
                                             objCSRParent.IncludeParent = true;
+                                            objCSRParent.ConsentId = conId;                                            
+
                                             lstCSRs.Add(objCSRParent);
                                         }
                                     }
@@ -193,13 +214,14 @@ namespace SurveyApp.Controllers
 
                             if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
                             {
-                                if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id])))
+                                if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
                                 {
                                     Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
                                     objCSRParent.ChildId = cId;
                                     objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
                                     objCSRParent.RespondentId = objChild.ParentId;
                                     objCSRParent.IncludeParent = true;
+                                    objCSRParent.ConsentId = conId;
                                     lstCSRs.Add(objCSRParent);
                                 }
                             }

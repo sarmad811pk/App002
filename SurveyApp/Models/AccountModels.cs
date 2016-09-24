@@ -32,10 +32,7 @@ namespace SurveyApp.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
-        public string FullName { get; set; }
-
-        [DefaultValue(false)]
-        public bool Agreed { get; set; }
+        public string FullName { get; set; }        
     }
 
     public class RegisterExternalLoginModel
@@ -78,10 +75,7 @@ namespace SurveyApp.Models
         public string Password { get; set; }
 
         [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
-                
-        [DefaultValue(false)]
-        public bool Consent { get; set; }
+        public bool RememberMe { get; set; }                
     }
 
     public class RegisterModel

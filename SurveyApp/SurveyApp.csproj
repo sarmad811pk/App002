@@ -218,9 +218,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ConditionController.cs" />
     <Compile Include="Controllers\ConsentController.cs" />
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\RequestAccountController.cs" />
+    <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\ErrorLog.cs" />
     <Compile Include="Models\LifeEvent.cs" />
     <Compile Include="SMTPHelper.cs" />
@@ -293,6 +295,8 @@
     <Content Include="Content\scroller\jquery.mCustomScrollbar.concat.min.js" />
     <Content Include="Content\scroller\jquery.mCustomScrollbar.min.css" />
     <Content Include="Content\scroller\mCSB_buttons.png" />
+    <Content Include="Content\summernote\summernote.css" />
+    <Content Include="Content\summernote\summernote.min.js" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -485,8 +489,12 @@
     <Content Include="Views\Data\Index.cshtml" />
     <Content Include="Views\RequestAccount\RequestAccount.cshtml" />
     <Content Include="Views\Consent\Index.cshtml" />
+    <Content Include="Views\Condition\Index.cshtml" />
+    <Content Include="Views\Condition\ConditionAddEdit.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\summernote\font\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>

@@ -475,10 +475,10 @@
             async: true,
             success: function (data) {
                 if (data.success == true) {
-                    alert("An email about the questionnaire completion has been sent to the selected respondent(s).");
+                    bootbox.alert("An email about the questionnaire completion has been sent to the selected respondent(s).");
                 }
                 else {
-                    alert("We are unable to send email at this time, please try again later.");
+                    bootbox.alert("We are unable to send email at this time, please try again later.");
                 }
             },
             error: function (errss) {

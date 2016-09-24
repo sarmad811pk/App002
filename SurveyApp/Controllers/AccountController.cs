@@ -60,30 +60,19 @@ namespace SurveyApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool isAgreed = frm["hdnIsAgreed"] != null ? Convert.ToBoolean(frm["hdnIsAgreed"]) : false;
-                
-                if(isAgreed == false)
+                using (var csrContext = new Child_Study_RespondentContext())
                 {
-                    UserProfile objUser = DataHelper.UserProfileGetUserByUserName(model.UserName);
-                    if (objUser.Agreed == false)
+                    UserProfile objUP = DataHelper.UserProfileGetUserByUserName(model.UserName);
+                    List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId && csr.Agreed == false).ToList();
+                    if(lstCSRs.Count > 0)
                     {
-                        model.Consent = true;
+                        ModelState.AddModelError("", "You have not given consent for all the studies.");
                         return View(model);
-                    }
-                }
-                
-                if(isAgreed == true)
-                {
-                    using (var uContext = new UsersContext())
-                    {
-                        UserProfile objUP = uContext.UserProfiles.Find(WebSecurity.GetUserId(model.UserName));
-                        objUP.Agreed = true;
-                        uContext.SaveChanges();
                     }
                 }
             }
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
-            {                
+            {   
                 using (var acContext = new ActivityLogContext())
                 {
                     ActivityLog objALog = new ActivityLog();
