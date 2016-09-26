@@ -38,8 +38,8 @@ namespace SurveyApp.Controllers
                 List<Consent> lstConsitions = JsonConvert.DeserializeObject<List<Consent>>(consents);
                 using (var cContext = new ConsentContext())
                 {
-                    cContext.Consents.RemoveRange(cContext.Consents.Where(c => c.StudyId == studyId));
-                    cContext.SaveChanges();
+                    //cContext.Consents.RemoveRange(cContext.Consents.Where(c => c.StudyId == studyId));
+                    //cContext.SaveChanges();
 
                     foreach (Consent objConsent in lstConsitions)
                     {

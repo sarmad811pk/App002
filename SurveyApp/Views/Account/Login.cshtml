@@ -167,9 +167,12 @@
 <script type="text/javascript">
         $(function () {
             $("form").submit(function () {
-                $("#btnSignIn").click();                
-                $(".disablebackground").focus();
-                return false;
+                if ($("#btnSignIn").hasClass("submitted") == false) {
+                    $("#btnSignIn").click();
+                    $(".disablebackground").focus();
+                    return false;
+                } 
+                
                 //if ($("#btnLogin").hasClass("disabled") == true) {
                 //    return false;
                 //}
@@ -187,7 +190,7 @@
         function validateUser(elem) {
             $(".disablebackground").show();
             $(".loading").show();
-
+            $("#btnSignIn").addClass("submitted");
             var txtUserName = $("#UserName").val();
             var txtPassword = $("#Password").val();
 
@@ -214,6 +217,7 @@
                     else {
                         $(".loading").hide();
                         $(".disablebackground").hide();
+                        $("#btnSignIn").removeClass("submitted");
                         alert(data.msg);
                     }
                 },
