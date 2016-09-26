@@ -376,6 +376,9 @@
     <Content Include="bootstrap\fonts\fontawesome-webfont.woff" />
     <Content Include="bootstrap\fonts\fontawesome-webfont.woff2" />
     <Content Include="bootstrap\fonts\FontAwesome.otf" />
+    <Content Include="Content\summernote\font\summernote.eot" />
+    <Content Include="Content\summernote\font\summernote.ttf" />
+    <Content Include="Content\summernote\font\summernote.woff" />
     <None Include="Properties\PublishProfiles\ucsfebit - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ucsfebit - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
@@ -492,9 +495,7 @@
     <Content Include="Views\Condition\Index.cshtml" />
     <Content Include="Views\Condition\ConditionAddEdit.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\summernote\font\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
