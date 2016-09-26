@@ -96,13 +96,15 @@ namespace SurveyApp.Controllers
                             {
                                 using (var conContext = new ConsentContext())
                                 {
+                                    List<int> lstStudies = new List<int>();
                                     foreach (Child_Study_Respondent obj in lstCSRs)
                                     {
                                         Consent objCon = conContext.Consents.Where(con => con.StudyId == obj.StudyId).FirstOrDefault();
-                                        if (objCon != null)
+                                        if (objCon != null && lstStudies.Contains(obj.StudyId) == false)
                                         {
                                             UserConsent objUC = new UserConsent { studyId = obj.StudyId, Consent = (role == "Parent" ? objCon.ParentConsent : (role == "Teacher" ? objCon.TeacherConsent : objCon.ChildConsent)), Title = objCon.Title, isAgreed = false };
                                             lstUserConsents.Add(objUC);
+                                            lstStudies.Add(obj.StudyId);
                                         }
                                     }
                                 }

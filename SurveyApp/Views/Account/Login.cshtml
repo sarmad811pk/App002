@@ -44,6 +44,13 @@
             background-color: #D0D0D0;
             border-color: #AAA;
         }
+        .bootbox .modal-dialog{
+            width: 800px;
+        }
+        .bootbox-body{
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -160,10 +167,13 @@
 <script type="text/javascript">
         $(function () {
             $("form").submit(function () {
-                if ($("#btnLogin").hasClass("disabled") == true) {
-                    return false;
-                }
-                $("#btnLogin").addClass("disabled");
+                $("#btnSignIn").click();                
+                $(".disablebackground").focus();
+                return false;
+                //if ($("#btnLogin").hasClass("disabled") == true) {
+                //    return false;
+                //}
+                //$("#btnLogin").addClass("disabled");
             });
         });
         function ConsentUser(){
