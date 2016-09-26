@@ -819,21 +819,39 @@ namespace SurveyApp.Controllers
             body = body.Replace("_CHILDNAME_", objChild.Name);
 
             string studies = String.Empty;
+            List<int> lstStudies = new List<int>();
             using (var csrConsent = new Child_Study_RespondentContext())
             {
                 List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
                 lstCSRs = csrConsent.Child_Study_Respondents.Where(c => c.ChildId == objChild.Id).ToList();
-                studies += "<table style='border:none;'>";
-                int serialNumber = 1;
-                using (var sContext = new StudyContext())
+                
+                if(lstCSRs.Count > 0)
                 {
-                    foreach (Child_Study_Respondent objCSR in lstCSRs)
-                    {   
-                        studies += "<tr><td>" + serialNumber + " : </td><td>" + sContext.Studies.Find(objCSR.StudyId).Name + "</td></tr>";
-                        serialNumber++;
+                    studies += "<br/>Following studies have been assigned to you.<br/><table style='border:none;'>";
+                    int serialNumber = 1;
+                    using (var sContext = new StudyContext())
+                    {
+                        foreach (Child_Study_Respondent objCSR in lstCSRs)
+                        {
+                            if(lstStudies.Contains(objCSR.StudyId) == false)
+                            {
+                                string studyName = sContext.Studies.Find(objCSR.StudyId).Name;
+                                string consent = "";
+                                studies += "<tr><td>" + serialNumber + " : </td><td>" + studyName + "</td></tr>";
+
+                                using (var conContext = new ConsentContext())
+                                {
+                                    Consent objConsent = conContext.Consents.Find(objCSR.ConsentId);
+                                    consent = objConsent.ChildConsent;
+                                    studies += "<tr><td></td><td>" + consent + "</td></tr>";
+                                }
+                                serialNumber++;
+                                lstStudies.Add(objCSR.StudyId);
+                            }                            
+                        }
                     }
+                    studies += "</table>";
                 }
-                studies += "</table>";
             }
             body = body.Replace("_STUDIES_", studies);
 

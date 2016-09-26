@@ -109,6 +109,26 @@
         return "";
     }
 
+    public string getConditionStatus(int studyId, int consentId)
+    {
+        if(Model != null && Model.Id > 0)
+        {
+            using (var csrContext = new Child_Study_RespondentContext())
+            {
+                Child_Study_Respondent obj = csrContext.Child_Study_Respondents.Where(csr => csr.StudyId == studyId && csr.ChildId == Model.Id).FirstOrDefault();
+                if (obj != null)
+                {
+                    if (consentId == obj.ConsentId)
+                    {
+                        return "checked='checked'";
+                    }
+                }
+            }
+        }
+
+        return "";
+    }
+
 }
 
 <link href="~/Content/scroller/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
@@ -295,7 +315,7 @@
                                                     <div class="col-sm-10">
                                                         @foreach (Consent obj in lstConsents)
                                                         {
-                                                            <div class="radio-inline"><label><input id="Condition_@(obj.Id)_StudyId_@std.Id" name="Condition_StudyId_@std.Id" type="radio" value="Condition_@(obj.Id)_StudyId_@std.Id">@obj.Title</label></div>
+                                                            <div class="radio-inline"><label><input id="Condition_@(obj.Id)_StudyId_@std.Id" @getConditionStatus(std.Id, obj.Id) name="Condition_StudyId_@std.Id" type="radio" value="Condition_@(obj.Id)_StudyId_@std.Id">@obj.Title</label></div>
                                                         }                                                        
                                                     </div>
                                                 </div>
@@ -734,7 +754,7 @@
                 success: {
                     label: "Save Changes",
                     className: "btn-primary",
-                    callback: function() {
+                    callback: function() {                        
                         var isValid = true;
                         if($(".bootbox-body .studyTeachers").attr("concount") > 0){
                             isValid = false;
@@ -748,19 +768,22 @@
                         }
 
                         if(isValid == true) {
-                            $(".bootbox-body .studyTeachers input").each(function(){                            
+                            $(".bootbox-body .studyTeachers input").each(function(){
                                 if($(this)[0].checked == true){
                                     $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).attr("checked", "checked");
+                                    if($("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0] != null && $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0] != undefined){
+                                        $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0].checked = true;
+                                    }                                    
                                     if($(this).attr("id").indexOf("_IncludeParent") >= 0){
                                         $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("1");
-                                    }                                
+                                    }
                                 }
                                 else{
                                     $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).removeAttr("checked");
                                     if($(this).attr("id").indexOf("_IncludeParent") >= 0){
                                         $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("0");
                                     }
-                                }                            
+                                }
                             });
                         }
                         else{

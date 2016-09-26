@@ -60,16 +60,21 @@ namespace SurveyApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var csrContext = new Child_Study_RespondentContext())
+                UserProfile objUP = DataHelper.UserProfileGetUserByUserName(model.UserName);
+                string role = Roles.GetRolesForUser(model.UserName)[0];
+                if(role != "Admin")
                 {
-                    UserProfile objUP = DataHelper.UserProfileGetUserByUserName(model.UserName);
-                    List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId && csr.Agreed == false).ToList();
-                    if(lstCSRs.Count > 0)
-                    {
-                        ModelState.AddModelError("", "You have not given consent for all the studies.");
-                        return View(model);
+                    using (var csrContext = new Child_Study_RespondentContext())
+                    {                        
+                        List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId && csr.Agreed == false).ToList();
+                        if (lstCSRs.Count > 0)
+                        {
+                            ModelState.AddModelError("", "You have not given consent for all the studies.");
+                            return View(model);
+                        }
                     }
                 }
+                
             }
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
             {   

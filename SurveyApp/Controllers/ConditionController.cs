@@ -87,21 +87,23 @@ namespace SurveyApp.Controllers
                 {
                     UserProfile objUP = DataHelper.UserProfileGetUserByUserName(userName);
                     string role = Roles.GetRolesForUser(userName)[0];
-
-                    using (var csrContext = new Child_Study_RespondentContext())
+                    if(role != "Admin")
                     {
-                        List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId && csr.Agreed == false && csr.ConsentId > 0).ToList();
-                        if (lstCSRs.Count > 0)
+                        using (var csrContext = new Child_Study_RespondentContext())
                         {
-                            using (var conContext = new ConsentContext())
+                            List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId && csr.Agreed == false && csr.ConsentId > 0).ToList();
+                            if (lstCSRs.Count > 0)
                             {
-                                foreach (Child_Study_Respondent obj in lstCSRs)
+                                using (var conContext = new ConsentContext())
                                 {
-                                    Consent objCon = conContext.Consents.Where(con => con.StudyId == obj.StudyId).FirstOrDefault();
-                                    if(objCon != null)
+                                    foreach (Child_Study_Respondent obj in lstCSRs)
                                     {
-                                        UserConsent objUC = new UserConsent { studyId = obj.StudyId, Consent = (role == "Parent" ? objCon.ParentConsent : (role == "Teacher" ? objCon.TeacherConsent : objCon.ChildConsent)), Title = objCon.Title, isAgreed = false };
-                                        lstUserConsents.Add(objUC);
+                                        Consent objCon = conContext.Consents.Where(con => con.StudyId == obj.StudyId).FirstOrDefault();
+                                        if (objCon != null)
+                                        {
+                                            UserConsent objUC = new UserConsent { studyId = obj.StudyId, Consent = (role == "Parent" ? objCon.ParentConsent : (role == "Teacher" ? objCon.TeacherConsent : objCon.ChildConsent)), Title = objCon.Title, isAgreed = false };
+                                            lstUserConsents.Add(objUC);
+                                        }
                                     }
                                 }
                             }
