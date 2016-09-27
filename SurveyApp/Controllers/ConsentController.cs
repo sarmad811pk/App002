@@ -15,8 +15,11 @@ namespace SurveyApp.Controllers
         public ActionResult Index(string cid, int? sts = 0)
         {
             ViewBag.Cid = cid;
-            cid = HttpUtility.HtmlDecode(Encryption.Decrypt(cid, System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false));
-            
+            cid = Encryption.Decrypt(cid, System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false);
+            if (String.IsNullOrEmpty(cid))
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if(sts == 0)
             {
                 using (var cContext = new SurveyApp.Models.ChildContext())
@@ -43,6 +46,7 @@ namespace SurveyApp.Controllers
                     int childId = Convert.ToInt32(HttpUtility.HtmlDecode(Encryption.Decrypt(cid, System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false)));
                     Child objChild = cConext.Children.Find(childId);
                     objChild.Agreed = true;
+                    objChild.AgreeDate = DateTime.Now;
                     cConext.SaveChanges();
                 }
                 status = 1;

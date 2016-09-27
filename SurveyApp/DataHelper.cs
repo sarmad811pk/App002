@@ -877,6 +877,18 @@ namespace SurveyApp
             cmd.CommandText = "Consent_GetByUserName";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet Consent_GetChildConsents(int childId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            cmd.Parameters["@ChildID"].Value = childId;
+
+            cmd.CommandText = "Consent_GetChildConsents";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        
         #endregion
 
 

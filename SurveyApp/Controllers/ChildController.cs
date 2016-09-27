@@ -815,7 +815,7 @@ namespace SurveyApp.Controllers
             {
                 body = reader.ReadToEnd();
             }
-            body = body.Replace("_CONSENTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString() + "Consent/Index?cid=" + HttpUtility.HtmlEncode(Encryption.Encrypt(objChild.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false)));
+            body = body.Replace("_CONSENTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString() + "Consent/Index?cid=" + HttpUtility.UrlEncode(Encryption.Encrypt(objChild.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false)) + "&sts=0");
             body = body.Replace("_CHILDNAME_", objChild.Name);
 
             string studies = String.Empty;
@@ -836,15 +836,8 @@ namespace SurveyApp.Controllers
                             if(lstStudies.Contains(objCSR.StudyId) == false)
                             {
                                 string studyName = sContext.Studies.Find(objCSR.StudyId).Name;
-                                string consent = "";
                                 studies += "<tr><td>" + serialNumber + " : </td><td>" + studyName + "</td></tr>";
-
-                                using (var conContext = new ConsentContext())
-                                {
-                                    Consent objConsent = conContext.Consents.Find(objCSR.ConsentId);
-                                    consent = objConsent.ChildConsent;
-                                    studies += "<tr><td></td><td>" + consent + "</td></tr>";
-                                }
+                                                                
                                 serialNumber++;
                                 lstStudies.Add(objCSR.StudyId);
                             }                            

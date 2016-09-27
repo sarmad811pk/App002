@@ -1,7 +1,15 @@
-﻿@{
+﻿@using System.Data;
+@{
     Layout = null;
 
-
+    int childId = Model != null ? (int)Model : 0;
+    DataSet dsConsents = null;
+    if(childId > 0)
+    {
+        if (String.IsNullOrEmpty(Request.QueryString["sts"]) || (String.IsNullOrEmpty(Request.QueryString["sts"]) == false && Request.QueryString["sts"] != "1")) {
+            dsConsents = SurveyApp.DataHelper.Consent_GetChildConsents(childId);
+        }
+    }
 }
 
 
@@ -23,9 +31,9 @@
     <script src="~/Scripts/jquery-ui.min.js"></script>
     <script src="~/Scripts/custom.js"></script>
     <style type="text/css">
-        /*body{
-            font-family: 'Open Sans','Noto Sans', Arial, sans-serif !important;
-        }*/
+        body{
+            background-color: #FFF;
+        }
         .container .disabled {
             background-color: #D0D0D0;
             color: #FFF;
@@ -48,7 +56,7 @@
 </head>
 <body>
     <header>
-        <div class="content-wrapper" style="overflow:auto;padding:10px;">
+        <div class="content-wrapper" style="overflow:auto;padding:10px;border-bottom: solid 1px #f1f1f1;background: url(/Images/ebitrainbow.jpg) no-repeat right bottom;background-size: auto 200%;padding-right: 90px;">
             <div class="float-left">
                 <p class="site-title">
                     <a href="@(System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString())"><img src="~/Images/at3logo.png"></a>
@@ -63,27 +71,36 @@
         </div>
     </header>
     <div id="body" style="padding-bottom:0px;">
-        <div class="container" style="background:url(../Images/ebitbg.jpg) no-repeat right center;padding-bottom:20px;min-height:420px;width:90%;">
-            <div class="col-sm-6">
-                <div class="col-sm-8">
-                    <h4 class="form-signin-heading">eBit - Study Consent</h4>                    
+        <div class="container" style="padding-bottom:20px;min-height:420px;width:90%;">
+            <div class="col-sm-12">
+                <div class="col-sm-12" style="text-align:center;">                    
                     <section>
-                        @if (String.IsNullOrEmpty(Request.QueryString["sts"]) || Request.QueryString["sts"] == "0")
+                        @if (String.IsNullOrEmpty(Request.QueryString["sts"]) || (String.IsNullOrEmpty(Request.QueryString["sts"]) == false && Request.QueryString["sts"] != "1"))
                         {
                             using (Html.BeginForm("Agreed", "Consent", new { cid = ViewBag.Cid, FormMethod.Post }))
                             {
-                                <div>
-                                    <p>Do you accept the Consent ?</p><br />
-                                    <button type="submit" class="btn btn-primary" style="width: 80px;color: #FFF;">Yes</button>
-                                    <a href="@(System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString())" class="btn btn-default" style="width: 80px;">No</a>
-                                </div>
+                                if(dsConsents != null && dsConsents.Tables != null && dsConsents.Tables[0].Rows.Count > 0)
+                                {
+                                    <h3>Please give consent for following studies.</h3>
+                                    foreach (DataRow dr in dsConsents.Tables[0].Rows)
+                                    {
+                                        <div style="border: solid 1px #CCC;">
+                                            <h5 style="text-transform: capitalize;margin: 0px;border: solid 2px #FFF;padding: 10px;background-color: #333;color: #FFF;">@dr["StudyName"]</h5>
+                                            @Html.Raw(dr["ChildConsent"] != DBNull.Value ? dr["ChildConsent"].ToString() : "")
+                                        </div>
+                                    }
+                                }
+
+                                <br />
+                                <button type="submit" class="btn btn-primary" style="width: 120px;color: #FFF;">I Agree</button>
+                                <a href="@(System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString())" class="btn btn-default" style="width: 120px;">I Disagree</a>                                
                             }
                         }
                         else
                         {
-                            <div>
-                                Thank you for the consent.
-                            </div>
+                            <h3>
+                                Thank you for your participation.
+                            </h3>
                         }
                     </section>
 

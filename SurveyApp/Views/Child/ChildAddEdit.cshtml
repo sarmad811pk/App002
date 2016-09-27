@@ -191,13 +191,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="school">Consent Required?:</label>
+                <label class="control-label col-sm-3" for="school">Child Consent Required?:</label>
                 <div class="col-sm-9">
                     @Html.CheckBoxFor(m => m.Consent, new { name = "chkConsent", onclick = "setConsentEmail(this);", @style = "margin-top: 9px;" })
                 </div>
             </div>
             <div class="form-group email" style="display:none;">
-                <label class="control-label col-sm-3" for="school">Email:</label>
+                <label class="control-label col-sm-3" for="school">Child Email:</label>
                 <div class="col-sm-9">
                     @Html.TextBoxFor(m => m.Email, new { placeholder = "Email address for consent", @class = "form-control", @maxlength = "100" })
                 </div>
@@ -320,6 +320,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <br />
                                         }
                                     }
 

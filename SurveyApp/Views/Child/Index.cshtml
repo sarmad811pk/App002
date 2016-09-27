@@ -24,6 +24,15 @@
     }
 }
 
+<style type="text/css">
+    .ui-tooltip {
+        min-width: 200px;
+        max-width: 400px;
+        background-color: #333;
+        color: #FFF;
+    }
+</style>
+
 <script type="text/javascript">
     $(function () {
         $("#tblChildren").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Children_List', exportOptions: {  modifier: { search: 'none', order: 'original' }} }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Children" } });
@@ -32,7 +41,6 @@
 <div>
     <h2 class="col-sm-11" style="margin: 0px;padding: 0px;">Child Manager</h2>
     <a href="@Url.Action("ChildAddEdit", "Child")" class="btn btn-default" style="float:right;"><i class="fa fa-child"></i>&nbsp;Add Child</a>
-    @*@Html.ActionLink("Add Child", "ChildAddEdit", "Child", new object { }, new { @class = "btn btn-default", style = "float:right;" })*@
 </div>
 <div style="clear:both;"></div>
 <br />
@@ -66,13 +74,23 @@
                     <td>@dr["Teacher"]</td>
                     <td>@dr["Study"]</td>
                     <td class="text-success">@getStatusDescription((int)dr["StatusId"])</td>
-                    <td style="text-align: center;vertical-align:middle;" title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Child has not given consent yet." : "Child has already given the consent") : "") : "Consent is not required for this child.")">                    
-                        <i class="ion-eye @(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye") : "")"></i>
+                    <td style="text-align: center;vertical-align:middle;">
+                        @if(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true){
+                            <i class="ion-eye @(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye") : "")"  data-toggle='tooltip' title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Child has not given consent yet." : "Child has given the consent" + (dr["AgreeDate"] != DBNull.Value ? " on " + Convert.ToDateTime(dr["AgreeDate"]).ToString("MM/dd/yyyy") : ".")) : "") : "Consent is not required for this child.")"></i>
+                        }                        
                     </td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"><i class="ion-close"></i></a></td>
                 </tr>
             }
         }
-
     </tbody>
 </table>
+
+<script type="text/javascript">
+    $('[data-toggle="tooltip"]').tooltip({
+        track: true,
+        content: function () {
+            return $(this).attr('title').replace(/_NEWLINE_/g, "<br/>");
+        },
+    });
+</script>
