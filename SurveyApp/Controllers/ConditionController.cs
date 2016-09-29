@@ -96,15 +96,18 @@ namespace SurveyApp.Controllers
                             {
                                 using (var conContext = new ConsentContext())
                                 {
-                                    List<int> lstStudies = new List<int>();
+                                    List<int> lstConsentIds = new List<int>();
                                     foreach (Child_Study_Respondent obj in lstCSRs)
                                     {
-                                        Consent objCon = conContext.Consents.Where(con => con.StudyId == obj.StudyId).FirstOrDefault();
-                                        if (objCon != null && lstStudies.Contains(obj.StudyId) == false)
+                                        List<Consent> lstConsents = conContext.Consents.Where(con => con.StudyId == obj.StudyId && obj.Agreed == false).ToList();
+                                        foreach(Consent objCon in lstConsents)
                                         {
-                                            UserConsent objUC = new UserConsent { studyId = obj.StudyId, Consent = (role == "Parent" ? objCon.ParentConsent : (role == "Teacher" ? objCon.TeacherConsent : objCon.ChildConsent)), Title = objCon.Title, isAgreed = false };
-                                            lstUserConsents.Add(objUC);
-                                            lstStudies.Add(obj.StudyId);
+                                            if (objCon != null && lstConsentIds.Contains(objCon.Id) == false && objCon.Id == obj.ConsentId)
+                                            {
+                                                UserConsent objUC = new UserConsent { consentId = objCon.Id, studyId = obj.StudyId, Consent = (role == "Parent" ? objCon.ParentConsent : (role == "Teacher" ? objCon.TeacherConsent : objCon.ChildConsent)), Title = objCon.Title, isAgreed = false };
+                                                lstUserConsents.Add(objUC);
+                                                lstConsentIds.Add(objCon.Id);
+                                            }
                                         }
                                     }
                                 }
@@ -127,7 +130,7 @@ namespace SurveyApp.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult User_UpdateConsents(string userName, string password)
+        public ActionResult User_UpdateConsents(string userName, string password, int consentId)
         {
             string msg = "";
             bool isValid = Membership.ValidateUser(userName, password);
@@ -138,10 +141,11 @@ namespace SurveyApp.Controllers
                     UserProfile objUP = DataHelper.UserProfileGetUserByUserName(userName);
                     using (var csrContext = new Child_Study_RespondentContext())
                     {
-                        List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId).ToList();
+                        List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId && csr.ConsentId == consentId).ToList();
                         foreach(Child_Study_Respondent obj in lstCSRs)
                         {
                             obj.Agreed = true;
+                            obj.AgreeDate = DateTime.Now;
                         }
 
                         csrContext.SaveChanges();

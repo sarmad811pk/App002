@@ -59,7 +59,7 @@
                         <td style="text-align: center;vertical-align:middle;" data-toggle='tooltip'>
                         @if (dr["Consent"] != DBNull.Value)
                         {
-                            <i class="ion-eye @(dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye")"  data-toggle='tooltip' title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Respondent has not given consent yet." : "Respondent has already given the consent") : "") : "Consent is not required for this respondent.")"></i>
+                            <i class="ion-eye @(dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye")"  data-toggle='tooltip' title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Respondent has not given consent yet." : "Respondent has given the consent" + (dr["AgreeDate"] != DBNull.Value ? " on " + Convert.ToDateTime(dr["AgreeDate"]).ToString("MM/dd/yyyy") : ".")) : "") : "Consent is not required for this respondent.")"></i>
                         }
                         </td>
                         <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" style="@(Convert.ToBoolean(dr["IsAdmin"]) == true ? "display:none;" : "")" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["UserId"], 'user', '@(dr["FullName"] == DBNull.Value ? dr["UserName"].ToString() : dr["FullName"].ToString())');"><i class="ion-close"></i></a></td>

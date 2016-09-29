@@ -33,6 +33,7 @@ namespace SurveyApp.Models
 
     public class UserConsent
     {
+        public int consentId { get; set; }
         public int studyId { get; set; }
         public string Title { get; set; }
         public string Consent { get; set; }

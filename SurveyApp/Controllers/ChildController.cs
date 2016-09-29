@@ -279,7 +279,7 @@ namespace SurveyApp.Controllers
                 #endregion
 
                 #region Consent
-                if (objChild.Agreed == false && childModel.Id <= 0)
+                if (Convert.ToBoolean(collection["hdnSendConsentEmail"]) == true)
                 {
                     string consentPath = Server.MapPath("~/Attachments/Child_Consent.html");
                     sendConsentEmail(objChild, consentPath);

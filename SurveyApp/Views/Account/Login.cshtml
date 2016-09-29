@@ -179,7 +179,8 @@
                 //$("#btnLogin").addClass("disabled");
             });
         });
-        function ConsentUser(){
+        function ConsentUser() {
+            this.consentId;
             this.studyId;
             this.Title;
             this.Consent;
@@ -207,7 +208,7 @@
                             for (var i = 0; i < arrConsents.length; i++) {
                                 $(".loading").hide();
                                 $(".disablebackground").hide();
-                                showConditions(arrConsents[i].Title, arrConsents[i].Consent, i);
+                                showConditions(arrConsents[i].Title, arrConsents[i].Consent, i, arrConsents[i].consentId);
                             }
                         }
                         else {
@@ -228,7 +229,7 @@
             });
         }
 
-        function showConditions(title, html, index) {
+        function showConditions(title, html, index, consentId) {
             bootbox.dialog({                
                 message : html,
                 title: title,
@@ -242,17 +243,7 @@
                         className: "btn-primary",
                         callback: function () {
                             arrConsents[index].isAgreed = true;
-                            var isSuccess = true;
-                            for (var i = 0; i < arrConsents.length; i++) {
-                                if (arrConsents[i].isAgreed == false) {
-                                    isSuccess = false;
-                                }
-                            }
-                            if (isSuccess == true) {
-                                $(".disablebackground").show();
-                                $(".loading").show();
-                                updateConsents();
-                            }
+                            updateConsents(consentId);
                         }
                     },
                     danger: {
@@ -266,19 +257,27 @@
             });
         }
 
-        function updateConsents() {
+        function updateConsents(consentId) {
             var txtUserName = $("#UserName").val();
             var txtPassword = $("#Password").val();
 
             $.ajax({
                 url: '@Url.Action("User_UpdateConsents", "Condition")',
-                data: "{'userName': '" + txtUserName + "', 'password': '" + txtPassword + "' }",
+                data: "{'userName': '" + txtUserName + "', 'password': '" + txtPassword + "', 'consentId' : '" + consentId + "' }",
                 type: 'POST',
-                async: true,
+                async: false,
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                     if (data.success == true && data.msg == "") {
-                        $("#btnLogin").click();
+                        if (areConsentsAgreed() == true) {
+                            $(".disablebackground").show();
+                            $(".loading").show();
+                            $("#btnLogin").click();
+                        }
+                        else {
+                            $(".disablebackground").hide();
+                            $(".loading").hide();
+                        }
                     }
                     else {
                         alert(data.msg);
@@ -289,6 +288,17 @@
                 processData: false
             });
         }
+
+    function areConsentsAgreed() {
+        var isSuccess = true;
+        for (var i = 0; i < arrConsents.length; i++) {
+            if (arrConsents[i].isAgreed == false) {
+                isSuccess = false;
+            }
+        }
+
+        return isSuccess;
+    }
     </script>
 </body>
 

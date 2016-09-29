@@ -194,6 +194,7 @@ namespace SurveyApp.Models
         public int? ConsentId { get; set; }
         [DefaultValue(false)]
         public bool Agreed { get; set; }
+        public DateTime? AgreeDate { get; set; }
     }
 
     public class Child_Study_RespondentContext : DbContext

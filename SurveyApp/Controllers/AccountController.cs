@@ -69,8 +69,18 @@ namespace SurveyApp.Controllers
                         List<Child_Study_Respondent> lstCSRs = csrContext.Child_Study_Respondents.Where(csr => csr.RespondentId == objUP.UserId && csr.Agreed == false).ToList();
                         if (lstCSRs.Count > 0)
                         {
-                            ModelState.AddModelError("", "You have not given consent for all the studies.");
-                            return View(model);
+                            foreach(Child_Study_Respondent obj in lstCSRs)
+                            {
+                                using (var conContext = new ConsentContext())
+                                {
+                                    Consent objCon = conContext.Consents.Find(obj.ConsentId);
+                                    if(objCon != null)
+                                    {
+                                        ModelState.AddModelError("", "You have not given consent for all the studies.");
+                                        return View(model);
+                                    }
+                                }                                
+                            }                            
                         }
                     }
                 }
