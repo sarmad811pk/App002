@@ -25,7 +25,7 @@ namespace SurveyApp.Controllers
                 using (var cContext = new SurveyApp.Models.ChildContext())
                 {
                     Child objChild = cContext.Children.Find(Convert.ToInt32(cid));
-                    if (objChild.Agreed == true)
+                    if (objChild == null || objChild.Agreed == true)
                     {
                         return RedirectToAction("Index", "Consent", new { cid = HttpUtility.HtmlEncode(ViewBag.Cid), sts = 1 });
                     }

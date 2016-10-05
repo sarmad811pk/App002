@@ -91,9 +91,17 @@
                                     }
                                 }
 
+                                <div>
+                                    <br /><br />
+                                    By checking the box below, I am providing my signature to this consent form.
+                                    <br />
+                                    <label><input type="radio" id="rdbConsentAgreed" name="rdbConsent" class="agreed" value="1" />&nbsp;I am providing consent</label>
+                                    <br />
+                                    <label><input type="radio" id="rdbConsentDisagreed" name="rdbConsent" class="disagreed" value="0" />&nbsp;I am not providing consent</label>
+                                </div>
                                 <br />
-                                <button type="submit" class="btn btn-primary" style="width: 120px;color: #FFF;">I Agree</button>
-                                <a href="@(System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString())" class="btn btn-default" style="width: 120px;">I Disagree</a>                                
+                                <button type="submit" id="btnSubmit" class="btn btn-primary" style="width: 120px;color: #FFF;">I Agree</button>
+                                <a href="@(System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString())" class="btn btn-default" style="width: 120px;">I Disagree</a>
                             }
                         }
                         else
@@ -123,5 +131,20 @@
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
     }
+
+    <script type="text/javascript">
+        $(function () {
+            $("#btnSubmit").click(function (e) {
+                if ($("#rdbConsentAgreed")[0].checked == true) {
+                    return true;
+                }
+                else {
+                    alert("Please provide consent.");
+                    e.preventDefault();
+                    return false;
+                }                
+            });
+        });
+    </script>
 </body>
 </html>
