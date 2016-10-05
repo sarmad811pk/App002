@@ -715,6 +715,10 @@
                 $(obj)[0].checked = false;
                 $(obj).removeAttr("checked");
             });
+            $(elem).siblings(".teachers").find("input[type=radio]").each(function(index, obj){
+                $(obj)[0].checked = false;
+                $(obj).removeAttr("checked");
+            });
             
             $(elem).siblings("label.deviation").fadeOut();
             $(elem).siblings(".studyInfo").fadeOut();
@@ -809,11 +813,11 @@
                 success: {
                     label: "Save Changes",
                     className: "btn-primary",
-                    callback: function() {                        
+                    callback: function() {
                         var isValid = true;
                         if($(".bootbox-body .studyTeachers").attr("concount") > 0){
                             isValid = false;
-                            $(".bootbox-body .conditions input[type=radio]").each(function(){                                
+                            $(".bootbox-body .conditions input[type=radio]").each(function(){
                                 if($(this)[0].checked == true){
                                     $("#studyId_" + studyId).find(".conditions").find("#" + $(this).attr("id")).attr("checked", "checked")
                                     isValid = true;
@@ -823,15 +827,18 @@
                         }
 
                         if(isValid == true) {
+                            var isRespondentValid = false;
                             $(".bootbox-body .studyTeachers input").each(function(){
                                 if($(this)[0].checked == true){
                                     $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).attr("checked", "checked");
                                     if($("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0] != null && $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0] != undefined){
                                         $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0].checked = true;
-                                    }                                    
+                                    }
                                     if($(this).attr("id").indexOf("_IncludeParent") >= 0){
                                         $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).val("1");
                                     }
+
+                                    isRespondentValid = true;
                                 }
                                 else{
                                     $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).removeAttr("checked");
@@ -840,19 +847,37 @@
                                     }
                                 }
                             });
+
+                            if(isRespondentValid == false){
+                                bootbox.alert("Please include parent or select at least one teacher.");
+                                return false;
+                            }
                         }
                         else{
                             bootbox.alert("Please select at least one condition.");
                             return false;
                         }
-                        
+
                     }
                 },
                 danger: {
                     label: "Cancel",
                     className: "btn-default",
                     callback: function() {
+                        var isEmpty = true;
+                        $(".bootbox-body .studyTeachers input[type=checkbox]").each(function(){                            
+                            if($(this)[0].checked == true){
+                                isEmpty = false;
+                            }
+                        });
+                        if(isEmpty == true){                            
+                            $("#studyId_" + studyId).find("label.study").find("input[type=checkbox]").checked = false;
+                            $("#studyId_" + studyId).find("label.study").find("input[type=checkbox]").removeAttr("checked");
+                            setDeviation($("div#studyId_" + studyId).find("label.study"));
 
+                            $(".bootbox-body input").checked = false;
+                            $(".bootbox-body input").removeAttr("checked");
+                        }
                     }
                 }
             },
@@ -863,7 +888,7 @@
         //    var ischecked = $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0].checked;
         //    if(ischecked == false){
         //        var isSet = $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id")).attr("teacherselected");
-        //        $(".bootbox-body .studyTeachers").find($(this))[0].checked = isSet == "true" ? true : false;            
+        //        $(".bootbox-body .studyTeachers").find($(this))[0].checked = isSet == "true" ? true : false;
         //    }
         //});
     }
@@ -872,7 +897,7 @@
         var key = $(elem).val().toLowerCase();
         $(elem).closest(".studyTeachers").find(".resp").each(function(index, obj){
             var txt = $(obj).find("label").text().toLowerCase();
-            
+
             if(txt.indexOf(key) >= 0 || txt.indexOf("include parent") == true || key == ""){
                 $(obj).show();
             }

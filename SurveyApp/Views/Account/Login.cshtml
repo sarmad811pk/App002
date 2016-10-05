@@ -219,7 +219,7 @@
                         $(".loading").hide();
                         $(".disablebackground").hide();
                         $("#btnSignIn").removeClass("submitted");
-                        alert(data.msg);
+                        bootbox.alert("Username or Password is not valid.");
                     }
                 },
 
@@ -230,7 +230,7 @@
         }
 
     function showConditions(title, html, index, consentId) {
-        html += "<br/><br/>By checking the box below, I am providing my signature to this consent form.<br/><label><input type='checkbox' id='chkAgreed_" + consentId + "' class='agreed' />&nbsp;I am providing consent</label><br/><label><input type='checkbox' id='chkDisagreed_" + consentId + "' class='disagreed' />&nbsp;I am not providing consent</label>";
+        html += "<br/><br/>By checking the box below, I am providing my signature to this consent form.<br/><label><input type='radio' id='chkAgreed_" + consentId + "' name='rdb" + consentId + "' class='agreed' />&nbsp;I am providing consent</label><br/><label><input type='radio' id='chkDisagreed_" + consentId + "' name='rdb" + consentId + "' class='disagreed' />&nbsp;I am not providing consent</label>";
             bootbox.dialog({                
                 message: html,
                 title: title,
