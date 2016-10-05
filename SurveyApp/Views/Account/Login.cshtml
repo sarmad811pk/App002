@@ -229,9 +229,10 @@
             });
         }
 
-        function showConditions(title, html, index, consentId) {
+    function showConditions(title, html, index, consentId) {
+        html += "<br/><br/>By checking the box below, I am providing my signature to this consent form.<br/><label><input type='checkbox' id='chkAgreed_" + consentId + "' class='agreed' />&nbsp;I am providing consent</label><br/><label><input type='checkbox' id='chkDisagreed_" + consentId + "' class='disagreed' />&nbsp;I am not providing consent</label>";
             bootbox.dialog({                
-                message : html,
+                message: html,
                 title: title,
                 closeButton: false,
                 onEscape: function () {
@@ -239,15 +240,17 @@
                 },
                 buttons: {
                     success: {
-                        label: "I Agree",
+                        label: "Save",
                         className: "btn-primary",
                         callback: function () {
-                            arrConsents[index].isAgreed = true;
-                            updateConsents(consentId);
+                            if ($("#chkAgreed_" + consentId)[0].checked == true) {
+                                arrConsents[index].isAgreed = true;
+                                updateConsents(consentId);
+                            }
                         }
                     },
                     danger: {
-                        label: "I Disagree",
+                        label: "Cancel",
                         className: "btn-default",
                         callback: function () {
                             
@@ -299,6 +302,8 @@
 
         return isSuccess;
     }
+
+    
     </script>
 </body>
 

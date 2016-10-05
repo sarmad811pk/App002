@@ -148,9 +148,11 @@ namespace SurveyApp.Controllers
 
                 #region Child_Study_Respondents
                 List<Study> lstStidues = Study.StudyGetAll();
+                List<Child_Study_Respondent> lstCSRPrevious = new List<Child_Study_Respondent>();
                 DataSet dsTeachers = Child_Teacher.Child_TeacherGetAll();
                 using (var csrConext = new Child_Study_RespondentContext())
                 {
+                    lstCSRPrevious = csrConext.Child_Study_Respondents.Where(csr => csr.ChildId == cId).ToList();
                     csrConext.Child_Study_Respondents.RemoveRange(csrConext.Child_Study_Respondents.Where(csr => csr.ChildId == cId));
                     csrConext.SaveChanges();
                     csrConext.Dispose();
@@ -201,10 +203,22 @@ namespace SurveyApp.Controllers
                                             objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
                                             objCSRParent.RespondentId = objChild.ParentId;
                                             objCSRParent.IncludeParent = true;
-                                            objCSRParent.ConsentId = conId;                                            
-
+                                            objCSRParent.ConsentId = conId;
+                                            Child_Study_Respondent objPreParent = lstCSRPrevious.Where(csr => csr.ChildId == objCSRParent.ChildId && csr.StudyId == objCSRParent.StudyId && csr.RespondentId == objCSRParent.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                            if(objPreParent != null)
+                                            {
+                                                objCSRParent.Agreed = objPreParent.Agreed;
+                                                objCSRParent.AgreeDate = objPreParent.AgreeDate;
+                                            }
                                             lstCSRs.Add(objCSRParent);
                                         }
+                                    }
+
+                                    Child_Study_Respondent objPreTeacher = lstCSRPrevious.Where(csr => csr.ChildId == objCSR.ChildId && csr.StudyId == objCSR.StudyId && csr.RespondentId == objCSR.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                    if (objPreTeacher != null)
+                                    {
+                                        objCSR.Agreed = objPreTeacher.Agreed;
+                                        objCSR.AgreeDate = objPreTeacher.AgreeDate;
                                     }
 
                                     lstCSRs.Add(objCSR);
@@ -222,6 +236,13 @@ namespace SurveyApp.Controllers
                                     objCSRParent.RespondentId = objChild.ParentId;
                                     objCSRParent.IncludeParent = true;
                                     objCSRParent.ConsentId = conId;
+
+                                    Child_Study_Respondent objPreParent = lstCSRPrevious.Where(csr => csr.ChildId == objCSRParent.ChildId && csr.StudyId == objCSRParent.StudyId && csr.RespondentId == objCSRParent.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                    if (objPreParent != null)
+                                    {
+                                        objCSRParent.Agreed = objPreParent.Agreed;
+                                        objCSRParent.AgreeDate = objPreParent.AgreeDate;
+                                    }
                                     lstCSRs.Add(objCSRParent);
                                 }
                             }
