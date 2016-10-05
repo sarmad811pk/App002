@@ -16,6 +16,7 @@
         cursor: help;
     }
     .ui-tooltip {background-color: #333;color:#FFF;}
+    #frmStudyAdd .name{text-transform:capitalize;}
 </style>
 
 <br />
@@ -90,14 +91,14 @@
         {
             <tr>
                 <td>
-                    <label class="col-sm-12">
+                    <label class="col-sm-12 name">
                         <input type="checkbox" name="Survey@(index)" value="@dr["Id"]" @(checkSurveyExists("survey", (int)dr["Id"]) == true? "checked='checked'" : "") onclick="enableDisableSchedule(this);"/>&nbsp;
                         @dr["Title"].ToString()
                     </label>
                 </td>
 
                 <td>
-                    <select class="form-control ddlParent" name="Parent@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" onchange="$(this).removeClass('inerror');" multiple>
+                    <select class="form-control ddlParent name" name="Parent@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" onchange="$(this).removeClass('inerror');" multiple>
                         <option value="0">---</option>
                         @foreach (System.Data.DataRow drSchedule in ds.Tables[2].Rows)
                         {
@@ -106,7 +107,7 @@
                     </select>
                 </td>
                 <td>
-                    <select class="form-control ddlTeacher" name="Teacher@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" onchange="$(this).removeClass('inerror');" multiple>
+                    <select class="form-control ddlTeacher name" name="Teacher@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" onchange="$(this).removeClass('inerror');" multiple>
                         <option value="0">---</option>
                         @foreach (System.Data.DataRow drSchedule in ds.Tables[2].Rows)
                         {

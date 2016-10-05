@@ -119,7 +119,7 @@
         if (userType == 0 || userType == 1)
         {
             int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0;
-            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND UserType = 2");
+            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND UserType = 1");
             if (drCount.Length > 0)
             {
                 foreach (DataRow dr in drCount)
@@ -159,7 +159,7 @@
         if (userType == 0 || userType == 2)
         {
             int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND UserType = 1");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND UserType = 2");
             if (drTeacherCount.Length > 0)
             {
                 foreach (DataRow dr in drTeacherCount)

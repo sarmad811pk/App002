@@ -31,6 +31,9 @@
         background-color: #333;
         color: #FFF;
     }
+    #tblChildren .name{
+        text-transform: capitalize;
+    }
 </style>
 
 <script type="text/javascript">
@@ -67,12 +70,12 @@
             foreach (DataRow dr in dsChildren.Tables[0].Rows)
             {
                 <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = dr["Id"] })';">
-                    <td>@dr["Name"]</td>
+                    <td class="name">@dr["Name"]</td>
                     <td>@(dr["dob"] != DBNull.Value ? Convert.ToDateTime(dr["dob"]).ToString("MM/dd/yyyy") : "")</td>
-                    <td>@dr["School"]</td>
-                    <td>@dr["Parent"]</td>
-                    <td>@dr["Teacher"]</td>
-                    <td>@dr["Study"]</td>
+                    <td class="name">@dr["School"]</td>
+                    <td class="name">@dr["Parent"]</td>
+                    <td class="name">@dr["Teacher"]</td>
+                    <td class="name">@dr["Study"]</td>
                     <td class="text-success">@getStatusDescription((int)dr["StatusId"])</td>
                     <td style="text-align: center;vertical-align:middle;">
                         @if(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true){

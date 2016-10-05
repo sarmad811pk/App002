@@ -220,7 +220,7 @@
                         @foreach (Study std in Study.StudyGetAll())
                         {
                             <div class="checker" id="studyId_@std.Id">
-                                <label onclick="setDeviation(this);" class="study">
+                                <label onclick="setDeviation(this);" class="study" style="text-transform: capitalize;">
                                     <input type="checkbox" @getStudyStatus(std.Id) name="StudyId_@std.Id" value="@std.Id" /> @std.Name
                                     <a href="javascript:void(0);" onclick="showRespondents(this, @std.Id, '@std.Name.Replace("\'", "").Replace("\"", "")');" class="viewResp">Respondents</a>
                                 </label>

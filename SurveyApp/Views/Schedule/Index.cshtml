@@ -76,6 +76,7 @@
         cursor: pointer;
     }
     .ui-tooltip {max-width: 400px;background-color: #333;color:#FFF;}
+    #tblSchedules .name{text-transform:capitalize;}
 </style>
 <table class="table table-striped table-hover" id="tblSchedules">
     <thead>
@@ -95,7 +96,7 @@
             foreach (DataRow dr in dsSchedules.Tables[0].Rows)
             {
                 <tr onclick="location.href = '@Url.Action("ScheduleAddEdit", "Schedule", new { id = dr["Id"] })';">
-                    <td>@dr["Title"]</td>
+                    <td class="name">@dr["Title"]</td>
                     <td>@getFrequency(dr["Frequency"], dr["DaysToRepeat"])</td>
                     <td>@getActivationType(dr["ActiveOn"], dr["Day"], dr["Month"], dr["Weekday"])</td>
                     <td>@dr["AvailableUntil"] day(s)</td>
