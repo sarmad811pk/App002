@@ -71,7 +71,7 @@ namespace SurveyApp.Controllers
                 int studyCount = 0;
                 foreach (var key in collection.Keys)
                 {
-                    if (key.ToString().Contains("StudyId_"))
+                    if (key.ToString().Contains("StudyId_") && key.ToString().StartsWith("StudyId_"))
                     {
                         studyCount++;
                     }

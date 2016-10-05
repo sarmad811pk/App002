@@ -135,7 +135,7 @@
             if (title != "" && (SurveyID==16 || SurveyID == 21 || SurveyID == 24))
             { 
                  <div class="list-group-item-heading col-sm-12 btn-primary disabled" style="margin-bottom:0px;">
-                     <h4>@title</h4>
+                     <h4>@Html.Raw(title)</h4>
                  </div>
             }
             if (q["PID"].ToString() == string.Empty)

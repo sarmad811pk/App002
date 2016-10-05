@@ -34,6 +34,15 @@
     dsQuestionsFilled = SurveyApp.DataHelper.QuestionGetFilledAnswers(userId);
     dsChildrenSchedules = SurveyApp.DataHelper.getChildrenSchedulesByUserId(userId);
 
+    int schoolId = 0;
+    if(dsReveseandLiveEvent != null && dsReveseandLiveEvent.Tables != null && dsReveseandLiveEvent.Tables.Count >= 6)
+    {
+        if(dsReveseandLiveEvent.Tables[5] != null && dsReveseandLiveEvent.Tables[5].Rows.Count > 0)
+        {
+            schoolId = Convert.ToInt32(dsReveseandLiveEvent.Tables[5].Rows[0]["SchoolId"]);
+        }
+    }
+
     string childName = "";
     if (childID > 0)
     {
@@ -327,13 +336,16 @@
                             <div class="col-md-12" style="font-size:14px;border-bottom:solid 2px #000000;"><i class="ion-clipboard"></i>&nbsp;Questionnaires&nbsp;(@childName)<a href="javascript:void(0);" style="text-decoration:none !important;background-color:#FFF !important;cursor:default;color: #00ADEE;font-weight: bold;">Currently Due</a><a href="javascript:void(0);" style="text-decoration:none !important;background-color:#FFF !important;cursor:default;color: #00ADEE;font-weight: bold;">Previously Due</a></div>
                             @if (roles[0] != "Teacher")
                             {
-
-                                string percentGen = getIntakeCompletion((int)drch["ID"], url.Replace("__", "16"));                                
-                                <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGen))</div>
-
-                                string percentGenCAS = getIntakeCompletion((int)drch["ID"], url.Replace("__", "43"));
-                                <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGenCAS))</div>
-
+                                if (schoolId == 2)
+                                {
+                                    string percentGen = getIntakeCompletion((int)drch["ID"], url.Replace("__", "16"));
+                                    <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGen))</div>
+                                }
+                                if (schoolId == 9)
+                                {
+                                    string percentGenCAS = getIntakeCompletion((int)drch["ID"], url.Replace("__", "43"));
+                                    <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGenCAS))</div>
+                                }
                             }
                             @if (roles[0] == "Teacher")
                             {
