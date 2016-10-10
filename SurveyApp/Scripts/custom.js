@@ -31,7 +31,7 @@
                             }
                         }
                         else {
-                            boobox.alert("Unable to perform the action, please try again or contact our support team.");
+                            alert("Unable to perform the action, please try again or contact our support team.");
                             result = false;
                         }
                     },

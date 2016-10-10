@@ -27,7 +27,7 @@
 
     DataTable dtChildren, dtTeachers, dtSurveys, dtTotalSurveys;
 
-    public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype)
+    public string getSurveyValue(int childId, int surveyId, int teacherId, int periodtype, SurveyAppRoles userType)
     {
         string value = "", scheduleDate = "", userId = "";
         string notstarted = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This questionnaire has not started yet' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
@@ -68,7 +68,17 @@
                     }
                     else
                     {
-                        value = notstarted;
+                        int aoutMin = drS["AOUTMin"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMin"]) : 0;
+                        int aoutMax = drS["AOUTMax"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMax"]) : 0;
+                        if(aoutMin == (int)userType || aoutMax == (int)userType)
+                        {
+                            value = notstarted;
+                        }
+                        else
+                        {
+                            value = notapplicable;
+                        }
+
                     }
                 }
                 else
@@ -244,11 +254,11 @@
                                                     if ((((int)drT["SurveyId"] == 6 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 7 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 8 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 9 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 45 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true)) && pedsTD == false)
                                                     {
                                                         pedsTD = true;
-                                                        <td class="dot @(drChild["Email"] == DBNull.Value ? "notasoc" : "")"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
+                                                        <td class="dot @(drChild["Email"] == DBNull.Value ? "notasoc" : "")"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1, SurveyAppRoles.Parent))</span></td>
                                                     }
                                                     else if ((int)drT["SurveyId"] != 6 && (int)drT["SurveyId"] != 7 && (int)drT["SurveyId"] != 8 && (int)drT["SurveyId"] != 9 && (int)drT["SurveyId"] != 45)
                                                     {
-                                                        <td class="dot @(drChild["Email"] == DBNull.Value ? "notasoc" : "")"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1))</span></td>
+                                                        <td class="dot @(drChild["Email"] == DBNull.Value ? "notasoc" : "")"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 1, SurveyAppRoles.Parent))</span></td>
                                                     }
                                                 }
                                             </tr>
@@ -267,11 +277,11 @@
                                                         if ((((int)drT["SurveyId"] == 6 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 7 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 8 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 9 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 45 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true)) && pedsPTD == false)
                                                         {
                                                             pedsPTD = true;
-                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
+                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1, SurveyAppRoles.Teacher))</span></td>
                                                         }
                                                         else if ((int)drT["SurveyId"] != 6 && (int)drT["SurveyId"] != 7 && (int)drT["SurveyId"] != 8 && (int)drT["SurveyId"] != 9 && (int)drT["SurveyId"] != 45)
                                                         {
-                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1))</span></td>
+                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 1, SurveyAppRoles.Teacher))</span></td>
                                                         }
                                                     }
                                                 </tr>
@@ -292,11 +302,11 @@
                                                     if ((((int)drT["SurveyId"] == 6 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 7 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 8 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 9 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 45 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true)) && pedsCTD == false)
                                                     {
                                                         pedsCTD = true;
-                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
+                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2, SurveyAppRoles.Parent))</span></td>
                                                     }
                                                     else if ((int)drT["SurveyId"] != 6 && (int)drT["SurveyId"] != 7 && (int)drT["SurveyId"] != 8 && (int)drT["SurveyId"] != 9 && (int)drT["SurveyId"] != 45)
                                                     {
-                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2))</span></td>
+                                                        <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drChild["ParentId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drChild["ParentId"], 2, SurveyAppRoles.Parent))</span></td>
                                                     }
                                                 }                                              
                                             </tr>
@@ -315,11 +325,11 @@
                                                         if ((((int)drT["SurveyId"] == 6 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 7 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 8 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 9 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true) || ((int)drT["SurveyId"] == 45 && getChildAge((int)drChild["ChildId"], (int)drT["SurveyId"]) == true)) && pedsCPTD == false)
                                                         {
                                                             pedsCPTD = true;
-                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
+                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2, SurveyAppRoles.Teacher))</span></td>
                                                         }
                                                         else if ((int)drT["SurveyId"] != 6 && (int)drT["SurveyId"] != 7 && (int)drT["SurveyId"] != 8 && (int)drT["SurveyId"] != 9 && (int)drT["SurveyId"] != 45)
                                                         {
-                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2))</span></td>
+                                                            <td class="dot"><span onclick="openSurvey(this, @drT["SurveyId"], @drChild["ChildId"], @((int)drTeacher["TeacherId"]), '@drChild["Name"]');">@Html.Raw(getSurveyValue((int)drChild["ChildId"], (int)drT["SurveyId"], (int)drTeacher["TeacherId"], 2, SurveyAppRoles.Teacher))</span></td>
                                                         }
                                                     }
                                                 </tr>

@@ -819,7 +819,8 @@
                             isValid = false;
                             $(".bootbox-body .conditions input[type=radio]").each(function(){
                                 if($(this)[0].checked == true){
-                                    $("#studyId_" + studyId).find(".conditions").find("#" + $(this).attr("id")).attr("checked", "checked")
+                                    $("#studyId_" + studyId).find(".conditions").find("#" + $(this).attr("id")).attr("checked", "checked");
+                                    $("#studyId_" + studyId).find(".conditions").find("#" + $(this).attr("id"))[0].checked = true;
                                     isValid = true;
                                     return false;
                                 }

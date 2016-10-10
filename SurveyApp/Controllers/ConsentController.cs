@@ -24,11 +24,18 @@ namespace SurveyApp.Controllers
             {
                 using (var cContext = new SurveyApp.Models.ChildContext())
                 {
-                    Child objChild = cContext.Children.Find(Convert.ToInt32(cid));
-                    if (objChild == null || objChild.Agreed == true)
+                    try
                     {
-                        return RedirectToAction("Index", "Consent", new { cid = HttpUtility.HtmlEncode(ViewBag.Cid), sts = 1 });
+                        Child objChild = cContext.Children.Find(Convert.ToInt32(cid));
+                        if (objChild == null || objChild.Agreed == true)
+                        {
+                            return RedirectToAction("Index", "Consent", new { cid = HttpUtility.HtmlEncode(ViewBag.Cid), sts = 1 });
+                        }
                     }
+                    catch(Exception ex){
+                        return RedirectToAction("Index", "Consent", new { cid = 0, sts = 1 });
+                    }
+                    
                 }
             }
             
