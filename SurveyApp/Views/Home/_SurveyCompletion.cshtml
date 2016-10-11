@@ -32,7 +32,7 @@
         #region ParentGraph
         if (userType == 0 || userType == 1)
         {
-            int completed = 0, partial = 0, notstarted = 0;
+            int completed = 0, partial = 0, notstarted = 0, notapplicable = 0;
             DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate AND (UserType = 1 OR UserType IS NULL)");
             if (drCount.Length > 0)
             {
@@ -62,9 +62,9 @@
             }
             else
             {
-                notstarted++;
+                notapplicable++;
             }
-            currParent = "['Completed', " + completed + "], ['Partially Completed', " + partial + "],['Not Started', " + notstarted + "]";
+            currParent = "['Completed', " + completed + "], ['Partially Completed', " + partial + "],['Not Started', " + notstarted + "],['Not Assigned', " + notapplicable + "]";
         }
         #endregion
 
@@ -72,7 +72,7 @@
         #region TeacherGraph
         if (userType == 0 || userType == 2)
         {
-            int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0;
+            int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0, notapplicableTeacher = 0;
             DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate AND (UserType = 2 OR UserType IS NULL)");
             if (drTeacherCount.Length > 0)
             {
@@ -102,9 +102,9 @@
             }
             else
             {
-                notstartedTeacher++;
+                notapplicableTeacher++;
             }
-            currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "]";
+            currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "],['Not Assigned', " + notapplicableTeacher + "]";
         }
         #endregion
     }
@@ -118,7 +118,7 @@
         #region ParentGraph
         if (userType == 0 || userType == 1)
         {
-            int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0;
+            int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0, notapplicablePrevious = 0;
             DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND (UserType = 1 OR UserType IS NULL)");
             if (drCount.Length > 0)
             {
@@ -148,9 +148,9 @@
             }
             else
             {
-                notstartedPrevious++;
+                notapplicablePrevious++;
             }
-            prevParent = "['Completed', " + completedPrevious + "], ['Partially Completed', " + partialPrevious + "],['Not Started', " + notstartedPrevious + "]";
+            prevParent = "['Completed', " + completedPrevious + "], ['Partially Completed', " + partialPrevious + "],['Not Started', " + notstartedPrevious + "],['Not Assigned', " + notapplicablePrevious + "]";
         }
         #endregion
 
@@ -158,7 +158,7 @@
         #region TeacherGraph
         if (userType == 0 || userType == 2)
         {
-            int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0;
+            int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0, notapplicableTeacherPrevious = 0;
             DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND (UserType = 2 OR UserType IS NULL)");
             if (drTeacherCount.Length > 0)
             {
@@ -188,9 +188,9 @@
             }
             else
             {
-                notstartedTeacherPrevious++;
+                notapplicableTeacherPrevious++;
             }
-            prevTeacher = "['Completed', " + completedTeacherPrevious + "], ['Partially Completed', " + partialTeacherPrevious + "],['Not Started', " + notstartedTeacherPrevious + "]";
+            prevTeacher = "['Completed', " + completedTeacherPrevious + "], ['Partially Completed', " + partialTeacherPrevious + "],['Not Started', " + notstartedTeacherPrevious + "],['Not Assigned', " + notapplicableTeacherPrevious + "]";
         }
         #endregion
     }
@@ -253,6 +253,7 @@ else
                                 <td style="color: #33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</td>
                                 <td style="color: #FFEB3B;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
                                 <td style="color: #EF5350;"><i class="ion-minus-round"></i>&nbsp;Not Started</td>
+                                <td style="color: #9E9E9E;"><i class="ion-minus-round"></i>&nbsp;Not Assigned</td>
                             </tr>
                         </table>                        
                     </div>
@@ -264,7 +265,7 @@ else
 
 </div>
 
-<script type="text/javascript">var colors = ['#33B86C', '#FFF379', '#EF5350']; //F46F66</script>
+<script type="text/javascript">var colors = ['#33B86C', '#FFF379', '#EF5350', '#9E9E9E']; //F46F66</script>
 @if (userType == 0 || userType == 1)
 {
     <script type="text/javascript">        
