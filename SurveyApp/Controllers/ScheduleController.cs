@@ -131,9 +131,14 @@ namespace SurveyApp.Controllers
                     if (mSchedule.Id <= 0)
                     {
                         cSchedule.Schedules.Add(objSchedule);
+                        cSchedule.SaveChanges();
                         scheduleId = cSchedule.Schedules.Max(item => item.Id);
                     }
-                    cSchedule.SaveChanges();
+                    else
+                    {
+                        cSchedule.SaveChanges();
+                    }
+                    
                 }
 
                 bool sendEmail = true;
