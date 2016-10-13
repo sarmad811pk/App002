@@ -1979,7 +1979,7 @@
                         <li>
                             <a href="#5" onclick="showGraphsSection(this, 3);">Parent/Teacher</a>
                         </li>
-                        <li>
+                        <li style="display:none;">
                             <a href="#6" onclick="showGraphsSection(this, 4);">Weekly Teacher</a>
                         </li>
                         <li>
@@ -2062,7 +2062,7 @@
                     <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>*@
                 </div>
-                <div class="row voffset weeklydiv" >
+                <div class="row voffset weeklydiv">
                     @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
 
                 </div>
