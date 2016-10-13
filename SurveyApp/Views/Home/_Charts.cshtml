@@ -83,13 +83,13 @@
         #endregion
 
         #region Abbreviated Sensory Profile
-        DataRow[] drASPP = dsCharts.Tables[0].Select("SURVEYid = 4");
+        DataRow[] drASPP = dsCharts.Tables[0].Select("SURVEYid = 1");
         foreach (DataRow dr in drASPP)
         {
             dASP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pASP += dr["Score"] + ",";
         }
-        DataRow[] drASPT = dsCharts.Tables[1].Select("SURVEYid = 4");
+        DataRow[] drASPT = dsCharts.Tables[1].Select("SURVEYid = 1");
         foreach (DataRow dr in drASPT)
         {
             tASP += dr["Score"] + ",";
