@@ -61,6 +61,7 @@
     string role = "";
     string inPer = "";
     string inDt = "";
+    bool isIntakeFormAssigned = false;
 
     public string getPercentCompletion(int surveyId, int childId, string url)
     {
@@ -116,6 +117,16 @@
                         }
                     }
 
+                    if(surveyId == 16 || surveyId == 43)
+                    {
+                        inPer = percentage;
+                        if (inPer == "100%")
+                        {
+                            inDt = (endDate != null && endDate != DateTime.MinValue ? endDate.ToString("MM/dd/yyyy") : "");
+                        }                        
+                    }
+                    
+
                     string cssClass = endDate >= DateTime.Now ? "tres" : "dos";
                     string urlForSurvey = url + "&perioddate=" + endDate.ToString("MM/dd/yyyy");
                     int percInt = Convert.ToInt32(percentage.Replace("%", ""));
@@ -127,12 +138,12 @@
         return info;
     }
 
-    public string getIntakeCompletion(int childId, string url) {
-        int surveyId = 16;
+    public string getIntakeCompletion(int childId, string url, int surveyId) {
         string comp = "";
 
         if (dsQuestionsFilled != null && dsQuestionsFilled.Tables.Count > 1 && dsQuestionsFilled.Tables[1].Rows.Count > 0)
         {
+
             DataRow[] drSchedules = dsQuestionsFilled.Tables[1].Select("SurveyId = " + surveyId + " AND ChildId = " + childId);
             foreach (DataRow dr in drSchedules)
             {
@@ -338,13 +349,19 @@
                             {
                                 if (schoolId == 1)
                                 {
-                                    string percentGen = getIntakeCompletion((int)drch["ID"], url.Replace("__", "16"));
-                                    <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGen))</div>
+                                    string percentGen = getPercentCompletion(16, (int)drch["ID"], url.Replace("__", "16"));
+                                    if (showHideSurvey(percentGen) == true)
+                                    {
+                                        <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form (OHS)@(Html.Raw(percentGen))</div>
+                                    }
                                 }
                                 if (schoolId == 2)
                                 {
-                                    string percentGenCAS = getIntakeCompletion((int)drch["ID"], url.Replace("__", "43"));
-                                    <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form@(Html.Raw(percentGenCAS))</div>
+                                    string percentGenCAS = getPercentCompletion(43, (int)drch["ID"], url.Replace("__", "43"));
+                                    if (showHideSurvey(percentGenCAS) == true)
+                                    {
+                                        <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form (CAS)@(Html.Raw(percentGenCAS))</div>
+                                    }
                                 }
                             }
                             @if (roles[0] == "Teacher")
@@ -558,7 +575,7 @@
 
                     <div style="clear:both;"></div>
                     
-                    <div class="col-md-6 text-left lifeevents boxitem" style="background: rgb(151, 201, 93) ;">
+                    <div class="col-md-@(roles[0] == "Parent" && inPer == "" && (schoolId == 1 || schoolId == 2) ? "12" : "6") text-left lifeevents boxitem" style="background: rgb(151, 201, 93) ;">
                         <div class="boxheading" style="background: rgb(139, 195, 74);">
                             <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = childID, ChildName = childName })">Add</a></span>
                         </div>
@@ -590,7 +607,7 @@
                         </div>
                     </div>    
                     
-                    @if(schoolId == 1 || schoolId == 2)
+                    @if((schoolId == 1 || schoolId == 2) && inPer != "")
                     {                    
                         <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
                         <div class="boxheading" style="background: #666666;">
@@ -641,11 +658,11 @@
                             }
                         </div>
                     </div>
-                    <div style="clear:both;"></div>
+                        <div style="clear:both;"></div>
                     }
                     
 
-                    @if (schoolId == 1 || schoolId == 2)
+                    @if ((schoolId == 1 || schoolId == 2) && inPer != "")
                     {
                         <div class="col-md-@(roles[0] == "Teacher" ? "6" : "12") text-left treatment boxitem" style="background: #2daad8;">
                             <div class="boxheading" style="background: #0084b5;">

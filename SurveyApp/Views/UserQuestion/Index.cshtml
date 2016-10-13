@@ -114,7 +114,7 @@
                     <table>
                         <tr>
                             <td>
-                                <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;display:none;">
+                                <select id="ddlStudy" class="col-sm-9 form-control" onchange="getStudyInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;display:none;text-transform:capitalize;">
                                     <option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>
                                     @foreach (DataRow drStd in dschildren.Tables[1].Rows)
                                     {
@@ -126,7 +126,7 @@
                                 @*<span style="font-size: 24px;color: #00adee;" class="dashboard-controls">&nbsp;&nbsp; &rArr; &nbsp;&nbsp;</span>*@
                             </td>
                             <td>
-                                <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;">
+                                <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;text-transform:capitalize;">
                                     @if (childrenCount >= 1 && Roles.IsUserInRole("Parent") == false)
                                     {
                                         <option value="0">All Children</option>
