@@ -444,7 +444,7 @@
                 EnableDisableChild(qid, ans);
                 setCompletionDiv();
                 if(SurveryID!=28 && SurveryID!=29){
-                    savequestions(qid, ans, score, childId, SurID,"SaveUpdate");
+                    savequestions(qid, ans, (SurveryID == 27 && ans == "" ? 0 : score), childId, SurID,"SaveUpdate");
                 }
             });
 

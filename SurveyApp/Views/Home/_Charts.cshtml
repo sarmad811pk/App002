@@ -24,6 +24,7 @@
     string dASP = "", pASP = "", tASP = "";
     string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
     string dPEDsql = "", pPEDsql = "";
+    string dSCQ = "", pSCQ = ""; 
     string dCareGiver = "", pCareGiver = "";
     string dPES = "", pPES = "";
     string dGSI = "", pGSI = "";
@@ -150,13 +151,23 @@
         //#endregion
 
         #region PedsQL-Parent Report for Children(8-12)
-        DataRow[] drPEDsqlP = dsCharts.Tables[2].Select("SURVEYid IN (6 ,7, 8, 9)");
+        DataRow[] drPEDsqlP = dsCharts.Tables[2].Select("SURVEYid IN (6 ,7, 8, 9, 45)");
         foreach (DataRow dr in drPEDsqlP)
         {
             dPEDsql += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pPEDsql += dr["Score"] + ",";
         }
         #endregion
+
+        #region SCQ
+        DataRow[] drSCQP = dsCharts.Tables[2].Select("SURVEYid IN (11)");
+        foreach (DataRow dr in drSCQP)
+        {
+            dSCQ += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pSCQ += dr["Score"] + ",";
+        }
+        #endregion
+
 
         #region Caregiver Strain Questionnaire
         DataRow[] drCareGiverP = dsCharts.Tables[2].Select("SURVEYid = 2");
@@ -1032,6 +1043,62 @@
                 symbol: 'square'
             },
             data: [@Html.Raw(pPEDsql.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------Social Communication Questionnaire----------------------------------------
+    $('#divSCQ').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Social communication Questionnaire – life time'
+        },
+        subtitle: {
+            //text: '*Higher is better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dSCQ.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pSCQ.TrimEnd(','))],
             color: '#00cc00'
 
         }],
@@ -2078,6 +2145,10 @@
                 <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6"><div id="tADAM"></div></div>
                     <div class="col-sm-6"><div id="tVanderbilt"></div></div>
+                </div>
+
+                <div class="row voffset parentdiv">
+                    <div class="col-sm-6"><div id="divSCQ"></div></div>
                 </div>
 
                 @*<div class="row voffset">
