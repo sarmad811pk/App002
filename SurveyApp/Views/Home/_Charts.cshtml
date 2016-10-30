@@ -24,7 +24,7 @@
     string dASP = "", pASP = "", tASP = "";
     string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
     string dPEDsql = "", pPEDsql = "";
-    string dSCQ = "", pSCQ = ""; 
+    string dSCQ = "", pSCQ = "";
     string dCareGiver = "", pCareGiver = "";
     string dPES = "", pPES = "";
     string dGSI = "", pGSI = "";
@@ -44,6 +44,8 @@
     string dpADAM = "", dtADAM = "", pADAM = "", tADAM = "";
     string dpVanderbilt = "", dtVanderbilt = "", pVanderbilt = "", tVanderbilt = "";
 
+    string pvD = "", pvAdapting = "", pvCFH = "", pvCFS = "", pvLAU = "", pvLIC = "", pvPAULT = "", pvSectionA = "", pvSectionB = "", pvSectionC = "", pvRAW = "", pvRTO = "", pvT = "", pvULM = "", pvUSM = "";
+    string tvD = "", tvCS = "", tvE = "", tvFM = "", tvGM = "", tvIR = "", tvN = "", tvP = "", tvPAL = "", tvSectionA = "", tvSectionB = "", tvSectionC = "", tvR = "", tvSC = "", tvW = "";
     //Auditory Sensitivity Taste/Smell Sensitivity  Underresponsiveness Visual Sensitivity  Questionnaire
 
     /* LIFE EVENTS */
@@ -343,6 +345,155 @@
         //    tstpWLCg += dr["Score"] + ",";
         //}
         //#endregion
+
+
+        #region VindelandParent
+        DataRow[] pvDates = dsCharts.Tables[3].Select("QuestionGroup = 'Adapting' AND SURVEYid = 46");
+        foreach (DataRow dr in pvDates)
+        {
+            pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pvAdapting += dr["Score"] + ",";
+        }
+        DataRow[] drCaring = dsCharts.Tables[3].Select("QuestionGroup = 'Caring For Home' AND SURVEYid = 46");
+        foreach (DataRow dr in drCaring)
+        {
+            pvCFH += dr["Score"] + ",";
+        }
+        DataRow[] drSelf = dsCharts.Tables[3].Select("QuestionGroup = 'Caring For Self' AND SURVEYid = 46");
+        foreach (DataRow dr in drSelf)
+        {
+            pvCFS += dr["Score"] + ",";
+        }
+        DataRow[] drListening = dsCharts.Tables[3].Select("QuestionGroup = 'Listening And Understanding' AND SURVEYid = 46");
+        foreach (DataRow dr in drListening)
+        {
+            pvLAU += dr["Score"] + ",";
+        }
+        DataRow[] drLiing = dsCharts.Tables[3].Select("QuestionGroup = 'Living In Community' AND SURVEYid = 46");
+        foreach (DataRow dr in drLiing)
+        {
+            pvLIC += dr["Score"] + ",";
+        }
+        DataRow[] drplaying = dsCharts.Tables[3].Select("QuestionGroup = 'Playing And Using Leisure Time' AND SURVEYid = 46");
+        foreach (DataRow dr in drplaying)
+        {
+            pvPAULT += dr["Score"] + ",";
+        }
+        DataRow[] drseca = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section A' AND SURVEYid = 46");
+        foreach (DataRow dr in drseca)
+        {
+            pvSectionA += dr["Score"] + ",";
+        }
+        DataRow[] drsecb = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section B' AND SURVEYid = 46");
+        foreach (DataRow dr in drsecb)
+        {
+            pvSectionB += dr["Score"] + ",";
+        }
+        DataRow[] drsecc = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section C' AND SURVEYid = 46");
+        foreach (DataRow dr in drsecc)
+        {
+            pvSectionC += dr["Score"] + ",";
+        }
+        DataRow[] drread = dsCharts.Tables[3].Select("QuestionGroup = 'Reading and Writing' AND SURVEYid = 46");
+        foreach (DataRow dr in drread)
+        {
+            pvRAW += dr["Score"] + ",";
+        }
+        DataRow[] drrto = dsCharts.Tables[3].Select("QuestionGroup = 'Relating To Others' AND SURVEYid = 46");
+        foreach (DataRow dr in drrto)
+        {
+            pvRTO += dr["Score"] + ",";
+        }
+        DataRow[] drTaling = dsCharts.Tables[3].Select("QuestionGroup = 'Talking' AND SURVEYid = 46");
+        foreach (DataRow dr in drTaling)
+        {
+            pvT += dr["Score"] + ",";
+        }
+        DataRow[] drulm = dsCharts.Tables[3].Select("QuestionGroup = 'Using Large Muscles' AND SURVEYid = 46");
+        foreach (DataRow dr in drulm)
+        {
+            pvULM += dr["Score"] + ",";
+        }
+        DataRow[] drusm = dsCharts.Tables[3].Select("QuestionGroup = 'Using Small Muscles' AND SURVEYid = 46");
+        foreach (DataRow dr in drusm)
+        {
+            pvUSM += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region VindelandTeacher
+        DataRow[] tvDates = dsCharts.Tables[4].Select("QuestionGroup = 'Coping Skills' AND SURVEYid = 47");
+        foreach (DataRow dr in tvDates)
+        {
+            tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pvAdapting += dr["Score"] + ",";
+        }
+        DataRow[] drExpressive = dsCharts.Tables[4].Select("QuestionGroup = 'Expressive' AND SURVEYid = 47");
+        foreach (DataRow dr in drExpressive)
+        {
+            tvE += dr["Score"] + ",";
+        }
+        DataRow[] Fine = dsCharts.Tables[4].Select("QuestionGroup = 'Fine Motor' AND SURVEYid = 47");
+        foreach (DataRow dr in Fine)
+        {
+            tvFM += dr["Score"] + ",";
+        }
+        DataRow[] Gross = dsCharts.Tables[4].Select("QuestionGroup = 'Gross Motor' AND SURVEYid = 47");
+        foreach (DataRow dr in Gross)
+        {
+            tvGM += dr["Score"] + ",";
+        }
+        DataRow[] Interpersonal = dsCharts.Tables[4].Select("QuestionGroup = 'Interpersonal Reslationships' AND SURVEYid = 47");
+        foreach (DataRow dr in Interpersonal)
+        {
+            tvIR += dr["Score"] + ",";
+        }
+        DataRow[] Numeric = dsCharts.Tables[4].Select("QuestionGroup = 'Numeric' AND SURVEYid = 47");
+        foreach (DataRow dr in Numeric)
+        {
+            tvN += dr["Score"] + ",";
+        }
+        DataRow[] drsecat = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section A' AND SURVEYid = 47");
+        foreach (DataRow dr in drsecat)
+        {
+            tvSectionA += dr["Score"] + ",";
+        }
+        DataRow[] drsecbt = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section B' AND SURVEYid = 47");
+        foreach (DataRow dr in drsecbt)
+        {
+            tvSectionB += dr["Score"] + ",";
+        }
+        DataRow[] drsecct = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section C' AND SURVEYid = 47");
+        foreach (DataRow dr in drsecct)
+        {
+            tvSectionC += dr["Score"] + ",";
+        }
+        DataRow[] Personal = dsCharts.Tables[4].Select("QuestionGroup = 'Personal' AND SURVEYid = 47");
+        foreach (DataRow dr in Personal)
+        {
+            tvP += dr["Score"] + ",";
+        }
+        DataRow[] Play = dsCharts.Tables[4].Select("QuestionGroup = 'Play and Leisure' AND SURVEYid = 47");
+        foreach (DataRow dr in Play)
+        {
+            tvPAL += dr["Score"] + ",";
+        }
+        DataRow[] Receptive = dsCharts.Tables[4].Select("QuestionGroup = 'Receptive' AND SURVEYid = 47");
+        foreach (DataRow dr in Receptive)
+        {
+            tvR += dr["Score"] + ",";
+        }
+        DataRow[] School = dsCharts.Tables[4].Select("QuestionGroup = 'School Community' AND SURVEYid = 47");
+        foreach (DataRow dr in School)
+        {
+            tvSC += dr["Score"] + ",";
+        }
+        DataRow[] Written = dsCharts.Tables[4].Select("QuestionGroup = 'Written' AND SURVEYid = 47");
+        foreach (DataRow dr in Written)
+        {
+            tvW += dr["Score"] + ",";
+        }
+        #endregion
     }
 
 }
@@ -869,6 +1020,339 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
+
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
+        $('#divParentVineland').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Vineland-3 (Parent)'
+        },
+        subtitle: {
+            text: 'Comprehensive Parent/Caregiver Form'
+        },
+        xAxis: {
+            categories: [@Html.Raw(pvD.Trim(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Adapting',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pvAdapting.Trim(','))],
+            color: '#73B3EF'
+
+        }, {
+            name: 'Caring For Home',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvCFH.Trim(','))],
+            color: '#67F97C'
+
+        }, {
+            name: 'Caring For Self',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pvCFS.Trim(','))],
+            color: '#FF9E4F'
+
+        }, {
+            name: 'Listening And Understanding',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvLAU.Trim(','))],
+            color: '#8778EC'
+        }
+
+        , {
+            name: 'Living In Community',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvLIC.Trim(','))],
+            color: '#434348'
+        }
+        , {
+            name: 'Playing And Using Leisure Time',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvPAULT.Trim(','))],
+            color: '#73B3EF'
+        }
+        , {
+            name: 'Problem Behaviors - Section A',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvSectionA.Trim(','))],
+            color: '#67F97C'
+        }, {
+            name: 'Problem Behaviors - Section B',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvSectionB.Trim(','))],
+            color: '#FF9E4F'
+        }
+        , {
+            name: 'Problem Behaviors - Section C',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvSectionC.Trim(','))],
+            color: '#8778EC'
+        }
+        , {
+            name: 'Reading and Writing',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvRAW.Trim(','))],
+            color: '#8778EC'
+        }
+        , {
+            name: 'Relating To Others',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvRTO.Trim(','))],
+            color: '#73B3EF'
+        }
+    , {
+        name: 'Talking',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(pvT.Trim(','))],
+        color: '#67F97C'
+    }
+    , {
+        name: 'Using Large Muscles',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(pvULM.Trim(','))],
+        color: '#FF9E4F'
+    }
+    , {
+        name: 'Using Small Muscles',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(pvUSM.Trim(','))],
+        color: '#8778EC'
+    }
+        ]
+
+
+            , yAxis: {
+            
+        }
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
+        $('#divTeacherVineland').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Vineland-3 (Teacher)'
+        },
+        subtitle: {
+            text: 'Comprehensive Teacher Form'
+        },
+        xAxis: {
+            categories: [@Html.Raw(tvD.Trim(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Coping Skills',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tvCS.Trim(','))],
+            color: '#73B3EF'
+
+        }, {
+            name: 'Expressive',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvE.Trim(','))],
+            color: '#67F97C'
+
+        }, {
+            name: 'Fine Motor',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tvFM.Trim(','))],
+            color: '#FF9E4F'
+
+        }, {
+            name: 'Gross Motor',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvGM.Trim(','))],
+            color: '#8778EC'
+        }
+
+        , {
+            name: 'Interpersonal Reslationships',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvIR.Trim(','))],
+            color: '#434348'
+        }
+        , {
+            name: 'Numeric',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvN.Trim(','))],
+            color: '#434348'
+        }
+        , {
+            name: 'Problem Behaviors - Section A',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvSectionA.Trim(','))],
+            color: '#434348'
+        }, {
+            name: 'Problem Behaviors - Section B',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvSectionB.Trim(','))],
+            color: '#434348'
+        }
+        , {
+            name: 'Problem Behaviors - Section C',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvSectionC.Trim(','))],
+            color: '#434348'
+        }
+        , {
+            name: 'Personal',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvP.Trim(','))],
+            color: '#434348'
+        }
+        , {
+            name: 'Play and Leisure',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tvPAL.Trim(','))],
+            color: '#434348'
+        }
+    , {
+        name: 'Receptive',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(tvR.Trim(','))],
+        color: '#434348'
+    }
+    , {
+        name: 'School Community',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(tvSC.Trim(','))],
+        color: '#434348'
+    }
+    , {
+        name: 'Written',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(tvW.Trim(','))],
+        color: '#434348'
+    }
+        ]
+
+
+            , yAxis: {
+
+        }
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+
 @*<script type="text/javascript">
     $(function () {
     //-----------------------------------------Short Language Profile----------------------------------------
@@ -2159,9 +2643,14 @@
                     <div id="levelchangesforChild2312" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
                 </div>*@
+                <div class="row voffset parentdiv">
+                    <div id="divParentVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>
+                <div class="row voffset teacherdiv">
+                    <div id="divTeacherVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                </div>
+                
             </div>
-
-
         </td>
     </tr>
 </table>

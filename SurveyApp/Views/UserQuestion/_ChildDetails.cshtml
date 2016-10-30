@@ -382,6 +382,11 @@
                                 {
                                     <div class="col-md-12 text-left">CAS Grit and Resilience Scale@(Html.Raw(testReportCard))</div>
                                 }
+                                var vinelandTeacher = getPercentCompletion(47, (int)drch["ID"], url.Replace("__", "47"));
+                                if (showHideSurvey(vinelandTeacher) == true)
+                                {
+                                    <div class="col-md-12 text-left">Vineland-3 (Teacher)@(Html.Raw(vinelandTeacher))</div>
+                                }
                             }
                             @{
                                 var abbsensoryprofile = getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
@@ -518,6 +523,11 @@
                                 {
                                     <div class="col-md-12 text-left">Parent Follow-Up Form (OHS)@(Html.Raw(percentM))</div>
                                 }*@
+                            var vinelandParent = getPercentCompletion(46, (int)drch["ID"], url.Replace("__", "46"));
+                            if (showHideSurvey(vinelandParent) == true)
+                            {
+                                <div class="col-md-12 text-left">Vineland-3 (Parent)@(Html.Raw(vinelandParent))</div>
+                                }
                             }
     </div>
     <div class="col-sm-5">
