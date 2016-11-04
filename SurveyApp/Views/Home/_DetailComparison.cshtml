@@ -39,8 +39,14 @@
         {
             scheduleDate = drS["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(drS["ScheduleDate"]).ToString("MM/dd/yyyy") : "";
             userId = drS["UserID"] != DBNull.Value ? drS["UserID"].ToString() : "";
+            if (surveyId == 4 && childId == 7 && teacherId == 99 && userId == "110")
+            {
+                string abc = "";
+            }
+            int aoutMin = drS["AOUTMin"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMin"]) : 0;
+            int aoutMax = drS["AOUTMax"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMax"]) : 0;
 
-            if ((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId)
+            if ((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId && (aoutMin == (int)userType || aoutMax == (int)userType))
             {
                 string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
                 string title = (cssClass == "complete" ? "This questionnaire is complete" : (cssClass == "incomplete" ? "This questionnaire is partially complete" : (cssClass == "notstarted" ? "This questionnaire has not started yet" : "Child is not scheduled for this questionnaire")));
@@ -68,8 +74,6 @@
                     }
                     else
                     {
-                        int aoutMin = drS["AOUTMin"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMin"]) : 0;
-                        int aoutMax = drS["AOUTMax"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMax"]) : 0;
                         if(aoutMin == (int)userType || aoutMax == (int)userType)
                         {
                             value = notstarted;

@@ -8,6 +8,9 @@
     string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
     string childNamets = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
 
+    string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+    string role = roles.Length > 0 ? roles[0] : "";
+
     //string childName = "";
     //if(childId > 0)
     //{
@@ -25,6 +28,7 @@
     string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
     string dPEDsql = "", pPEDsql = "";
     string dSCQ = "", pSCQ = "";
+    string dSCQTeacher = "", tSCQTeacher = "";
     string dCareGiver = "", pCareGiver = "";
     string dPES = "", pPES = "";
     string dGSI = "", pGSI = "";
@@ -52,7 +56,7 @@
     //List<LifeEventChart> lstABCPTLifeEvents = new List<LifeEventChart>();
     //int indexLE = 0;
 
-
+    #region populatingGraphs
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
     {
         #region Aberrant Behavior Checklist Social Responsiveness Scale
@@ -167,6 +171,12 @@
         {
             dSCQ += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pSCQ += dr["Score"] + ",";
+        }
+        DataRow[] drSCQT = dsCharts.Tables[2].Select("SURVEYid IN (11)");
+        foreach (DataRow dr in drSCQT)
+        {
+            dSCQTeacher += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tSCQTeacher += dr["Score"] + ",";
         }
         #endregion
 
@@ -495,6 +505,7 @@
         }
         #endregion
     }
+    #endregion
 
 }
 
@@ -503,7 +514,8 @@
 
 
 
-
+@if (role != "" && role != "Parent")
+{
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------ABC VS SRS Line Chart----------------------------------------
@@ -598,113 +610,7 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
-<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------ABC Sub Categories-Parents----------------------------------------
-    $('#ABCSubCategoriesParent').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Aberrant  Behaviour Checklist'
-        },
-        subtitle: {
-            text: '*Lower is Better'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dpABCg.Trim(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Irritability/Agitation',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(aspABCg.Trim(','))],
-            color: '#73B3EF'
 
-        }, {
-            name: 'Letargy, Social Withdrawl',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(tstpABCg.Trim(','))],
-            color: '#67F97C'
-
-        }, {
-            name: 'Sterotypic Behavior',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(unpABCg.Trim(','))],
-            color: '#FF9E4F'
-
-        }, {
-            name: 'Hyperactivity/Noncompliance',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(vspABCg.Trim(','))],
-            color: '#8778EC'
-        }
-
-        , {
-            name: 'Inappropriate Speech',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(qpABCg.Trim(','))],
-            color: '#434348'
-        }],
-        yAxis:{
-            max: 50,
-            plotLines: [{
-                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(48)', style: { "color": "#8778EC", "fontSize": "10px" } }
-            },
-            {
-                value: 12, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(12)', style: { "color": "#434348", "fontSize": "10px" } }
-            },
-            {
-                value: 45, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(45)', style: { "color": "#73B3EF", "fontSize": "10px" } }
-            },
-            {
-                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(48)', style: { "color": "#67F97C", "fontSize": "10px" } }
-            },
-            {
-                value: 21, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(21)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
-            }]
-        }
-
-
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------ABC Sub Categories-Teacher----------------------------------------
@@ -809,113 +715,7 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
-<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
-    $('#SRSSubScale').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Social Responsivness Scale <span style="font-size:13px;">(sub scale)</span>'
-        },
-        subtitle: {
-            text: '*Lower is Better'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dpSRSg.Trim(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Social Awareness',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(aspSRSg.Trim(','))],
-            color: '#73B3EF'
 
-        }, {
-            name: 'Social Cognition',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(tstpSRSg.Trim(','))],
-            color: '#67F97C'
-
-        }, {
-            name: 'Social Communication',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(unpSRSg.Trim(','))],
-            color: '#FF9E4F'
-
-        }, {
-            name: 'Social Motivation',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(vspSRSg.Trim(','))],
-            color: '#8778EC'
-        }
-
-        , {
-            name: 'Restricted Interests and Repetitive Bahaviour',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(qpSRSg.Trim(','))],
-            color: '#434348'
-        }],yAxis: {
-            max: 70,
-            plotLines: [{
-                value: 24, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(24)', style: { "color": "#73B3EF", "fontSize": "10px" } }
-            },
-            {
-                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(36)', style: { "color": "#67F97C", "fontSize": "10px" } }
-            },
-            {
-                value: 63, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(63)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
-            },
-            {
-                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(36)', style: { "color": "#8778EC", "fontSize": "10px" } }
-            },
-            {
-                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br>.<br>.Max(36)', style: { "color": "#434348", "fontSize": "10px" } }
-            }]
-        }
-         
-
-
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
@@ -1015,172 +815,6 @@
             {
                 value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br>.<br>.Max(36)', style: { "color": "#434348", "fontSize": "10px" } }
             }]
-        }
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
-
-
-<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
-        $('#divParentVineland').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Vineland-3 (Parent)'
-        },
-        subtitle: {
-            text: 'Comprehensive Parent/Caregiver Form'
-        },
-        xAxis: {
-            categories: [@Html.Raw(pvD.Trim(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Adapting',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pvAdapting.Trim(','))],
-            color: '#73B3EF'
-
-        }, {
-            name: 'Caring For Home',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvCFH.Trim(','))],
-            color: '#67F97C'
-
-        }, {
-            name: 'Caring For Self',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pvCFS.Trim(','))],
-            color: '#FF9E4F'
-
-        }, {
-            name: 'Listening And Understanding',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvLAU.Trim(','))],
-            color: '#8778EC'
-        }
-
-        , {
-            name: 'Living In Community',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvLIC.Trim(','))],
-            color: '#434348'
-        }
-        , {
-            name: 'Playing And Using Leisure Time',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvPAULT.Trim(','))],
-            color: '#73B3EF'
-        }
-        , {
-            name: 'Problem Behaviors - Section A',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvSectionA.Trim(','))],
-            color: '#67F97C'
-        }, {
-            name: 'Problem Behaviors - Section B',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvSectionB.Trim(','))],
-            color: '#FF9E4F'
-        }
-        , {
-            name: 'Problem Behaviors - Section C',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvSectionC.Trim(','))],
-            color: '#8778EC'
-        }
-        , {
-            name: 'Reading and Writing',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvRAW.Trim(','))],
-            color: '#8778EC'
-        }
-        , {
-            name: 'Relating To Others',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(pvRTO.Trim(','))],
-            color: '#73B3EF'
-        }
-    , {
-        name: 'Talking',
-        marker: {
-            symbol: 'diamond'
-        },
-        data: [@Html.Raw(pvT.Trim(','))],
-        color: '#67F97C'
-    }
-    , {
-        name: 'Using Large Muscles',
-        marker: {
-            symbol: 'diamond'
-        },
-        data: [@Html.Raw(pvULM.Trim(','))],
-        color: '#FF9E4F'
-    }
-    , {
-        name: 'Using Small Muscles',
-        marker: {
-            symbol: 'diamond'
-        },
-        data: [@Html.Raw(pvUSM.Trim(','))],
-        color: '#8778EC'
-    }
-        ]
-
-
-            , yAxis: {
-            
         }
     });
         //-----------------------------------------End----------------------------------------
@@ -1352,70 +986,6 @@
     });
 </script>
 
-
-@*<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------Short Language Profile----------------------------------------
-    $('#ShortLanguageProfile').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Short Language Profile'
-        },
-        subtitle: {
-            text: 'Parent/Teacher Quarterly Trend'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dSLP.Trim(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Parent SPL',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pSLP.Trim(','))],
-            color: '#73B3EF'
-
-        }, {
-            name: 'Teacher SPL',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(tSLP.Trim(','))],
-            color: '#434348'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>*@
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
@@ -1479,66 +1049,11 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
-<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------PedsQL-Parent----------------------------------------
-    $('#PedsQLParent').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Peds Quality of Life'
-        },
-        subtitle: {
-            text: '*Higher is better'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dPEDsql.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Scores',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pPEDsql.TrimEnd(','))],
-            color: '#00cc00'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
 
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------Social Communication Questionnaire----------------------------------------
-    $('#divSCQ').highcharts({
+    $('#divSCQTeacher').highcharts({
         chart: {
             type: 'spline'
         },
@@ -1549,7 +1064,7 @@
             //text: '*Higher is better'
         },
         xAxis: {
-            categories: [@Html.Raw(dSCQ.TrimEnd(','))]
+            categories: [@Html.Raw(dSCQTeacher.TrimEnd(','))]
         },
         yAxis: {
             title: {
@@ -1582,7 +1097,7 @@
             marker: {
                 symbol: 'square'
             },
-            data: [@Html.Raw(pSCQ.TrimEnd(','))],
+            data: [@Html.Raw(tSCQTeacher.TrimEnd(','))],
             color: '#00cc00'
 
         }],
@@ -1590,234 +1105,7 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
-@*<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------PedsQL Parent Report----------------------------------------
-    $('#PedsQLParentReport').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'PedsQL Parent Report'
-        },
-        subtitle: {
-            text: 'Parent Quarterly Trend'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dpPQLg.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'PedsQL(8-12)',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(aspPQLg.TrimEnd(','))],
-            color: '#73B3EF'
 
-        }, {
-            name: 'PedsQL(13-18)',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(tstpPQLg.TrimEnd(','))],
-            color: '#434348'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>*@
-<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------CaregiverStrainQuesionaire----------------------------------------
-    $('#CaregiverStrainQuesionaire').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Caregiver Strain Quesionnaire'
-        },
-        subtitle: {
-            text: '*Lower is Better'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dCareGiver.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Scores',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pCareGiver.TrimEnd(','))],
-            color: '#cc0000'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
-<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------CaregiverStrainQuesionaire----------------------------------------
-    $('#FamilyEmpowementScale').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Family Empowerment Scale'
-        },
-        subtitle: {
-            text: '*Higher is better'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dPES.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Scores',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pPES.TrimEnd(','))],
-            color: '#00cc00'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
-<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------GI Severity Index----------------------------------------
-    $('#GISeverityIndex').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'GI Severity Index'
-        },
-        subtitle: {
-            text: '*Lower is Better'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dGSI.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Scores',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pGSI.TrimEnd(','))],
-            color: '#cc0000'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
 <script type="text/javascript">
     $(function () {
     //-----------------------------------------Academic Progress DSM Level 1----------------------------------------
@@ -1867,239 +1155,6 @@
             },
             data: [@Html.Raw(tAPRS.TrimEnd(','))],
             color: '#73B3EF'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
-@*<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------* When level changes for Child----------------------------------------
-    $('#levelchangesforChild').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: '* When level changes for Child'
-        },
-        subtitle: {
-            text: 'Academic Progress'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dpWLCg.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'DSM Level 1',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(aspWLCg.TrimEnd(','))],
-            color: '#73B3EF'
-
-        }, {
-            name: 'DSM Level 2',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(tstpWLCg.TrimEnd(','))],
-            color: '#434348'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>*@
-@*<script type="text/javascript">
-    $(function () {
-    //-----------------------------------------Weekly Progress Scroe----------------------------------------
-    $('#WeeklyProgressScroe').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Weekly Progress Score'
-        },
-        subtitle: {
-            text: 'Teachers: Weekly trend'
-        },
-        xAxis: {
-            categories: [@Html.Raw(dWT.TrimEnd(','))]
-        },
-
-        yAxis: {
-            plotLines: [{
-                color: '#4F81BD',
-                width: 2,
-                value: 70,
-                label: {
-                    text: 'Avg score',
-                    align: 'right',
-                    x: -10
-                }
-            }]
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Scores',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(tWT.TrimEnd(','))],
-            color: '#73B3EF'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>*@
-
-<script type="text/javascript">
-    $(function () {
-        //-----------------------------------------Anxiety Depression and Mood Scale--PARENT--------------------------------------
-    $('#pADAM').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Anxiety Depression and Mood Scale'
-        },
-        //subtitle: {
-        //    text: '*Lower is Better'
-        //},
-        xAxis: {
-            categories: [@Html.Raw(dpADAM.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Scores',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pADAM.TrimEnd(','))],
-            color: '#cc0000'
-
-        }],
-    });
-        //-----------------------------------------End----------------------------------------
-    });
-</script>
-
-<script type="text/javascript">
-    $(function () {
-        //-----------------------------------------Vanderbilt Adhd Diagnostic Teacher Rating Scale--PARENT--------------------------------------
-        $('#pVanderbilt').highcharts({
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: 'Vanderbilt Adhd Diagnostic Teacher Rating Scale'
-        },
-        //subtitle: {
-        //    text: '*Lower is Better'
-        //},
-        xAxis: {
-            categories: [@Html.Raw(dpVanderbilt.TrimEnd(','))]
-        },
-        yAxis: {
-            title: {
-                text: 'Scores'
-            },
-            labels: {
-                formatter: function () {
-                    return this.value + '';
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: 'Scores',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(pVanderbilt.TrimEnd(','))],
-            color: '#cc0000'
 
         }],
     });
@@ -2218,6 +1273,781 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
+}
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------ABC Sub Categories-Parents----------------------------------------
+    $('#ABCSubCategoriesParent').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Aberrant  Behaviour Checklist'
+        },
+        subtitle: {
+            text: '*Lower is Better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dpABCg.Trim(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Irritability/Agitation',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(aspABCg.Trim(','))],
+            color: '#73B3EF'
+
+        }, {
+            name: 'Letargy, Social Withdrawl',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tstpABCg.Trim(','))],
+            color: '#67F97C'
+
+        }, {
+            name: 'Sterotypic Behavior',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(unpABCg.Trim(','))],
+            color: '#FF9E4F'
+
+        }, {
+            name: 'Hyperactivity/Noncompliance',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(vspABCg.Trim(','))],
+            color: '#8778EC'
+        }
+
+        , {
+            name: 'Inappropriate Speech',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(qpABCg.Trim(','))],
+            color: '#434348'
+        }],
+        yAxis:{
+            max: 50,
+            plotLines: [{
+                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(48)', style: { "color": "#8778EC", "fontSize": "10px" } }
+            },
+            {
+                value: 12, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(12)', style: { "color": "#434348", "fontSize": "10px" } }
+            },
+            {
+                value: 45, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(45)', style: { "color": "#73B3EF", "fontSize": "10px" } }
+            },
+            {
+                value: 48, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(48)', style: { "color": "#67F97C", "fontSize": "10px" } }
+            },
+            {
+                value: 21, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(21)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
+            }]
+        }
+
+
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
+    $('#SRSSubScale').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Social Responsivness Scale <span style="font-size:13px;">(sub scale)</span>'
+        },
+        subtitle: {
+            text: '*Lower is Better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dpSRSg.Trim(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Social Awareness',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(aspSRSg.Trim(','))],
+            color: '#73B3EF'
+
+        }, {
+            name: 'Social Cognition',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(tstpSRSg.Trim(','))],
+            color: '#67F97C'
+
+        }, {
+            name: 'Social Communication',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(unpSRSg.Trim(','))],
+            color: '#FF9E4F'
+
+        }, {
+            name: 'Social Motivation',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(vspSRSg.Trim(','))],
+            color: '#8778EC'
+        }
+
+        , {
+            name: 'Restricted Interests and Repetitive Bahaviour',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(qpSRSg.Trim(','))],
+            color: '#434348'
+        }],yAxis: {
+            max: 70,
+            plotLines: [{
+                value: 24, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(24)', style: { "color": "#73B3EF", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(36)', style: { "color": "#67F97C", "fontSize": "10px" } }
+            },
+            {
+                value: 63, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", text: 'Max(63)', style: { "color": "#FF9E4F", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br> Max(36)', style: { "color": "#8778EC", "fontSize": "10px" } }
+            },
+            {
+                value: 36, color: 'black', dashStyle: 'shortdash', width: 1, label: { align: "right", userHTML: true, text: ' <br>.<br>.Max(36)', style: { "color": "#434348", "fontSize": "10px" } }
+            }]
+        }
+         
+
+
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------Social Responsivness Scale(SRS) sub scale----------------------------------------
+        $('#divParentVineland').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Vineland-3 (Parent)'
+        },
+        subtitle: {
+            text: 'Comprehensive Parent/Caregiver Form'
+        },
+        xAxis: {
+            categories: [@Html.Raw(pvD.Trim(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Adapting',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pvAdapting.Trim(','))],
+            color: '#73B3EF'
+
+        }, {
+            name: 'Caring For Home',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvCFH.Trim(','))],
+            color: '#67F97C'
+
+        }, {
+            name: 'Caring For Self',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pvCFS.Trim(','))],
+            color: '#FF9E4F'
+
+        }, {
+            name: 'Listening And Understanding',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvLAU.Trim(','))],
+            color: '#8778EC'
+        }
+
+        , {
+            name: 'Living In Community',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvLIC.Trim(','))],
+            color: '#434348'
+        }
+        , {
+            name: 'Playing And Using Leisure Time',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvPAULT.Trim(','))],
+            color: '#73B3EF'
+        }
+        , {
+            name: 'Problem Behaviors - Section A',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvSectionA.Trim(','))],
+            color: '#67F97C'
+        }, {
+            name: 'Problem Behaviors - Section B',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvSectionB.Trim(','))],
+            color: '#FF9E4F'
+        }
+        , {
+            name: 'Problem Behaviors - Section C',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvSectionC.Trim(','))],
+            color: '#8778EC'
+        }
+        , {
+            name: 'Reading and Writing',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvRAW.Trim(','))],
+            color: '#8778EC'
+        }
+        , {
+            name: 'Relating To Others',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [@Html.Raw(pvRTO.Trim(','))],
+            color: '#73B3EF'
+        }
+    , {
+        name: 'Talking',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(pvT.Trim(','))],
+        color: '#67F97C'
+    }
+    , {
+        name: 'Using Large Muscles',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(pvULM.Trim(','))],
+        color: '#FF9E4F'
+    }
+    , {
+        name: 'Using Small Muscles',
+        marker: {
+            symbol: 'diamond'
+        },
+        data: [@Html.Raw(pvUSM.Trim(','))],
+        color: '#8778EC'
+    }
+        ]
+
+
+            , yAxis: {
+            
+        }
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------PedsQL-Parent----------------------------------------
+    $('#PedsQLParent').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Peds Quality of Life'
+        },
+        subtitle: {
+            text: '*Higher is better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dPEDsql.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pPEDsql.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------Social Communication Questionnaire----------------------------------------
+    $('#divSCQ').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Social communication Questionnaire – life time'
+        },
+        subtitle: {
+            //text: '*Higher is better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dSCQ.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pSCQ.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------CaregiverStrainQuesionaire----------------------------------------
+    $('#CaregiverStrainQuesionaire').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Caregiver Strain Quesionnaire'
+        },
+        subtitle: {
+            text: '*Lower is Better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dCareGiver.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pCareGiver.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------CaregiverStrainQuesionaire----------------------------------------
+    $('#FamilyEmpowementScale').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Family Empowerment Scale'
+        },
+        subtitle: {
+            text: '*Higher is better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dPES.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pPES.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------GI Severity Index----------------------------------------
+    $('#GISeverityIndex').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'GI Severity Index'
+        },
+        subtitle: {
+            text: '*Lower is Better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dGSI.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pGSI.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Anxiety Depression and Mood Scale--PARENT--------------------------------------
+    $('#pADAM').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Anxiety Depression and Mood Scale'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dpADAM.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pADAM.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Vanderbilt Adhd Diagnostic Teacher Rating Scale--PARENT--------------------------------------
+        $('#pVanderbilt').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Vanderbilt Adhd Diagnostic Teacher Rating Scale'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dpVanderbilt.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pVanderbilt.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
 
 <style type="text/css">
     .voffset {
@@ -2260,6 +2090,7 @@
 </style>
 
 <h3 style="text-transform:capitalize;">@studyName @(childNamets != "" ? "(" + childNamets + ")" : "") - Statistical Analysis</h3>
+
 
 @if (childId == 0 || childId != 0)
 {
@@ -2524,18 +2355,21 @@
                         <li>
                             <a class="selected" href="#3" onclick="showGraphsSection(this, 1);">Parent</a>
                         </li>
-                        <li>
-                            <a href="#4" onclick="showGraphsSection(this, 2);">Teacher</a>
-                        </li>
-                        <li>
-                            <a href="#5" onclick="showGraphsSection(this, 3);">Parent/Teacher</a>
-                        </li>
-                        <li style="display:none;">
-                            <a href="#6" onclick="showGraphsSection(this, 4);">Weekly Teacher</a>
-                        </li>
-                        <li>
-                            <a href="#7" onclick="showGraphsSection(this, 5);">Life Events</a>
-                        </li>
+                        @if (role != "" && role != "Parent")
+                        {
+                            <li>
+                                <a href="#4" onclick="showGraphsSection(this, 2);">Teacher</a>
+                            </li>
+                            <li>
+                                <a href="#5" onclick="showGraphsSection(this, 3);">Parent/Teacher</a>
+                            </li>
+                            <li style="display:none;">
+                                <a href="#6" onclick="showGraphsSection(this, 4);">Weekly Teacher</a>
+                            </li>
+                            <li>
+                                <a href="#7" onclick="showGraphsSection(this, 5);">Life Events</a>
+                            </li>
+                        }
                     </ul>
                 </div>           
         </td>
@@ -2545,20 +2379,25 @@
                     <div class="col-sm-6"><div class="dvABCGroup"></div></div>
                     <div class="col-sm-6"><div class="dvSRSGroup"></div></div>
                 </div>
-
-                <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6"><div class="dvABCGroupTeacher"></div></div>
-                    <div class="col-sm-6"><div class="dvSRSGroupTeacher"></div></div>
-                </div>
-
-                <div class="row parentteacherdiv">
-                    <div class="col-sm-6 parentteacher" style="background-color:transparent;">
-                        <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                @if (role != "" && role != "Parent")
+                {
+                    <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                        <div class="col-sm-6"><div class="dvABCGroupTeacher"></div></div>
+                        <div class="col-sm-6"><div class="dvSRSGroupTeacher"></div></div>
                     </div>
-                    <div class="col-sm-6 parentteacher" style="background-color:transparent;">
-                        <div id="AbbreviatedSensoryProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                    <div class="row parentteacherdiv">
+                        <div class="col-sm-6 parentteacher" style="background-color:transparent;">
+                            <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+                        <div class="col-sm-6 parentteacher" style="background-color:transparent;">
+                            <div id="AbbreviatedSensoryProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
                     </div>
-                </div>
+                }
+                
+
+                
 
                 <div class="row voffset parentdiv">
                     <div class="col-sm-6 parent" style="background-color:transparent;">
@@ -2569,17 +2408,21 @@
                     </div>
                 </div>
 
-                <div class="row voffset teacherdiv">
-                    <div class="col-sm-6 teacher" style="background-color:transparent;">
-                        <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                @if (role != "" && role != "Parent")
+                {
+                    <div class="row voffset teacherdiv">
+                        <div class="col-sm-6 teacher" style="background-color:transparent;">
+                            <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+                        <div class="col-sm-6 teacher" style="background-color:transparent;">
+                            <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+                        @*<div class="col-sm-6" style="background-color:transparent;">
+                                <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                            </div>*@
                     </div>
-                    <div class="col-sm-6 teacher" style="background-color:transparent;">
-                        <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
-                    @*<div class="col-sm-6" style="background-color:transparent;">
-                    <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                </div>*@
-                </div>
+                }
+                
 
                 <div class="row voffset parentdiv">                    
                     <div class="col-sm-6 parent" style="background-color:transparent;">
@@ -2605,31 +2448,47 @@
                     </div>
                 </div>
 
-                <div class="row voffset teacherdiv">
-                    <div class="col-sm-6 teacher" style="background-color:transparent;">
-                        <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                @if (role != "" && role != "Parent")
+                {
+                    <div class="row voffset teacherdiv">
+                        <div class="col-sm-6 teacher" style="background-color:transparent;">
+                            <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+                        @*<div class="col-sm-6" style="background-color:transparent;">
+                                <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                            </div>*@
+                        <div class="col-sm-6" style="background-color:transparent;">
+                            <div id="divSCQTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
                     </div>
-                    @*<div class="col-sm-6" style="background-color:transparent;">
-                    <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                </div>*@
-                </div>
-                <div class="row voffset weeklydiv">
-                    @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
+                }
+                
 
-                </div>
-                <div class="row voffset lifeeventsdiv">
-                    @{Html.RenderPartial("~/Views/Home/_LifeEventsChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
-                </div>
+                @if (role != "" && role != "Parent")
+                {
+                    <div class="row voffset weeklydiv">
+                        @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
+
+                    </div>
+                    <div class="row voffset lifeeventsdiv">
+                        @{Html.RenderPartial("~/Views/Home/_LifeEventsChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
+                    </div>
+                }
+                
 
                 <div class="parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6"><div id="pADAM"></div></div>
                     <div class="col-sm-6"><div id="pVanderbilt"></div></div>
                 </div>
 
-                <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6"><div id="tADAM"></div></div>
-                    <div class="col-sm-6"><div id="tVanderbilt"></div></div>
-                </div>
+                @if (role != "" && role != "Parent")
+                {
+                    <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                        <div class="col-sm-6"><div id="tADAM"></div></div>
+                        <div class="col-sm-6"><div id="tVanderbilt"></div></div>
+                    </div>
+                }
+                
 
                 <div class="row voffset parentdiv">
                     <div class="col-sm-6"><div id="divSCQ"></div></div>
@@ -2646,9 +2505,14 @@
                 <div class="row voffset parentdiv">
                     <div id="divParentVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
-                <div class="row voffset teacherdiv">
-                    <div id="divTeacherVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                </div>
+
+                @if (role != "" && role != "Parent")
+                {
+                    <div class="row voffset teacherdiv">
+                        <div id="divTeacherVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    </div>
+                }
+                
                 
             </div>
         </td>
