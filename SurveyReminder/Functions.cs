@@ -33,7 +33,7 @@ namespace SurveyReminder
                 {
                     foreach (DataRow dr in dsReminders.Tables[0].Rows)
                     {
-                        if (dr["UserName"] != DBNull.Value)
+                        if (dr["UserName"] != DBNull.Value && lstEmails.Contains(dr["UserName"].ToString()) == false)
                         {
                             lstEmails.Add(dr["UserName"].ToString());
                         }
