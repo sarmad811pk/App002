@@ -106,7 +106,7 @@
 
 <h2><a href="javascript:void(0);" id="back" onclick="goBack(this);"></a> &nbsp;@dsSurvey.Tables[0].Rows[0]["Title"].ToString().Replace("[Child]",childname) @(SurveyID == 6 ? " for 2yrs - 4yrs" : (SurveyID == 7 ? " for 5yrs - 7yrs" : (SurveyID == 8 ? " for 8yrs - 12yrs" : (SurveyID == 9 ? " for 13yrs - 18yrs" : (SurveyID == 45 ? " for 19yrs and older" : "")))))</h2>
 <p style="font-size:16px;">
-    @dsSurvey.Tables[0].Rows[0]["TagLine"].ToString().Replace("[Child]", childname)
+    @Html.Raw(dsSurvey.Tables[0].Rows[0]["TagLine"].ToString().Replace("[Child]", childname))
 </p>
 <div class="form-group" style="position:relative;">
     @if (Roles.IsUserInRole("Administrator"))
