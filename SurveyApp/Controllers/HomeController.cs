@@ -30,7 +30,7 @@ namespace SurveyApp.Controllers
             {
                 string[] roles = Roles.GetRolesForUser(User.Identity.Name);
 
-                if (roles[0] == "Parent" || roles[0] == "Teacher")
+                if (roles[0] != "Administrator")
                 {
                     return RedirectToAction("Index", "UserQuestion");
                 }
@@ -335,23 +335,68 @@ namespace SurveyApp.Controllers
 
         public ActionResult _Charts()
         {
-            return PartialView("_Charts");
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+            string role = roles[0];
+            if(role != "Student")
+            {
+                return PartialView("_Charts");
+            }
+            else
+            {
+                return null;
+            }
         }
         public ActionResult _AdverseEvent()
-        {
-            return PartialView("_AdverseEvent");
+        {            
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+            string role = roles[0];
+            if (role != "Student")
+            {
+                return PartialView("_AdverseEvent");
+            }
+            else
+            {
+                return null;
+            }
         }
         public ActionResult _ChildrenCounts()
         {
-            return PartialView("_ChildrenCounts");
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+            string role = roles[0];
+            if (role != "Student")
+            {
+                return PartialView("_ChildrenCounts");
+            }
+            else
+            {
+                return null;
+            }
         }
         public ActionResult _SurveyCompletion()
-        {
-            return PartialView("_SurveyCompletion");
+        {            
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+            string role = roles[0];
+            if (role != "Student")
+            {
+                return PartialView("_SurveyCompletion");
+            }
+            else
+            {
+                return null;
+            }
         }
         public ActionResult _DetailComparison()
-        {
-            return PartialView("_DetailComparison");
+        {            
+            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
+            string role = roles[0];
+            if (role != "Student")
+            {
+                return PartialView("_DetailComparison");
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 

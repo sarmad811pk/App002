@@ -85,7 +85,7 @@
     public string getExactInfo(int index, int surveyId, int childId, string percentage, string rrr, string url)
     {
         string info = "";
-        string condition = " AND ScheduleId" + role + " IS NOT NULL";
+        string condition = " AND ScheduleId" + (role == "Student" ? "Child" : role) + " IS NOT NULL";
         DataRow[] drSchedules = dsChildrenSchedules.Tables[index].Select("SurveyId = " + surveyId + " AND ChildId = " + childId + "" + condition);
 
         int i = 0;
@@ -328,7 +328,7 @@
     <div style="margin: 0px 0px 20px 0px;" class="childDetailsDiv">
         <table cellpadding="0" cellspacing="0" style="width:100%;">
             <tr>
-                <td style="width: 60%;vertical-align:top;padding-right: 12px;">
+                <td style="width: @(role != "Student" ? "60%" : "100%");vertical-align:top;padding-right: 12px;">
                     <div class="panel-group surveys">
 
                         @if (dschild.Tables[0].Rows.Count > 0)
@@ -508,6 +508,12 @@
                                 {
                                     <div class="col-md-12 text-left">Anxiety Depression and Mood Scale@(Html.Raw(anxiety))</div>
                                 }
+
+                                var pas = getPercentCompletion(48, (int)drch["ID"], url.Replace("__", "48"));
+                                if (showHideSurvey(pas) == true)
+                                {
+                                    <div class="col-md-12 text-left">Parent Assessment Summary@(Html.Raw(pas))</div>
+                                }
                             }
 
                             @if (roles[0] != "Teacher")
@@ -549,165 +555,33 @@
                                             }
                     </div>
                 </td>
-                <td style="vertical-align:top;">
-                    <div style="font-size:14px;border-bottom:solid 2px #000000;margin-bottom: 5px;padding: 16px;">@*<i class="fa fa-history"></i>&nbsp;Child Statistics&nbsp;(@childName)*@</div>
+                @if (role != "Student")
+                {
+                    <td style="vertical-align:top;">
+                        <div style="font-size:14px;border-bottom:solid 2px #000000;margin-bottom: 5px;padding: 16px;">@*<i class="fa fa-history"></i>&nbsp;Child Statistics&nbsp;(@childName)*@</div>
 
-                    <div class="col-md-12 text-left adverse boxitem" style="background: rgb(235, 99, 87);">
-                        <div class="boxheading" style="background: #E14C3E;">
-                            <i class="ion-nuclear" style="position:absolute;top:7px;left:12px;font-size:16px;"></i> Adverse Reactions
-                            <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = childID, ChildName = childName })">Add</a></span>
-                        </div>
-                        <div style="padding: 5px 5px 5px 5px;overflow:hidden; font-size: 12px;" class="content mCustomScrollbar adversereactions">
-                            @if (dsReveseandLiveEvent.Tables[0].Rows.Count > 0)
-                            {
-                                int indexAR = 1;
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
-                                {
-                                    <div id="ad@(indexAR)" indexer="@indexAR" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["DateResolved"] != DBNull.Value && Convert.ToDateTime(dr["DateResolved"]) < DateTime.Now ? "color: #111;" : "")@(indexAR > 5 ? "display:none;" : "")" class="item">
-                                        <div style="overflow:hidden;position:relative;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
-                                            <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b> occured on <b>@dr["DateOccured"]</b> and resolved on <b>@dr["DateResolved"]</b> by using <b>@dr["Medication"]</b></div>                                            
-                                            <span><a href="javascript:void(0);" style="top: -2px;color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'adversereaction', '@dr["AdverseReaction"]');"></a></span>
-                                        </div>
-                                    </div>
-                                    indexAR++;
-                                }
-                                if (indexAR > 6)
-                                {
-                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 3);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
-                                }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;"> No history found</div>
-                            }
-                        </div>
-                    </div>
-
-                    <div style="clear:both;"></div>
-                    
-                    <div class="col-md-@(roles[0] == "Parent" && inPer == "" && (schoolId == 1 || schoolId == 2) ? "12" : "6") text-left lifeevents boxitem" style="background: rgb(151, 201, 93) ;">
-                        <div class="boxheading" style="background: rgb(139, 195, 74);">
-                            <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = childID, ChildName = childName })">Add</a></span>
-                        </div>
-                        <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar levents">
-                            @if (dsReveseandLiveEvent.Tables[1].Rows.Count > 0)
-                            {
-                                int indexLE = 1;
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
-                                {
-                                    <div indexer="@indexLE" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event item">
-                                        @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
-                                        <div style="overflow:hidden;position:relative;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>                                            
-                                            <div style="float:left;font-weight:bold;">@dr["EventName"]</div>
-                                            <div style="text-align:right;float:left;@(@dr["EventDate"].ToString() == "" ? "display:none;" : "") ">&nbsp;on @dr["EventDate"]</div>
-                                            <a href="javascript:void(0);" style="color: #FFF;top:0px;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeenvent', '@dr["EventName"]');"></a>                  
-                                        </div>
-                                    </div>
-                                    indexLE++;
-                                }
-                                if(indexLE > 6)
-                                {
-                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 1);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
-                                }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;">No history found</div>
-                            }
-                        </div>
-                    </div>    
-                    
-                    @if((schoolId == 1 || schoolId == 2) && inPer != "")
-                    {                    
-                        <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
-                        <div class="boxheading" style="background: #666666;">
-                            <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
-                            @if (roles[0] == "Parent")
-                            {
-                                <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 1 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "bootbox.alert('Please complete the Intake Form first.');")">Update</a></span>
-                            }
-                            
-                        </div>
-                        <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar medicationhistory">
-                            @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
-                            {
-                                int indexMH = 1;
-                                foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[2].Rows)
-                                {
-                                    var _qq = dr["Question"].ToString().Split('-')[1].Trim();
-                                    var _aa = dr["Answers"];
-                                    string[] _a = _aa.ToString().Split('|');
-                                    if (_a.Length >= 5)
-                                    {
-                                        if (_a[2].Length > 0 || _a[3].Length > 0)
-                                        {
-
-                                            <div indexer="@indexMH" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexMH > 5 ? "display:none;" : "")" class="item">
-                                                <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
-                                                    <b>@_qq (@_a[1] @_a[4])</b>
-                                                    <div style="text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
-
-                                                </div>
-
-
-                                            </div>
-                                        }
-                                        //Indication|Dosage|02/01/2015|03/02/2015|ug|9|Hour|undefined
-                                        //Indication|5|05/01/2016|05/11/2016|ul|6|Week|undefined
-                                    }
-                                    indexMH++;
-                                }
-                                if (indexMH > 6)
-                                {
-                                    <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 4);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
-                                }
-                            }
-                            else
-                            {
-                                <div style="color:#FFF;text-align:center;"> No history found</div>
-                            }
-                        </div>
-                    </div>
-                        <div style="clear:both;"></div>
-                    }
-                    
-
-                    @if ((schoolId == 1 || schoolId == 2) && inPer != "")
-                    {
-                        <div class="col-md-@(roles[0] == "Teacher" ? "6" : "12") text-left treatment boxitem" style="background: #2daad8;">
-                            <div class="boxheading" style="background: #0084b5;">
-                                <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Therapies
-                                @if (roles[0] == "Parent")
-                                {
-                                    <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 2 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "bootbox.alert('Please complete the Intake Form first.');")">Update</a></span>
-                                }
+                        <div class="col-md-12 text-left adverse boxitem" style="background: rgb(235, 99, 87);">
+                            <div class="boxheading" style="background: #E14C3E;">
+                                <i class="ion-nuclear" style="position:absolute;top:7px;left:12px;font-size:16px;"></i> Adverse Reactions
+                                <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 28, ChildId = childID, ChildName = childName })">Add</a></span>
                             </div>
-                            <div style="padding: 5px;overflow: auto; font-size: 12px;" class="content mCustomScrollbar therapies">
-                                @if (dsReveseandLiveEvent.Tables[3].Rows.Count > 0)
+                            <div style="padding: 5px 5px 5px 5px;overflow:hidden; font-size: 12px;" class="content mCustomScrollbar adversereactions">
+                                @if (dsReveseandLiveEvent.Tables[0].Rows.Count > 0)
                                 {
-                                    int indexTherapy = 1;
-                                    foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[3].Rows)
+                                    int indexAR = 1;
+                                    foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[0].Rows)
                                     {
-                                        var _qq = dr["Question"].ToString().Trim();
-                                        var _aa = dr["Answers"];
-                                        string[] _a = _aa.ToString().Split('|');
-                                        <div indexer="@indexTherapy" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(_a[3] != "" && checkDateValidity(_a[3]) && Convert.ToDateTime(_a[3]) < DateTime.Now ? "color: #111;" : "")@(indexTherapy > 5 ? "display:none;" : "")" class="item">
-                                            <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
-                                                <b>@_qq</b>
-                                                @if (_a.Length >= 4)
-                                                {
-                                                    <div>
-                                                        <b>@(String.IsNullOrEmpty(_a[0]) == false ? _a[0] : "-")</b> session(s) of <b>@(String.IsNullOrEmpty(_a[1]) == false ? _a[1] : "-")</b>
-                                                        From @(String.IsNullOrEmpty(_a[2]) == false ? (_a[2].Contains("-") == true ? _a[2].Replace("-", "/") : _a[2]) : "-") To @(String.IsNullOrEmpty(_a[3]) == false ? (_a[3].Contains("-") == true ? _a[3].Replace("-", "/") : _a[3]) : "-")
-                                                    </div>
-                                                }
+                                        <div id="ad@(indexAR)" indexer="@indexAR" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["DateResolved"] != DBNull.Value && Convert.ToDateTime(dr["DateResolved"]) < DateTime.Now ? "color: #111;" : "")@(indexAR > 5 ? "display:none;" : "")" class="item">
+                                            <div style="overflow:hidden;position:relative;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
+                                                <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b> occured on <b>@dr["DateOccured"]</b> and resolved on <b>@dr["DateResolved"]</b> by using <b>@dr["Medication"]</b></div>
+                                                <span><a href="javascript:void(0);" style="top: -2px;color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'adversereaction', '@dr["AdverseReaction"]');"></a></span>
                                             </div>
                                         </div>
-                                        indexTherapy++;
+                                        indexAR++;
                                     }
-                                    if (indexTherapy > 6)
+                                    if (indexAR > 6)
                                     {
-                                        <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 5);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                        <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 3);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
                                     }
                                 }
                                 else
@@ -716,32 +590,32 @@
                                 }
                             </div>
                         </div>
-                    }
 
-                    @if (roles[0] == "Teacher")
-                    {
-                        <div class="col-md-6 text-left crinterventions boxitem" style="background: #dc7ba8;">
-                            <div class="boxheading" style="background: #af708d">
-                                <i class="ion-android-list" style="position: absolute; top: 4px; left: 12px; font-size: 16px;"></i>Classroom Interventions <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName })">Add</a></span>
+                        <div style="clear:both;"></div>
+
+                        <div class="col-md-@(roles[0] == "Parent" && inPer == "" && (schoolId == 1 || schoolId == 2) ? "12" : "6") text-left lifeevents boxitem" style="background: rgb(151, 201, 93) ;">
+                            <div class="boxheading" style="background: rgb(139, 195, 74);">
+                                <i class="ion-android-calendar" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Life Events <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 29, ChildId = childID, ChildName = childName })">Add</a></span>
                             </div>
-                            <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar classroominterventions">
-                                @if (dsReveseandLiveEvent.Tables[4].Rows.Count > 0)
+                            <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar levents">
+                                @if (dsReveseandLiveEvent.Tables[1].Rows.Count > 0)
                                 {
-                                    int indexCRI = 1;
-                                    foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
+                                    int indexLE = 1;
+                                    foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[1].Rows)
                                     {
-                                        <div indexer="@indexCRI" style="cursor:pointer;padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["EndDate"] != DBNull.Value && Convert.ToDateTime(dr["EndDate"]) < DateTime.Now ? "color: #111;" : "")@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">
-                                            <div style="overflow:hidden;position: relative;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
-                                                <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
-                                                <div>On @dr["StartDate"] - @dr["EndDate"]</div>
-                                                <span><a href="javascript:void(0);" style="color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'crintervention', '@dr["Title"]', function(){ location.href = location.href; });"></a></span>
-                                            </div>                                            
+                                        <div indexer="@indexLE" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event item">
+                                            @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
+                                            <div style="overflow:hidden;position:relative;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
+                                                <div style="float:left;font-weight:bold;">@dr["EventName"]</div>
+                                                <div style="text-align:right;float:left;@(@dr["EventDate"].ToString() == "" ? "display:none;" : "") ">&nbsp;on @dr["EventDate"]</div>
+                                                <a href="javascript:void(0);" style="color: #FFF;top:0px;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeenvent', '@dr["EventName"]');"></a>
+                                            </div>
                                         </div>
-                                        indexCRI++;
+                                        indexLE++;
                                     }
-                                    if (indexCRI > 6)
+                                    if (indexLE > 6)
                                     {
-                                        <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 2);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                        <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 1);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
                                     }
                                 }
                                 else
@@ -750,10 +624,145 @@
                                 }
                             </div>
                         </div>
-                    }
-                    
 
-                </td>
+                        @if ((schoolId == 1 || schoolId == 2) && inPer != "")
+                        {
+                            <div class="col-md-6 text-left medication boxitem" style="background: rgb(153, 153, 153);">
+                                <div class="boxheading" style="background: #666666;">
+                                    <i class="fa fa-medkit" style="position:absolute;top:7px;left:12px;font-size:16px;"></i>Medication History
+                                    @if (roles[0] == "Parent")
+                                    {
+                                        <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 1 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "bootbox.alert('Please complete the Intake Form first.');")">Update</a></span>
+                                    }
+
+                                </div>
+                                <div style="padding: 5px 5px 5px 5px; overflow:hidden; font-size: 12px;" class="content mCustomScrollbar medicationhistory">
+                                    @if (dsReveseandLiveEvent.Tables[2].Rows.Count > 0)
+                                    {
+                                        int indexMH = 1;
+                                        foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[2].Rows)
+                                        {
+                                            var _qq = dr["Question"].ToString().Split('-')[1].Trim();
+                                            var _aa = dr["Answers"];
+                                            string[] _a = _aa.ToString().Split('|');
+                                            if (_a.Length >= 5)
+                                            {
+                                                if (_a[2].Length > 0 || _a[3].Length > 0)
+                                                {
+
+                                                    <div indexer="@indexMH" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexMH > 5 ? "display:none;" : "")" class="item">
+                                                        <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
+                                                            <b>@_qq (@_a[1] @_a[4])</b>
+                                                            <div style="text-transform:capitalize;">on: @_a[2] - @_a[3]<br />for: @_a[5] times per @_a[6]</div>
+
+                                                        </div>
+
+
+                                                    </div>
+                                                }
+                                                //Indication|Dosage|02/01/2015|03/02/2015|ug|9|Hour|undefined
+                                                //Indication|5|05/01/2016|05/11/2016|ul|6|Week|undefined
+                                            }
+                                            indexMH++;
+                                        }
+                                        if (indexMH > 6)
+                                        {
+                                            <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 4);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div style="color:#FFF;text-align:center;"> No history found</div>
+                                    }
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        }
+
+
+                        @if ((schoolId == 1 || schoolId == 2) && inPer != "")
+                        {
+                            <div class="col-md-@(roles[0] == "Teacher" ? "6" : "12") text-left treatment boxitem" style="background: #2daad8;">
+                                <div class="boxheading" style="background: #0084b5;">
+                                    <i class="fa fa-stethoscope" style="position: absolute; top: 7px; left: 12px; font-size: 16px;"></i>Therapies
+                                    @if (roles[0] == "Parent")
+                                    {
+                                        <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@(inPer == "100%" ? Url.Action("Question", "UserQuestion", new { surveyID = 16, ChildId = childID, ChildName = childName, perioddate = inDt, sec = 2 }) : "javascript:void(0);")" data-toggle='tooltip' title="@(inPer == "100%" ? "" : "Please complete the Intake Form first.")" onclick="@(inPer == "100%" ? "" : "bootbox.alert('Please complete the Intake Form first.');")">Update</a></span>
+                                    }
+                                </div>
+                                <div style="padding: 5px;overflow: auto; font-size: 12px;" class="content mCustomScrollbar therapies">
+                                    @if (dsReveseandLiveEvent.Tables[3].Rows.Count > 0)
+                                    {
+                                        int indexTherapy = 1;
+                                        foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[3].Rows)
+                                        {
+                                            var _qq = dr["Question"].ToString().Trim();
+                                            var _aa = dr["Answers"];
+                                            string[] _a = _aa.ToString().Split('|');
+                                            <div indexer="@indexTherapy" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(_a[3] != "" && checkDateValidity(_a[3]) && Convert.ToDateTime(_a[3]) < DateTime.Now ? "color: #111;" : "")@(indexTherapy > 5 ? "display:none;" : "")" class="item">
+                                                <div style="overflow:hidden;" title='@_qq' data-toggle='tooltip'>
+                                                    <b>@_qq</b>
+                                                    @if (_a.Length >= 4)
+                                                    {
+                                                        <div>
+                                                            <b>@(String.IsNullOrEmpty(_a[0]) == false ? _a[0] : "-")</b> session(s) of <b>@(String.IsNullOrEmpty(_a[1]) == false ? _a[1] : "-")</b>
+                                                            From @(String.IsNullOrEmpty(_a[2]) == false ? (_a[2].Contains("-") == true ? _a[2].Replace("-", "/") : _a[2]) : "-") To @(String.IsNullOrEmpty(_a[3]) == false ? (_a[3].Contains("-") == true ? _a[3].Replace("-", "/") : _a[3]) : "-")
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            indexTherapy++;
+                                        }
+                                        if (indexTherapy > 6)
+                                        {
+                                            <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 5);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div style="color:#FFF;text-align:center;"> No history found</div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        @if (roles[0] == "Teacher")
+                        {
+                            <div class="col-md-6 text-left crinterventions boxitem" style="background: #dc7ba8;">
+                                <div class="boxheading" style="background: #af708d">
+                                    <i class="ion-android-list" style="position: absolute; top: 4px; left: 12px; font-size: 16px;"></i>Classroom Interventions <span style="float: right;"><a class="btnAdd btn btn-link" style="color:#FFF;" href="@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName })">Add</a></span>
+                                </div>
+                                <div style="padding: 5px;overflow: hidden; font-size: 12px;" class="content mCustomScrollbar classroominterventions">
+                                    @if (dsReveseandLiveEvent.Tables[4].Rows.Count > 0)
+                                    {
+                                        int indexCRI = 1;
+                                        foreach (System.Data.DataRow dr in dsReveseandLiveEvent.Tables[4].Rows)
+                                        {
+                                            <div indexer="@indexCRI" style="cursor:pointer;padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["EndDate"] != DBNull.Value && Convert.ToDateTime(dr["EndDate"]) < DateTime.Now ? "color: #111;" : "")@(indexCRI > 5 ? "display:none;" : "")" class="crintervention item" onclick="location.href = '@Url.Action("Question", "UserQuestion", new { surveyID = 44, ChildId = childID, ChildName = childName, criid = dr["Id"] })'">
+                                                <div style="overflow:hidden;position: relative;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
+                                                    <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
+                                                    <div>On @dr["StartDate"] - @dr["EndDate"]</div>
+                                                    <span><a href="javascript:void(0);" style="color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'crintervention', '@dr["Title"]', function(){ location.href = location.href; });"></a></span>
+                                                </div>
+                                            </div>
+                                            indexCRI++;
+                                        }
+                                        if (indexCRI > 6)
+                                        {
+                                            <div class="viewMore"><a herf="javascript:void(0);" class="btnViewMore btn btn-link" type="1" onclick="viewMore(this, 2);">View More&nbsp;<i class="ion-chevron-down"></i></a></div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div style="color:#FFF;text-align:center;">No history found</div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+
+                    </td>
+                }                
             </tr>
         </table>
     </div>

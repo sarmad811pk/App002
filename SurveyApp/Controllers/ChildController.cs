@@ -68,6 +68,33 @@ namespace SurveyApp.Controllers
                     }
                 }
 
+                if(childModel.Account == true && childModel.Id <= 0)
+                {
+                    if (String.IsNullOrEmpty(collection["regEmail"]))
+                    {
+                        ModelState.AddModelError("", "Please provide email address for student account.");
+                        return View(childModel);
+                    }
+                    if (String.IsNullOrEmpty(collection["regPassword"]))
+                    {
+                        ModelState.AddModelError("", "Please provide password for student account.");
+                        return View(childModel);
+                    }
+                    if (String.IsNullOrEmpty(collection["regConfirmPassword"]))
+                    {
+                        ModelState.AddModelError("", "Please provide confirm password  for student account.");
+                        return View(childModel);
+                    }
+                    if (String.IsNullOrEmpty(collection["regPassword"]) == false && String.IsNullOrEmpty(collection["regConfirmPassword"]) == false)
+                    {
+                        if(collection["regPassword"].ToString() != collection["regConfirmPassword"].ToString())
+                        {
+                            ModelState.AddModelError("", "Both passwords do not match for student account.");
+                            return View(childModel);
+                        }
+                    }
+                }
+
                 int studyCount = 0;
                 foreach (var key in collection.Keys)
                 {
@@ -106,6 +133,7 @@ namespace SurveyApp.Controllers
                 int cId = 0;
                 DateTime? dtEnrollment = null;
                 Child objChild = new Child();
+                int accountId = 0;                
                 using (var cContext = new ChildContext())
                 {                    
                     if (childModel.Id > 0)
@@ -131,7 +159,8 @@ namespace SurveyApp.Controllers
                         }
                     }
                     objChild.Consent = childModel.Consent;                    
-                    objChild.Email = childModel.Email;
+                    
+                    objChild.Account = childModel.Account;
 
                     dtEnrollment = objChild.EnrollmentDate;
 
@@ -141,10 +170,38 @@ namespace SurveyApp.Controllers
                         cContext.Children.Add(objChild);
                     }
 
+                    if (String.IsNullOrEmpty(childModel.Email) == true && String.IsNullOrEmpty(objChild.Email) == true)
+                    {
+                        objChild.Email = String.IsNullOrEmpty(collection["regEmail"]) == false ? collection["regEmail"] : "";
+                    }
+
+                    if (String.IsNullOrEmpty(objChild.Email) == false)
+                    {
+                        accountId = WebSecurity.GetUserId(objChild.Email);
+                    }
+
                     cContext.SaveChanges();
                     cId = childModel.Id > 0 ? childModel.Id : cContext.Children.Max(item => item.Id);
                     childModel.EnrollmentDate = dtEnrollment;
-                }                
+
+                    if(childModel.Account == true && childModel.Id <= 0)
+                    {
+                        string role = "Student";
+                        string email = String.IsNullOrEmpty(collection["regEmail"]) == false ? collection["regEmail"] : "";
+                        string pass = String.IsNullOrEmpty(collection["regPassword"]) == false ? collection["regPassword"] : ""; ;
+
+                        if(email != "" && pass != "")
+                        {
+                            RegisterModel reg = new RegisterModel();
+                            reg.FullName = childModel.Name;
+                            reg.UserName = email;
+                            reg.Password = pass;
+                            AccountController.CreateAccount(reg, role);
+                            accountId = WebSecurity.GetUserId(email);
+                        }                        
+                    }
+                }
+
 
                 #region Child_Study_Respondents
                 List<Study> lstStidues = Study.StudyGetAll();
@@ -247,6 +304,28 @@ namespace SurveyApp.Controllers
                                 }
                             }
 
+                            if(accountId > 0)
+                            {
+                                if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.RespondentId == accountId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
+                                {
+                                    Child_Study_Respondent objCSRChlid = new Child_Study_Respondent();
+                                    objCSRChlid.ChildId = cId;
+                                    objCSRChlid.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
+                                    objCSRChlid.RespondentId = accountId;
+                                    //objCSRParent.IncludeParent = true;
+                                    objCSRChlid.ConsentId = conId;
+                                    objCSRChlid.IncludeParent = collection["StudyId_" + objStudy.Id + "_IncludeParent"] == "1" ? true : false;
+
+                                    Child_Study_Respondent objPreChild = lstCSRPrevious.Where(csr => csr.ChildId == objCSRChlid.ChildId && csr.StudyId == objCSRChlid.StudyId && csr.RespondentId == objCSRChlid.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                    if (objPreChild != null)
+                                    {
+                                        objPreChild.Agreed = objPreChild.Agreed;
+                                        objPreChild.AgreeDate = objPreChild.AgreeDate;
+                                    }
+                                    lstCSRs.Add(objCSRChlid);
+                                }
+                            }
+
                             foreach (Child_Study_Respondent obj in lstCSRs)
                             {
                                 csrConext.Child_Study_Respondents.Add(obj);
@@ -300,11 +379,13 @@ namespace SurveyApp.Controllers
                 #endregion
 
                 #region Consent
+                /*
                 if (Convert.ToBoolean(collection["hdnSendConsentEmail"]) == true)
                 {
                     string consentPath = Server.MapPath("~/Attachments/Child_Consent.html");
                     sendConsentEmail(objChild, consentPath);
                 }
+                */
                 #endregion
 
                 bool sendEmail = true;
@@ -537,6 +618,7 @@ namespace SurveyApp.Controllers
                                     }
                                 }
                                 #endregion
+
                                 #region TeacherSchedules
                                 foreach (Study_Survey_Schedule objSSS in studySchedules)
                                 {
@@ -657,6 +739,138 @@ namespace SurveyApp.Controllers
                                                     {
                                                         dtStartDate = dtStartDate.AddDays(objSchedule.DaysToRepeat.HasValue ? objSchedule.DaysToRepeat.Value : 0);
                                                     }                                                        
+                                                    objChildSurveySchedule.ScheuleStartDate = dtStartDate;
+                                                    objChildSurveySchedule.ScheuleEndDate = dtStartDate.AddDays(objSchedule.AvailableUntil);
+                                                    cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                #endregion
+
+                                #region ChildSchedules
+                                foreach (Study_Survey_Schedule objSSS in studySchedules)
+                                {
+                                    if (objSSS.ScheduleIdChild > 0)
+                                    {
+                                        using (var scContext = new ScheduleContext())
+                                        {
+                                            Schedule objSchedule = scContext.Schedules.Where(sc => sc.Id == objSSS.ScheduleIdChild).ToArray().FirstOrDefault();
+                                            DateTime specificWeekday = DateTime.MinValue;
+                                            if (objSchedule.Weekday > 0)
+                                            {
+                                                specificWeekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                while (specificWeekday.DayOfWeek != (DayOfWeek)(objSchedule.Weekday - 1))
+                                                {
+                                                    specificWeekday = specificWeekday.AddDays(1);
+                                                }
+                                            }
+                                            DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
+
+                                            DateTime endDate = DateTime.MinValue;
+
+                                            if (objSchedule.Frequency == 1)
+                                            {
+                                                Child_Survey_Schedule objChildSurveySchedule = new Child_Survey_Schedule();
+                                                objChildSurveySchedule.ChildId = childModel.Id;
+                                                objChildSurveySchedule.ScheduleIdChild = objSSS.ScheduleIdChild;
+                                                objChildSurveySchedule.ScheduleIdTeacher = null;
+                                                objChildSurveySchedule.ScheduleIdParent = null;
+                                                objChildSurveySchedule.StudyId = studyId;
+                                                objChildSurveySchedule.SurveyId = objSSS.SurveyId;
+
+                                                int activeOn = objSchedule.ActiveOn;
+                                                using (var cCSS = new Child_Study_ScheduleContext())
+                                                {
+                                                    Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
+                                                    foreach (Child_Study_Schedule css in cStudySchedules)
+                                                    {
+                                                        if (css.StudyId == studyId && css.ScheduleId == objSSS.ScheduleIdChild)
+                                                        {
+                                                            DateTime weekday = DateTime.MinValue;
+                                                            if (css.Weekday > 0)
+                                                            {
+                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                {
+                                                                    weekday = weekday.AddDays(1);
+                                                                }
+                                                            }
+
+                                                            activeOn = css.ActiveOn;
+                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                        }
+                                                    }
+                                                }
+
+                                                if (activeOn == 1)
+                                                {
+                                                    endDate = dtEnrollment.Value.AddDays(objSchedule.AvailableUntil);
+                                                    objChildSurveySchedule.ScheuleStartDate = dtEnrollment.Value;
+                                                }
+                                                if (activeOn == 2)
+                                                {
+                                                    endDate = specificDate.AddDays(objSchedule.AvailableUntil);
+                                                    objChildSurveySchedule.ScheuleStartDate = specificDate;
+                                                }
+
+                                                objChildSurveySchedule.ScheuleEndDate = endDate;
+                                                cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+                                            }
+
+                                            if (objSchedule.Frequency == 2)
+                                            {
+                                                string nods = System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfDaysToSaveScheduleUpto"] == null ? "" : System.Web.Configuration.WebConfigurationManager.AppSettings["NoOfDaysToSaveScheduleUpto"];
+                                                int noi = Convert.ToInt32(nods == "" ? "10" : nods);
+                                                DateTime dtStartDate = DateTime.MinValue;
+
+                                                int activeOn = objSchedule.ActiveOn;
+                                                using (var cCSS = new Child_Study_ScheduleContext())
+                                                {
+                                                    Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
+                                                    foreach (Child_Study_Schedule css in cStudySchedules)
+                                                    {
+                                                        if (css.StudyId == studyId && css.ScheduleId == objSSS.ScheduleIdChild)
+                                                        {
+                                                            DateTime weekday = DateTime.MinValue;
+                                                            if (css.Weekday > 0)
+                                                            {
+                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                {
+                                                                    weekday = weekday.AddDays(1);
+                                                                }
+                                                            }
+
+                                                            activeOn = css.ActiveOn;
+                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                        }
+                                                    }
+                                                }
+
+                                                if (activeOn == 1)
+                                                {
+                                                    dtStartDate = dtEnrollment.Value;//.AddDays(-objSchedule.AvailableUntil);
+
+                                                }
+                                                if (activeOn == 2)
+                                                {
+                                                    dtStartDate = specificDate;//.AddDays(-objSchedule.AvailableUntil);
+                                                }
+                                                for (int i = 0; i < noi; i++)
+                                                {
+                                                    Child_Survey_Schedule objChildSurveySchedule = new Child_Survey_Schedule();
+                                                    objChildSurveySchedule.ChildId = childModel.Id;
+                                                    objChildSurveySchedule.ScheduleIdChild = objSSS.ScheduleIdChild;
+                                                    objChildSurveySchedule.ScheduleIdTeacher = null;
+                                                    objChildSurveySchedule.ScheduleIdParent = null;
+                                                    objChildSurveySchedule.StudyId = studyId;
+                                                    objChildSurveySchedule.SurveyId = objSSS.SurveyId;
+                                                    if (i != 0)
+                                                    {
+                                                        dtStartDate = dtStartDate.AddDays(objSchedule.DaysToRepeat.HasValue ? objSchedule.DaysToRepeat.Value : 0);
+                                                    }
                                                     objChildSurveySchedule.ScheuleStartDate = dtStartDate;
                                                     objChildSurveySchedule.ScheuleEndDate = dtStartDate.AddDays(objSchedule.AvailableUntil);
                                                     cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);

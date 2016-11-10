@@ -59,6 +59,7 @@ namespace SurveyApp.Models
         public int SurveyId { get; set; }
         public int ScheduleIdTeacher { get; set; }
         public int ScheduleIdParent { get; set; }
+        public int ScheduleIdChild { get; set; }
     }
 
     public class StudyStatus{

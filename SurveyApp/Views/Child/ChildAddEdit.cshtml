@@ -133,7 +133,8 @@
 
 <link href="~/Content/scroller/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <script src="~/Content/scroller/jquery.mCustomScrollbar.concat.min.js"></script>
-
+<script src="~/Scripts/zxcvbn.js"></script>
+<script src="~/Scripts/pwstrength.js"></script>
 
 <h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;Child Information Editor</h2>
 
@@ -153,6 +154,24 @@
         font-size: 12px;
     }
     .ui-tooltip {min-width:420px; max-width: 500px;background-color: #333; color: #FFF;}
+    msg.green {
+        color: #00cc00;
+        margin: 0px 0px 6px 0px;
+    }
+    .msg.red {
+        color: #cc0000;
+        margin: 0px 0px 6px 0px;
+    }
+    .progress {
+        margin-bottom: 0px;
+        margin-top: 2px;
+    }
+    .password-verdict {
+        position: absolute;
+        bottom: 0px;
+        left: 20px;
+        color: #FFF;
+    }
 </style>
 <br />
 
@@ -166,55 +185,84 @@
             <input type="hidden" id="hdnSendConsentEmail" name="hdnSendConsentEmail" value="false" />
             
             <div class="form-group">
-                <label class="control-label col-sm-3" for="email">Name:</label>
+                <label class="control-label col-sm-3" for="email">Name:*</label>
                 <div class="col-sm-9">
                     @Html.TextBoxFor(m => m.Name, new { placeholder = "Enter Name", @class = "form-control", @maxlength = "100" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="pwd">Date of Birth:</label>
+                <label class="control-label col-sm-3" for="pwd">Date of Birth:*</label>
                 <div class="col-sm-9">
                     @Html.TextBoxFor(m => m.dob, "{0:MM/dd/yyyy}", new { type = "text", placeholder = "Enter DOB", @class = "form-control datepicker", max = @DateTime.Now.ToString(@"MM/dd/yyyy") })
                 </div>
                 <div style="display:none;">, "{0:yyyy-MM-dd}"</div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="gender">Gender:</label>
+                <label class="control-label col-sm-3" for="gender">Gender:*</label>
                 <div class="col-sm-9">
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Gender, "1", new { name = "optradio" })Male</label></div>
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Gender, "2", new { name = "optradio" })Female</label></div>
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="school">Status:</label>
+                <label class="control-label col-sm-3" for="school">Status:*</label>
                 <div class="col-sm-9">
                     @Html.DropDownListFor(m => m.StatusId, new SelectList(EnrollmentStatus.EnrollmentStatus_GetAll(), "Id", "Status"), "Select Status", new { id = "ddlEnrollmentStatus", @class = "form-control" })
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" style="display:none;">
                 <label class="control-label col-sm-3" for="school">Child's Consent Required?:</label>
                 <div class="col-sm-9">
                     @Html.CheckBoxFor(m => m.Consent, new { name = "chkConsent", onclick = "setConsentEmail(this);", @style = "margin-top: 9px;" })
                 </div>
             </div>
-            <div class="form-group email" style="display:none;">
+            <div class="form-group email _panel" style="display:none;">
                 <label class="control-label col-sm-3" for="school">Child's Email:</label>
                 <div class="col-sm-9">
                     @Html.TextBoxFor(m => m.Email, new { placeholder = "Email address for consent", @class = "form-control", @maxlength = "100" })
                 </div>
             </div>
 
+            <!-- STUDENT -->
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="school">Create Account for child?:</label>
+                <div class="col-sm-9">
+                    @Html.CheckBoxFor(m => m.Account, new { name = "chkAccount", onclick = "setStudentAccount(this);", @style = "margin-top: 9px;" })
+                </div>
+            </div>
+            <div id="addStudent" class="_panel form-group" style="display:none;">
+                <div class="msg"></div>                
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="gender">Email:*</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control txtUserName" id="regEmail" name="regEmail" placeholder="Email" onkeyup="checkEmailValidation(this);">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="parent">Password:*</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control txtPassword" id="regPassword" name="regPassword" placeholder="Password" onkeyup="checkPwdValidation(this);">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="parent">Confirm Password:*</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control txtConfirmPassword" id="regConfirmPassword" name="regConfirmPassword" placeholder="Confirm Password" onkeyup="checkPwdValidation(this);">
+                    </div>
+                </div>                
+            </div>
+            <!-- STUDENT -->
 
             <!-- INTERESTING STUFF STARTS HERE -->
             <div class="form-group">
-                <label class="control-label col-sm-3" for="school">School:</label>
+                <label class="control-label col-sm-3" for="school">School:*</label>
                 <div class="col-sm-9">
                     @Html.DropDownListFor(m => m.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select School", new { id = "ddlSchools", @class = "form-control" })
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-3" for="teacher">Study:</label>
+                <label class="control-label col-sm-3" for="teacher">Study:*</label>
                 <div class="col-sm-9">
                     <div class="checklist" style="max-height: 250px;">
                         @foreach (Study std in Study.StudyGetAll())
@@ -348,7 +396,7 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-3" for="parent">Parent:</label>
+                <label class="control-label col-sm-3" for="parent">Parent:*</label>
                 <div class="col-sm-9">
                     @Html.DropDownListFor(m => m.ParentId, new SelectList(SurveyApp.DataHelper.Parent_GetAll(), "UserId", "FullName"), "Select Parent", new { id = "ddlParents", @class = "form-control" })                    
                 </div>
@@ -525,7 +573,7 @@
     }
 
     function addParentTeacher(type) {
-        var div = type == "Parent" ? "#addParent" : "#addTeacher";
+        var div = "#addStudent";
         var msg = $(div).find(".msg");
 
         var txtUserName = $(div).find(".txtUserName");
@@ -907,4 +955,70 @@
             }
         });
     }
+</script>
+
+<script type="text/javascript">
+    $(function(){
+        @{ bool isEnabled = true; }
+        @if(Model.Account == true && Model.Id > 0){
+            isEnabled = false;
+        }
+        var isEn = @(isEnabled == true ? "true" : "false");
+
+        if(isEn == true){
+            var options = {};
+            options.common = {
+                zxcvbn: true,
+                zxcvbnTerms: ['samurai', 'shogun', 'bushido', 'daisho', 'seppuku']
+            };
+            $("#regPassword").pwstrength(options);
+        }
+        else{
+            disableAccount();
+        }
+
+        setStudentAccount($("#Account"));
+
+    });
+
+    function disableAccount(){
+        $("#regEmail").val("@Model.Email");
+        $("#regEmail").attr("disabled", "disabled");
+        $("#regPassword").attr("disabled", "disabled");
+        $("#regConfirmPassword").attr("disabled", "disabled");
+    }
+
+    function setStudentAccount(elem){
+        var isChecked = $(elem)[0].checked;
+        if(isChecked == true){
+            $("#addStudent").slideDown();
+            if($("#Email") != ""){
+                $("#regEmail").val($("#Email").val());
+            }
+        }
+        else{
+            $("#addStudent").slideUp();
+            $("#regEmail").val("");
+            $("#regPassword").val("");
+            $("#regConfirmPassword").val("");
+        }
+    }
+
+    function checkPwdValidation(elem){
+        $(".msg").removeClass("red");
+        $(".msg").html("");
+
+        if($("#regPassword").val() != "" && $("#regConfirmPassword").val() != "" && $("#regPassword").val() != $("#regConfirmPassword").val()){
+            $(".msg").addClass("red");
+            $(".msg").html("Both passwords do not match.");
+        }
+    }
+
+    function checkEmailValidation(elem){
+        if(validateEmail($(elem).val()) == false){
+            $(".msg").addClass("red");
+            $(".msg").html("Email is not valid.");
+        }
+    }
+
 </script>

@@ -99,9 +99,12 @@ namespace SurveyApp.Controllers
                                 {
                                     int[] parentSchedules = collection["Parent" + i] != null ? Array.ConvertAll(collection["Parent" + i].ToString().Split(','), int.Parse) : null;
                                     int[] teacherSchedules = collection["Teacher" + i] != null ? Array.ConvertAll(collection["Teacher" + i].ToString().Split(','), int.Parse) : null;
+                                    int[] childSchedules = collection["Teacher" + i] != null ? Array.ConvertAll(collection["Child" + i].ToString().Split(','), int.Parse) : null;
 
                                     int parentSchCount = parentSchedules != null ? parentSchedules.Length : 0;
                                     int teacherSchCount = teacherSchedules != null ? teacherSchedules.Length : 0;
+                                    int childSchCount = childSchedules != null ? childSchedules.Length : 0;
+
                                     int maxSchCount = 0;
                                     if(parentSchCount > teacherSchCount)
                                     {
@@ -112,26 +115,32 @@ namespace SurveyApp.Controllers
                                         maxSchCount = teacherSchCount;
                                     }
 
+                                    if(maxSchCount < childSchCount)
+                                    {
+                                        maxSchCount = childSchCount;
+                                    }
+
                                     for(int index = 0; index < maxSchCount; index++)
                                     {
                                         int pId = parentSchedules != null && parentSchedules.Length > index ? parentSchedules[index] : 0;
                                         int tId = teacherSchedules != null && teacherSchedules.Length > index ? teacherSchedules[index] : 0;
+                                        int cId = teacherSchedules != null && childSchedules.Length > index ? childSchedules[index] : 0;
 
                                         int surveyId = Convert.ToInt32(collection["Survey" + i]);
                                         if(surveyId == 6)
                                         {
                                             for(int pedsIndex = 6; pedsIndex <= 9; pedsIndex++)
                                             {
-                                                Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = pedsIndex, ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
+                                                Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = pedsIndex, ScheduleIdParent = (pId), ScheduleIdTeacher = tId, ScheduleIdChild = cId };
                                                 dbSS.SSSs.Add(sss);
                                             }
 
-                                            Study_Survey_Schedule s45 = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = 45, ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
+                                            Study_Survey_Schedule s45 = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = 45, ScheduleIdParent = (pId), ScheduleIdTeacher = tId, ScheduleIdChild = cId };
                                             dbSS.SSSs.Add(s45);
                                         }
                                         else
                                         {
-                                            Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = surveyId, ScheduleIdParent = (pId), ScheduleIdTeacher = tId };
+                                            Study_Survey_Schedule sss = new Study_Survey_Schedule { StudyId = newStudyId, SurveyId = surveyId, ScheduleIdParent = (pId), ScheduleIdTeacher = tId, ScheduleIdChild = cId };
                                             dbSS.SSSs.Add(sss);
                                         }                                        
                                     }

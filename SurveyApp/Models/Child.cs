@@ -48,6 +48,8 @@ namespace SurveyApp.Models
                
         public DateTime? AgreeDate { get; set; }
 
+        [DefaultValue(false)]
+        public bool Account { get; set; }
     }
 
     public class ChildContext : DbContext
@@ -169,6 +171,7 @@ namespace SurveyApp.Models
         public int SurveyId { get; set; }
         public int? ScheduleIdParent { get; set; }
         public int? ScheduleIdTeacher { get; set; }
+        public int? ScheduleIdChild { get; set; }
         public DateTime ScheuleStartDate { get; set; }
         public DateTime ScheuleEndDate { get; set; }
     }

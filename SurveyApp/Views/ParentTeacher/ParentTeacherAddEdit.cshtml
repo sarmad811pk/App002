@@ -4,15 +4,17 @@
     ViewBag.Title = "eBit - Respondent Information Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    int roleId = 0, teacherRoleId = 0, parentRoleId = 0;
-    
-    if(Model.vw_ParentTeacher.Id > 0){        
+    int roleId = 0, teacherRoleId = 0, parentRoleId = 0, studentRoleId = 0;
+
+    if(Model.vw_ParentTeacher.Id > 0){
         roleId = Model.vw_ParentTeacher.Role;
     }
     DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
 
     parentRoleId = (int)dtRoles.Select("RoleName = 'Parent'")[0]["RoleId"];
     teacherRoleId = (int)dtRoles.Select("RoleName = 'Teacher'")[0]["RoleId"];
+    studentRoleId = (int)dtRoles.Select("RoleName = 'Student'")[0]["RoleId"];
+
 }
 @model SurveyApp.Models.ParentTeacher_Register
 
@@ -206,6 +208,7 @@
                 <div class="col-sm-9 roles">
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, parentRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Parent + "');" })Parent</label></div>
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, teacherRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Teacher + "');" })Teacher</label></div>
+                    <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, studentRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Student + "');" })Student</label></div>
                 </div>
             </div>
             <div class="form-group divSchool" style="@(roleId == teacherRoleId ? "" : "display: none;")">

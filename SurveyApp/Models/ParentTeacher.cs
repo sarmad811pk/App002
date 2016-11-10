@@ -73,7 +73,8 @@ namespace SurveyApp.Models
     public enum SurveyAppRoles
     {
         Parent = 1,
-        Teacher = 2
+        Teacher = 2,
+        Student = 3
     }
 
     public class ParentTeacher_Register

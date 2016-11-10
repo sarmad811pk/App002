@@ -48,10 +48,17 @@
                         return true;
                     }
                 }
-                
+                else if (type == "childschedule")
+                {
+                    if ((int)dr["ScheduleIdChild"] == scheduleId && (int)dr["SurveyId"] == surveyId)
+                    {
+                        return true;
+                    }
+                }
+
             }
-        }       
-        
+        }
+
         return false;
     }
 
@@ -115,7 +122,15 @@
                         }
                     </select>
                 </td>
-
+                <td>
+                    <select class="form-control ddlChild name" name="Child@(index)" disabled="disabled" data-toggle='tooltip' title="Please select a Survey first to associate this Schedule" onchange="$(this).removeClass('inerror');" multiple>
+                        <option value="0">---</option>
+                        @foreach (System.Data.DataRow drSchedule in ds.Tables[2].Rows)
+                        {
+                            <option value="@drSchedule["Id"]" @(checkSurveyExists("childschedule", (int)dr["Id"], (int)drSchedule["Id"]) == true ? "selected='selected'" : "")>@drSchedule["Title"]</option>
+                        }
+                    </select>
+                </td>
             </tr>
             index++;
         }
@@ -162,6 +177,8 @@
             $("#tblStudy").find("input[type=checkbox]").each(function (index, obj) {
                 var isParentSelected = true;
                 var isTeacherSelected = true;
+                var isChildSelected = true;
+
                 if ($(obj)[0].checked == true) {
                     var survey = $($(obj).closest("tr").find("td")[0]).find("label").text();
                     if ($(obj).closest("tr").find(".ddlParent").val() == "" || $(obj).closest("tr").find(".ddlParent").val() == null || $(obj).closest("tr").find(".ddlParent").val() == "0") {
@@ -172,7 +189,11 @@
                         $(obj).closest("tr").find(".ddlTeacher").addClass("inerror");
                         isTeacherSelected = false;
                     }
-                    if (isParentSelected == false && isTeacherSelected == false) {
+                    if ($(obj).closest("tr").find(".ddlChild").val() == "" || $(obj).closest("tr").find(".ddlChild").val() == null || $(obj).closest("tr").find(".ddlChild").val() == "0") {
+                        $(obj).closest("tr").find(".ddlChild").addClass("inerror");
+                        isChildSelected = false;
+                    }
+                    if (isParentSelected == false && isTeacherSelected == false && isChildSelected == false) {
                         errors += "Please select atealst one schedule for " + survey.trim() + " \n";
                         isValid = false;
                     }

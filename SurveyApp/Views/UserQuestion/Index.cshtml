@@ -7,6 +7,8 @@
     string studyName = "";
     //var ds = SurveyApp.DataHelper.SurveyGetAll();
 
+    string[] roles = Roles.GetRolesForUser(User.Identity.Name);    
+    string role = roles[0];
 
     string divSelected = String.IsNullOrEmpty(Request.QueryString["div"]) == true ? "" : Request.QueryString["div"].ToString();
     int childIdts = String.IsNullOrEmpty(Request.QueryString["childIdts"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childIdts"]);
@@ -38,7 +40,7 @@
     {
         if(dschildren != null && dschildren.Tables.Count > 0 && dschildren.Tables[0].Rows.Count > 0 && Roles.IsUserInRole("Parent") == true)
         {
-            childIdts = (int)dschildren.Tables[0].Rows[0]["ChildId"];            
+            childIdts = (int)dschildren.Tables[0].Rows[0]["ChildId"];
         }
     }
     else
@@ -100,15 +102,21 @@
     <div class="waiting" style="@((Request.Url.ToString().ToLower().Contains("/home/") == true && Request.Url.ToString().ToLower().Contains("/home/about") == false && Request.Url.ToString().ToLower().Contains("/home/contact") == false) || (Request.Url.ToString().ToLower().Contains("/userquestion/") == true && Request.Url.ToString().ToLower().Contains("/userquestion/question") == false && Request.Url.ToString().ToLower().Contains("/userquestion/index?childid=") == false) ? "" : "display:none;")"><div>Please Wait...</div></div> 
     <div class="tabs toptabs" style="display:none;">
         <ul class="tabdashboard">
+            @if(role != "Student")
+            {
             <li>
                 <a class="selected" href="#0" onclick="loadDashboard(this);">Dashboard</a>
             </li>
+            }
             <li>
-                <a href="#1" onclick="loadQuestionDetails(this);">Assessment</a>
+                <a href="#1" class="@(role == "Student" ? "selected" : "")" onclick="loadQuestionDetails(this);">Assessment</a>
             </li>
+            @if (role != "Student")
+            {
             <li>
                 <a href="#2" onclick="loadCharts(this);">Visualization</a>
             </li>    
+            }
             <li style="float:right;">
                 <div style="height: 38px;display:none;" class="col-md-6 topControls">
                     <table>
@@ -148,7 +156,8 @@
 
     
 
-
+    @if (role != "Student")
+    {
     <div class="dashboardDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
         <div class="col-sm-12">
@@ -168,6 +177,7 @@
             @*@{Html.RenderPartial("~/Views/Home/_Charts.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childIdts } });}*@
         </div>
     </div>
+    }
     <div class="quesDetails __tabs" style="opacity:0;">
         <div class="col-sm-12">
             <div id="divQuestionDetails"></div>
@@ -176,6 +186,7 @@
     </div>
 
 <script type="text/javascript">
+    var isStudent = @(role == "Student" ? "true" : "false");
     $(window).load(function () {
         $(".waiting").hide();
         $(".toptabs").show();
@@ -186,8 +197,13 @@
             hash = window.location.hash.substring(1);
         }
 
-        $(".tabdashboard").find("li:eq(" + (hash > 2 ? 2 : hash) + ")").find("a").click();
-
+        if(isStudent == true){
+            $(".tabdashboard").find("li:eq(" + (hash > 2 ? 2 : 0) + ")").find("a").click();
+        }
+        else{
+            $(".tabdashboard").find("li:eq(" + (hash > 2 ? 2 : hash) + ")").find("a").click();
+        }        
+        
         if (hash > 2) {
             $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
         }
