@@ -57,15 +57,15 @@
     <input type="hidden" id="hdnSendEmail" name="hdnSendEmail" value="true" />
 
     <div class="form-group">
-        <label class="control-label col-sm-3">Title:</label>
-        <div class="col-sm-9">
+        <label class="control-label col-sm-4">Title:*</label>
+        <div class="col-sm-8">
             @Html.TextBoxFor(m => m.Title, new { placeholder = "Enter Title", @class = "form-control", @maxlength = "100" })
         </div>
     </div>
     
     <div class="form-group">
-        <label class="control-label col-sm-3">Frequency:</label>
-        <div class="col-sm-9">
+        <label class="control-label col-sm-4">Frequency:*</label>
+        <div class="col-sm-8">
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "1", new { name = "optradio", onclick = "$('#divDays').hide();$('#DaysToRepeat').removeClass('inerror');" })Once</label></div>
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "2", new { name = "optradio", onclick = "$('#divDays').show();" })Repeat</label></div>
         </div>
@@ -73,24 +73,24 @@
 
     <div id="divDays" class="_panel form-group" style="display:none;">
         <div class="form-group">
-            <label class="control-label col-sm-3">Enter Days To Repeat:</label>
-            <div class="col-sm-9">
+            <label class="control-label col-sm-4">Enter Days To Repeat:*</label>
+            <div class="col-sm-8">
                 @Html.TextBoxFor(m => m.DaysToRepeat, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
             </div>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="control-label col-sm-3">Active On:</label>
-        <div class="col-sm-9">
+        <label class="control-label col-sm-4">Active On:*</label>
+        <div class="col-sm-8">
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.ActiveOn, "1", new { name = "optradio", onclick = "$('#divSpecify').hide();" })Enrollment</label></div>
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.ActiveOn, "2", new { name = "optradio", onclick = "$('#divSpecify').show();" })Specify</label></div>
         </div>
     </div>
 
     <div id="divSpecify" class="form-group _panel" style="display:none;">
-        <label class="control-label col-sm-3">Specify Period:</label>
-        <div class="col-sm-9">
+        <label class="control-label col-sm-4">Specify Period:*</label>
+        <div class="col-sm-8">
             <div class="specify" data-toggle="tooltip" title="Please note this selection will be applicable for the future dates.">
                 <table cellpadding="0" cellspacing="0" style="width:100%;">                    
                     <tr>
@@ -115,28 +115,28 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label col-sm-3">Available Until:</label>
-        <div class="col-sm-9">
+        <label class="control-label col-sm-4">Available Until:*</label>
+        <div class="col-sm-8">
             @Html.TextBoxFor(m => m.AvailableUntil, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
         </div>
     </div>
     
     <div class="form-group">
-        <label class="control-label col-sm-3">Reminder Frequncey:</label>
-        <div class="col-sm-9">
+        <label class="control-label col-sm-4">Reminder Frequncey:*</label>
+        <div class="col-sm-8">
             @Html.TextBoxFor(m => m.ReminderFrequency, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
         </div>
     </div>
     
     <div class="form-group">
-        <label class="control-label col-sm-3">Last Reminder:</label>
-        <div class="col-sm-9">
+        <label class="control-label col-sm-4">Last Reminder:*</label>
+        <div class="col-sm-8">
             @Html.TextBoxFor(m => m.LastReminder, new { placeholder = "Enter No. Of Days", type="text", pattern="\\d*", maxlength="3", @class = "form-control" })
         </div>
     </div>
     
     <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-9" style="margin-top:10px;">
+        <div class="col-sm-offset-3 col-sm-8" style="margin-top:10px;">
             <button type="button" id="btnSaveSchedule" class="btn btn-default">Save Information</button>
             <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index", "Schedule")';">Cancel</button>
         </div>

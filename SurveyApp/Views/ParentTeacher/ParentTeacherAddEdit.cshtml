@@ -66,6 +66,9 @@
         padding: 0px 0px;
         margin: 0px 10px;
     }*/
+    .form-group label.reguired::after{
+        content : ":*";
+    }
 </style>
 <script type="text/javascript">
 
@@ -192,42 +195,42 @@
             <input type="hidden" id="hdnIsEmailSent" name="hdnIsEmailSent" value="false"/>
 
             <div class="form-group">
-                <label class="control-label col-sm-3"> </label>
-                <div class="col-sm-9" style="text-align: right;">
+                <label class="control-label col-sm-4"> </label>
+                <div class="col-sm-8" style="text-align: right;">
                     @Html.ActionLink("Add Study", "StudyAddEdit", "Study", new object { }, new { @class = "btn btn-link" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3">Name</label>
-                <div class="col-sm-9">
+                <label class="control-label col-sm-4">Name:*</label>
+                <div class="col-sm-8">
                     @Html.TextBoxFor(m => m.vw_ParentTeacher.Name, new { @class = "form-control", id = "parent", placeholder = "User Name", @maxlength = "100" })
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3" for="gender">Role:</label>
-                <div class="col-sm-9 roles">
+                <label class="control-label col-sm-4" for="gender">Role:*</label>
+                <div class="col-sm-8 roles">
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, parentRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Parent + "');" })Parent</label></div>
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, teacherRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Teacher + "');" })Teacher</label></div>
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, studentRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Student + "');" })Student</label></div>
                 </div>
             </div>
             <div class="form-group divSchool" style="@(roleId == teacherRoleId ? "" : "display: none;")">
-                <label class="control-label col-sm-3" for="school">School:</label>
-                <div class="col-sm-9">
+                <label class="control-label col-sm-4" for="school">School:</label>
+                <div class="col-sm-8">
                     @Html.DropDownListFor(m => m.vw_ParentTeacher.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })
                 </div>
             </div>
             <div id="addSchool" class="_panel form-group" style="display: none;margin-bottom: 5px;">
                 <div class="msg"></div>
                 <div class="form-group">
-                    <label class="control-label col-sm-3">School Name</label>
-                    <div class="col-sm-9">
+                    <label class="control-label col-sm-4">School Name:*</label>
+                    <div class="col-sm-8">
                         @Html.TextBoxFor(m => m.vw_ParentTeacher.SchoolName, null, new { id = "txtSchoolName", @class = "form-control txtSchoolName", placeholder = "School Name", maxlength = "100" })
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-3"> </label>
-                    <div class="col-sm-offset-3 col-sm-9">
+                    <label class="control-label col-sm-4"> </label>
+                    <div class="col-sm-offset-3 col-sm-8">
                         <button type="button" class="btn btn-default" onclick="addSchool();">Add School</button>
                         <button type="button" class="btn btn-default" onclick="$('#addSchool').slideUp();">Cancel</button>
                     </div>
@@ -235,8 +238,8 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label col-sm-3"> </label>
-                <div class="col-sm-9" style=" text-align: right;">
+                <label class="control-label col-sm-4"> </label>
+                <div class="col-sm-8" style=" text-align: right;">
                     @if (Model.vw_ParentTeacher.Id > 0)
                     {
                         <a href="javascript:void(0);" class="btn btn-link" onclick="showAccountInfo();">Edit Account Information</a>
@@ -245,29 +248,29 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.vw_Register.UserName, new { @class = "control-label col-sm-3" })
-                <div class="col-sm-9">
+                @Html.LabelFor(m => m.vw_Register.UserName, new { @class = "control-label col-sm-4 reguired" })
+                <div class="col-sm-8">
                     @Html.TextBoxFor(m => m.vw_Register.UserName, new { id = "txtUserName", @class = "form-control", placeholder = "Email", autocomplete = "off", @maxlength = "100" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.vw_Register.Password, new { @class = "control-label col-sm-3" })
-                <div class="col-sm-9">
+                @Html.LabelFor(m => m.vw_Register.Password, new { @class = "control-label col-sm-4 reguired" })
+                <div class="col-sm-8">
                     @Html.PasswordFor(m => m.vw_Register.Password, new { id = "txtPassword", @class = "form-control", placeholder = "Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, Model.vw_Register.Password.Length) : "" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.vw_Register.ConfirmPassword, new { @class = "control-label col-sm-3" })
-                <div class="col-sm-9">
+                @Html.LabelFor(m => m.vw_Register.ConfirmPassword, new { @class = "control-label col-sm-4 reguired" })
+                <div class="col-sm-8">
                     @Html.PasswordFor(m => m.vw_Register.ConfirmPassword, new { id = "txtConfirmPassword", @class = "form-control", placeholder = "Confirm Password", autocomplete = (Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off"), value = Model.vw_Register.Password != null ? Model.vw_Register.Password.ToString().Substring(0, Model.vw_Register.Password.Length) : "" })
                 </div>
             </div>
 
 
             <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9" style="margin-top:10px;">
+                <div class="col-sm-offset-3 col-sm-8" style="margin-top:10px;">
                     <button type="submit" id="btnSaveUser" class="btn btn-default">Save Information</button>
                     <button type="button" class="btn btn-default" onclick="location.href='@Url.Action("Index", "ParentTeacher")';">Cancel</button>
                 </div>
@@ -281,20 +284,20 @@
                 <ul></ul>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3">User name</label>
-                <div class="col-sm-9">
+                <label class="control-label col-sm-4">User name:*</label>
+                <div class="col-sm-8">
                     <input autocomplete="off" class="form-control" id="txtEUserName" placeholder="Email" type="text" value="">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3">Password</label>
-                <div class="col-sm-9">
+                <label class="control-label col-sm-4">Password:*</label>
+                <div class="col-sm-8">
                     <input autocomplete="@(Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off" )" class="form-control" id="txtEPassword" placeholder="Password" type="password" value="">
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-3">Confirm Password</label>
-                <div class="col-sm-9">
+                <label class="control-label col-sm-4">Confirm Password:*</label>
+                <div class="col-sm-8">
                     <input autocomplete="@(Request.Browser.Browser.ToString().ToLower() == "chrome" ? "new-password" : "off" )" class="form-control" id="txtEConfirmPassword" placeholder="Confirm Password" type="password" value="">
                 </div>
             </div>

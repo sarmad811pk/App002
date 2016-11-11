@@ -175,7 +175,7 @@
 </style>
 <br />
 
-@using (Html.BeginForm("ChildAddEdit", "Child", FormMethod.Post, new { id = "frmAddChild", @class = "form-horizontal", style = "width: 700px;padding-left: 24px;" }))
+@using (Html.BeginForm("ChildAddEdit", "Child", FormMethod.Post, new { id = "frmAddChild", @class = "form-horizontal", style = "width: 800px;padding-left: 24px;" }))
 {
     <div class="childInfo">
         <div style="width: 100%;">
@@ -225,7 +225,7 @@
 
             <!-- STUDENT -->
             <div class="form-group">
-                <label class="control-label col-sm-3" for="school">Create Account for child?:</label>
+                <label class="control-label col-sm-3" for="school">Create Account for Child?:</label>
                 <div class="col-sm-9">
                     @Html.CheckBoxFor(m => m.Account, new { name = "chkAccount", onclick = "setStudentAccount(this);", @style = "margin-top: 9px;" })
                 </div>
