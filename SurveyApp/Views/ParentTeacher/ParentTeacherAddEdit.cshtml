@@ -147,8 +147,9 @@
         if (roleType == "@SurveyApp.Models.SurveyAppRoles.Parent") {
             $('.divSchool').hide();
             $("#addSchool").hide();
+            $("#ddlSchools").val("0");
         }
-        else if (roleType == "@SurveyApp.Models.SurveyAppRoles.Teacher") {
+        else if (roleType == "@SurveyApp.Models.SurveyAppRoles.Teacher" || roleType == "@SurveyApp.Models.SurveyAppRoles.Student") {
             $('.divSchool').show();
             if ($("#ddlSchools").val() == -1) {
                 $("#addSchool").show();

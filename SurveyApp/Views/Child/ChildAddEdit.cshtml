@@ -138,7 +138,7 @@
 
 <h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;Child Information Editor</h2>
 
-<style>
+<style type="text/css">
     ._panel { background: #fafafa; border: solid 1px #cccccc; padding: 10px; border-radius: 6px; }
     .msg.green {
         color: #00cc00;
@@ -171,6 +171,10 @@
         bottom: 0px;
         left: 20px;
         color: #FFF;
+    }
+    .bootbox-body{
+        max-height: 400px;
+        overflow-y: auto;
     }
 </style>
 <br />
@@ -235,7 +239,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="gender">Email:*</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control txtUserName" id="regEmail" name="regEmail" placeholder="Email" onkeyup="checkEmailValidation(this);">
+                        <input type="text" class="form-control txtUserName" id="regEmail" name="regEmail" placeholder="Email" value="@Model.Email" onkeyup="checkEmailValidation(this);">
                     </div>
                 </div>
                 <div class="form-group">
@@ -439,7 +443,7 @@
             theme: "dark-thick",
             scrollInertia: 700,
             scrollbarPosition: "inside"
-        });
+        });        
 
         $("#btnSaveChild").click(function (e) {
             e.preventDefault();
@@ -933,6 +937,12 @@
             message: html
         });
 
+        $(".bootbox-body").mCustomScrollbar({
+            scrollButtons: { enable: true },
+            theme: "dark-thick",
+            scrollInertia: 700,
+            scrollbarPosition: "inside"
+        });
         //$(".bootbox-body .studyTeachers input").each(function(){
         //    var ischecked = $("#studyId_" + studyId).find(".studyTeachers #" + $(this).attr("id"))[0].checked;
         //    if(ischecked == false){
@@ -982,7 +992,6 @@
     });
 
     function disableAccount(){
-        $("#regEmail").val("@Model.Email");
         $("#regEmail").attr("disabled", "disabled");
         $("#regPassword").attr("disabled", "disabled");
         $("#regConfirmPassword").attr("disabled", "disabled");
@@ -992,7 +1001,7 @@
         var isChecked = $(elem)[0].checked;
         if(isChecked == true){
             $("#addStudent").slideDown();
-            if($("#Email") != ""){
+            if($("#Email") != "" && "@Model.Email" == ""){
                 $("#regEmail").val($("#Email").val());
             }
         }

@@ -38,7 +38,7 @@
     string childName = "All Children";
     if(childIdts == 0)
     {
-        if(dschildren != null && dschildren.Tables.Count > 0 && dschildren.Tables[0].Rows.Count > 0 && Roles.IsUserInRole("Parent") == true)
+        if(dschildren != null && dschildren.Tables.Count > 0 && dschildren.Tables[0].Rows.Count > 0 && (Roles.IsUserInRole("Parent") == true || Roles.IsUserInRole("Student") == true))
         {
             childIdts = (int)dschildren.Tables[0].Rows[0]["ChildId"];
         }
@@ -135,7 +135,7 @@
                             </td>
                             <td>
                                 <select id="ddlChildren" class="col-sm-9 form-control dashboard-controls" onchange="getChildInfo(this);" style="font-weight: bold; color: #00ADEE;border:solid 2px #00adee;width:250px;text-transform:capitalize;">
-                                    @if (childrenCount >= 1 && Roles.IsUserInRole("Parent") == false)
+                                    @if (childrenCount >= 1 && Roles.IsUserInRole("Parent") == false && Roles.IsUserInRole("Student") == false)
                                     {
                                         <option value="0">All Children</option>
                                     }                                    

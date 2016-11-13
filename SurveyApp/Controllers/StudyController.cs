@@ -99,7 +99,7 @@ namespace SurveyApp.Controllers
                                 {
                                     int[] parentSchedules = collection["Parent" + i] != null ? Array.ConvertAll(collection["Parent" + i].ToString().Split(','), int.Parse) : null;
                                     int[] teacherSchedules = collection["Teacher" + i] != null ? Array.ConvertAll(collection["Teacher" + i].ToString().Split(','), int.Parse) : null;
-                                    int[] childSchedules = collection["Teacher" + i] != null ? Array.ConvertAll(collection["Child" + i].ToString().Split(','), int.Parse) : null;
+                                    int[] childSchedules = collection["Child" + i] != null ? Array.ConvertAll(collection["Child" + i].ToString().Split(','), int.Parse) : null;
 
                                     int parentSchCount = parentSchedules != null ? parentSchedules.Length : 0;
                                     int teacherSchCount = teacherSchedules != null ? teacherSchedules.Length : 0;
@@ -124,7 +124,7 @@ namespace SurveyApp.Controllers
                                     {
                                         int pId = parentSchedules != null && parentSchedules.Length > index ? parentSchedules[index] : 0;
                                         int tId = teacherSchedules != null && teacherSchedules.Length > index ? teacherSchedules[index] : 0;
-                                        int cId = teacherSchedules != null && childSchedules.Length > index ? childSchedules[index] : 0;
+                                        int cId = childSchedules != null && childSchedules.Length > index ? childSchedules[index] : 0;
 
                                         int surveyId = Convert.ToInt32(collection["Survey" + i]);
                                         if(surveyId == 6)

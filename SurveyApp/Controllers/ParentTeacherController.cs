@@ -71,8 +71,9 @@ namespace SurveyApp.Controllers
             DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
             int teacherRoleId = (int)dtRoles.Select("RoleName = 'Teacher'")[0]["RoleId"];
             int parentRoleId = (int)dtRoles.Select("RoleName = 'Parent'")[0]["RoleId"];
+            int studentRoleId = (int)dtRoles.Select("RoleName = 'Student'")[0]["RoleId"];
 
-            if (parentTeacherModel.Role == teacherRoleId
+            if ((parentTeacherModel.Role == teacherRoleId || parentTeacherModel.Role == studentRoleId)
                 && (parentTeacherModel.SchoolId == null || parentTeacherModel.SchoolId == 0)
                 && String.IsNullOrEmpty(parentTeacherModel.SchoolName))
             {
@@ -118,7 +119,7 @@ namespace SurveyApp.Controllers
                 //save account info                
                 try
                 {                    
-                    string roleName = (parentTeacherModel.Role == parentRoleId ? "Parent" : (parentTeacherModel.Role == teacherRoleId ? "Teacher" : ""));
+                    string roleName = (parentTeacherModel.Role == parentRoleId ? "Parent" : (parentTeacherModel.Role == teacherRoleId ? "Teacher" : (parentTeacherModel.Role == studentRoleId ? "Student" : "")));
                     if (parentTeacherModel.Id > 0)
                     {
                         string[] roles = Roles.GetRolesForUser(registerModel.UserName);

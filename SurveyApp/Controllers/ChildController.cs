@@ -456,9 +456,13 @@ namespace SurveyApp.Controllers
             {
                 title = "Peds quality of life for 8yrs-12yrs";
             }
-            else if (age >= 13)
+            else if (age >= 13 && age <= 18)
             {
                 title = "Peds quality of life for 13yrs -18yrs";
+            }
+            else if (age >= 19)
+            {
+                title = "Peds quality of life for 19yrs";
             }
 
             return title;
