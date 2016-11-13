@@ -230,7 +230,7 @@
             <!-- STUDENT -->
             <div class="form-group">
                 <label class="control-label col-sm-3" for="school">Create Account for Child?:</label>
-                <div class="col-sm-9">
+                <div class="col-sm-9" data-toggle="tooltip" title="Please select this option if student account has not been created already.">
                     @Html.CheckBoxFor(m => m.Account, new { name = "chkAccount", onclick = "setStudentAccount(this);", @style = "margin-top: 9px;" })
                 </div>
             </div>
