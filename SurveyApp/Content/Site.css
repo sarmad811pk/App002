@@ -209,7 +209,7 @@ ul#menu {
             text-decoration: none;
         }
 
-        ul#menu li a:hover {
+        ul#menu li a:hover, ul#menu li.selected a {
             color: #333;
             text-decoration: none;
         }

@@ -6,9 +6,9 @@
 
     int roleId = 0, teacherRoleId = 0, parentRoleId = 0, studentRoleId = 0;
 
-    if(Model.vw_ParentTeacher.Id > 0){
+    //if(Model.vw_ParentTeacher.Id > 0){
         roleId = Model.vw_ParentTeacher.Role;
-    }
+    //}
     DataTable dtRoles = SurveyApp.DataHelper.RolesGetAll().Tables[0];
 
     parentRoleId = (int)dtRoles.Select("RoleName = 'Parent'")[0]["RoleId"];
@@ -216,8 +216,8 @@
                     <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.vw_ParentTeacher.Role, studentRoleId.ToString(), new { name = "optradio", onclick = "changeRole('" + SurveyApp.Models.SurveyAppRoles.Student + "');" })Student</label></div>
                 </div>
             </div>
-            <div class="form-group divSchool" style="@(roleId == teacherRoleId ? "" : "display: none;")">
-                <label class="control-label col-sm-4" for="school">School:</label>
+            <div class="form-group divSchool" style="@(roleId == teacherRoleId || roleId == studentRoleId ? "" : "display: none;")">
+                <label class="control-label col-sm-4" for="school">School:*</label>
                 <div class="col-sm-8">
                     @Html.DropDownListFor(m => m.vw_ParentTeacher.SchoolId, new SelectList(School.SchoolGetAll(), "SchoolId", "Name"), "Select school", new { id = "ddlSchools", @class = "form-control", })
                 </div>

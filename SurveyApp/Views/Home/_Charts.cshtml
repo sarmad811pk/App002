@@ -27,6 +27,7 @@
     string dASP = "", pASP = "", tASP = "";
     string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
     string dPEDsql = "", pPEDsql = "";
+    string dPEDsqlS = "", pPEDsqlS = "";
     string dSCQ = "", pSCQ = "";
     string dSCQTeacher = "", tSCQTeacher = "";
     string dCareGiver = "", pCareGiver = "";
@@ -157,11 +158,19 @@
         //#endregion
 
         #region PedsQL-Parent Report for Children(8-12)
-        DataRow[] drPEDsqlP = dsCharts.Tables[2].Select("SURVEYid IN (6 ,7, 8, 9, 45)");
+        DataRow[] drPEDsqlP = dsCharts.Tables[2].Select("SURVEYid IN (6 ,7, 8, 9)");
         foreach (DataRow dr in drPEDsqlP)
         {
             dPEDsql += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pPEDsql += dr["Score"] + ",";
+        }
+        #endregion
+        #region PedsQL-Student Report for Children(19 yrs and above)
+        DataRow[] drPEDsqlS = dsCharts.Tables[2].Select("SURVEYid IN (45)");
+        foreach (DataRow dr in drPEDsqlS)
+        {
+            dPEDsqlS += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pPEDsqlS += dr["Score"] + ",";
         }
         #endregion
 
@@ -389,17 +398,17 @@
         {
             pvPAULT += dr["Score"] + ",";
         }
-        DataRow[] drseca = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section A' AND SURVEYid = 46");
+        DataRow[] drseca = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section A (Parent)' AND SURVEYid = 46");
         foreach (DataRow dr in drseca)
         {
             pvSectionA += dr["Score"] + ",";
         }
-        DataRow[] drsecb = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section B' AND SURVEYid = 46");
+        DataRow[] drsecb = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section B (Parent)' AND SURVEYid = 46");
         foreach (DataRow dr in drsecb)
         {
             pvSectionB += dr["Score"] + ",";
         }
-        DataRow[] drsecc = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section C' AND SURVEYid = 46");
+        DataRow[] drsecc = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section C (Parent)' AND SURVEYid = 46");
         foreach (DataRow dr in drsecc)
         {
             pvSectionC += dr["Score"] + ",";
@@ -436,7 +445,7 @@
         foreach (DataRow dr in tvDates)
         {
             tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            pvAdapting += dr["Score"] + ",";
+            tvCS += dr["Score"] + ",";
         }
         DataRow[] drExpressive = dsCharts.Tables[4].Select("QuestionGroup = 'Expressive' AND SURVEYid = 47");
         foreach (DataRow dr in drExpressive)
@@ -463,17 +472,17 @@
         {
             tvN += dr["Score"] + ",";
         }
-        DataRow[] drsecat = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section A' AND SURVEYid = 47");
+        DataRow[] drsecat = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section A (Teacher)' AND SURVEYid = 47");
         foreach (DataRow dr in drsecat)
         {
             tvSectionA += dr["Score"] + ",";
         }
-        DataRow[] drsecbt = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section B' AND SURVEYid = 47");
+        DataRow[] drsecbt = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section B (Teacher)' AND SURVEYid = 47");
         foreach (DataRow dr in drsecbt)
         {
             tvSectionB += dr["Score"] + ",";
         }
-        DataRow[] drsecct = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section C' AND SURVEYid = 47");
+        DataRow[] drsecct = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section C (Teacher)' AND SURVEYid = 47");
         foreach (DataRow dr in drsecct)
         {
             tvSectionC += dr["Score"] + ",";
@@ -866,7 +875,7 @@
         series: [{
             name: 'Coping Skills',
             marker: {
-                symbol: 'square'
+                symbol: 'circle'
             },
             data: [@Html.Raw(tvCS.Trim(','))],
             color: '#73B3EF'
@@ -874,32 +883,16 @@
         }, {
             name: 'Expressive',
             marker: {
-                symbol: 'diamond'
+                symbol: 'square'
             },
             data: [@Html.Raw(tvE.Trim(','))],
             color: '#67F97C'
 
-        }, {
-            name: 'Fine Motor',
-            marker: {
-                symbol: 'square'
-            },
-            data: [@Html.Raw(tvFM.Trim(','))],
-            color: '#FF9E4F'
-
-        }, {
-            name: 'Gross Motor',
-            marker: {
-                symbol: 'diamond'
-            },
-            data: [@Html.Raw(tvGM.Trim(','))],
-            color: '#8778EC'
         }
-
         , {
             name: 'Interpersonal Reslationships',
             marker: {
-                symbol: 'diamond'
+                symbol: 'triangle-down'
             },
             data: [@Html.Raw(tvIR.Trim(','))],
             color: '#434348'
@@ -907,25 +900,25 @@
         , {
             name: 'Numeric',
             marker: {
-                symbol: 'diamond'
+                symbol: 'circle'
             },
             data: [@Html.Raw(tvN.Trim(','))],
-            color: '#434348'
+            color: '#73B3EF'
         }
         , {
             name: 'Problem Behaviors - Section A',
             marker: {
-                symbol: 'diamond'
+                symbol: 'square'
             },
             data: [@Html.Raw(tvSectionA.Trim(','))],
-            color: '#434348'
+            color: '#67F97C'
         }, {
             name: 'Problem Behaviors - Section B',
             marker: {
-                symbol: 'diamond'
+                symbol: 'triangle'
             },
             data: [@Html.Raw(tvSectionB.Trim(','))],
-            color: '#434348'
+            color: '#FF9E4F'
         }
         , {
             name: 'Problem Behaviors - Section C',
@@ -933,12 +926,12 @@
                 symbol: 'diamond'
             },
             data: [@Html.Raw(tvSectionC.Trim(','))],
-            color: '#434348'
+            color: '#8778EC'
         }
         , {
             name: 'Personal',
             marker: {
-                symbol: 'diamond'
+                symbol: 'triangle-down'
             },
             data: [@Html.Raw(tvP.Trim(','))],
             color: '#434348'
@@ -946,26 +939,26 @@
         , {
             name: 'Play and Leisure',
             marker: {
-                symbol: 'diamond'
+                symbol: 'circle'
             },
             data: [@Html.Raw(tvPAL.Trim(','))],
-            color: '#434348'
+            color: '#73B3EF'
         }
     , {
         name: 'Receptive',
         marker: {
-            symbol: 'diamond'
+            symbol: 'square'
         },
         data: [@Html.Raw(tvR.Trim(','))],
-        color: '#434348'
+        color: '#67F97C'
     }
     , {
         name: 'School Community',
         marker: {
-            symbol: 'diamond'
+            symbol: 'triangle'
         },
         data: [@Html.Raw(tvSC.Trim(','))],
-        color: '#434348'
+        color: '#FF9E4F'
     }
     , {
         name: 'Written',
@@ -973,7 +966,7 @@
             symbol: 'diamond'
         },
         data: [@Html.Raw(tvW.Trim(','))],
-        color: '#434348'
+        color: '#8778EC'
     }
         ]
 
@@ -1273,6 +1266,62 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------PedsQL-Parent----------------------------------------
+    $('#PedsQLParentS').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Peds Quality of Life (19yrs and above)'
+        },
+        subtitle: {
+            text: '*Higher is better'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dPEDsqlS.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pPEDsqlS.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
 }
 
 <script type="text/javascript">
@@ -1536,7 +1585,7 @@
         series: [{
             name: 'Adapting',
             marker: {
-                symbol: 'square'
+                symbol: 'circle'
             },
             data: [@Html.Raw(pvAdapting.Trim(','))],
             color: '#73B3EF'
@@ -1544,7 +1593,7 @@
         }, {
             name: 'Caring For Home',
             marker: {
-                symbol: 'diamond'
+                symbol: 'square'
             },
             data: [@Html.Raw(pvCFH.Trim(','))],
             color: '#67F97C'
@@ -1552,7 +1601,7 @@
         }, {
             name: 'Caring For Self',
             marker: {
-                symbol: 'square'
+                symbol: 'triangle'
             },
             data: [@Html.Raw(pvCFS.Trim(','))],
             color: '#FF9E4F'
@@ -1569,7 +1618,7 @@
         , {
             name: 'Living In Community',
             marker: {
-                symbol: 'diamond'
+                symbol: 'triangle-down'
             },
             data: [@Html.Raw(pvLIC.Trim(','))],
             color: '#434348'
@@ -1577,7 +1626,7 @@
         , {
             name: 'Playing And Using Leisure Time',
             marker: {
-                symbol: 'diamond'
+                symbol: 'circle'
             },
             data: [@Html.Raw(pvPAULT.Trim(','))],
             color: '#73B3EF'
@@ -1585,14 +1634,14 @@
         , {
             name: 'Problem Behaviors - Section A',
             marker: {
-                symbol: 'diamond'
+                symbol: 'square'
             },
             data: [@Html.Raw(pvSectionA.Trim(','))],
             color: '#67F97C'
         }, {
             name: 'Problem Behaviors - Section B',
             marker: {
-                symbol: 'diamond'
+                symbol: 'triangle'
             },
             data: [@Html.Raw(pvSectionB.Trim(','))],
             color: '#FF9E4F'
@@ -1608,15 +1657,15 @@
         , {
             name: 'Reading and Writing',
             marker: {
-                symbol: 'diamond'
+                symbol: 'triangle-down'
             },
             data: [@Html.Raw(pvRAW.Trim(','))],
-            color: '#8778EC'
+            color: '#434348'
         }
         , {
             name: 'Relating To Others',
             marker: {
-                symbol: 'diamond'
+                symbol: 'circle'
             },
             data: [@Html.Raw(pvRTO.Trim(','))],
             color: '#73B3EF'
@@ -1624,27 +1673,11 @@
     , {
         name: 'Talking',
         marker: {
-            symbol: 'diamond'
+            symbol: 'square'
         },
         data: [@Html.Raw(pvT.Trim(','))],
         color: '#67F97C'
-    }
-    , {
-        name: 'Using Large Muscles',
-        marker: {
-            symbol: 'diamond'
-        },
-        data: [@Html.Raw(pvULM.Trim(','))],
-        color: '#FF9E4F'
-    }
-    , {
-        name: 'Using Small Muscles',
-        marker: {
-            symbol: 'diamond'
-        },
-        data: [@Html.Raw(pvUSM.Trim(','))],
-        color: '#8778EC'
-    }
+    }    
         ]
 
 
@@ -2362,12 +2395,15 @@
                             </li>
                             <li>
                                 <a href="#5" onclick="showGraphsSection(this, 3);">Parent/Teacher</a>
-                            </li>
+                            </li>                            
                             <li style="display:none;">
                                 <a href="#6" onclick="showGraphsSection(this, 4);">Weekly Teacher</a>
                             </li>
                             <li>
                                 <a href="#7" onclick="showGraphsSection(this, 5);">Life Events</a>
+                            </li>
+                            <li>
+                                <a href="#8" onclick="showGraphsSection(this, 6);">Student</a>
                             </li>
                         }
                     </ul>
@@ -2421,6 +2457,12 @@
                                 <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                             </div>*@
                     </div>
+
+                    <div class="row voffset studentdiv">
+                        <div class="col-sm-6 student" style="background-color:transparent;">
+                            <div id="PedsQLParentS" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+                    </div>
                 }
                 
 
@@ -2432,6 +2474,8 @@
                         <div id="CaregiverStrainQuesionaire" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                 </div>
+
+                
 
                 @*<div class="row voffset">
                     <div class="col-sm-6" style="background-color:transparent;">
@@ -2533,6 +2577,7 @@
         $(".parentteacherdiv").hide();
         $(".weeklydiv").hide();
         $(".lifeeventsdiv").hide();
+        $(".studentdiv").hide();
 
         $(".graphTabs a").removeClass("selected");
         $(elem).addClass("selected");
@@ -2551,6 +2596,9 @@
         }
         else if (type == 5) {
             $(".lifeeventsdiv").show();
+        }
+        else if (type == 6) {
+            $(".studentdiv").show();
         }
 
         //$(window).resize();

@@ -118,9 +118,9 @@
                     @if (!Request.Url.ToString().Contains("/Login"))
                     {
                         <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                            <li class="@(Request.Url.ToString().ToLower().Contains("home/index") == true ? "selected" : "")">@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li class="@(Request.Url.ToString().ToLower().Contains("home/about") == true ? "selected" : "")">@Html.ActionLink("About", "About", "Home")</li>
+                            <li class="@(Request.Url.ToString().ToLower().Contains("home/contact") == true ? "selected" : "")">@Html.ActionLink("Contact", "Contact", "Home")</li>
                         </ul>
                     }
                 </nav>

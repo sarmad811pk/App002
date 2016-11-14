@@ -27,7 +27,7 @@
     #region CurrentPrriod
     if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count >= 1)
     {
-        string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
+        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
         /* PARENT */
         #region ParentGraph
         if (userType == 0 || userType == 1)
@@ -113,7 +113,7 @@
     #region PreviousPrriod
     if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count >= 1)
     {
-        string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
+        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
         /* PARENT */
         #region ParentGraph
         if (userType == 0 || userType == 1)

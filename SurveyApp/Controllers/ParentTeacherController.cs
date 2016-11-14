@@ -77,7 +77,7 @@ namespace SurveyApp.Controllers
                 && (parentTeacherModel.SchoolId == null || parentTeacherModel.SchoolId == 0)
                 && String.IsNullOrEmpty(parentTeacherModel.SchoolName))
             {
-                ModelState.AddModelError("", "Please select a school for the teacher.");
+                ModelState.AddModelError("", "Please select a school for the " + (parentTeacherModel.Role == studentRoleId == true ? "student." : "teacher."));
                 return View(parentTeacher_RegisterModel);
             }            
 
