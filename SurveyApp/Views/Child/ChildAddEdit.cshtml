@@ -228,8 +228,8 @@
             </div>
 
             <!-- STUDENT -->
-            <div class="form-group">
-                <label class="control-label col-sm-3" for="school">Create Account for Child?:</label>
+            <div class="form-group" style="display:none;">
+                <label class="control-label col-sm-3">Create Account for Child?:</label>
                 <div class="col-sm-9" data-toggle="tooltip" title="Please select this option if student account has not been created already.">
                     @Html.CheckBoxFor(m => m.Account, new { name = "chkAccount", onclick = "setStudentAccount(this);", @style = "margin-top: 9px;" })
                 </div>
@@ -386,7 +386,7 @@
                                             {
                                                 <div class="resp"><label><input type="checkbox" @getParentStatus(std.Id) id="StudyId_@(std.Id)_IncludeParent" name="StudyId_@(std.Id)_IncludeParent" value="@getParentStatusValue(std.Id)" /> Include Parent?</label></div>
                                             }
-                                            <div class="resp"><label><input type="checkbox" @getTeacherStatus((int)dr["UserId"], std.Id) id="StudyId_@(std.Id)_TeacherId_@dr["UserId"]" name="StudyId_@(std.Id)_TeacherId_@dr["UserId"]" value="@dr["UserId"]" /> @(dr["FullName"])</label></div>
+                                            <div class="resp"><label><input type="checkbox" @getTeacherStatus((int)dr["UserId"], std.Id) id="StudyId_@(std.Id)_TeacherId_@dr["UserId"]" name="StudyId_@(std.Id)_TeacherId_@dr["UserId"]" value="@dr["UserId"]" /> @(dr["FullName"]) @(dr["RoleName"] != DBNull.Value && dr["RoleName"].ToString() == "Student" ? " (Student)" : "")</label></div>
                                             index++;
                                         }
                                     </div>
@@ -992,9 +992,13 @@
     });
 
     function disableAccount(){
+        $("#Account").attr("disabled", "disabled");
         $("#regEmail").attr("disabled", "disabled");
+        $("#regPassword").val("*********");
+        $("#regConfirmPassword").val("*********");
+
         $("#regPassword").attr("disabled", "disabled");
-        $("#regConfirmPassword").attr("disabled", "disabled");
+        $("#regConfirmPassword").attr("disabled", "disabled");        
     }
 
     function setStudentAccount(elem){

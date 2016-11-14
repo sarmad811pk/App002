@@ -70,7 +70,7 @@
             foreach (DataRow dr in dsChildren.Tables[0].Rows)
             {
                 <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = dr["Id"] })';">
-                    <td class="name">@dr["Name"]</td>
+                    <td title="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "This child is self respondent" : "")" data-toggle="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "tooltip" : "")" class="name">@(dr["Name"])<label class="text-danger">@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "*" : "")</label></td>
                     <td>@(dr["dob"] != DBNull.Value ? Convert.ToDateTime(dr["dob"]).ToString("MM/dd/yyyy") : "")</td>
                     <td class="name">@dr["School"]</td>
                     <td class="name">@dr["Parent"]</td>
