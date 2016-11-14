@@ -33,21 +33,21 @@
         string value = "", scheduleDate = "", userId = "";
         string notstarted = "<span><i class='ion-record notstarted' data-toggle='tooltip' title='This questionnaire has not started yet' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
         string notapplicable = "<span><i class='ion-android-radio-button-off notenrolled' data-toggle='tooltip' title='Not applicable to respond' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
-        string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this questionnaire' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
+        string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this questionnaire for this respondent' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
 
-        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = " + surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL)", (periodtype == 1 ? " ScheduleDate ASC" : " ScheduleDate DESC "));
+        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = " + surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL) AND (ScheuleStartDate <= '" + DateTime.Now + "')", (periodtype == 1 ? " ScheduleDate ASC" : " ScheduleDate DESC "));
         foreach (DataRow drS in drSurveys)
         {
             scheduleDate = drS["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(drS["ScheduleDate"]).ToString("MM/dd/yyyy") : "";
             userId = drS["UserID"] != DBNull.Value ? drS["UserID"].ToString() : "";
-            
+
             int aoutMin = drS["AOUTMin"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMin"]) : 0;
             int aoutMax = drS["AOUTMax"] != DBNull.Value ? Convert.ToInt32(drS["AOUTMax"]) : 0;
 
             if ((drS["UserID"] != DBNull.Value ? (int)drS["UserID"] : -1) == teacherId && (aoutMin == (int)userType || aoutMax == (int)userType))
             {
                 string cssClass = (drS["Percentage"] == DBNull.Value ? "notstarted" : (Convert.ToInt32(drS["Percentage"]) == 100 ? "complete" : (Convert.ToInt32(drS["Percentage"]) < 100 ? "incomplete" : "notapplicable")));
-                string title = (cssClass == "complete" ? "This questionnaire is complete" : (cssClass == "incomplete" ? "This questionnaire is partially complete" : (cssClass == "notstarted" ? "This questionnaire has not started yet" : "Child is not scheduled for this questionnaire")));
+                string title = (cssClass == "complete" ? "This questionnaire is complete" : (cssClass == "incomplete" ? "This questionnaire is partially complete" : (cssClass == "notstarted" ? "This questionnaire has not started yet" : "Child is not scheduled for this questionnaire for this respondent")));
                 value = "<span><i data-toggle='tooltip' title='" + title + "' class='ion-record " + cssClass + "' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
                 value = value.Replace("_SCHEDULEDATE_", scheduleDate);
                 value = value.Replace("_USERID_", userId);
