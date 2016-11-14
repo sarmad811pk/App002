@@ -187,7 +187,7 @@ namespace SurveyApp.Controllers
                         ptScContext.ParentTeacher_Schools.RemoveRange(ptScContext.ParentTeacher_Schools.Where(pts => pts.ParentTeacherId == parentTeacherModel.Id));
                         ptScContext.SaveChanges();
                     }
-                    if (parentTeacherModel.Role == teacherRoleId)
+                    if (parentTeacherModel.Role == teacherRoleId || parentTeacherModel.Role == studentRoleId)
                     {
                         ParentTeacher_School objPTS = new ParentTeacher_School();
                         objPTS.ParentTeacherId = ptId;

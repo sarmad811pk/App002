@@ -62,7 +62,7 @@ namespace SurveyApp.Controllers
             {
                 UserProfile objUP = DataHelper.UserProfileGetUserByUserName(model.UserName);
                 string role = Roles.GetRolesForUser(model.UserName)[0];
-                if(role != "Admin")
+                if(role != "Administrator")
                 {
                     using (var csrContext = new Child_Study_RespondentContext())
                     {                        
