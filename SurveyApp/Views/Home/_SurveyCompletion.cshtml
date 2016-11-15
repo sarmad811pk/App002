@@ -9,8 +9,8 @@
     string childName = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
 
     DataSet dsCompletion;
-    string currParent = "", currTeacher = "", prevParent = "", prevTeacher = "";
-    int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : 0;
+    string currParent = "", currTeacher = "", currStudent = "", prevParent = "", prevTeacher = "", prevStudent = "";
+    int userType = User.IsInRole("Teacher") == true ? 2 : User.IsInRole("Parent") == true ? 1 : (User.IsInRole("Student") == true ? 3 : 0);
     var Title = "";
     if (userType == 2) {
         Title = " (Teacher)";
@@ -18,53 +18,28 @@
     else if(userType == 1){
         Title = "(Parent)";
     }
-    else{
+    else if (userType == 3){
+        Title = "(Student)";
+    }
+    else
+    {
         Title="";
     }
-    dsCompletion = SurveyApp.DataHelper.DashboardGetSchedulesForUserRoles(studyId, WebSecurity.CurrentUserId, childIdts);
+    dsCompletion = SurveyApp.DataHelper.Dashboard_getCompletion(WebSecurity.CurrentUserId, studyId, childIdts);
 
 
     #region CurrentPrriod
-    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count >= 1)
+    if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count >= 2)
     {
-        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
         /* PARENT */
         #region ParentGraph
         if (userType == 0 || userType == 1)
         {
-            int completed = 0, partial = 0, notstarted = 0, notapplicable = 0;
-            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate AND (UserType = 1 OR UserType IS NULL)");
-            if (drCount.Length > 0)
+            DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("UserType = 1");
+            if (drTeacherCount.Length > 0)
             {
-                foreach (DataRow dr in drCount)
-                {
-                    if (dr["Percentage"] != DBNull.Value)
-                    {
-                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                        if (percent == 100)
-                        {
-                            completed++;
-                        }
-                        else if (percent > 0 && percent < 100)
-                        {
-                            partial++;
-                        }
-                        else if (percent == 0)
-                        {
-                            notstarted++;
-                        }
-                    }
-                    else
-                    {
-                        notstarted++;
-                    }
-                }
+                currParent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
             }
-            else
-            {
-                notapplicable++;
-            }
-            currParent = "['Completed', " + completed + "], ['Partially Completed', " + partial + "],['Not Started', " + notstarted + "],['Not Assigned', " + notapplicable + "]";
         }
         #endregion
 
@@ -72,39 +47,23 @@
         #region TeacherGraph
         if (userType == 0 || userType == 2)
         {
-            int completedTeacher = 0, partialTeacher = 0, notstartedTeacher = 0, notapplicableTeacher = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "'  <= ScheduleDate AND (UserType = 2 OR UserType IS NULL)");
+            DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("UserType = 2");
             if (drTeacherCount.Length > 0)
             {
-                foreach (DataRow dr in drTeacherCount)
-                {
-                    if (dr["Percentage"] != DBNull.Value)
-                    {
-                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                        if (percent == 100)
-                        {
-                            completedTeacher++;
-                        }
-                        else if (percent > 0 && percent < 100)
-                        {
-                            partialTeacher++;
-                        }
-                        else if (percent == 0)
-                        {
-                            notstartedTeacher++;
-                        }
-                    }
-                    else
-                    {
-                        notstartedTeacher++;
-                    }
-                }
+                currTeacher = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
             }
-            else
+        }
+        #endregion
+
+        /* STUDENT */
+        #region StudentGraph
+        if (userType == 0 || userType == 3)
+        {
+            DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("UserType = 3");
+            if (drTeacherCount.Length > 0)
             {
-                notapplicableTeacher++;
+                currStudent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
             }
-            currTeacher = "['Completed', " + completedTeacher + "], ['Partially Completed', " + partialTeacher + "],['Not Started', " + notstartedTeacher + "],['Not Assigned', " + notapplicableTeacher + "]";
         }
         #endregion
     }
@@ -113,44 +72,15 @@
     #region PreviousPrriod
     if (dsCompletion != null && dsCompletion.Tables != null && dsCompletion.Tables.Count >= 1)
     {
-        string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
         /* PARENT */
         #region ParentGraph
         if (userType == 0 || userType == 1)
         {
-            int completedPrevious = 0, partialPrevious = 0, notstartedPrevious = 0, notapplicablePrevious = 0;
-            DataRow[] drCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND (UserType = 1 OR UserType IS NULL)");
-            if (drCount.Length > 0)
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("UserType = 1");
+            if (drTeacherCount.Length > 0)
             {
-                foreach (DataRow dr in drCount)
-                {
-                    if (dr["Percentage"] != DBNull.Value)
-                    {
-                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                        if (percent == 100)
-                        {
-                            completedPrevious++;
-                        }
-                        else if (percent > 0 && percent < 100)
-                        {
-                            partialPrevious++;
-                        }
-                        else if (percent == 0)
-                        {
-                            notstartedPrevious++;
-                        }
-                    }
-                    else
-                    {
-                        notstartedPrevious++;
-                    }
-                }
+                prevParent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
             }
-            else
-            {
-                notapplicablePrevious++;
-            }
-            prevParent = "['Completed', " + completedPrevious + "], ['Partially Completed', " + partialPrevious + "],['Not Started', " + notstartedPrevious + "],['Not Assigned', " + notapplicablePrevious + "]";
         }
         #endregion
 
@@ -158,39 +88,23 @@
         #region TeacherGraph
         if (userType == 0 || userType == 2)
         {
-            int completedTeacherPrevious = 0, partialTeacherPrevious = 0, notstartedTeacherPrevious = 0, notapplicableTeacherPrevious = 0;
-            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("'" + currentDate + "' > ScheduleDate AND (UserType = 2 OR UserType IS NULL)");
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("UserType = 2");
             if (drTeacherCount.Length > 0)
             {
-                foreach (DataRow dr in drTeacherCount)
-                {
-                    if (dr["Percentage"] != DBNull.Value)
-                    {
-                        int percent = Convert.ToInt32(dr["Percentage"].ToString().Replace("%", ""));
-                        if (percent == 100)
-                        {
-                            completedTeacherPrevious++;
-                        }
-                        else if (percent > 0 && percent < 100)
-                        {
-                            partialTeacherPrevious++;
-                        }
-                        else if (percent == 0)
-                        {
-                            notstartedTeacherPrevious++;
-                        }
-                    }
-                    else
-                    {
-                        notstartedTeacherPrevious++;
-                    }
-                }
+                prevTeacher = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
             }
-            else
+        }
+        #endregion
+
+        /* STUDENT */
+        #region StudentGraph
+        if (userType == 0 || userType == 3)
+        {
+            DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("UserType = 3");
+            if (drTeacherCount.Length > 0)
             {
-                notapplicableTeacherPrevious++;
+                prevStudent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
             }
-            prevTeacher = "['Completed', " + completedTeacherPrevious + "], ['Partially Completed', " + partialTeacherPrevious + "],['Not Started', " + notstartedTeacherPrevious + "],['Not Assigned', " + notapplicableTeacherPrevious + "]";
         }
         #endregion
     }
@@ -200,10 +114,10 @@
 
 
 
-@if(userType == 0)
+@if (userType == 0)
 {
     <style type="text/css">
-        .graphDiv{width: 46%; height: 200px; margin: 0 6px;display: inline-block;}
+        .graphDiv{width: 30%; height: 200px; margin: 0 6px;display: inline-block;}
     </style>
 }
 else
@@ -216,53 +130,82 @@ else
     .graphInfo{padding: 4px 0px 4px 0px;}
     .graphInfo .tblgraphInfo{margin: 0px auto;}
     .graphInfo .tblgraphInfo td{padding:0px 10px;}
-    
+    .completion .compGraphs {border:solid 1px #CCC;border-top: none;width: 100%;}
+    .completion ul {height: 41px;margin: 0px;list-style: none;padding:0px;border-bottom: solid 1px #CCC;}
+    .completion li {float: left;}
+    .completion li a {margin-right: 2px;border: 1px solid transparent;padding: 10px 15px;display: block;position: relative;text-shadow: none;text-decoration:none;color:#333;min-width: 141px;text-align:center;}
+    .completion li a:hover {border-color: #FEFEFE;cursor: pointer;}
+    .completion li a.selected {color: #4d6b8a;background-color: #fff;border: 1px solid #B1B1B1;border-bottom-color: transparent;cursor: default;}
 </style>
 
 <div class="completion">
     <h3 style="text-transform:capitalize;">@studyName @(childName != "" ? "(" + childName + ")" : "") - Questionnaire Completion @Title</h3>
-    <div style="border:solid 1px #CCC;">
-        <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
-            <tr>
-                <td style="width: 50%; text-align: right;">
-                    @if (userType == 0 || userType == 1)
-                    {
-                        <div id="previousPeriodParent" class="graphDiv"></div>
-                    }
-                    @if (userType == 0 || userType == 2)
-                    {
-                        <div id="previousPeriodTeacher" class="graphDiv"></div>
-                    }                    
-                </td>
-                <td style="width: 50%; text-align: right;">
-                    @if (userType == 0 || userType == 1)
-                    {
-                        <div id="currentPeriodParent" class="graphDiv"></div>
-                    }                    
-                    @if (userType == 0 || userType == 2)
-                    {
-                        <div id="currentPeriodTeacher" class="graphDiv"></div>
-                    }                    
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="width: 100%;">
-                    <div class="graphInfo">
-                        <table class="tblgraphInfo">
-                            <tr>
-                                <td style="color: #33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</td>
-                                <td style="color: #FFEB3B;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
-                                <td style="color: #EF5350;"><i class="ion-minus-round"></i>&nbsp;Not Started</td>
-                                <td style="color: #9E9E9E;"><i class="ion-minus-round"></i>&nbsp;Not Assigned</td>
-                            </tr>
-                        </table>                        
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
-    
 
+    <div class="tabsc">
+        <ul class="tabperiodc">
+            <li>
+                <a class="selected" href="javascript:void(0);" onclick="$('.tabperiodc a').removeClass('selected'); $(this).addClass('selected'); $('.completion').find('.previous').hide(); $('.completion').find('.current').show();">Currently Due</a>
+            </li>
+            <li>
+                <a href="javascript:void(0);" onclick="$('.tabperiodc a').removeClass('selected'); $(this).addClass('selected'); $('.completion').find('.current').hide(); $('.completion').find('.previous').show();">Previously Due</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="compGraphs">
+        <div class="current">
+            <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
+                <tr>
+                    <td style="text-align: right;">
+                        @if (userType == 0 || userType == 1)
+                        {
+                            <div id="currentPeriodParent" class="graphDiv"></div>
+                        }
+                        @if (userType == 0 || userType == 2)
+                        {
+                            <div id="currentPeriodTeacher" class="graphDiv"></div>
+                        }
+                        @if (userType == 0 || userType == 3)
+                        {
+                            <div id="currentPeriodStudent" class="graphDiv"></div>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="previous">
+            <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
+                <tr>
+                    <td style="text-align: right;">
+                        @if (userType == 0 || userType == 1)
+                        {
+                            <div id="previousPeriodParent" class="graphDiv"></div>
+                        }
+                        @if (userType == 0 || userType == 2)
+                        {
+                            <div id="previousPeriodTeacher" class="graphDiv"></div>
+                        }
+                        @if (userType == 0 || userType == 3)
+                        {
+                            <div id="previousPeriodStudent" class="graphDiv"></div>
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="graphInfo">
+            <table class="tblgraphInfo">
+                <tr>
+                    <td style="color: #33B86C;"><i class="ion-checkmark"></i>&nbsp;Completed</td>
+                    <td style="color: #FFEB3B;"><i class="ion-android-more-horizontal"></i>&nbsp;Partially Completed</td>
+                    <td style="color: #EF5350;"><i class="ion-minus-round"></i>&nbsp;Not Started</td>
+                    <td style="color: #9E9E9E;"><i class="ion-minus-round"></i>&nbsp;Not Assigned</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">var colors = ['#33B86C', '#FFF379', '#EF5350', '#9E9E9E']; //F46F66</script>
@@ -388,6 +331,68 @@ else
     });
     </script>
 }
+@if (userType == 0 || userType == 2)
+{
+    <script type="text/javascript">
+    $(function () {
+        /* PREVIOUS PERIOD STUDENT */
+        $('#previousPeriodStudent').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: colors,
+            title: {
+                text: '@(userType==2? "Previously Due" : "Previously Due: Student")',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: -70,
+                style: { "color": "#333333", "fontSize": "14px" }
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    size: '140%',
+                    dataLabels: {
+                        enabled: false,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0px 1px 2px black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '114%']
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'Share',
+                innerSize: '50%',
+                data: [@Html.Raw(prevStudent)/*,
+                    {
+                        name: 'There are no previously scheduled surveys available',
+                        y: 0.2,
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }*/
+                ]
+            }]
+        });
+    });
+    </script>
+}
+
 @if (userType == 0 || userType == 1)
 {
     <script type="text/javascript">
@@ -496,8 +501,66 @@ else
     });
     </script>
 }
+@if (userType == 0 || userType == 3)
+{
+    <script type="text/javascript">
+    $(function () {
+        /* CURRENT PERIOD STUDENT */
+        $('#currentPeriodStudent').highcharts({
+            chart: {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            colors: colors,
+            title: {
+                text: '@(userType == 3 ? "Currently Due" : "Currently Due: Student")',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: -70,
+                style: { "color": "#333333", "fontSize": "14px" }
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    size: '140%',
+                    dataLabels: {
+                        enabled: false,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0px 1px 2px black'
+                        }
+                    },
+                    startAngle: -90,
+                    endAngle: 90,
+                    center: ['50%', '114%']
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                type: 'pie',
+                name: 'Share',
+                innerSize: '50%',
+                data: [@Html.Raw(currStudent)
+                ]
+            }]
+        });
+    });
+    </script>
+}
 
-
+<script type="text/javascript">
+    $(function () {
+        $(".completion .previous").hide();
+    });
+</script>
 
 
 

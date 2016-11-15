@@ -594,6 +594,32 @@ namespace SurveyApp
             cmd.CommandText = "Dashboard_GetSchedulesForUserRoles";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+
+        public static DataSet Dashboard_getCompletion(int userId, int? studyId = 0, int? childIdts = 0)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            cmd.Parameters["@StudyId"].Value = studyId;
+
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+            cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            if (childIdts == 0)
+            {
+                cmd.Parameters["@ChildId"].Value = DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters["@ChildId"].Value = childIdts;
+            }
+
+            cmd.CommandText = "Dashboard_getCompletion";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        
         public static DataSet DashboardGetDetailComparison(int studyId, int? childId = 0)
         {
             SqlCommand cmd = new SqlCommand();
@@ -888,9 +914,45 @@ namespace SurveyApp
             cmd.CommandText = "Consent_GetChildConsents";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        
-        #endregion
 
+        #endregion
+        #region ErrorLog
+        public static int ErrorLog_Add(DateTime date, string url, string urlReferrer, string errorMessage, string stackTrace, string userAgent, string userHostAddress, string sessionId, string userName)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@Date", SqlDbType.DateTime);
+            cmd.Parameters["@Date"].Value = date;
+
+            cmd.Parameters.Add("@Url", SqlDbType.NVarChar);
+            cmd.Parameters["@Url"].Value = url;
+
+            cmd.Parameters.Add("@UrlReferrer", SqlDbType.NVarChar);
+            cmd.Parameters["@UrlReferrer"].Value = urlReferrer;
+
+            cmd.Parameters.Add("@ErrorMessage", SqlDbType.NVarChar);
+            cmd.Parameters["@ErrorMessage"].Value = errorMessage;
+
+            cmd.Parameters.Add("@StackTrace", SqlDbType.NVarChar);
+            cmd.Parameters["@StackTrace"].Value = stackTrace;
+
+            cmd.Parameters.Add("@UserAgent", SqlDbType.NVarChar);
+            cmd.Parameters["@UserAgent"].Value = userAgent;
+
+            cmd.Parameters.Add("@UserHostAddress", SqlDbType.NVarChar);
+            cmd.Parameters["@UserHostAddress"].Value = userHostAddress;
+
+            cmd.Parameters.Add("@SessionId", SqlDbType.NVarChar);
+            cmd.Parameters["@SessionId"].Value = sessionId;
+
+            cmd.Parameters.Add("@UserName", SqlDbType.NVarChar);
+            cmd.Parameters["@UserName"].Value = userName;
+
+            cmd.CommandText = "ErrorLog_Add";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+        }
+        #endregion
 
     }
 }

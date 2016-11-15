@@ -226,6 +226,7 @@
     <Compile Include="Models\ErrorLog.cs" />
     <Compile Include="Models\LifeEvent.cs" />
     <Compile Include="SMTPHelper.cs" />
+    <Content Include="404.html" />
     <Content Include="App_Data\aspnet-SurveyApp-20160130102437.mdf" />
     <Content Include="App_Data\aspnet-SurveyApp-20160130102437_log.ldf">
       <DependentUpon>aspnet-SurveyApp-20160130102437.mdf</DependentUpon>

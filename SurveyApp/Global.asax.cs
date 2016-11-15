@@ -32,11 +32,31 @@ namespace SurveyApp
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
-        }
+        }        
 
         protected void Application_Error(object sender, EventArgs e)
         {
+            object enableErrorLog = System.Web.Configuration.WebConfigurationManager.AppSettings["EnableErrorLog"];
+            bool isErrorLogEnabled = enableErrorLog == null ? false : Convert.ToBoolean(enableErrorLog);
+            if (isErrorLogEnabled == true)
+            {
+                Exception exc = Server.GetLastError();
 
+                DateTime errorTime = DateTime.Now;
+                if (HttpContext.Current != null && HttpContext.Current.Request != null)
+                {
+                    string url = HttpContext.Current.Request.Url.ToString();
+                    string urlReferrer = HttpContext.Current.Request.UrlReferrer == null ? "" : HttpContext.Current.Request.UrlReferrer.ToString();
+                    string errorMessage = exc.Message;
+                    string stackTrace = exc.StackTrace;
+                    string userAgent = HttpContext.Current.Request.UserAgent;
+                    string userHostAddress = HttpContext.Current.Request.UserHostAddress;
+                    string sessionId = HttpContext.Current.Session.SessionID;
+                    string userName = HttpContext.Current.User.Identity.Name;
+
+                    SurveyApp.DataHelper.ErrorLog_Add(errorTime, url, urlReferrer, errorMessage, stackTrace, userAgent, userHostAddress, sessionId, userName);
+                }
+            }
         }
     }
 }

@@ -462,7 +462,7 @@ namespace SurveyApp.Controllers
             }
             else if (age >= 19)
             {
-                title = "Peds quality of life for 19yrs";
+                title = "Peds quality of life for 19yrs and older";
             }
 
             return title;
