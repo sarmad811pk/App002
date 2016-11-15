@@ -37,8 +37,8 @@
         {
             DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("UserType = 1");
             if (drTeacherCount.Length > 0)
-            {
-                currParent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
+            {                
+                currParent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + ((int)drTeacherCount[0]["CompletelyFilled"] == 0 && (int)drTeacherCount[0]["PartiallyFilled"] == 0 && (int)drTeacherCount[0]["NotStarted"] == 0 ? 1 : 0) + "]";
             }
         }
         #endregion
@@ -50,7 +50,7 @@
             DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("UserType = 2");
             if (drTeacherCount.Length > 0)
             {
-                currTeacher = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
+                currTeacher = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + ((int)drTeacherCount[0]["CompletelyFilled"] == 0 && (int)drTeacherCount[0]["PartiallyFilled"] == 0 && (int)drTeacherCount[0]["NotStarted"] == 0 ? 1 : 0) + "]";
             }
         }
         #endregion
@@ -62,7 +62,7 @@
             DataRow[] drTeacherCount = dsCompletion.Tables[1].Select("UserType = 3");
             if (drTeacherCount.Length > 0)
             {
-                currStudent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
+                currStudent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + ((int)drTeacherCount[0]["CompletelyFilled"] == 0 && (int)drTeacherCount[0]["PartiallyFilled"] == 0 && (int)drTeacherCount[0]["NotStarted"] == 0 ? 1 : 0) + "]";
             }
         }
         #endregion
@@ -79,7 +79,7 @@
             DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("UserType = 1");
             if (drTeacherCount.Length > 0)
             {
-                prevParent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
+                prevParent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + ((int)drTeacherCount[0]["CompletelyFilled"] == 0 && (int)drTeacherCount[0]["PartiallyFilled"] == 0 && (int)drTeacherCount[0]["NotStarted"] == 0 ? 1 : 0) + "]";
             }
         }
         #endregion
@@ -91,7 +91,7 @@
             DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("UserType = 2");
             if (drTeacherCount.Length > 0)
             {
-                prevTeacher = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
+                prevTeacher = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + ((int)drTeacherCount[0]["CompletelyFilled"] == 0 && (int)drTeacherCount[0]["PartiallyFilled"] == 0 && (int)drTeacherCount[0]["NotStarted"] == 0 ? 1 : 0) + "]";
             }
         }
         #endregion
@@ -103,7 +103,7 @@
             DataRow[] drTeacherCount = dsCompletion.Tables[0].Select("UserType = 3");
             if (drTeacherCount.Length > 0)
             {
-                prevStudent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + 0 + "]";
+                prevStudent = "['Completed', " + drTeacherCount[0]["CompletelyFilled"] + "], ['Partially Completed', " + drTeacherCount[0]["PartiallyFilled"] + "],['Not Started', " + drTeacherCount[0]["NotStarted"] + "],['Not Assigned', " + ((int)drTeacherCount[0]["CompletelyFilled"] == 0 && (int)drTeacherCount[0]["PartiallyFilled"] == 0 && (int)drTeacherCount[0]["NotStarted"] == 0 ? 1 : 0) + "]";
             }
         }
         #endregion
@@ -154,7 +154,7 @@ else
 
     <div class="compGraphs">
         <div class="current">
-            <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
+            <table style="width:100%;background-color: #FFF;margin: 0px auto;">
                 <tr>
                     <td style="text-align: right;">
                         @if (userType == 0 || userType == 1)
@@ -175,7 +175,7 @@ else
         </div>
 
         <div class="previous">
-            <table style="width:@(userType == 0 ? "100%" : "60%");background-color: #FFF;margin: 0px auto;">
+            <table style="width:100%;background-color: #FFF;margin: 0px auto;">
                 <tr>
                     <td style="text-align: right;">
                         @if (userType == 0 || userType == 1)
