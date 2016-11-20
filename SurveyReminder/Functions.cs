@@ -26,7 +26,7 @@ namespace SurveyReminder
         {
             try
             {
-                DataSet dsReminders = DataHelper.getScheduleReminders();
+                DataSet dsReminders = DataHelper.getScheduleRemindersFixed();
 
                 List<string> lstEmails = new List<string>();
                 if (dsReminders != null && dsReminders.Tables[0] != null && dsReminders.Tables[0].Rows.Count > 0)

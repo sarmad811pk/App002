@@ -724,6 +724,14 @@ namespace SurveyApp
             cmd.CommandText = "Data_GetDefaultDataValues";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet getAssignment()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            
+            cmd.CommandText = "Data_getAssignment";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         #endregion
 
         public static DataSet getClassroomInterventions(int criId)
