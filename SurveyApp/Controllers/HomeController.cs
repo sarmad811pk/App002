@@ -385,13 +385,23 @@ namespace SurveyApp.Controllers
                 return null;
             }
         }
-        public ActionResult _DetailComparison()
-        {            
-            string[] roles = Roles.GetRolesForUser(User.Identity.Name);
-            string role = roles[0];
-            if (role != "Student")
+        public ActionResult _DetailComparison(string role)
+        {
+            if (role == "Administrator")
             {
                 return PartialView("_DetailComparison");
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public ActionResult _AssignmentDetails(string role)
+        {
+            if (role == "Administrator")
+            {
+                return PartialView("_AssignmentDetails");
             }
             else
             {

@@ -32,7 +32,20 @@ namespace SurveyApp
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
-        }        
+        }
+
+        protected void Application_BeginRequest(Object source, EventArgs e)
+        {
+            bool isHttps = Convert.ToBoolean(System.Web.Configuration.WebConfigurationManager.AppSettings["EnableHttps"]);
+            if(isHttps == true)
+            {
+                if (!Context.Request.IsSecureConnection &&
+                !Request.Url.Host.Contains("localhost"))
+                {
+                    Response.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+                }
+            }            
+        }
 
         protected void Application_Error(object sender, EventArgs e)
         {

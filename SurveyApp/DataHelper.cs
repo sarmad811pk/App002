@@ -732,6 +732,35 @@ namespace SurveyApp
             cmd.CommandText = "Data_getAssignment";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
+        public static DataSet getAssignmentDetails(int studyId, int? childId = 0)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyId", SqlDbType.Int);
+            if(studyId > 0)
+            {
+                cmd.Parameters["@StudyId"].Value = studyId;
+            }
+            else
+            {
+                cmd.Parameters["@StudyId"].Value = DBNull.Value;
+            }
+            
+
+            cmd.Parameters.Add("@ChildId", SqlDbType.Int);
+            if (childId == 0)
+            {
+                cmd.Parameters["@ChildId"].Value = null;
+            }
+            else
+            {
+                cmd.Parameters["@ChildId"].Value = childId;
+            }
+
+            cmd.CommandText = "Data_getAssignmentDetails";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
         #endregion
 
         public static DataSet getClassroomInterventions(int criId)

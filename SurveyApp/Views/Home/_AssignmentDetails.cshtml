@@ -1,0 +1,114 @@
+﻿@using SurveyApp.Models;
+@using System.Data;
+
+@{
+    int studyId = String.IsNullOrEmpty(Request.QueryString["studyId"]) != true ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
+    string studyName = String.IsNullOrEmpty(Request.QueryString["studyName"]) != true ? Request.QueryString["studyName"].ToString() : "";
+    int childIdts = String.IsNullOrEmpty(Request.QueryString["childIdts"]) != true ? Convert.ToInt32(Request.QueryString["childIdts"]) : 0;
+    string childName = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
+        
+    DataSet dsAsDetail = SurveyApp.DataHelper.getAssignmentDetails(studyId, childIdts);
+    
+}
+
+<link href="~/Content/scroller/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+<script src="~/Content/scroller/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<style type="text/css">   
+    .details{
+        
+    }
+    .details th, .details td{
+        border-bottom: solid 1px #CCC;
+        border-right: solid 1px #CCC;
+        padding: 2px;        
+    }
+    .details tr:hover td{
+        background-color: #EEE;
+    }
+    .details th{
+        border-top: solid 1px #CCC;
+    }
+    .details td{
+        cursor: default;
+    }
+    .details th:first-child, .details td:first-child{
+        border-left: solid 1px #CCC;
+    }
+    .details .date{
+        text-align: center;
+        width: 84px;
+    }
+    .details .startdate, .details .enddate{
+        cursor:pointer;
+    }
+    .details .startdate:hover, .details .enddate:hover{
+        color: #0008ff;
+    }
+</style>
+
+
+<div class="details">
+    <h5>Following is the survey assignment to different roles according to child</h5>
+    <table cellpadding="0" cellspacing="0" style="width:100%;" id="tblAssignmentDetails">
+        <thead>
+            <tr>
+                <th class="child">Child</th>
+                <th class="respo">Respondent</th>
+                <th class="survey">Survey</th>
+                <th class="study">Study</th>
+                <th class="startdate date">Schedule Start Date</th>
+                <th class="enddate date">Schedule End Date</th>
+                <th class="reminderdate date">Next Reminder Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow dr in dsAsDetail.Tables[0].Rows)
+            {
+                <tr>
+                    <td class="child">@dr["Child"]</td>
+                    <td class="respo">
+                        @if (dr["Respondent"].ToString() == "Parent")
+                        { <i class="ion-home"></i> } 
+                        @if (dr["Respondent"].ToString() == "Teacher")
+                        { <i class="ion-university"></i> } 
+                        @if (dr["Respondent"].ToString() == "Student")
+                        { <i class="ion-happy"></i> } 
+                        @dr["Respondent"]
+                    </td>
+                    <td class="survey">@dr["Survey"]</td>
+                    <td class="study">@dr["Study"]</td>
+                    <td class="startdate date" onclick="gotoSchedule(@dr["ScheduleId"]);"><i class="ion-calendar"></i>&nbsp;@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleStartDate"]).ToString("MM/dd/yyyy") : "")</td>
+                    <td class="enddate date" onclick="gotoSchedule(@dr["ScheduleId"]);"><i class="ion-calendar"></i>&nbsp;@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleEndDate"]).ToString("MM/dd/yyyy") : "")</td>
+                    <td class="reminderdate date"><i class="fa fa-clock-o"></i>&nbsp;@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextReminderDate"]).ToString("MM/dd/yyyy") : "")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $("#tblAssignmentDetails").DataTable({
+        "scrollY": "400px",
+        "scrollCollapse": true,
+        "paging": false,
+        "language": {
+            "emptyTable": "There is no future assignment available for selected study and student"
+        },
+        dom: 'Bfrtip',
+        buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Children_Respondents_Surveys', exportOptions: { modifier: { search: 'none', order: 'original' } } }]
+
+    });
+    /*
+    $(".details .dataTables_scrollBody").mCustomScrollbar({
+        scrollButtons: { enable: true },
+        theme: "dark-thick",
+        scrollInertia: 10,
+        scrollbarPosition: "inside"
+    });
+    */
+
+    function gotoSchedule(scheduleId){
+        window.open("@Url.Action("ScheduleAddEdit", "Schedule")?id=" + scheduleId);
+    }
+</script>

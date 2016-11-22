@@ -211,7 +211,7 @@
             });
 
             $.ajax({
-                url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
+                url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName&role=@Roles.GetRolesForUser(User.Identity.Name)[0].ToString()",
                 dataType: "html",
                 success: function (data) {
                     $("#divDetailComparison").html(data);
