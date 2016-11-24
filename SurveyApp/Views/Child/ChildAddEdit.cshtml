@@ -446,6 +446,29 @@
         });        
 
         $("#btnSaveChild").click(function (e) {
+            $(".checklist .checker").removeClass("inerror");
+            var isTeacherSelected = false;
+            $(".checklist .checker").each(function(i, objI){
+                if($(objI).find(".study").find("input[type=checkbox]")[0].checked == true){
+                    var isSdtyVld = false;
+                    $(objI).find(".studyTeachers").find(".resp").each(function(j, objJ){
+                        if($(objJ).find("input[type=checkbox]")[0].checked == true){
+                            isTeacherSelected = true;
+                            isSdtyVld = true;
+                        }
+                    });
+
+                    if(isSdtyVld == false){
+                        $(objI).addClass("inerror");
+                    }
+                }                
+            });
+
+            if(isTeacherSelected == false){
+                bootbox.alert("Please select at least one respondent.");
+                return false;
+            }
+
             e.preventDefault();
             $('.loading').show();
             $('.disablebackground').show();
@@ -761,7 +784,9 @@
 
             $(elem).find(".viewResp").fadeIn();
         }
-        else {            
+        else {
+            $(elem).closest(".checker").removeClass("inerror");
+
             $(elem).siblings("label").find("input[type=checkbox]")[0].checked = false;
             $(elem).siblings(".teachers").find("input[type=checkbox]").each(function(index, obj){
                 $(obj)[0].checked = false;
