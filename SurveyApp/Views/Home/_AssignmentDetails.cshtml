@@ -80,7 +80,7 @@
                     <td class="study">@dr["Study"]</td>
                     <td class="startdate date" onclick="gotoSchedule(@dr["ScheduleId"]);"><i class="ion-calendar"></i>&nbsp;@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleStartDate"]).ToString("MM/dd/yyyy") : "")</td>
                     <td class="enddate date" onclick="gotoSchedule(@dr["ScheduleId"]);"><i class="ion-calendar"></i>&nbsp;@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleEndDate"]).ToString("MM/dd/yyyy") : "")</td>
-                    <td class="reminderdate date"><i class="fa fa-clock-o"></i>&nbsp;@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextReminderDate"]).ToString("MM/dd/yyyy") : "")</td>
+                    <td class="reminderdate date"><i class="fa fa-clock-o"></i>&nbsp;@(dr["NextReminderDate"] != DBNull.Value ? Convert.ToDateTime(dr["NextReminderDate"]).ToString("MM/dd/yyyy") : "-")</td>
                 </tr>
             }
         </tbody>
