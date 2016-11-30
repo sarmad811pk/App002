@@ -86,6 +86,9 @@
         padding-right: 0px;
         font-weight: bold;
     }
+    .__slider{
+        clear: both;
+    }
 </style>
 
 
@@ -1096,7 +1099,7 @@
             else if (type == "slider")
             {
                 temp += tslider.Replace("#c#", cssclass + " slider").Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]).Replace("#sc#", GetArrayValue(sr, i));
-                if (i == s.Length - 1) { temp += ("<div id='slider#q#' qid='#q#' length='#i#' value='#si#' class='col-sm-" + (i == 5 ? "12" : "10") + " __slider'></div>").Replace("#si#", Array.IndexOf(s, ans).ToString()).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()); }
+                if (i == s.Length - 1) { temp += ("<div id='slider#q#' qid='#q#' length='#i#' value='#si#' class='col-sm-" + (i == 5 ? "9" : "10") + " __slider'></div>").Replace("#si#", Array.IndexOf(s, ans).ToString()).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()); }
             }
             else
             {
