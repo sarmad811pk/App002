@@ -20,6 +20,7 @@ namespace SurveyApp.Controllers
             Database.SetInitializer<ScheduleContext>(null);
             Database.SetInitializer<Child_Survey_ScheduleContext>(null);
             Database.SetInitializer<Child_Study_RespondentContext>(null);
+            Database.SetInitializer<ScheduleReminderContext>(null);
         }
 
         public ActionResult Index()

@@ -172,4 +172,28 @@ namespace SurveyApp.Models
         public int Id { get; set; }
         public string OccurenceType { get; set; }        
     }
+
+    [Table("ScheduleReminder")]
+    public class ScheduleReminder
+    {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int ChildId { get; set; }
+        public int StudyId { get; set; }
+        public int SurveyId { get; set; }
+        public int? ScheduleIdParent { get; set; }
+        public int? ScheduleIdTeacher { get; set; }
+        public int? ScheduleIdChild { get; set; }
+        public DateTime ReminderDate { get; set; }
+    }
+
+    public class ScheduleReminderContext : DbContext
+    {
+        public ScheduleReminderContext()
+            : base("DefaultConnection")
+        {
+        }
+        public DbSet<ScheduleReminder> ScheduleReminders { get; set; }
+    }
 }

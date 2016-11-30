@@ -20,6 +20,7 @@ namespace SurveyApp.Controllers
             Database.SetInitializer<StudyContext>(null);
             Database.SetInitializer<Child_Survey_ScheduleContext>(null);
             Database.SetInitializer<Child_Study_RespondentContext>(null);
+            Database.SetInitializer<ScheduleReminderContext>(null);
         }
 
         public ActionResult Index()
@@ -475,6 +476,7 @@ namespace SurveyApp.Controllers
             try
             {
                 dtEnrollment = childModel.EnrollmentDate;
+                bool EnableReminderCalculation = Convert.ToBoolean(System.Web.Configuration.WebConfigurationManager.AppSettings["EnableReminderCalculation"]);
                 #region Child_Survey_Schedule
                 if (dtEnrollment != null && dtEnrollment.HasValue && dtEnrollment.Value != DateTime.MinValue)
                 {
@@ -560,6 +562,33 @@ namespace SurveyApp.Controllers
 
                                                 objChildSurveySchedule.ScheuleEndDate = endDate;
                                                 cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+
+                                                #region ScheduleReminders
+                                                if (EnableReminderCalculation)
+                                                {
+                                                    using (var srContext = new ScheduleReminderContext())
+                                                    {
+                                                        DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
+                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                        DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
+                                                        while (dtReminder <= dtLastReminder)
+                                                        {
+                                                            ScheduleReminder objSR = new ScheduleReminder();
+                                                            objSR.ChildId = objChildSurveySchedule.ChildId;
+                                                            objSR.ReminderDate = dtReminder;
+                                                            objSR.ScheduleIdChild = null;
+                                                            objSR.ScheduleIdParent = objChildSurveySchedule.ScheduleIdParent;
+                                                            objSR.ScheduleIdTeacher = null;
+                                                            objSR.StudyId = studyId;
+                                                            objSR.SurveyId = objChildSurveySchedule.SurveyId;
+
+                                                            srContext.ScheduleReminders.Add(objSR);
+                                                            dtReminder = dtReminder.AddDays(interval);
+                                                        }
+                                                        srContext.SaveChanges();
+                                                    }
+                                                }
+                                                #endregion
                                             }
 
                                             if (objSchedule.Frequency == 2)
@@ -616,6 +645,33 @@ namespace SurveyApp.Controllers
                                                     objChildSurveySchedule.ScheuleStartDate = dtStartDate;
                                                     objChildSurveySchedule.ScheuleEndDate = dtStartDate.AddDays(objSchedule.AvailableUntil);
                                                     cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+
+                                                    #region ScheduleReminders
+                                                    if (EnableReminderCalculation)
+                                                    {
+                                                        using (var srContext = new ScheduleReminderContext())
+                                                        {
+                                                            DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
+                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                            DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
+                                                            while (dtReminder <= dtLastReminder)
+                                                            {
+                                                                ScheduleReminder objSR = new ScheduleReminder();
+                                                                objSR.ChildId = objChildSurveySchedule.ChildId;
+                                                                objSR.ReminderDate = dtReminder;
+                                                                objSR.ScheduleIdChild = null;
+                                                                objSR.ScheduleIdParent = objChildSurveySchedule.ScheduleIdParent;
+                                                                objSR.ScheduleIdTeacher = null;
+                                                                objSR.StudyId = studyId;
+                                                                objSR.SurveyId = objChildSurveySchedule.SurveyId;
+
+                                                                srContext.ScheduleReminders.Add(objSR);
+                                                                dtReminder = dtReminder.AddDays(interval);
+                                                            }
+                                                            srContext.SaveChanges();
+                                                        }
+                                                    }
+                                                    #endregion
                                                 }
                                             }
                                         }
@@ -690,6 +746,33 @@ namespace SurveyApp.Controllers
 
                                                 objChildSurveySchedule.ScheuleEndDate = endDate;
                                                 cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+
+                                                #region ScheduleReminders
+                                                if (EnableReminderCalculation)
+                                                {
+                                                    using (var srContext = new ScheduleReminderContext())
+                                                    {
+                                                        DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
+                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                        DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
+                                                        while (dtReminder <= dtLastReminder)
+                                                        {
+                                                            ScheduleReminder objSR = new ScheduleReminder();
+                                                            objSR.ChildId = objChildSurveySchedule.ChildId;
+                                                            objSR.ReminderDate = dtReminder;
+                                                            objSR.ScheduleIdChild = null;
+                                                            objSR.ScheduleIdTeacher = objChildSurveySchedule.ScheduleIdTeacher;
+                                                            objSR.ScheduleIdParent = null;
+                                                            objSR.StudyId = studyId;
+                                                            objSR.SurveyId = objChildSurveySchedule.SurveyId;
+
+                                                            srContext.ScheduleReminders.Add(objSR);
+                                                            dtReminder = dtReminder.AddDays(interval);
+                                                        }
+                                                        srContext.SaveChanges();
+                                                    }
+                                                }
+                                                #endregion
                                             }
 
                                             if (objSchedule.Frequency == 2)
@@ -746,6 +829,33 @@ namespace SurveyApp.Controllers
                                                     objChildSurveySchedule.ScheuleStartDate = dtStartDate;
                                                     objChildSurveySchedule.ScheuleEndDate = dtStartDate.AddDays(objSchedule.AvailableUntil);
                                                     cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+
+                                                    #region ScheduleReminders
+                                                    if (EnableReminderCalculation)
+                                                    {
+                                                        using (var srContext = new ScheduleReminderContext())
+                                                        {
+                                                            DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
+                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                            DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
+                                                            while (dtReminder <= dtLastReminder)
+                                                            {
+                                                                ScheduleReminder objSR = new ScheduleReminder();
+                                                                objSR.ChildId = objChildSurveySchedule.ChildId;
+                                                                objSR.ReminderDate = dtReminder;
+                                                                objSR.ScheduleIdChild = null;
+                                                                objSR.ScheduleIdTeacher = objChildSurveySchedule.ScheduleIdTeacher;
+                                                                objSR.ScheduleIdParent = null;
+                                                                objSR.StudyId = studyId;
+                                                                objSR.SurveyId = objChildSurveySchedule.SurveyId;
+
+                                                                srContext.ScheduleReminders.Add(objSR);
+                                                                dtReminder = dtReminder.AddDays(interval);
+                                                            }
+                                                            srContext.SaveChanges();
+                                                        }
+                                                    }
+                                                    #endregion
                                                 }
                                             }
                                         }
@@ -821,6 +931,33 @@ namespace SurveyApp.Controllers
 
                                                 objChildSurveySchedule.ScheuleEndDate = endDate;
                                                 cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+
+                                                #region ScheduleReminders
+                                                if (EnableReminderCalculation)
+                                                {
+                                                    using (var srContext = new ScheduleReminderContext())
+                                                    {
+                                                        DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
+                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                        DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
+                                                        while (dtReminder <= dtLastReminder)
+                                                        {
+                                                            ScheduleReminder objSR = new ScheduleReminder();
+                                                            objSR.ChildId = objChildSurveySchedule.ChildId;
+                                                            objSR.ReminderDate = dtReminder;
+                                                            objSR.ScheduleIdParent = null;
+                                                            objSR.ScheduleIdChild = objChildSurveySchedule.ScheduleIdChild;
+                                                            objSR.ScheduleIdTeacher = null;
+                                                            objSR.StudyId = studyId;
+                                                            objSR.SurveyId = objChildSurveySchedule.SurveyId;
+
+                                                            srContext.ScheduleReminders.Add(objSR);
+                                                            dtReminder = dtReminder.AddDays(interval);
+                                                        }
+                                                        srContext.SaveChanges();
+                                                    }
+                                                }
+                                                #endregion                                            
                                             }
 
                                             if (objSchedule.Frequency == 2)
@@ -878,6 +1015,33 @@ namespace SurveyApp.Controllers
                                                     objChildSurveySchedule.ScheuleStartDate = dtStartDate;
                                                     objChildSurveySchedule.ScheuleEndDate = dtStartDate.AddDays(objSchedule.AvailableUntil);
                                                     cssContext.Child_Survey_Schedules.Add(objChildSurveySchedule);
+
+                                                    #region ScheduleReminders
+                                                    if (EnableReminderCalculation)
+                                                    {
+                                                        using (var srContext = new ScheduleReminderContext())
+                                                        {
+                                                            DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
+                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                            DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
+                                                            while (dtReminder <= dtLastReminder)
+                                                            {
+                                                                ScheduleReminder objSR = new ScheduleReminder();
+                                                                objSR.ChildId = objChildSurveySchedule.ChildId;
+                                                                objSR.ReminderDate = dtReminder;
+                                                                objSR.ScheduleIdParent = null;
+                                                                objSR.ScheduleIdChild = objChildSurveySchedule.ScheduleIdChild;
+                                                                objSR.ScheduleIdTeacher = null;
+                                                                objSR.StudyId = studyId;
+                                                                objSR.SurveyId = objChildSurveySchedule.SurveyId;
+
+                                                                srContext.ScheduleReminders.Add(objSR);
+                                                                dtReminder = dtReminder.AddDays(interval);
+                                                            }
+                                                            srContext.SaveChanges();
+                                                        }
+                                                    }
+                                                    #endregion
                                                 }
                                             }
                                         }
@@ -889,6 +1053,7 @@ namespace SurveyApp.Controllers
 
                         cssContext.SaveChanges();
                     }
+                    DataHelper.updateFilledQuestionByScheduleId();
                 }
                 #endregion
 

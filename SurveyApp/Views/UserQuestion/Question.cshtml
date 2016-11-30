@@ -17,6 +17,8 @@
     {
         dsCRIs = SurveyApp.DataHelper.getClassroomInterventions(criid);
     }
+
+    int schId = String.IsNullOrEmpty(Request.QueryString["schid"]) == false ? Convert.ToInt32(Request.QueryString["schid"]) : 0;
 }
 
 <style type="text/css">
@@ -663,8 +665,9 @@
 
             var url = "/UserQuestion/SaveUserQuestion";
             var period = "@(String.IsNullOrEmpty(Request.QueryString["sec"]) == true ? (String.IsNullOrEmpty(Request.QueryString["perioddate"]) == true ? "" : Request.QueryString["perioddate"].ToString()) : DateTime.Now.ToString())";
-
-        $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt, scheduleDate : period }, function (data) {
+            var schId = @schId;
+            
+            $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt, scheduleDate : period, scheduleId : schId }, function (data) {
 
         });
     }
