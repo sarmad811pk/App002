@@ -1,0 +1,248 @@
+﻿@using System.Data;
+@using SurveyApp.Models;
+
+@{
+    ViewBag.Title = "eBit - Assignment Manager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int schId = Model;
+
+    DataSet dsAssignment = SurveyApp.DataHelper.getAssignment(schId);
+
+    string name = String.IsNullOrEmpty(Request.QueryString["name"]) == false ? Request.QueryString["name"] : "";
+
+}
+
+
+<style type="text/css">
+    a.list-group-item:first-child, a.list-group-item:last-child {
+        padding: 10px 15px;
+    }
+
+    .featured .content-wrapper h2 {
+        background-image: -webkit-linear-gradient(top, #0af 0%, #b9def0 100%);
+        background-image: -o-linear-gradient(top, #00aaff 0%, #4b9dc5 100%);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#0af), to(#4b9dc5));
+        background-image: linear-gradient(to bottom, #0af 0%, #4b9dc5 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffd9edf7', endColorstr='#ffb9def0', GradientType=0);
+        background-repeat: repeat-x;
+        border-color: #000;
+    }
+    .remDetails .tabs ul {
+        margin: 0px;
+        list-style: none;
+        padding: 0px;
+    }
+    .remDetails .tabs li {
+        float: left;
+    }
+        .remDetails .tabs li a {
+            text-align: center;
+            margin-right: 2px;
+            border: 1px solid transparent;
+            padding: 10px 15px;
+            display: block;
+            position: relative;
+            text-shadow: none;
+            text-decoration: none;
+            color: #333;
+            min-width: 141px;
+        }
+            .remDetails .tabs li a:hover {
+                border-color: #FEFEFE;
+                cursor: pointer;
+            }
+            .remDetails .tabs li a.selected {
+                color: #4d6b8a;
+                background-color: #f9f9f9;
+                border: 1px solid #B1B1B1;
+                border-bottom-color: transparent;
+                cursor: default;
+            }
+       
+    .remDetails .reminderdetails .dataTables_wrapper{
+        border: solid 1px #CCC;
+    }     
+    .remDetails .reminderdetails .dataTables_wrapper .dt-buttons{
+        padding: 6px 0px 14px 0px;
+    }
+    .remDetails .reminderdetails .dataTables_wrapper .dataTables_filter{
+        /*padding: 6px 0px 14px 0px;*/
+        padding: 6px 0px 0px 0px;
+    }
+    .remDetails .reminderdetails th, .remDetails .reminderdetails td{
+        border-bottom: solid 1px #CCC;
+        border-right: solid 1px #CCC;
+        padding: 2px;        
+    }
+    .remDetails .reminderdetails th{
+        padding: 10px;
+    }
+    .remDetails .reminderdetails tr:hover td{
+        background-color: #EEE;
+    }
+    .remDetails .reminderdetails th{
+        border-top: solid 1px #CCC;
+    }
+    .remDetails .reminderdetails th.name{
+        width: 127px;
+    }
+    .remDetails .reminderdetails th.detail{
+        width: 333px;
+    }
+    .remDetails .reminderdetails th.date{
+        width: 83px;
+    }
+    .remDetails .reminderdetails td{
+        cursor: default;
+    }
+    .remDetails .reminderdetails th:last-child, .remDetails .reminderdetails td:last-child{
+        border-right: none;
+    }
+    .remDetails .reminderdetails .date{
+        text-align: center;
+        width: 84px;
+    }
+</style>
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h2>@name - Reminders Detail</h2>
+            </hgroup>
+            <p style="font-size:16px;">
+                Following is the reminder details for respondents in this schedule.
+            </p>
+        </div>
+    </section>
+}
+
+<div class="list-group remDetails">
+    <div class="col-sm-12 types">
+        <div class="tabs resTypes">
+            <ul>
+                <li><a class="selected" href="javascript:void(0);" onclick="setReminderDetails(this, '@SurveyAppRoles.Parent');" data-toggle="tooltip" title="Reminders detail for Parents">Parent</a></li>
+                <li><a href="javascript:void(0);" onclick="setReminderDetails(this, '@SurveyAppRoles.Teacher');" data-toggle="tooltip" title="Reminders detail for Teachers">Teacher</a></li>
+                <li><a href="javascript:void(0);" onclick="setReminderDetails(this, '@SurveyAppRoles.Student');" data-toggle="tooltip" title="Reminders detail for Students">Student</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="divPReminders" class="parent_reminders reminderdetails col-sm-12">
+        <table cellpadding="0" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th class="name">Child</th>
+                    <th class="name">Study</th>
+                    <th class="detail">Survey</th>
+                    <th class="date">Start Date</th>
+                    <th class="date">End Date</th>
+                    <th class="detail">Reminders</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in dsAssignment.Tables[0].Rows)
+                {
+                    <tr>
+                        <td class="name">@dr["Child"]</td>
+                        <td class="name">@dr["Study"]</td>
+                        <td class="detail">@dr["Survey"]</td>
+                        <td class="date">@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleStartDate"]).ToString("MM/dd/yyyy") : "")</td>
+                        <td class="date">@(dr["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleEndDate"]).ToString("MM/dd/yyyy") : "")</td>
+                        <td class="detail">@dr["ReminderDates"]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="divTReminders" class="parent_reminders reminderdetails col-sm-12">
+        <table cellpadding="0" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th class="name">Child</th>
+                    <th class="name">Study</th>
+                    <th class="detail">Survey</th>
+                    <th class="date">Start Date</th>
+                    <th class="date">End Date</th>
+                    <th class="detail">Reminders</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in dsAssignment.Tables[1].Rows)
+                {
+                    <tr>
+                        <td class="name">@dr["Child"]</td>
+                        <td class="name">@dr["Study"]</td>
+                        <td class="detail">@dr["Survey"]</td>
+                        <td class="date">@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleStartDate"]).ToString("MM/dd/yyyy") : "")</td>
+                        <td class="date">@(dr["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleEndDate"]).ToString("MM/dd/yyyy") : "")</td>
+                        <td class="detail">@dr["ReminderDates"]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="divCReminders" class="child_reminders reminderdetails col-sm-12">
+        <table cellpadding="0" cellspacing="0" style="width:100%;">
+            <thead>
+                <tr>
+                    <th class="name">Child</th>
+                    <th class="name">Study</th>
+                    <th class="detail">Survey</th>
+                    <th class="date">Start Date</th>
+                    <th class="date">End Date</th>
+                    <th class="detail">Reminders</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in dsAssignment.Tables[2].Rows)
+                {
+                    <tr>
+                        <td class="name">@dr["Child"]</td>
+                        <td class="name">@dr["Study"]</td>
+                        <td class="detail">@dr["Survey"]</td>
+                        <td class="date">@(dr["ScheuleStartDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleStartDate"]).ToString("MM/dd/yyyy") : "")</td>
+                        <td class="date">@(dr["ScheuleEndDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheuleEndDate"]).ToString("MM/dd/yyyy") : "")</td>
+                        <td class="detail">@dr["ReminderDates"]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".resTypes a:first").click();
+    });
+
+    $(".reminderdetails table").DataTable({
+        "paging": true,
+        "pageLength": 50,
+        "language": {
+            "info": "",
+            "emptyTable": "There is no reminder information availale for these respondents."
+        },
+        dom: 'Bfrtip',
+        buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Reminders', exportOptions: { modifier: { search: 'none', order: 'original' } } }]
+
+    });
+
+    function setReminderDetails(elem, type) {
+        $(".resTypes a").removeClass("selected");
+        $(".reminderdetails").hide();
+
+        $(elem).addClass("selected");
+        if (type == "@SurveyAppRoles.Parent") {
+            $("#divPReminders").show();
+        }
+        else if (type == "@SurveyAppRoles.Teacher") {
+            $("#divTReminders").show();
+        }
+        else if (type == "@SurveyAppRoles.Student") {
+            $("#divCReminders").show();
+        }
+    }
+</script>

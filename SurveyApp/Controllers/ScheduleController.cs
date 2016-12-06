@@ -147,6 +147,7 @@ namespace SurveyApp.Controllers
                 string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
 
                 setChildSchedulesInformation(path, sendEmail, scheduleId);
+                DataHelper.updateFilledQuestionByScheduleId(scheduleId);
             }
             catch (Exception ex)
             {

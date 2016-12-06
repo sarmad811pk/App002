@@ -218,6 +218,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AssignmentController.cs" />
     <Compile Include="Controllers\ConditionController.cs" />
     <Compile Include="Controllers\ConsentController.cs" />
     <Compile Include="Controllers\DataController.cs" />
@@ -496,6 +497,7 @@
     <Content Include="Views\Condition\Index.cshtml" />
     <Content Include="Views\Condition\ConditionAddEdit.cshtml" />
     <Content Include="Views\Home\_AssignmentDetails.cshtml" />
+    <Content Include="Views\Assignment\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

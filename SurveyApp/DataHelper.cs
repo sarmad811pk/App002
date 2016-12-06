@@ -727,11 +727,21 @@ namespace SurveyApp
             cmd.CommandText = "Data_GetDefaultDataValues";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        public static DataSet getAssignment()
+        public static DataSet getAssignment(int? schId)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            
+
+            cmd.Parameters.Add("@ScheduleID", SqlDbType.Int);
+            if (schId.HasValue && schId.Value > 0)
+            {
+                cmd.Parameters["@ScheduleID"].Value = schId;
+            }
+            else
+            {
+                cmd.Parameters["@ScheduleID"].Value = DBNull.Value;
+            }
+
             cmd.CommandText = "Data_getAssignment";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
@@ -994,11 +1004,14 @@ namespace SurveyApp
         }
         #endregion
 
-        public static int updateFilledQuestionByScheduleId()
+        public static int updateFilledQuestionByScheduleId(int schId)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            
+
+            cmd.Parameters.Add("@ScheduleID", SqlDbType.Int);
+            cmd.Parameters["@ScheduleID"].Value = schId;
+
             cmd.CommandText = "Schedule_updateFilledQuestionByScheduleId";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);
         }

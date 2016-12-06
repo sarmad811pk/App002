@@ -569,7 +569,7 @@ namespace SurveyApp.Controllers
                                                     using (var srContext = new ScheduleReminderContext())
                                                     {
                                                         DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
-                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / (objSchedule.ReminderFrequency == 0 ? 1 : objSchedule.ReminderFrequency);
                                                         DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
                                                         while (dtReminder <= dtLastReminder)
                                                         {
@@ -652,7 +652,7 @@ namespace SurveyApp.Controllers
                                                         using (var srContext = new ScheduleReminderContext())
                                                         {
                                                             DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
-                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / (objSchedule.ReminderFrequency == 0 ? 1 : objSchedule.ReminderFrequency);
                                                             DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
                                                             while (dtReminder <= dtLastReminder)
                                                             {
@@ -753,7 +753,7 @@ namespace SurveyApp.Controllers
                                                     using (var srContext = new ScheduleReminderContext())
                                                     {
                                                         DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
-                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / (objSchedule.ReminderFrequency == 0 ? 1 : objSchedule.ReminderFrequency);
                                                         DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
                                                         while (dtReminder <= dtLastReminder)
                                                         {
@@ -836,7 +836,7 @@ namespace SurveyApp.Controllers
                                                         using (var srContext = new ScheduleReminderContext())
                                                         {
                                                             DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
-                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / (objSchedule.ReminderFrequency == 0 ? 1 : objSchedule.ReminderFrequency);
                                                             DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
                                                             while (dtReminder <= dtLastReminder)
                                                             {
@@ -938,7 +938,7 @@ namespace SurveyApp.Controllers
                                                     using (var srContext = new ScheduleReminderContext())
                                                     {
                                                         DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
-                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                        int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / (objSchedule.ReminderFrequency == 0 ? 1 : objSchedule.ReminderFrequency);
                                                         DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
                                                         while (dtReminder <= dtLastReminder)
                                                         {
@@ -1022,7 +1022,7 @@ namespace SurveyApp.Controllers
                                                         using (var srContext = new ScheduleReminderContext())
                                                         {
                                                             DateTime dtLastReminder = objChildSurveySchedule.ScheuleEndDate.AddDays(-1 * objSchedule.LastReminder);
-                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / objSchedule.ReminderFrequency;
+                                                            int interval = (Convert.ToInt32((objChildSurveySchedule.ScheuleEndDate - objChildSurveySchedule.ScheuleStartDate).TotalDays) - objSchedule.LastReminder) / (objSchedule.ReminderFrequency == 0 ? 1 : objSchedule.ReminderFrequency);
                                                             DateTime dtReminder = objChildSurveySchedule.ScheuleStartDate.AddDays(interval);
                                                             while (dtReminder <= dtLastReminder)
                                                             {
@@ -1053,7 +1053,7 @@ namespace SurveyApp.Controllers
 
                         cssContext.SaveChanges();
                     }
-                    DataHelper.updateFilledQuestionByScheduleId();
+                    //DataHelper.updateFilledQuestionByScheduleId();
                 }
                 #endregion
 
