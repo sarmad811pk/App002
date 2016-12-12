@@ -71,9 +71,10 @@
     .ui-tooltip {max-width: 400px;background-color: #333;color:#FFF;}
     #tblSchedules .name{text-transform:capitalize;}
     #tblSchedules .schDetails{
-        font-size: 20px;
+        /*font-size: 20px;
         position: absolute;
-        color: #63aa3f;
+        color: #63aa3f;*/
+        text-decoration:underline;
     }
 </style>
 <div>
@@ -90,7 +91,7 @@
             <th>Frequency</th>
             <th>Active On</th>
             <th>Available Until</th>
-            <th>Reminder Frequency</th>
+            <th>Reminders</th>
             <th>Last Reminder</th>
             <th style="width: 50px;">Action</th>
         </tr>
@@ -105,7 +106,7 @@
                     <td>@getFrequency(dr["Frequency"], dr["DaysToRepeat"])</td>
                     <td>@getActivationType(dr["ActiveOn"], dr["Day"], dr["Month"], dr["Weekday"])</td>
                     <td>@dr["AvailableUntil"] day(s)</td>
-                    <td title="A reminder will be sent to respondent @dr["ReminderFrequency"] time(s) in questionnaire duration.">@dr["ReminderFrequency"] time(s)&nbsp;<a href="@Url.Action("Index", "Assignment")?schId=@dr["Id"]&name=@Html.Encode(dr["Title"])" onclick="event.stopPropagation();" target="_blank" data-toggle='tooltip' title="Click here to view reminders detail"><i class="ion-android-calendar schDetails"></i></a></td>
+                    <td><a href="@Url.Action("Index", "Assignment")?schId=@dr["Id"]&name=@Html.Encode(dr["Title"])" onclick="event.stopPropagation();" target="_blank" data-toggle='tooltip' title="Click here to view reminders detail"><i class="ion-android-calendar schDetails"></i>&nbsp;View Details</a></td>
                     <td>-@dr["LastReminder"] day(s) from last day</td>
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'schedule', '@dr["Title"]');"><i class="ion-close"></i></a></td>
                 </tr>

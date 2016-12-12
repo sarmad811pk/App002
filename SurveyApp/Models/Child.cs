@@ -218,7 +218,10 @@ namespace SurveyApp.Models
                 studies = csContext.Child_Study_Respondents.Where(cs => cs.ChildId == childId).ToArray();
                 foreach (Child_Study_Respondent objCSR in studies)
                 {
-                    lstStudies.Add(objCSR.StudyId);
+                    if(lstStudies.Contains(objCSR.StudyId) == false)
+                    {
+                        lstStudies.Add(objCSR.StudyId);
+                    }                    
                 }
                 lstStudiesDistinct = lstStudies.Distinct().ToList();
                 csContext.Dispose();

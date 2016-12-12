@@ -21,7 +21,12 @@
     }
     else
     {
-        studyName = "All Studies";
+        using (StudyContext sContext = new StudyContext())
+        {
+            Study objStd = sContext.Studies.FirstOrDefault();
+            studyId = objStd.Id;
+            studyName = objStd.Name;
+        }
     }
 
     int childId = String.IsNullOrEmpty(Request.QueryString["childId"]) == true ? 0 : Convert.ToInt32(Request.QueryString["childId"]);

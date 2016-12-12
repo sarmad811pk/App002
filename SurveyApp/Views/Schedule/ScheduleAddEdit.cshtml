@@ -275,6 +275,12 @@
                     errors += "<li>Survey should be repeated after finishing the current iteration i.e. number of days to repeat should be more than available until days.</li>";
                 }                
             }
+            if ($("#ReminderFrequency").val() != "" && $("#AvailableUntil").val() != "" && $("#LastReminder").val() != "") {
+                if (parseInt($("#AvailableUntil").val()) - parseInt($("#LastReminder").val()) < parseInt($("#ReminderFrequency").val())) {
+                    $("#ReminderFrequency").addClass("inerror");
+                    errors += "<li>Reminder frequency(after adding Last Reminder) can not be more than available until days.</li>";
+                }
+            }
         }
 
         if (document.getElementsByName("ActiveOn")[0].checked == false && document.getElementsByName("ActiveOn")[1].checked == false) {

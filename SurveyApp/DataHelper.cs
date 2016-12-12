@@ -598,7 +598,7 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
-        public static DataSet Dashboard_getCompletion(int userId, int? studyId = 0, int? childIdts = 0)
+        public static DataSet Dashboard_getCompletion(int userId, DateTime dtNow, int? studyId = 0, int? childIdts = 0)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -608,6 +608,9 @@ namespace SurveyApp
 
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
             cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.Parameters.Add("@dtNow", SqlDbType.DateTime);
+            cmd.Parameters["@dtNow"].Value = dtNow;
 
             cmd.Parameters.Add("@ChildID", SqlDbType.Int);
             if (childIdts == 0)
@@ -623,13 +626,16 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
         
-        public static DataSet DashboardGetDetailComparison(int studyId, int? childId = 0)
+        public static DataSet DashboardGetDetailComparison(int studyId, DateTime dtNow, int? childId = 0)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@StudyId", SqlDbType.Int);
             cmd.Parameters["@StudyId"].Value = studyId;
+
+            cmd.Parameters.Add("@dtNow", SqlDbType.DateTime);
+            cmd.Parameters["@dtNow"].Value = dtNow;
 
             cmd.Parameters.Add("@ChildId", SqlDbType.Int);
             if(childId == 0)

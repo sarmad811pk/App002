@@ -8,7 +8,7 @@
     string childName = String.IsNullOrEmpty(Request.QueryString["child"]) != true ? Request.QueryString["child"].ToString() : "";
 
     int children = 0;
-    DataSet dsComparison = SurveyApp.DataHelper.DashboardGetDetailComparison(studyId, childIdts);
+    DataSet dsComparison = SurveyApp.DataHelper.DashboardGetDetailComparison(studyId, DateTime.Now, childIdts);
     if(dsComparison != null)
     {
         dtChildren = dsComparison.Tables[0];
@@ -35,7 +35,7 @@
         string notapplicable = "<span><i class='ion-android-radio-button-off notenrolled' data-toggle='tooltip' title='Not applicable to respond' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
         string notscheduled = "<span><i class='ion-record notapplicable' data-toggle='tooltip' title='Child is not scheduled for this questionnaire for this respondent' scheuledate='_SCHEDULEDATE_' userid='_USERID_'></i></span>";
 
-        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = " + surveyId + " AND ('" + DateTime.Now + "'" + (periodtype == 1 ? " < " : " >= ") + "ScheduleDate OR ScheduleDate IS NULL) AND (ScheuleStartDate <= '" + DateTime.Now + "')", (periodtype == 1 ? " ScheduleDate ASC" : " ScheduleDate DESC "));
+        DataRow[] drSurveys = dtSurveys.Select("ChildId = " + childId + " AND SurveyId = " + surveyId + " AND ('" + DateTime.Now.ToString("MM/dd/yyyy") + "'" + (periodtype == 1 ? " <= " : " > ") + " ScheduleDate OR ScheduleDate IS NULL) "+ (periodtype == 1 ? " AND EndDatePassed = 0 " : " AND EndDatePassed = 1 ") + " AND (ScheuleStartDate <= '" + DateTime.Now.ToString("MM/dd/yyyy") + "')", (periodtype == 1 ? " ScheduleDate ASC" : " ScheduleDate DESC "));
         foreach (DataRow drS in drSurveys)
         {
             scheduleDate = drS["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(drS["ScheduleDate"]).ToString("MM/dd/yyyy") : "";
@@ -374,7 +374,7 @@
                                                         <input type="checkbox" class="checkReminder" data-toggle="tooltip" title="@drStudent["Email"]" onclick="setReminderOption(this);" userid="@drStudent["StudentId"]" email="@drStudent["Email"]" />
                                                     </td>
                                                     <td class="name">
-                                                        <i class="ion-university"></i> @drStudent["Student"]@if (@drStudent["ReminderDate"] != DBNull.Value)
+                                                        <i class="ion-happy"></i> @drStudent["Student"]@if (@drStudent["ReminderDate"] != DBNull.Value)
                                                 { <span data-toggle="tooltip" title="Last Reminder Sent On: @drStudent["ReminderDate"]"><i class="fa fa-clock-o"></i></span> }
                                                     </td>
                                                     @{bool pedsCPTD = false; }
