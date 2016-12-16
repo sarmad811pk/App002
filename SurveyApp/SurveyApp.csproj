@@ -281,6 +281,9 @@
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="bootstrap\js\npm.js" />
     <Content Include="bootstrap\css\combinedcss.css" />
+    <Content Include="Content\chosen\chosen-sprite%402x.png" />
+    <Content Include="Content\chosen\chosen-sprite.png" />
+    <Content Include="Content\chosen\chosen.css" />
     <Content Include="Content\combinecontentcss.css" />
     <Content Include="Content\dataTables.bootstrap.min.css" />
     <Content Include="Content\awsm\css\font-awesome.min.css" />
@@ -393,6 +396,7 @@
     <Content Include="Images\lawton.jpg" />
     <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\buttons.html5.min.js" />
+    <Content Include="Content\chosen\chosen.jquery.min.js" />
     <Content Include="Scripts\combineddatatablejs.js" />
     <Content Include="Scripts\combinedjs.js" />
     <Content Include="Scripts\custom.js" />

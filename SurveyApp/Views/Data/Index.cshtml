@@ -55,6 +55,8 @@
     DataSet dsData = SurveyApp.DataHelper.getAllData(userId, childId, surveyId);
 }
 
+<link href="~/Content/chosen/chosen.css" rel="stylesheet" />
+
 <style type="text/css">
     a.excel{
         padding: 6px 10px 7px 10px;
@@ -84,6 +86,8 @@
         margin-right: 5px;width: 250px;padding: 0px;
     }
 </style>
+
+<script src="~/Content/chosen/chosen.jquery.min.js"></script>
 
 <script type="text/javascript">
     $(function () {
@@ -117,7 +121,7 @@
         {
             foreach (DataRow dr in dtUsers.Rows)
             {
-                <option value="@dr["UserId"]" @((int)dr["UserId"] == userId ? "selected='selected'" : "")>@dr["UserName"]</option>
+                <option value="@dr["UserId"]" @((int)dr["UserId"] == userId ? "selected='selected'" : "")>@Html.Raw(dr["UserName"])</option>
             }
         }
     </select>
@@ -204,6 +208,13 @@
 </div>
 
 <script type="text/javascript">
+    $(function () {
+        $("#ddlStudy").chosen();
+        $("#ddlUsers").chosen();
+        $("#ddlChildren").chosen();
+        $("#ddlSurveys").chosen();
+    });
+
     function getData(elem, type) {
         var studyId, userId, childId, surveyId;
         studyId = $("#ddlStudy option:selected").val();

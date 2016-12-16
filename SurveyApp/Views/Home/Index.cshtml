@@ -52,9 +52,13 @@
     }
 }
 
+<link href="~/Content/chosen/chosen.css" rel="stylesheet" />
+
 <style type="text/css">
     .stats .separator{clear:both;margin-bottom: 10px;}
     .topControls #ddlStudy, .topControls #ddlChildren{float: right; width: 22%; background-color: #fff;text-transform:capitalize;}
+    .topControls #ddlStudy_chosen, .topControls #ddlChildren_chosen{float: right;}
+    .topControls #ddlStudy_chosen{margin-right:5px;}
     .tabs{margin-bottom: 12px;}
     .tabs .current, .comparison .previous {border-top: none;}
     .tabs ul {height: 41px;margin: 0px;list-style: none;padding:0px;border-bottom: solid 1px #CCC;}
@@ -68,6 +72,7 @@
     
 </style>
 
+<script src="~/Content/chosen/chosen.jquery.min.js"></script>
 
 @section featured {
     @*<section class="featured">
@@ -162,6 +167,8 @@
         }
         $(".__tabs").css("opacity", "1");
 
+        $("#ddlStudy").chosen();
+        $("#ddlChildren").chosen();
     });
 
     function getVisibleDiv() {
