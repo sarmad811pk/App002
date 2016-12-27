@@ -333,6 +333,7 @@ namespace SurveyApp.Controllers
             return Json(new { success = isSuccess });
         }
 
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _Charts()
         {
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
@@ -346,6 +347,8 @@ namespace SurveyApp.Controllers
                 return null;
             }
         }
+
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _AdverseEvent()
         {            
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
@@ -359,6 +362,8 @@ namespace SurveyApp.Controllers
                 return null;
             }
         }
+
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _ChildrenCounts()
         {
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
@@ -372,6 +377,8 @@ namespace SurveyApp.Controllers
                 return null;
             }
         }
+
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _SurveyCompletion()
         {            
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
@@ -385,6 +392,8 @@ namespace SurveyApp.Controllers
                 return null;
             }
         }
+
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _DetailComparison(string role)
         {
             if (role == "Administrator")
@@ -397,6 +406,7 @@ namespace SurveyApp.Controllers
             }
         }
 
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _AssignmentDetails(string role)
         {
             if (role == "Administrator")

@@ -16,6 +16,7 @@ namespace SurveyApp.Controllers
         // GET: /UserQuestion/
 
 
+        
         public ActionResult Index(int? childID)
         {
             if (!Request.IsAuthenticated)
@@ -23,6 +24,7 @@ namespace SurveyApp.Controllers
                 WebSecurity.Logout();
                 return RedirectToAction("Login", "Account");
             }
+            
             TempData["ChildID"] = childID;
             TempData["ID"] = WebSecurity.CurrentUserId;
             return View();
@@ -123,7 +125,8 @@ namespace SurveyApp.Controllers
             }
             
         }
-        
+
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _ChildDetails()
         {
             return PartialView("_ChildDetails");
