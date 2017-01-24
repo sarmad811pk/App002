@@ -38,12 +38,12 @@ namespace SurveyApp.Controllers
 
      
         [HttpPost]
-        public void SaveUserQuestion(string QuestionID, string AnswerID, string score, string childid, string SurveyID, string statusparm, string percentage, string scheduleDate, int scheduleId)
+        public int SaveUserQuestion(string QuestionID, string AnswerID, string score, string childid, string SurveyID, string statusparm, string percentage, string scheduleDate, int scheduleId)
         {        
             var userID = WebSecurity.CurrentUserId;
             //if (SurveyID == "15" || SurveyID == "28" || SurveyID == "29") { statusparm = ""; }
             int rsl = SurveyApp.DataHelper.SaveuserQuestions(userID, QuestionID, AnswerID, score, childid, SurveyID,statusparm, percentage, scheduleDate != "" ? Convert.ToDateTime(scheduleDate) : DateTime.MinValue, scheduleId);
-            
+            return rsl;
         }
         [HttpPost]
         public void savequestionsAdverseReaction(
@@ -129,7 +129,14 @@ namespace SurveyApp.Controllers
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _ChildDetails()
         {
-            return PartialView("_ChildDetails");
+            if (Request.IsAuthenticated)
+            {
+                return PartialView("_ChildDetails");
+            }
+            else
+            {
+                return new EmptyResult();
+            }
         }
     }
 }

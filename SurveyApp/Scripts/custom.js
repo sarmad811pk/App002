@@ -33,6 +33,7 @@
                         else {
                             alert("Unable to perform the action, please try again or contact our support team.");
                             result = false;
+                            checkTimeout(data, 1);
                         }
                     },
                     error: function (errss) {

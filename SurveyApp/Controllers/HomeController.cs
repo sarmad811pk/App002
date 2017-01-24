@@ -338,7 +338,7 @@ namespace SurveyApp.Controllers
         {
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
             string role = roles[0];
-            if(role != "Student")
+            if(role != "Student" && Request.IsAuthenticated)
             {
                 return PartialView("_Charts");
             }
@@ -353,7 +353,7 @@ namespace SurveyApp.Controllers
         {            
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
             string role = roles[0];
-            if (role != "Student")
+            if (role != "Student" && Request.IsAuthenticated)
             {
                 return PartialView("_AdverseEvent");
             }
@@ -368,7 +368,7 @@ namespace SurveyApp.Controllers
         {
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
             string role = roles[0];
-            if (role != "Student")
+            if (role != "Student" && Request.IsAuthenticated)
             {
                 return PartialView("_ChildrenCounts");
             }
@@ -383,7 +383,7 @@ namespace SurveyApp.Controllers
         {            
             string[] roles = Roles.GetRolesForUser(User.Identity.Name);
             string role = roles[0];
-            if (role != "Student")
+            if (role != "Student" && Request.IsAuthenticated)
             {
                 return PartialView("_SurveyCompletion");
             }
@@ -396,7 +396,7 @@ namespace SurveyApp.Controllers
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _DetailComparison(string role)
         {
-            if (role == "Administrator")
+            if (role == "Administrator" && Request.IsAuthenticated)
             {
                 return PartialView("_DetailComparison");
             }
@@ -409,7 +409,7 @@ namespace SurveyApp.Controllers
         [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
         public ActionResult _AssignmentDetails(string role)
         {
-            if (role == "Administrator")
+            if (role == "Administrator" && Request.IsAuthenticated)
             {
                 return PartialView("_AssignmentDetails");
             }

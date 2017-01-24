@@ -704,10 +704,13 @@ namespace SurveyApp
         #endregion
 
         #region DataManager
-        public static DataSet getAllData(int userId, int childId, int surveyId)
+        public static DataSet getAllData(int studyId, int userId, int childId, int surveyId)
         {
             SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;            
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;
 
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
             cmd.Parameters["@UserID"].Value = userId;

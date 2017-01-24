@@ -356,6 +356,7 @@
                 else {
                     msg.removeClass("green").addClass("red");
                     msg.html(data.msg);
+                    checkTimeout(data, 1);
                 }
             },
 
@@ -454,6 +455,7 @@
                 else {
                     $("#divErrors ul").append("<li>We are unable to process your request at this time, please try again or contact our support team.</li>");
                     $("#divErrors").show();
+                    checkTimeout(data, 1);
                 }
             },
             error: function (errors) {

@@ -99,6 +99,39 @@
             $(document).ajaxStart(function () { $(".loading").show(); /*$(".disablebackground").show();*/ });
             $(document).ajaxStop(function () { $(".loading").hide(); /*$(".disablebackground").hide();*/ });
         });
+
+        function isSessionValid(data) {
+            if (data.indexOf("sessionexpiredshowpopup") != -1) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        function checkTimeout(data, type) {
+            if (data.indexOf("sessionexpiredshowpopup") != -1) {
+                showTimeoutError("@Url.Action("Login", "Account")");
+            }
+        }
+        function showTimeoutError(url) {
+            bootbox.dialog({
+                message: "Your session has expired, please login again to continue work.",
+                title: "Session Expired!",
+                closeButton: false,
+                onEscape: function() {
+                    location.href = url;
+                },
+                buttons: {
+                    success: {
+                        label: "Ok",
+                        className: "btn-primary",
+                        callback: function() {
+                            location.href = url;
+                        }
+                    }
+                }
+            });
+        }
     </script>
     @*@Html.Raw(Request.IsAuthenticated == false ? "<script type=\"text/javascript\">window.location.href = window.location.origin + '/Account/Login';</script>" : "")*@
 </head>

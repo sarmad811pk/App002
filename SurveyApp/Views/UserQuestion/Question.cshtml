@@ -671,8 +671,8 @@
             var schId = @schId;
             
             $.post(url, { QuestionID: qid, AnswerID: ansid, score: s, childid: cid, SurveyID: SurID, statusparm: status, percentage : prcnt, scheduleDate : period, scheduleId : schId }, function (data) {
-
-        });
+                checkTimeout(data, 0);
+            });
     }
     function savequestionsAdverseReaction(cid){
         var AdverseReaction = $("#q861_0").val().trim();
@@ -694,7 +694,7 @@
             DateEnd: DateEnd,
             DateSubmitted : DateSubmitted,
             ChildID : ChildID }, function (data) {
-
+                checkTimeout(data, 0);
             });
     }
 
@@ -714,7 +714,7 @@
                 entryDate: entryDate,
                 childId: childId,
                 classroomIID : criid }, function (data) {
-
+                    checkTimeout(data, 0);
                 });
         }
 
@@ -835,7 +835,7 @@
 
         $.post(url, { LifeEvent: str,
             ChildID : ChildID }, function (data) {
-
+                checkTimeout(data, 0);
             });
 
     }

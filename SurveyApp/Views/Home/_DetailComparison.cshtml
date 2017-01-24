@@ -106,6 +106,10 @@
         if (drChildren.Length > 0)
         {
             age = DateTime.Today.Year - Convert.ToDateTime(drChildren[0]["dob"]).Year;
+            DateTime dob = Convert.ToDateTime(drChildren[0]["dob"]);
+            DateTime today = DateTime.Today;
+            if (dob > today.AddYears(-age)) { age--; }
+
             if (surveyId == 6) { if (age <= 4 && surveyId == 6) { isPeds = true; } else { isPeds = false; } }
             if (surveyId == 7) { if (age <= 7 && age >= 5 && surveyId == 7) { isPeds = true; } else { isPeds = false; } }
             if (surveyId == 8) { if (age <= 12 && age >= 8 && surveyId == 8) { isPeds = true; } else { isPeds = false; } }
@@ -548,12 +552,13 @@
                 if (data.success == true) {
                     bootbox.alert("An email about the questionnaire completion has been sent to the selected respondent(s).");
                 }
-                else {
+                else {                    
                     bootbox.alert("We are unable to send email at this time, please try again later.");
+                    checkTimeout(data, 1);
                 }
             },
             error: function (errss) {
-                result = false;
+                //result = false;
             },
             cache: false,
             processData: false
@@ -579,8 +584,11 @@
                 url: "@Url.Action("_AssignmentDetails", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childIdts&child=@childName&role=@Roles.GetRolesForUser(User.Identity.Name)[0].ToString()",
                 dataType: "html",
                 success: function (data) {
-                    $("#divAssignmentDetails").addClass("loaded")
-                    $("#divAssignmentDetails").html(data);                    
+                    if (isSessionValid(data) == true) {
+                        $("#divAssignmentDetails").addClass("loaded");
+                        $("#divAssignmentDetails").html(data);
+                    }
+                    checkTimeout(data, 3);
                 }
             });
         }        

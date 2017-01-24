@@ -443,6 +443,7 @@ namespace SurveyApp.Controllers
         public static string getPEDsqlTitle(DateTime dob) {
             DateTime today = DateTime.Today;
             int age = today.Year - dob.Year;
+            if (dob > today.AddYears(-age)) { age--; }
 
             string title = "";
             if (age <= 4)

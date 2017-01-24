@@ -210,7 +210,10 @@
                 url: "@Url.Action("_ChildrenCounts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
-                    $("#divChildrenCount").html(data);
+                    if (isSessionValid(data) == true) {
+                        $("#divChildrenCount").html(data);
+                    }
+                    checkTimeout(data, 3);
                 }
             });
 
@@ -218,7 +221,10 @@
                 url: "@Url.Action("_SurveyCompletion", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
-                    $("#divSurveyCompletion").html(data);
+                    if (isSessionValid(data) == true) {
+                        $("#divSurveyCompletion").html(data);
+                    }
+                    checkTimeout(data, 3);
                 }
             });
 
@@ -226,7 +232,10 @@
                 url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName&role=@Roles.GetRolesForUser(User.Identity.Name)[0].ToString()",
                 dataType: "html",
                 success: function (data) {
-                    $("#divDetailComparison").html(data);
+                    if (isSessionValid(data) == true) {
+                        $("#divDetailComparison").html(data);
+                    }
+                    checkTimeout(data, 3);
                 }
             });
 
@@ -248,15 +257,18 @@
                 url: "@Url.Action("_Charts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
-                    $(".graphsDetails").addClass("loaded");
-                    $(".graphsDetails").html(data);
-                    if (window.location.hash) {
-                        hash = window.location.hash.substring(1);
+                    if (isSessionValid(data) == true) {
+                        $(".graphsDetails").addClass("loaded");
+                        $(".graphsDetails").html(data);
+                        if (window.location.hash) {
+                            hash = window.location.hash.substring(1);
+                        }
+
+                        if (hash > 2) {
+                            $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
+                        }
                     }
-                    
-                    if (hash > 2) {
-                        $(".graphTabs .graphSections").find("li:eq(" + (hash - 3) + ")").find("a").click();
-                    }
+                    checkTimeout(data, 3);
                 }
             });
         }
@@ -276,8 +288,11 @@
                 url: "@Url.Action("_AdverseEvent", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
-                    $(".Adverse").addClass("loaded");
-                    $(".Adverse").html(data);
+                    if (isSessionValid(data) == true) {
+                        $(".Adverse").addClass("loaded");
+                        $(".Adverse").html(data);
+                    }
+                    checkTimeout(data, 3);
                 }
             });
         }

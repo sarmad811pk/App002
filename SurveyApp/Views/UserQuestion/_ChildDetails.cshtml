@@ -517,6 +517,11 @@
                                 {
                                     <div class="col-md-12 text-left">Parent Assessment Summary@(Html.Raw(pas))</div>
                                 }
+                                var qTeacher = getPercentCompletion(49, (int)drch["ID"], url.Replace("__", "49"));
+                                if (showHideSurvey(qTeacher) == true)
+                                {
+                                    <div class="col-md-12 text-left">Quarterly Teacher Academic Progress@(Html.Raw(qTeacher))</div>
+                                }
                             }
 
                             @if (roles[0] != "Teacher")
