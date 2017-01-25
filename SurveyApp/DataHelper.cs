@@ -1024,5 +1024,15 @@ namespace SurveyApp
             cmd.CommandText = "Schedule_updateFilledQuestionByScheduleId";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);
         }
+
+        #region Report
+        public static DataSet getAccountRequests() {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            
+            cmd.CommandText = "Report_GetAccountRequests";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        #endregion
     }
 }

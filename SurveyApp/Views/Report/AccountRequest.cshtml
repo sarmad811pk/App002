@@ -1,0 +1,60 @@
+﻿@using System.Data;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "eBit - Account Request(s)";
+
+    DataSet ds = SurveyApp.DataHelper.getAccountRequests();
+}
+
+<style type="text/css">
+    .requests .name {
+        text-transform: capitalize;
+    }
+    .requests .action{
+        text-align:center;
+    }
+    .requests i{
+        font-size: 18px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $("#tblRequests").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Account_Requests', exportOptions: { modifier: { search: 'none', order: 'original' } } }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Request(s)" } });
+    });
+</script>
+
+<h2>
+    <a href="javascript:void(0);" id="back" onclick="history.go(-1);"></a> &nbsp;Account Request(s)
+</h2>
+
+<div class="requests">
+    <table class="table table-striped table-hover" id="tblRequests">
+        <thead>
+            <tr>
+                <th class="name">Name</th>
+                <th class="name">School</th>
+                <th class="email">Email</th>
+                <th class="comments">Comments</th>
+                <th class="date">Requested On</th>                
+                <th class="action">Account Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ds != null && ds.Tables.Count > 0)
+            {
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    <tr>
+                        <td class="name">@dr["FullName"]</td>
+                        <td class="name">@dr["SchoolName"]</td>
+                        <td class="email">@dr["Email"]</td>
+                        <td class="comments">@dr["Comments"]</td>
+                        <td class="date">@(dr["Date"] != DBNull.Value ? Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy") : "")</td>                        
+                        <td class="action">@(dr["AccountCreated"] != DBNull.Value ? (Convert.ToBoolean(dr["AccountCreated"]) == true ? "Yes" : "No") : "")</td>
+                    </tr>
+                }
+            }                        
+        </tbody>
+    </table>
+</div>

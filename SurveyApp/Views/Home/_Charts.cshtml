@@ -56,6 +56,7 @@
     /* LIFE EVENTS */
     //List<LifeEventChart> lstABCPTLifeEvents = new List<LifeEventChart>();
     //int indexLE = 0;
+    string tQuarterly = "", dQuarterly = "";
 
     #region populatingGraphs
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
@@ -511,6 +512,15 @@
         foreach (DataRow dr in Written)
         {
             tvW += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region TeacherQuarterly
+        DataRow[] drQuarterly = dsCharts.Tables[1].Select("SurveyID = 49");
+        foreach (DataRow dr in drQuarterly)
+        {
+            dQuarterly += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tQuarterly += dr["Score"] + ",";
         }
         #endregion
     }
@@ -1315,6 +1325,59 @@
                 symbol: 'square'
             },
             data: [@Html.Raw(pPEDsqlS.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+    //-----------------------------------------PedsQL-Parent----------------------------------------
+    $('#divTQuerterly').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Quarterly Teacher Academic Progress'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dQuarterly.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tQuarterly.TrimEnd(','))],
             color: '#00cc00'
 
         }],
@@ -2546,13 +2609,16 @@
                     <div id="levelchangesforChild2312" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
                 </div>*@
-                <div class="row voffset parentdiv">
+                <div class="voffset parentdiv">
                     <div id="divParentVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
 
                 @if (role != "" && role != "Parent")
-                {
-                    <div class="row voffset teacherdiv">
+                {                    
+                    <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                        <div class="col-sm-6"><div id="divTQuerterly"></div></div>                        
+                    </div>
+                    <div class="voffset teacherdiv">
                         <div id="divTeacherVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                 }

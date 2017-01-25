@@ -222,6 +222,7 @@
     <Compile Include="Controllers\ConditionController.cs" />
     <Compile Include="Controllers\ConsentController.cs" />
     <Compile Include="Controllers\DataController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RequestAccountController.cs" />
     <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\ErrorLog.cs" />
@@ -502,6 +503,8 @@
     <Content Include="Views\Condition\ConditionAddEdit.cshtml" />
     <Content Include="Views\Home\_AssignmentDetails.cshtml" />
     <Content Include="Views\Assignment\Index.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Report\AccountRequest.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

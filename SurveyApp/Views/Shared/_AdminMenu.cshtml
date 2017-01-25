@@ -27,6 +27,7 @@
                 <a class='list-group-item @(c == "ParentTeacher" ? " active" : "")  ' href="@Url.Action("Index", "ParentTeacher", new object { })"><i class='ion-ios-people'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;User Manager</a>
                 <a class='list-group-item @(c == "Child" ? " active" : "")          ' href="@Url.Action("Index", "Child", new object { })"><i class='ion-happy-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Child Manager</a>
                 <a class='list-group-item @(c == "Data" ? " active" : "")          ' href="@Url.Action("Index", "Data", new object { })"><i class='ion-ios-pie-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Data Manager</a>
+                <a class='list-group-item @(c == "Report" ? " active" : "")          ' href="@Url.Action("Index", "Report", new object { })"><i class='ion-ios-list-outline'></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Report Manager</a>
             }
             @*else
                 {
