@@ -21,6 +21,7 @@
 @functions{
         
 }
+
 <script src="~/Scripts/zxcvbn.js"></script>
 <script src="~/Scripts/pwstrength.js"></script>
 <link href="~/Content/scroller/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
@@ -28,8 +29,24 @@
 
 <h2><a href="javascript:void(0);" id="back" class="btnBack"></a> &nbsp;User Information Editor</h2>
 <div><p class="text-danger">Please create account for Parents, Teachers and only for those Students who will login to eBit and fill surveys.</p></div>
+@if (string.IsNullOrEmpty(Request.QueryString["email"]) == false)
+{
+    <div class="col-sm-8"><p class="account">If this is a request for an admin account please contact the eBit team <a href="mailto:Tracy.warren@ucsf.edu">here</a>.</p></div><br />
+    <script type="text/javascript">
+        $(function () {
+            var emailAccount = "@Request.QueryString["email"]";
+            var nameAccount = "@Request.QueryString["name"]";
+            if (emailAccount != "") {
+                $("#txtUserName").val(emailAccount);
+            }
+            if (nameAccount != "") {
+                $("#parent").val(nameAccount);
+            }
+        });
+    </script>
+}
 
-<style>
+<style type="text/css">
     ._panel { background: #fafafa; border: solid 1px #cccccc; padding: 10px; border-radius: 6px; }
     .msg.green {
         color: #00cc00;
@@ -69,6 +86,14 @@
     }*/
     .form-group label.reguired::after{
         content : ":*";
+    }
+    .account{           
+        border: solid 1px #666;
+        padding: 10px;
+        background-color: #fdfdfd;
+    }
+    .account a{
+        text-decoration: underline;
     }
 </style>
 <script type="text/javascript">

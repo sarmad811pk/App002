@@ -13,6 +13,10 @@
     .requests .action{
         text-align:center;
     }
+    .requests .action a{
+        color:#337ab7;
+        text-decoration: underline;
+    }
     .requests i{
         font-size: 18px;
     }
@@ -37,7 +41,7 @@
                 <th class="email">Email</th>
                 <th class="comments">Comments</th>
                 <th class="date">Requested On</th>                
-                <th class="action">Account Created</th>
+                <th class="action">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -51,7 +55,7 @@
                         <td class="email">@dr["Email"]</td>
                         <td class="comments">@dr["Comments"]</td>
                         <td class="date">@(dr["Date"] != DBNull.Value ? Convert.ToDateTime(dr["Date"]).ToString("MM/dd/yyyy") : "")</td>                        
-                        <td class="action">@(dr["AccountCreated"] != DBNull.Value ? (Convert.ToBoolean(dr["AccountCreated"]) == true ? "Yes" : "No") : "")</td>
+                        <td class="action">@Html.ActionLink("Create Accound", "ParentTeacherAddEdit", "ParentTeacher", new { email = Html.Encode(dr["Email"]), name = Html.Encode(dr["FullName"]) }, null)</td>
                     </tr>
                 }
             }                        

@@ -60,7 +60,7 @@
             <th>Teacher(s)</th>
             <th>Study(s)</th>
             <th>Status</th>
-            <th style="width: 50px;">Consent</th>
+            @*<th style="width: 50px;">Consent</th>*@
             <th style="width: 50px;">Action</th>
         </tr>
     </thead>
@@ -77,11 +77,11 @@
                     <td class="name">@dr["Teacher"]</td>
                     <td class="name">@dr["Study"]</td>
                     <td class="text-success">@getStatusDescription((int)dr["StatusId"])</td>
-                    <td style="text-align: center;vertical-align:middle;">
+                    @*<td style="text-align: center;vertical-align:middle;">
                         @if(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true){
                             <i class="ion-eye @(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye") : "")"  data-toggle='tooltip' title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Child has not given consent yet." : "Child has given the consent" + (dr["AgreeDate"] != DBNull.Value ? " on " + Convert.ToDateTime(dr["AgreeDate"]).ToString("MM/dd/yyyy") : ".")) : "") : "Consent is not required for this child.")"></i>
                         }                        
-                    </td>
+                    </td>*@
                     <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"><i class="ion-close"></i></a></td>
                 </tr>
             }
