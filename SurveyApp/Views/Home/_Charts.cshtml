@@ -22,7 +22,7 @@
     //}
 
 
-    DataSet dsCharts = SurveyApp.DataHelper.DashboardGetCharts(studyId, WebSecurity.CurrentUserId, childId);
+    DataSet dsCharts = SurveyApp.DataHelper.DashboardGetGraphs(studyId, WebSecurity.CurrentUserId, childId);
 
     string dASP = "", pASP = "", tASP = "";
     string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
@@ -35,7 +35,8 @@
     string dGSI = "", pGSI = "";
     string dAPRS = "", tAPRS = "";
     string dWT = "", tWT = "";
-    string dSLP = "", pSLP = "", tSLP = "";
+    string dSLP = "", pSLP = "", tSLP = "", dInsom = "", pInsom = "", dConnor = "", pConnor = "", dtConnor = "", tConnor = "";
+    string dpFeed = "", pFeed = "", dtFeed = "", tFeed = "", dpPAS = "", pPAS = "";
 
     string dpABCg = "", aspABCg = "", tstpABCg = "", unpABCg = "", vspABCg = "", qpABCg = "";
     string dtABCg = "", astABCg = "", tsttABCg = "", untABCg = "", vstABCg = "", qtABCg = "";
@@ -76,17 +77,29 @@
         DataRow[] drABCT = dsCharts.Tables[1].Select("SURVEYid = 4");
         foreach (DataRow dr in drABCT)
         {
+            if(dr["ScheduleDate"] != DBNull.Value && dABC.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tABC += dr["Score"] + ",";
         }
 
         DataRow[] drSRSP = dsCharts.Tables[0].Select("SURVEYid = 5");
         foreach (DataRow dr in drSRSP)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dABC.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pSRS += dr["Score"] + ",";
         }
         DataRow[] drSRST = dsCharts.Tables[1].Select("SURVEYid = 5");
         foreach (DataRow dr in drSRST)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dABC.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tSRS += dr["Score"] + ",";
         }
         #endregion
@@ -101,6 +114,10 @@
         DataRow[] drASPT = dsCharts.Tables[1].Select("SURVEYid = 1");
         foreach (DataRow dr in drASPT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dASP.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dASP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tASP += dr["Score"] + ",";
         }
         #endregion
@@ -135,19 +152,69 @@
         }
         #endregion
 
-        //#region Short Language Profile
-        //DataRow[] drSLPP = dsCharts.Tables[5].Select("UserType = 1");
-        //foreach (DataRow dr in drSLPP)
-        //{
-        //    dSLP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-        //    pSLP += dr["Score"] + ",";
-        //}
-        //DataRow[] drSLPT = dsCharts.Tables[5].Select("UserType = 2");
-        //foreach (DataRow dr in drSLPT)
-        //{
-        //    tSLP += dr["Score"] + ",";
-        //}
-        //#endregion
+        #region Short Language Profile (Parent)
+        DataRow[] drSLPP = dsCharts.Tables[0].Select("SURVEYid = 10");
+        foreach (DataRow dr in drSLPP)
+        {
+            dSLP += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pSLP += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Insomnia Severity Index (Parent)
+        DataRow[] drInsom = dsCharts.Tables[0].Select("SURVEYid = 12");
+        foreach (DataRow dr in drInsom)
+        {
+            dInsom += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pInsom += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Connor-Davidson Resilience Scale 10 (Parent)
+        DataRow[] drConnor = dsCharts.Tables[0].Select("SURVEYid = 13");
+        foreach (DataRow dr in drConnor)
+        {
+            dConnor += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pConnor += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Connor-Davidson Resilience Scale 10 (Teacher)
+        DataRow[] drtConnor = dsCharts.Tables[1].Select("SURVEYid = 13");
+        foreach (DataRow dr in drtConnor)
+        {
+            dtConnor += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tConnor += dr["Score"] + ",";
+        }
+        #endregion
+
+
+        #region Feedback Questionnaire (Parent)
+        DataRow[] drpFeedback = dsCharts.Tables[0].Select("SURVEYid = 15");
+        foreach (DataRow dr in drpFeedback)
+        {
+            dpFeed += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pFeed += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Feedback Questionnaire (Teacher)
+        DataRow[] drtFeedback = dsCharts.Tables[1].Select("SURVEYid = 15");
+        foreach (DataRow dr in drtFeedback)
+        {
+            dtFeed += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tFeed += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region Parent Assessment Summary (Parent)
+        DataRow[] drpPAS = dsCharts.Tables[0].Select("SURVEYid = 48");
+        foreach (DataRow dr in drpPAS)
+        {
+            dpPAS += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pPAS += dr["Score"] + ",";
+        }
+        #endregion
 
         //#region Weekly Teacher 
         //DataRow[] drWT = dsCharts.Tables[6].Select("UserType = 2");
@@ -159,7 +226,7 @@
         //#endregion
 
         #region PedsQL-Parent Report for Children(8-12)
-        DataRow[] drPEDsqlP = dsCharts.Tables[2].Select("SURVEYid IN (6 ,7, 8, 9)");
+        DataRow[] drPEDsqlP = dsCharts.Tables[0].Select("SURVEYid IN (6 ,7, 8, 9)");
         foreach (DataRow dr in drPEDsqlP)
         {
             dPEDsql += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -176,13 +243,13 @@
         #endregion
 
         #region SCQ
-        DataRow[] drSCQP = dsCharts.Tables[2].Select("SURVEYid IN (11)");
+        DataRow[] drSCQP = dsCharts.Tables[0].Select("SURVEYid IN (11)");
         foreach (DataRow dr in drSCQP)
         {
             dSCQ += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             pSCQ += dr["Score"] + ",";
         }
-        DataRow[] drSCQT = dsCharts.Tables[2].Select("SURVEYid IN (11)");
+        DataRow[] drSCQT = dsCharts.Tables[1].Select("SURVEYid IN (11)");
         foreach (DataRow dr in drSCQT)
         {
             dSCQTeacher += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -192,7 +259,7 @@
 
 
         #region Caregiver Strain Questionnaire
-        DataRow[] drCareGiverP = dsCharts.Tables[2].Select("SURVEYid = 2");
+        DataRow[] drCareGiverP = dsCharts.Tables[0].Select("SURVEYid = 2");
         foreach (DataRow dr in drCareGiverP)
         {
             dCareGiver += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -201,7 +268,7 @@
         #endregion
 
         #region Family Empowerment Scale
-        DataRow[] drPESrP = dsCharts.Tables[2].Select("SURVEYid = 14");
+        DataRow[] drPESrP = dsCharts.Tables[0].Select("SURVEYid = 14");
         foreach (DataRow dr in drPESrP)
         {
             dPES += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -210,7 +277,7 @@
         #endregion
 
         #region GI Severity Index 
-        DataRow[] drGSIP = dsCharts.Tables[2].Select("SURVEYid = 3");
+        DataRow[] drGSIP = dsCharts.Tables[0].Select("SURVEYid = 3");
         foreach (DataRow dr in drGSIP)
         {
             dGSI += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -219,7 +286,7 @@
         #endregion
 
         #region Academic Progress Rating Scales
-        DataRow[] drAPRST = dsCharts.Tables[2].Select("SURVEYid = 27");
+        DataRow[] drAPRST = dsCharts.Tables[1].Select("SURVEYid = 27");
         foreach (DataRow dr in drAPRST)
         {
             dAPRS += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
@@ -237,21 +304,37 @@
         DataRow[] drTSTP = dsCharts.Tables[3].Select("QuestionGroup = 'Lethargy' AND SURVEYid = 4");
         foreach (DataRow dr in drTSTP)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tstpABCg += dr["Score"] + ",";
         }
         DataRow[] drSteros = dsCharts.Tables[3].Select("QuestionGroup = 'Stereotypy' AND SURVEYid = 4");
         foreach (DataRow dr in drSteros)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             unpABCg += dr["Score"] + ",";
         }
         DataRow[] drHypers = dsCharts.Tables[3].Select("QuestionGroup = 'Hyperactivity' AND SURVEYid = 4");
         foreach (DataRow dr in drHypers)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             vspABCg += dr["Score"] + ",";
         }
         DataRow[] drInps = dsCharts.Tables[3].Select("QuestionGroup = 'Inappropriate Speech' AND SURVEYid = 4");
         foreach (DataRow dr in drInps)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             qpABCg += dr["Score"] + ",";
         }
         #endregion
@@ -266,21 +349,37 @@
         DataRow[] drLetharsT = dsCharts.Tables[4].Select("QuestionGroup = 'Lethargy' AND SURVEYid = 4");
         foreach (DataRow dr in drLetharsT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tsttABCg += dr["Score"] + ",";
         }
         DataRow[] drSterosT = dsCharts.Tables[4].Select("QuestionGroup = 'Stereotypy' AND SURVEYid = 4");
         foreach (DataRow dr in drSterosT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             untABCg += dr["Score"] + ",";
         }
         DataRow[] drHypersT = dsCharts.Tables[4].Select("QuestionGroup = 'Hyperactivity' AND SURVEYid = 4");
         foreach (DataRow dr in drHypersT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             vstABCg += dr["Score"] + ",";
         }
         DataRow[] drInpsT = dsCharts.Tables[4].Select("QuestionGroup = 'Inappropriate Speech' AND SURVEYid = 4");
         foreach (DataRow dr in drInpsT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtABCg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtABCg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             qtABCg += dr["Score"] + ",";
         }
         #endregion
@@ -295,21 +394,37 @@
         DataRow[] drCognition = dsCharts.Tables[3].Select("QuestionGroup = 'Social Cognition' AND SURVEYid = 5");
         foreach (DataRow dr in drCognition)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tstpSRSg += dr["Score"] + ",";
         }
         DataRow[] drCommunication = dsCharts.Tables[3].Select("QuestionGroup = 'Social Communication' AND SURVEYid = 5");
         foreach (DataRow dr in drCommunication)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             unpSRSg += dr["Score"] + ",";
         }
         DataRow[] drMotivation = dsCharts.Tables[3].Select("QuestionGroup = 'Social Motivation' AND SURVEYid = 5");
         foreach (DataRow dr in drMotivation)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             vspSRSg += dr["Score"] + ",";
         }
         DataRow[] drBahaviour = dsCharts.Tables[3].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour' AND SURVEYid = 5");
         foreach (DataRow dr in drBahaviour)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dpSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dpSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             qpSRSg += dr["Score"] + ",";
         }
         #endregion
@@ -324,21 +439,37 @@
         DataRow[] drCognitionT = dsCharts.Tables[4].Select("QuestionGroup = 'Social Cognition' AND SURVEYid = 5");
         foreach (DataRow dr in drCognitionT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tsttSRSg += dr["Score"] + ",";
         }
         DataRow[] drCommunicationT = dsCharts.Tables[4].Select("QuestionGroup = 'Social Communication' AND SURVEYid = 5");
         foreach (DataRow dr in drCommunicationT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             untSRSg += dr["Score"] + ",";
         }
         DataRow[] drMotivationT = dsCharts.Tables[4].Select("QuestionGroup = 'Social Motivation' AND SURVEYid = 5");
         foreach (DataRow dr in drMotivationT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             vstSRSg += dr["Score"] + ",";
         }
         DataRow[] drBahaviourT = dsCharts.Tables[4].Select("QuestionGroup = 'Restricted Interests and Repetitive Bahaviour' AND SURVEYid = 5");
         foreach (DataRow dr in drBahaviourT)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && dtSRSg.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtSRSg += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             qtSRSg += dr["Score"] + ",";
         }
         #endregion
@@ -377,66 +508,118 @@
         DataRow[] drCaring = dsCharts.Tables[3].Select("QuestionGroup = 'Caring For Home' AND SURVEYid = 46");
         foreach (DataRow dr in drCaring)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvCFH += dr["Score"] + ",";
         }
         DataRow[] drSelf = dsCharts.Tables[3].Select("QuestionGroup = 'Caring For Self' AND SURVEYid = 46");
         foreach (DataRow dr in drSelf)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvCFS += dr["Score"] + ",";
         }
         DataRow[] drListening = dsCharts.Tables[3].Select("QuestionGroup = 'Listening And Understanding' AND SURVEYid = 46");
         foreach (DataRow dr in drListening)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvLAU += dr["Score"] + ",";
         }
         DataRow[] drLiing = dsCharts.Tables[3].Select("QuestionGroup = 'Living In Community' AND SURVEYid = 46");
         foreach (DataRow dr in drLiing)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvLIC += dr["Score"] + ",";
         }
         DataRow[] drplaying = dsCharts.Tables[3].Select("QuestionGroup = 'Playing And Using Leisure Time' AND SURVEYid = 46");
         foreach (DataRow dr in drplaying)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvPAULT += dr["Score"] + ",";
         }
         DataRow[] drseca = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section A (Parent)' AND SURVEYid = 46");
         foreach (DataRow dr in drseca)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvSectionA += dr["Score"] + ",";
         }
         DataRow[] drsecb = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section B (Parent)' AND SURVEYid = 46");
         foreach (DataRow dr in drsecb)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvSectionB += dr["Score"] + ",";
         }
         DataRow[] drsecc = dsCharts.Tables[3].Select("QuestionGroup = 'Problem Behaviors - Section C (Parent)' AND SURVEYid = 46");
         foreach (DataRow dr in drsecc)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvSectionC += dr["Score"] + ",";
         }
         DataRow[] drread = dsCharts.Tables[3].Select("QuestionGroup = 'Reading and Writing' AND SURVEYid = 46");
         foreach (DataRow dr in drread)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvRAW += dr["Score"] + ",";
         }
         DataRow[] drrto = dsCharts.Tables[3].Select("QuestionGroup = 'Relating To Others' AND SURVEYid = 46");
         foreach (DataRow dr in drrto)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvRTO += dr["Score"] + ",";
         }
         DataRow[] drTaling = dsCharts.Tables[3].Select("QuestionGroup = 'Talking' AND SURVEYid = 46");
         foreach (DataRow dr in drTaling)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvT += dr["Score"] + ",";
         }
         DataRow[] drulm = dsCharts.Tables[3].Select("QuestionGroup = 'Using Large Muscles' AND SURVEYid = 46");
         foreach (DataRow dr in drulm)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvULM += dr["Score"] + ",";
         }
         DataRow[] drusm = dsCharts.Tables[3].Select("QuestionGroup = 'Using Small Muscles' AND SURVEYid = 46");
         foreach (DataRow dr in drusm)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && pvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                pvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             pvUSM += dr["Score"] + ",";
         }
         #endregion
@@ -451,66 +634,118 @@
         DataRow[] drExpressive = dsCharts.Tables[4].Select("QuestionGroup = 'Expressive' AND SURVEYid = 47");
         foreach (DataRow dr in drExpressive)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvE += dr["Score"] + ",";
         }
         DataRow[] Fine = dsCharts.Tables[4].Select("QuestionGroup = 'Fine Motor' AND SURVEYid = 47");
         foreach (DataRow dr in Fine)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvFM += dr["Score"] + ",";
         }
         DataRow[] Gross = dsCharts.Tables[4].Select("QuestionGroup = 'Gross Motor' AND SURVEYid = 47");
         foreach (DataRow dr in Gross)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvGM += dr["Score"] + ",";
         }
         DataRow[] Interpersonal = dsCharts.Tables[4].Select("QuestionGroup = 'Interpersonal Reslationships' AND SURVEYid = 47");
         foreach (DataRow dr in Interpersonal)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvIR += dr["Score"] + ",";
         }
         DataRow[] Numeric = dsCharts.Tables[4].Select("QuestionGroup = 'Numeric' AND SURVEYid = 47");
         foreach (DataRow dr in Numeric)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvN += dr["Score"] + ",";
         }
         DataRow[] drsecat = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section A (Teacher)' AND SURVEYid = 47");
         foreach (DataRow dr in drsecat)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvSectionA += dr["Score"] + ",";
         }
         DataRow[] drsecbt = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section B (Teacher)' AND SURVEYid = 47");
         foreach (DataRow dr in drsecbt)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvSectionB += dr["Score"] + ",";
         }
         DataRow[] drsecct = dsCharts.Tables[4].Select("QuestionGroup = 'Problem Behaviors - Section C (Teacher)' AND SURVEYid = 47");
         foreach (DataRow dr in drsecct)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvSectionC += dr["Score"] + ",";
         }
         DataRow[] Personal = dsCharts.Tables[4].Select("QuestionGroup = 'Personal' AND SURVEYid = 47");
         foreach (DataRow dr in Personal)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvP += dr["Score"] + ",";
         }
         DataRow[] Play = dsCharts.Tables[4].Select("QuestionGroup = 'Play and Leisure' AND SURVEYid = 47");
         foreach (DataRow dr in Play)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvPAL += dr["Score"] + ",";
         }
         DataRow[] Receptive = dsCharts.Tables[4].Select("QuestionGroup = 'Receptive' AND SURVEYid = 47");
         foreach (DataRow dr in Receptive)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvR += dr["Score"] + ",";
         }
         DataRow[] School = dsCharts.Tables[4].Select("QuestionGroup = 'School Community' AND SURVEYid = 47");
         foreach (DataRow dr in School)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvSC += dr["Score"] + ",";
         }
         DataRow[] Written = dsCharts.Tables[4].Select("QuestionGroup = 'Written' AND SURVEYid = 47");
         foreach (DataRow dr in Written)
         {
+            if (dr["ScheduleDate"] != DBNull.Value && tvD.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                tvD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
             tvW += dr["Score"] + ",";
         }
         #endregion
@@ -1385,6 +1620,118 @@
         //-----------------------------------------End----------------------------------------
     });
 </script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Connor-Davidson Resilience Scale 10--Teacher--------------------------------------
+        $('#divtConnor').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Connor-Davidson Resilience Scale 10'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dtConnor.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tConnor.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Feedback Questionnaire--Teacher--------------------------------------
+        $('#divtFeedback').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Feedback Questionnaire'
+        },
+        //subtitle: {
+        //    text: 'Parents'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dtFeed.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tFeed.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
 }
 
 <script type="text/javascript">
@@ -2144,6 +2491,287 @@
     });
 </script>
 
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Short Language Profile--PARENT--------------------------------------
+        $('#divpSLP').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Short Language Profile '
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dSLP.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pSLP.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Insomnia Severity Index--PARENT--------------------------------------
+        $('#divpInsomn').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Insomnia Severity Index'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dInsom.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pInsom.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Connor-Davidson Resilience Scale 10--PARENT--------------------------------------
+        $('#divpConnor').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Connor-Davidson Resilience Scale 10'
+        },
+        //subtitle: {
+        //    text: 'Parents'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dConnor.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pConnor.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Feedback Questionnaire--PARENT--------------------------------------
+        $('#divpFeedback').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Feedback Questionnaire'
+        },
+        //subtitle: {
+        //    text: 'Parents'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dpFeed.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pFeed.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------Parent Assessment Summary--PARENT--------------------------------------
+        $('#divpPAS').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Parent Assessment Summary'
+        },
+        //subtitle: {
+        //    text: 'Parents'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dpPAS.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pPAS.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+
 
 <style type="text/css">
     .voffset {
@@ -2183,6 +2811,9 @@
         border-bottom: solid 1px #CCC;
         right: -1px;
     }
+    .gDetails .row{
+        border-bottom: solid 1px #EDEDED;
+    }
 </style>
 
 <h3 style="text-transform:capitalize;">@studyName @(childNamets != "" ? "(" + childNamets + ")" : "") - Statistical Analysis</h3>
@@ -2208,8 +2839,7 @@
     ABCg = ABCg.TrimEnd(',');
     SRSg = SRSg.TrimEnd(',');
 
-    if (drABCGroup.Length > 0)
-    {
+    
         <script type="text/javascript">
     $(function () {
         //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
@@ -2259,10 +2889,9 @@
         //-----------------------------------------End----------------------------------------
     });
         </script>
-    }
+    
 
-    if(drSRSGroup.Length > 0)
-    {
+    
         <script type="text/javascript">
             $(function(){
                 //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
@@ -2312,7 +2941,7 @@
                 //-----------------------------------------End----------------------------------------
             });
         </script>
-    }
+    
 
 
 
@@ -2336,8 +2965,7 @@
     ABCgTeacher = ABCgTeacher.TrimEnd(',');
     SRSgTeacher = SRSgTeacher.TrimEnd(',');
 
-    if(drABCGroupTeacher.Length > 0)
-    {
+    
         <script type="text/javascript">
             $(function () {
                 //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
@@ -2387,9 +3015,8 @@
                 //-----------------------------------------End----------------------------------------
             });
         </script>
-    }
-    if (drSRSGroupTeacher.Length > 0)
-    {
+    
+   
         <script type="text/javascript">
             $(function () {
             //-----------------------------------------Abbreviated Sensory Profile- Parent & Teacher----------------------------------------
@@ -2439,7 +3066,7 @@
             //-----------------------------------------End----------------------------------------
     });
         </script>
-    }
+    
 
 }
 
@@ -2474,18 +3101,18 @@
         </td>
         <td style="width: 84%;border: solid 1px #CCC;">
             <div class="gDetails">
-                <div class="parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                <div class="row parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6"><div class="dvABCGroup"></div></div>
                     <div class="col-sm-6"><div class="dvSRSGroup"></div></div>
                 </div>
                 @if (role != "" && role != "Parent")
                 {
-                    <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                    <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                         <div class="col-sm-6"><div class="dvABCGroupTeacher"></div></div>
                         <div class="col-sm-6"><div class="dvSRSGroupTeacher"></div></div>
                     </div>
 
-                    <div class="row parentteacherdiv">
+                    <div class="row parentteacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
                         <div class="col-sm-6 parentteacher" style="background-color:transparent;">
                             <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                         </div>
@@ -2498,7 +3125,7 @@
 
                 
 
-                <div class="row voffset parentdiv">
+                <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6 parent" style="background-color:transparent;">
                         <div id="ABCSubCategoriesParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>                    
@@ -2509,7 +3136,7 @@
 
                 @if (role != "" && role != "Parent")
                 {
-                    <div class="row voffset teacherdiv">
+                    <div class="row voffset teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                         <div class="col-sm-6 teacher" style="background-color:transparent;">
                             <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                         </div>
@@ -2521,7 +3148,7 @@
                             </div>*@
                     </div>
 
-                    <div class="row voffset studentdiv">
+                    <div class="row voffset studentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
                         <div class="col-sm-6 student" style="background-color:transparent;">
                             <div id="PedsQLParentS" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                         </div>
@@ -2529,7 +3156,7 @@
                 }
                 
 
-                <div class="row voffset parentdiv">                    
+                <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">                    
                     <div class="col-sm-6 parent" style="background-color:transparent;">
                         <div id="PedsQLParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
@@ -2540,13 +3167,13 @@
 
                 
 
-                @*<div class="row voffset">
+                @*<div class="row voffset" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6" style="background-color:transparent;">
                     <div id="PedsQLParentReport" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                 </div>*@
 
-                <div class="row voffset parentdiv">
+                <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6 parent" style="background-color:transparent;">
                         <div id="FamilyEmpowementScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
@@ -2557,7 +3184,7 @@
 
                 @if (role != "" && role != "Parent")
                 {
-                    <div class="row voffset teacherdiv">
+                    <div class="row voffset teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                         <div class="col-sm-6 teacher" style="background-color:transparent;">
                             <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                         </div>
@@ -2573,34 +3200,44 @@
 
                 @if (role != "" && role != "Parent")
                 {
-                    <div class="row voffset weeklydiv">
+                    <div class="row voffset weeklydiv" style="border-bottom:none;">
                         @{Html.RenderPartial("~/Views/Home/_WeeklyChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
 
                     </div>
-                    <div class="row voffset lifeeventsdiv">
+                    <div class="row voffset lifeeventsdiv" style="border-bottom:none;">
                         @{Html.RenderPartial("~/Views/Home/_LifeEventsChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "childIdts", childId } });}
                     </div>
                 }
                 
 
-                <div class="parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                <div class="row parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6"><div id="pADAM"></div></div>
                     <div class="col-sm-6"><div id="pVanderbilt"></div></div>
                 </div>
 
                 @if (role != "" && role != "Parent")
                 {
-                    <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                    <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                         <div class="col-sm-6"><div id="tADAM"></div></div>
                         <div class="col-sm-6"><div id="tVanderbilt"></div></div>
                     </div>
                 }
                 
 
-                <div class="row voffset parentdiv">
+                <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
                     <div class="col-sm-6"><div id="divSCQ"></div></div>
+                    <div class="col-sm-6"><div id="divpSLP"></div></div>                    
                 </div>
 
+                <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                    <div class="col-sm-6"><div id="divpInsomn"></div></div>
+                    <div class="col-sm-6"><div id="divpConnor"></div></div>
+                </div>
+
+                <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                    <div class="col-sm-6"><div id="divpFeedback"></div></div>
+                    <div class="col-sm-6"><div id="divpPAS"></div></div>                    
+                </div>
                 @*<div class="row voffset">
                     <div class="col-sm-6" style="background-color:transparent;">
                     <div id="WeeklyProgressScroe" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -2609,16 +3246,22 @@
                     <div id="levelchangesforChild2312" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
                 </div>*@
-                <div class="voffset parentdiv">
+                <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
                     <div id="divParentVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                 </div>
 
                 @if (role != "" && role != "Parent")
                 {                    
-                    <div class="teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                        <div class="col-sm-6"><div id="divTQuerterly"></div></div>                        
+                    <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                        <div class="col-sm-6"><div id="divTQuerterly"></div></div>
+                        <div class="col-sm-6"><div id="divtConnor"></div></div>
                     </div>
-                    <div class="voffset teacherdiv">
+
+                    <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
+                        <div class="col-sm-6"><div id="divtFeedback"></div></div>                        
+                    </div>
+
+                    <div class="row voffset teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
                         <div id="divTeacherVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     </div>
                 }
@@ -2633,6 +3276,7 @@
     $(function () {
         $(".teacherdiv").hide();
         $(".parentteacherdiv").hide();
+        $(".studentdiv").hide();
         $(".weeklydiv").hide();
         $(".lifeeventsdiv").hide();
     });

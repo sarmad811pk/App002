@@ -588,7 +588,7 @@
                 }
                 noQ++;
             });
-
+            
             var percentage = (Math.round((nofQ / noQ) * 100).toFixed(0));
 
             setCompletionPercentage(percentage);
@@ -647,6 +647,9 @@
                         location.href = "@Html.Raw(Request.UrlReferrer != null && Request.UrlReferrer.ToString() != "" ? Request.UrlReferrer.ToString() : Url.Action("Index", "UserQuestion") + "?childIdts=" + chiildid)#1";
                     }
                 });
+            }
+            else{
+                $('html, body').animate({ scrollTop: $(".notFilled").offset().top - 63 }, 500);
             }
 
 

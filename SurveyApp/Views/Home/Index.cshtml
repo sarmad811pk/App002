@@ -114,7 +114,7 @@
         </select>
 
         <select id="ddlStudy" class="col-sm-9 form-control" style="margin-right: 5px;" onchange="getStudyInfo(this);">
-            <option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>            
+            @*<option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>*@            
             @foreach (Study objStudy in Study.StudyGetAll())
             {
                 <option value="@objStudy.Id"  @(studyId == objStudy.Id ? "selected=selected" : "")>@objStudy.Name</option>
