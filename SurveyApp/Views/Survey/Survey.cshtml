@@ -519,11 +519,11 @@
         };
         function enableDate(elm, id_date) {
             if (elm.checked) {
-                $("#" + id_date).removeAttr("disabled", "disabled");
+                $("." + id_date).removeAttr("disabled", "disabled");
             }
             else {
-                $("#" + id_date).val('');
-                $("#" + id_date).attr("disabled", "disabled");
+                $("." + id_date).val('');
+                $("." + id_date).attr("disabled", "disabled");
             }
         }
         function enabletextDate(elm, id_date) {
@@ -648,115 +648,116 @@
     }
     function savequestionsLifeEvents(cid){
         var ChildID = cid;
-        var q869g="School Event",q869="Teacher Change",d869=$('#q869_1').val();
-        var q870g="School Event",q870="Classroom Change",d870=$('#q870_1').val();
-        var q871g="School Event",q871="New Student",d871=$('#q871_1').val();
-        var q872g="School Event",q872="Major peer incident",d872=$('#q872_1').val();
-        var q873g="School Event",q873="Violence in classroom",d873=$('#q873_1').val();
-        var q874g="School Event",q874="Emotional peer interaction",d874=$('#q874_1').val();
-        var q875g="School Event",q875="Change in schedule",d875=$('#q875_1').val();
-        var q876g="School Event",q876="High stakes test",d876=$('#q876_1').val();
-        var q877g="School Event",q877="Formal assessment",d877=$('#q877_1').val();
-        var q878g="School Event",q878="Outside assessor",d878=$('#q878_1').val();
-        var q879g="School Event",q879="Personnel change",d879=$('#q879_1').val();
-        var q880g="School Event",q880="Teacher absence",d880=$('#q880_1').val();
-        var q881g="School Event",q881="School absence",d881=$('#q881_1').val();
-        var q882g="School Event",q882=$('#q882_0').val(),d882=$('#q882_1').val();
-        var q884g="Family Events",q884="New family member",d884=$('#q884_1').val();
-        var q885g="Family Events",q885="Parent temporarily leave",d885=$('#q885_1').val();
-        var q886g="Family Events",q886="Injury or illness in family",d886=$('#q886_1').val();
-        var q887g="Family Events",q887="Change in residence",d887=$('#q887_1').val();
-        var q888g="Family Events",q888="Sibling issues",d888=$('#q888_1').val();
-        var q889g="Family Events",q889="Parents travel",d889=$('#q889_1').val();
-        var q890g="Family Events",q890="New person staying at the home (company)",d890=$('#q890_1').val();
-        var q891g="Family Events",q891="Death in the family",d891=$('#q891_1').val();
-        var q892g="Family Events",q892="Parental separation/divorce",d892=$('#q892_1').val();
-        var q893g="Family Events",q893="Significant family member moves",d893=$('#q893_1').val();
-        var q894g="Family Events",q894="Sibling moves",d894=$('#q894_1').val();
-        var q895g="Family Events",q895="Significant struggles with parents",d895=$('#q895_1').val();
-        var q896g="Family Events",q896="Significant struggles with siblingsabsence",d896=$('#q896_1').val();
-        var q897g="Family Events",q897="Mother pregnant",d897=$('#q897_1').val();
-        var q898g="Family Events",q898="Parent marrying",d898=$('#q898_1').val();
-        var q899g="Family Events",q899="Sibling marrying",d899=$('#q899_1').val();
-        var q900g="Family Events",q900="Parent Job/Work Change",d900=$('#q900_1').val();
-        var q901g="Family Events",q901="Change in family financial circumstances",d901=$('#q901_1').val();
-        var q902g="Family Events",q902=$('#q902_0').val(),d902=$('#q902_1').val();
-        var q904g="Health Events",q904="Physical Injury",d904=$('#q904_1').val();
-        var q905g="Health Events",q905="Medication Change",d905=$('#q905_1').val();
-        var q906g="Health Events",q906="Supplement Change",d906=$('#q906_1').val();
-        var q907g="Health Events",q907="Complementary and Alternative Medicine Change",d907=$('#q907_1').val();
-        var q908g="Health Events",q908="Physician Change",d908=$('#q908_1').val();
-        var q909g="Health Events",q909="Therapist Change",d909=$('#q909_1').val();
-        var q910g="Health Events",q910="Illness requiring doctor visit",d910=$('#q910_1').val();
-        var q911g="Health Events",q911="Illness not requiring doctor visit",d911=$('#q911_1').val();
-        var q912g="Health Events",q912="Change in diet",d912=$('#q912_1').val();
-        var q913g="Health Events",q913="Hospitalization",d913=$('#q913_1').val();
-        var q914g="Health Events",q914="Drug or Alcohol Use",d914=$('#q914_1').val();
-        var q915g="Health Events",q915="Weight Gain or Loss",d915=$('#q915_1').val();
-        var q916g="Health Events",q916="Change in physical appearance (glasses, braces)",d916=$('#q916_1').val();
-        var q917g="Health Events",q917=$('#q917_0').val(),d917=$('#q917_1').val();
-        var q919g="External Events",q919="Significant Weather",d919=$('#q919_1').val();
-        var q920g="External Events",q920="World Events",d920=$('#q920_1').val();
-        var q921g="External Events",q921="Local Events",d921=$('#q921_1').val();
-        var q922g="External Events",q922="Natural Disaster",d922=$('#q922_1').val();
-        var q923g="External Events",q923=$('#q923_0').val(),d923=$('#q923_1').val();
-        var q924g="Additional Notes",q924=$('#q924_0').val();
+        var q869g="School Event",q869="Teacher Change",                                                 d869_st=$('#q869_1_st').val(),  d869_en=$('#q869_1_en').val();
+        var q870g="School Event",q870="Classroom Change",                                               d870_st=$('#q870_1_st').val(),  d870_en=$('#q870_1_en').val();
+        var q871g="School Event",q871="New Student",                                                    d871_st=$('#q871_1_st').val(),  d871_en=$('#q871_1_en').val();
+        var q872g="School Event",q872="Major peer incident",                                            d872_st=$('#q872_1_st').val(),  d872_en=$('#q872_1_en').val();
+        var q873g="School Event",q873="Violence in classroom",                                          d873_st=$('#q873_1_st').val(),  d873_en=$('#q873_1_en').val();
+        var q874g="School Event",q874="Emotional peer interaction",                                     d874_st=$('#q874_1_st').val(),  d874_en=$('#q874_1_en').val();
+        var q875g="School Event",q875="Change in schedule",                                             d875_st=$('#q875_1_st').val(),  d875_en=$('#q875_1_en').val();
+        var q876g="School Event",q876="High stakes test",                                               d876_st=$('#q876_1_st').val(),  d876_en=$('#q876_1_en').val();
+        var q877g="School Event",q877="Formal assessment",                                              d877_st=$('#q877_1_st').val(),  d877_en=$('#q877_1_en').val();
+        var q878g="School Event",q878="Outside assessor",                                               d878_st=$('#q878_1_st').val(),  d878_en=$('#q878_1_en').val();
+        var q879g="School Event",q879="Personnel change",                                               d879_st=$('#q879_1_st').val(),  d879_en=$('#q879_1_en').val();
+        var q880g="School Event",q880="Teacher absence",                                                d880_st=$('#q880_1_st').val(),  d880_en=$('#q880_1_en').val();
+        var q881g="School Event",q881="School absence",                                                 d881_st=$('#q881_1_st').val(),  d881_en=$('#q881_1_en').val();
+        var q882g="School Event",q882=$('#q882_0').val(),                                               d882_st=$('#q882_1').val();
+        var q884g="Family Events",q884="New family member",                                             d884_st=$('#q884_1_st').val(),  d884_en=$('#q884_1_en').val();
+        var q885g="Family Events",q885="Parent temporarily leave",                                      d885_st=$('#q885_1_st').val(),  d885_en=$('#q885_1_en').val();
+        var q886g="Family Events",q886="Injury or illness in family",                                   d886_st=$('#q886_1_st').val(),  d886_en=$('#q886_1_en').val();
+        var q887g="Family Events",q887="Change in residence",                                           d887_st=$('#q887_1_st').val(),  d887_en=$('#q887_1_en').val();
+        var q888g="Family Events",q888="Sibling issues",                                                d888_st=$('#q888_1_st').val(),  d888_en=$('#q888_1_en').val();
+        var q889g="Family Events",q889="Parents travel",                                                d889_st=$('#q889_1_st').val(),  d889_en=$('#q889_1_en').val();
+        var q890g="Family Events",q890="New person staying at the home (company)",                      d890_st=$('#q890_1_st').val(),  d890_en=$('#q890_1_en').val();
+        var q891g="Family Events",q891="Death in the family",                                           d891_st=$('#q891_1_st').val(),  d891_en=$('#q891_1_en').val();
+        var q892g="Family Events",q892="Parental separation/divorce",                                   d892_st=$('#q892_1_st').val(),  d892_en=$('#q892_1_en').val();
+        var q893g="Family Events",q893="Significant family member moves",                               d893_st=$('#q893_1_st').val(),  d893_en=$('#q893_1_en').val();
+        var q894g="Family Events",q894="Sibling moves",                                                 d894_st=$('#q894_1_st').val(),  d894_en=$('#q894_1_en').val();
+        var q895g="Family Events",q895="Significant struggles with parents",                            d895_st=$('#q895_1_st').val(),  d895_en=$('#q895_1_en').val();
+        var q896g="Family Events",q896="Significant struggles with siblingsabsence",                    d896_st=$('#q896_1_st').val(),  d896_en=$('#q896_1_en').val();
+        var q897g="Family Events",q897="Mother pregnant",                                               d897_st=$('#q897_1_st').val(),  d897_en=$('#q897_1_en').val();
+        var q898g="Family Events",q898="Parent marrying",                                               d898_st=$('#q898_1_st').val(),  d898_en=$('#q898_1_en').val();
+        var q899g="Family Events",q899="Sibling marrying",                                              d899_st=$('#q899_1_st').val(),  d899_en=$('#q899_1_en').val();
+        var q900g="Family Events",q900="Parent Job/Work Change",                                        d900_st=$('#q900_1_st').val(),  d900_en=$('#q900_1_en').val();
+        var q901g="Family Events",q901="Change in family financial circumstances",                      d901_st=$('#q901_1_st').val(),  d901_en=$('#q901_1_en').val();
+        var q902g="Family Events",q902=$('#q902_0').val(),                                              d902_st=$('#q902_1').val();
+        var q904g="Health Events",q904="Physical Injury",                                               d904_st=$('#q904_1_st').val(),  d904_en=$('#q904_1_en').val();
+        var q905g="Health Events",q905="Medication Change",                                             d905_st=$('#q905_1_st').val(),  d905_en=$('#q905_1_en').val();
+        var q906g="Health Events",q906="Supplement Change",                                             d906_st=$('#q906_1_st').val(),  d906_en=$('#q906_1_en').val();
+        var q907g="Health Events",q907="Complementary and Alternative Medicine Change",                 d907_st=$('#q907_1_st').val(),  d907_en=$('#q907_1_en').val();
+        var q908g="Health Events",q908="Physician Change",                                              d908_st=$('#q908_1_st').val(),  d908_en=$('#q908_1_en').val();
+        var q909g="Health Events",q909="Therapist Change",                                              d909_st=$('#q909_1_st').val(),  d909_en=$('#q909_1_en').val();
+        var q910g="Health Events",q910="Illness requiring doctor visit",                                d910_st=$('#q910_1_st').val(),  d910_en=$('#q910_1_en').val();
+        var q911g="Health Events",q911="Illness not requiring doctor visit",                            d911_st=$('#q911_1_st').val(),  d911_en=$('#q911_1_en').val();
+        var q912g="Health Events",q912="Change in diet",                                                d912_st=$('#q912_1_st').val(),  d912_en=$('#q912_1_en').val();
+        var q913g="Health Events",q913="Hospitalization",                                               d913_st=$('#q913_1_st').val(),  d913_en=$('#q913_1_en').val();
+        var q914g="Health Events",q914="Drug or Alcohol Use",                                           d914_st=$('#q914_1_st').val(),  d914_en=$('#q914_1_en').val();
+        var q915g="Health Events",q915="Weight Gain or Loss",                                           d915_st=$('#q915_1_st').val(),  d915_en=$('#q915_1_en').val();
+        var q916g="Health Events",q916="Change in physical appearance (glasses, braces)",               d916_st=$('#q916_1_st').val(),  d916_en=$('#q916_1_en').val();
+        var q917g="Health Events",q917=$('#q917_0').val(),                                              d917_st=$('#q917_1').val();
+        var q919g="External Events",q919="Significant Weather",                                         d919_st=$('#q919_1_st').val(),  d919_en=$('#q919_1_en').val();
+        var q920g="External Events",q920="World Events",                                                d920_st=$('#q920_1_st').val(),  d920_en=$('#q920_1_en').val();
+        var q921g="External Events",q921="Local Events",                                                d921_st=$('#q921_1_st').val(),  d921_en=$('#q921_1_en').val();
+        var q922g="External Events",q922="Natural Disaster",                                            d922_st=$('#q922_1_st').val(),  d922_en=$('#q922_1_en').val();
+        var q923g="External Events",q923=$('#q923_0').val(),                                            d923_st=$('#q923_1').val();
+        var q924g="Additional Notes",q924=$('#q924_0').val(),                                        d924_en="";
 
         var str = "";
-        var _LifeE = "[#1#|#2#|#3#]";
-        if(d869!=''){str += _LifeE.replace('#1#',q869g).replace('#2#',q869).replace('#3#',d869);}
-        if(d870!=''){str += _LifeE.replace('#1#',q870g).replace('#2#',q870).replace('#3#',d870);}
-        if(d871!=''){str += _LifeE.replace('#1#',q871g).replace('#2#',q871).replace('#3#',d871);}
-        if(d872!=''){str += _LifeE.replace('#1#',q872g).replace('#2#',q872).replace('#3#',d872);}
-        if(d873!=''){str += _LifeE.replace('#1#',q873g).replace('#2#',q873).replace('#3#',d873);}
-        if(d874!=''){str += _LifeE.replace('#1#',q874g).replace('#2#',q874).replace('#3#',d874);}
-        if(d875!=''){str += _LifeE.replace('#1#',q875g).replace('#2#',q875).replace('#3#',d875);}
-        if(d876!=''){str += _LifeE.replace('#1#',q876g).replace('#2#',q876).replace('#3#',d876);}
-        if(d877!=''){str += _LifeE.replace('#1#',q877g).replace('#2#',q877).replace('#3#',d877);}
-        if(d878!=''){str += _LifeE.replace('#1#',q878g).replace('#2#',q878).replace('#3#',d878);}
-        if(d879!=''){str += _LifeE.replace('#1#',q879g).replace('#2#',q879).replace('#3#',d879);}
-        if(d880!=''){str += _LifeE.replace('#1#',q880g).replace('#2#',q880).replace('#3#',d880);}
-        if(d881!=''){str += _LifeE.replace('#1#',q881g).replace('#2#',q881).replace('#3#',d881);}
-        if(d882!=''){str += _LifeE.replace('#1#',q882g).replace('#2#',q882).replace('#3#',d882);}
-        if(d884!=''){str += _LifeE.replace('#1#',q884g).replace('#2#',q884).replace('#3#',d884);}
-        if(d885!=''){str += _LifeE.replace('#1#',q885g).replace('#2#',q885).replace('#3#',d885);}
-        if(d886!=''){str += _LifeE.replace('#1#',q886g).replace('#2#',q886).replace('#3#',d886);}
-        if(d887!=''){str += _LifeE.replace('#1#',q887g).replace('#2#',q887).replace('#3#',d887);}
-        if(d888!=''){str += _LifeE.replace('#1#',q888g).replace('#2#',q888).replace('#3#',d888);}
-        if(d889!=''){str += _LifeE.replace('#1#',q889g).replace('#2#',q889).replace('#3#',d889);}
-        if(d890!=''){str += _LifeE.replace('#1#',q890g).replace('#2#',q890).replace('#3#',d890);}
-        if(d891!=''){str += _LifeE.replace('#1#',q891g).replace('#2#',q891).replace('#3#',d891);}
-        if(d892!=''){str += _LifeE.replace('#1#',q892g).replace('#2#',q892).replace('#3#',d892);}
-        if(d893!=''){str += _LifeE.replace('#1#',q893g).replace('#2#',q893).replace('#3#',d893);}
-        if(d894!=''){str += _LifeE.replace('#1#',q894g).replace('#2#',q894).replace('#3#',d894);}
-        if(d895!=''){str += _LifeE.replace('#1#',q895g).replace('#2#',q895).replace('#3#',d895);}
-        if(d896!=''){str += _LifeE.replace('#1#',q896g).replace('#2#',q896).replace('#3#',d896);}
-        if(d897!=''){str += _LifeE.replace('#1#',q897g).replace('#2#',q897).replace('#3#',d897);}
-        if(d898!=''){str += _LifeE.replace('#1#',q898g).replace('#2#',q898).replace('#3#',d898);}
-        if(d899!=''){str += _LifeE.replace('#1#',q899g).replace('#2#',q899).replace('#3#',d899);}
-        if(d900!=''){str += _LifeE.replace('#1#',q900g).replace('#2#',q900).replace('#3#',d900);}
-        if(d901!=''){str += _LifeE.replace('#1#',q901g).replace('#2#',q901).replace('#3#',d901);}
-        if(d902!=''){str += _LifeE.replace('#1#',q902g).replace('#2#',q902).replace('#3#',d902);}
-        if(d904!=''){str += _LifeE.replace('#1#',q904g).replace('#2#',q904).replace('#3#',d904);}
-        if(d905!=''){str += _LifeE.replace('#1#',q905g).replace('#2#',q905).replace('#3#',d905);}
-        if(d906!=''){str += _LifeE.replace('#1#',q906g).replace('#2#',q906).replace('#3#',d906);}
-        if(d907!=''){str += _LifeE.replace('#1#',q907g).replace('#2#',q907).replace('#3#',d907);}
-        if(d908!=''){str += _LifeE.replace('#1#',q908g).replace('#2#',q908).replace('#3#',d908);}
-        if(d909!=''){str += _LifeE.replace('#1#',q909g).replace('#2#',q909).replace('#3#',d909);}
-        if(d910!=''){str += _LifeE.replace('#1#',q910g).replace('#2#',q910).replace('#3#',d910);}
-        if(d911!=''){str += _LifeE.replace('#1#',q911g).replace('#2#',q911).replace('#3#',d911);}
-        if(d912!=''){str += _LifeE.replace('#1#',q912g).replace('#2#',q912).replace('#3#',d912);}
-        if(d913!=''){str += _LifeE.replace('#1#',q913g).replace('#2#',q913).replace('#3#',d913);}
-        if(d914!=''){str += _LifeE.replace('#1#',q914g).replace('#2#',q914).replace('#3#',d914);}
-        if(d915!=''){str += _LifeE.replace('#1#',q915g).replace('#2#',q915).replace('#3#',d915);}
-        if(d916!=''){str += _LifeE.replace('#1#',q916g).replace('#2#',q916).replace('#3#',d916);}
-        if(d917!=''){str += _LifeE.replace('#1#',q917g).replace('#2#',q917).replace('#3#',d917);}
-        if(d919!=''){str += _LifeE.replace('#1#',q919g).replace('#2#',q919).replace('#3#',d919);}
-        if(d920!=''){str += _LifeE.replace('#1#',q920g).replace('#2#',q920).replace('#3#',d920);}
-        if(d921!=''){str += _LifeE.replace('#1#',q921g).replace('#2#',q921).replace('#3#',d921);}
-        if(d922!=''){str += _LifeE.replace('#1#',q922g).replace('#2#',q922).replace('#3#',d922);}
-        if(d923!=''){str += _LifeE.replace('#1#',q923g).replace('#2#',q923).replace('#3#',d923);}
-        if(q924!=''){str += _LifeE.replace('#1#',q924g).replace('#2#',q924).replace('#3#','');}
+        var _LifeE = "[#1#|#2#|#3#|#4#]";
+        if(d869_st!='' || d869_en != ''){str += _LifeE.replace('#1#',q869g).replace('#2#',q869).replace('#3#',d869_st).replace('#4#', d869_en);}
+        if(d870_st!='' || d870_en != ''){str += _LifeE.replace('#1#',q870g).replace('#2#',q870).replace('#3#',d870_st).replace('#4#', d870_en);}
+        if(d871_st!='' || d871_en != ''){str += _LifeE.replace('#1#',q871g).replace('#2#',q871).replace('#3#',d871_st).replace('#4#', d871_en);}
+        if(d872_st!='' || d872_en != ''){str += _LifeE.replace('#1#',q872g).replace('#2#',q872).replace('#3#',d872_st).replace('#4#', d872_en);}
+        if(d873_st!='' || d873_en != ''){str += _LifeE.replace('#1#',q873g).replace('#2#',q873).replace('#3#',d873_st).replace('#4#', d873_en);}
+        if(d874_st!='' || d874_en != ''){str += _LifeE.replace('#1#',q874g).replace('#2#',q874).replace('#3#',d874_st).replace('#4#', d874_en);}
+        if(d875_st!='' || d875_en != ''){str += _LifeE.replace('#1#',q875g).replace('#2#',q875).replace('#3#',d875_st).replace('#4#', d875_en);}
+        if(d876_st!='' || d876_en != ''){str += _LifeE.replace('#1#',q876g).replace('#2#',q876).replace('#3#',d876_st).replace('#4#', d876_en);}
+        if(d877_st!='' || d877_en != ''){str += _LifeE.replace('#1#',q877g).replace('#2#',q877).replace('#3#',d877_st).replace('#4#', d877_en);}
+        if(d878_st!='' || d878_en != ''){str += _LifeE.replace('#1#',q878g).replace('#2#',q878).replace('#3#',d878_st).replace('#4#', d878_en);}
+        if(d879_st!='' || d879_en != ''){str += _LifeE.replace('#1#',q879g).replace('#2#',q879).replace('#3#',d879_st).replace('#4#', d879_en);}
+        if(d880_st!='' || d880_en != ''){str += _LifeE.replace('#1#',q880g).replace('#2#',q880).replace('#3#',d880_st).replace('#4#', d880_en);}
+        if(d881_st!='' || d881_en != ''){str += _LifeE.replace('#1#',q881g).replace('#2#',q881).replace('#3#',d881_st).replace('#4#', d881_en);}
+        if(d882_st!=''){str += _LifeE.replace('#1#',q882g).replace('#2#',q882).replace('#3#',d882_st).replace('#4#', '');}
+        if(d884_st!='' || d884_en != ''){str += _LifeE.replace('#1#',q884g).replace('#2#',q884).replace('#3#',d884_st).replace('#4#', d884_en);}
+        if(d885_st!='' || d885_en != ''){str += _LifeE.replace('#1#',q885g).replace('#2#',q885).replace('#3#',d885_st).replace('#4#', d885_en);}
+        if(d886_st!='' || d886_en != ''){str += _LifeE.replace('#1#',q886g).replace('#2#',q886).replace('#3#',d886_st).replace('#4#', d886_en);}
+        if(d887_st!='' || d887_en != ''){str += _LifeE.replace('#1#',q887g).replace('#2#',q887).replace('#3#',d887_st).replace('#4#', d887_en);}
+        if(d888_st!='' || d888_en != ''){str += _LifeE.replace('#1#',q888g).replace('#2#',q888).replace('#3#',d888_st).replace('#4#', d888_en);}
+        if(d889_st!='' || d889_en != ''){str += _LifeE.replace('#1#',q889g).replace('#2#',q889).replace('#3#',d889_st).replace('#4#', d889_en);}
+        if(d890_st!='' || d890_en != ''){str += _LifeE.replace('#1#',q890g).replace('#2#',q890).replace('#3#',d890_st).replace('#4#', d890_en);}
+        if(d891_st!='' || d891_en != ''){str += _LifeE.replace('#1#',q891g).replace('#2#',q891).replace('#3#',d891_st).replace('#4#', d891_en);}
+        if(d892_st!='' || d892_en != ''){str += _LifeE.replace('#1#',q892g).replace('#2#',q892).replace('#3#',d892_st).replace('#4#', d892_en);}
+        if(d893_st!='' || d893_en != ''){str += _LifeE.replace('#1#',q893g).replace('#2#',q893).replace('#3#',d893_st).replace('#4#', d893_en);}
+        if(d894_st!='' || d894_en != ''){str += _LifeE.replace('#1#',q894g).replace('#2#',q894).replace('#3#',d894_st).replace('#4#', d894_en);}
+        if(d895_st!='' || d895_en != ''){str += _LifeE.replace('#1#',q895g).replace('#2#',q895).replace('#3#',d895_st).replace('#4#', d895_en);}
+        if(d896_st!='' || d896_en != ''){str += _LifeE.replace('#1#',q896g).replace('#2#',q896).replace('#3#',d896_st).replace('#4#', d896_en);}
+        if(d897_st!='' || d897_en != ''){str += _LifeE.replace('#1#',q897g).replace('#2#',q897).replace('#3#',d897_st).replace('#4#', d897_en);}
+        if(d898_st!='' || d898_en != ''){str += _LifeE.replace('#1#',q898g).replace('#2#',q898).replace('#3#',d898_st).replace('#4#', d898_en);}
+        if(d899_st!='' || d899_en != ''){str += _LifeE.replace('#1#',q899g).replace('#2#',q899).replace('#3#',d899_st).replace('#4#', d899_en);}
+        if(d900_st!='' || d900_en != ''){str += _LifeE.replace('#1#',q900g).replace('#2#',q900).replace('#3#',d900_st).replace('#4#', d900_en);}
+        if(d901_st!='' || d901_en != ''){str += _LifeE.replace('#1#',q901g).replace('#2#',q901).replace('#3#',d901_st).replace('#4#', d901_en);}
+        if(d902_st!=''){str += _LifeE.replace('#1#',q902g).replace('#2#',q902).replace('#3#',d902_st).replace('#4#', '');}
+        if(d904_st!='' || d904_en != ''){str += _LifeE.replace('#1#',q904g).replace('#2#',q904).replace('#3#',d904_st).replace('#4#', d904_en);}
+        if(d905_st!='' || d905_en != ''){str += _LifeE.replace('#1#',q905g).replace('#2#',q905).replace('#3#',d905_st).replace('#4#', d905_en);}
+        if(d906_st!='' || d906_en != ''){str += _LifeE.replace('#1#',q906g).replace('#2#',q906).replace('#3#',d906_st).replace('#4#', d906_en);}
+        if(d907_st!='' || d907_en != ''){str += _LifeE.replace('#1#',q907g).replace('#2#',q907).replace('#3#',d907_st).replace('#4#', d907_en);}
+        if(d908_st!='' || d908_en != ''){str += _LifeE.replace('#1#',q908g).replace('#2#',q908).replace('#3#',d908_st).replace('#4#', d908_en);}
+        if(d909_st!='' || d909_en != ''){str += _LifeE.replace('#1#',q909g).replace('#2#',q909).replace('#3#',d909_st).replace('#4#', d909_en);}
+        if(d910_st!='' || d910_en != ''){str += _LifeE.replace('#1#',q910g).replace('#2#',q910).replace('#3#',d910_st).replace('#4#', d910_en);}
+        if(d911_st!='' || d911_en != ''){str += _LifeE.replace('#1#',q911g).replace('#2#',q911).replace('#3#',d911_st).replace('#4#', d911_en);}
+        if(d912_st!='' || d912_en != ''){str += _LifeE.replace('#1#',q912g).replace('#2#',q912).replace('#3#',d912_st).replace('#4#', d912_en);}
+        if(d913_st!='' || d913_en != ''){str += _LifeE.replace('#1#',q913g).replace('#2#',q913).replace('#3#',d913_st).replace('#4#', d913_en);}
+        if(d914_st!='' || d914_en != ''){str += _LifeE.replace('#1#',q914g).replace('#2#',q914).replace('#3#',d914_st).replace('#4#', d914_en);}
+        if(d915_st!='' || d915_en != ''){str += _LifeE.replace('#1#',q915g).replace('#2#',q915).replace('#3#',d915_st).replace('#4#', d915_en);}
+        if(d916_st!='' || d916_en != ''){str += _LifeE.replace('#1#',q916g).replace('#2#',q916).replace('#3#',d916_st).replace('#4#', d916_en);}
+        if(d917_st!=''){str += _LifeE.replace('#1#',q917g).replace('#2#',q917).replace('#3#',d917_st).replace('#4#', '');}
+        if(d919_st!='' || d919_en != ''){str += _LifeE.replace('#1#',q919g).replace('#2#',q919).replace('#3#',d919_st).replace('#4#', d919_en);}
+        if(d920_st!='' || d920_en != ''){str += _LifeE.replace('#1#',q920g).replace('#2#',q920).replace('#3#',d920_st).replace('#4#', d920_en);}
+        if(d921_st!='' || d921_en != ''){str += _LifeE.replace('#1#',q921g).replace('#2#',q921).replace('#3#',d921_st).replace('#4#', d921_en);}
+        if(d922_st!='' || d922_en != ''){str += _LifeE.replace('#1#',q922g).replace('#2#',q922).replace('#3#',d922_st).replace('#4#', d922_en);}
+        if(d923_st!=''){str += _LifeE.replace('#1#',q923g).replace('#2#',q923).replace('#3#',d923_st).replace('#4#', '');}
+        if(q924!=''){str += _LifeE.replace('#1#',q924g).replace('#2#',q924).replace('#3#','').replace('#4#','');}
+
         var url = "/UserQuestion/savequestionsLifeEvent";
 
         //$.post(url, { LifeEvent: str,
@@ -792,10 +793,10 @@
         string returnrsl = "";
         try
         {
-        if(sr[i].Length>0)
-        {
-            returnrsl = sr[i].ToString();
-        }
+            if(sr[i].Length>0)
+            {
+                returnrsl = sr[i].ToString();
+            }
 
 
         }
@@ -807,7 +808,7 @@
 
 
     }
-    
+
     public string GetSelect()
     {
         return "<select class='form-control' qid='#q#' data-tmed='tmed' data-md='m6#q#'>" +
@@ -820,8 +821,8 @@
          "<option value='iu' >IU: International Unit(s)</option>" +
          "<option value='other' >Other</option></select>";
     }
-    
-  
+
+
     public string GetFrequency()
     {
         return "<select class='form-control' qid='#q#' data-tmed='tmed' data-md='m7#q#'   >" +
@@ -839,7 +840,7 @@
      "<option value='11' >11</option> " +
      "<option value='12' >12</option> " +
      "</select>";
-        
+
     }
 
     public string GetHours()
@@ -852,8 +853,8 @@
    "<option value='Month' >Month</option>" +
    "</select>";
     }
-        
-    
+
+
     protected string Option(int qid, string a, string type, string cssclass,string scr,string ans)
     {
 
@@ -921,7 +922,9 @@
                     <div class='col-sm-3'><input class='form-control' data-schdiet='tschdiet' data-id='t2#q#' placeholder='Start (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si1#'></div>
                     <div class='col-sm-3'><input class='form-control' data-schdiet='tschdiet' data-id='t3#q#' placeholder='End (mm-yy)' type='text' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si2#'></div>
                     </div>";
-        var tcheckdate = "<div class='#c#  form-inline'><input type='checkbox' #chk# qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='col-sm-1' style='margin-top:10px;' onclick='enableDate(this,\"q#q#_1\")'><div class='col-sm-10'><input disabled='disabled' placeholder='Select Date' class='form-control _datepicker' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div></div>";
+        var tcheckdate = "<div class='#c#  form-inline'><input type='checkbox' #chk# qid='#q#' name='q#q#' id='q#q#_#i#' value='#si#' class='col-sm-1' style='margin-top:10px;' onclick='enableDate(this,\"q#q#_1\")'>"+
+                    "<div class='col-sm-5'><input disabled='disabled' placeholder='Select Start Date' class='form-control _datepicker q#q#_1' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div>" +
+                    "<div class='col-sm-5'><input disabled='disabled' placeholder='Select End Date' class='form-control _datepicker q#q#_1' type='text' qid='#q#' name='q#q#' id='q#q#_1' value='#si#'></div></div>";
         var ttextdate = "<div class='#c#  form-inline'>" +
                          "<input type='text' placeholder='Details' qid='#q#' name='q#q#' id='q#q#_#i#' value='#si0#' class='form-control _txtdatepicker' style='width:68%;' onkeyup='enabletextDate(this,\"q#q#_1\")'>" +
                          "<input type='text' disabled='disabled'  placeholder='Select Date' qid='#q#' name='q#q#' id='q#q#_1' value='#si1#' class='form-control _datepicker'></div>";
@@ -932,7 +935,7 @@
         if (scr!="")
         {
 
-           sr = scr.Split('|');
+            sr = scr.Split('|');
         }
         for (int i = 0; i < s.Length; i++)
         {
@@ -960,22 +963,22 @@
             }
             else if (type == "checkbox")
             {
-                 for (int j = 0; j < s.Length; j++)
-            {
-                for (int k = 0; k < multians.Length; k++)
+                for (int j = 0; j < s.Length; j++)
                 {
-                    if (s[i].ToString() == multians[k])
+                    for (int k = 0; k < multians.Length; k++)
                     {
-                        att = "checked";
-                        break;
+                        if (s[i].ToString() == multians[k])
+                        {
+                            att = "checked";
+                            break;
+                        }
+                        else
+                        {
+                            att = "";
+                        }
                     }
-                    else
-                    {
-                        att = "";
-                    }
+                    break;
                 }
-                break;
-            }
 
                 temp += tcheckbox.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si#", s[i]).Replace("#sc#", GetArrayValue(sr, i)).Replace("#chk#", att);
             }
@@ -999,7 +1002,7 @@
                 {
                     var selectedoption = ans;
                     selectedvalue = "selected";
-                   // break;
+                    // break;
                 }
                 else
                 {
@@ -1024,14 +1027,14 @@
             }
             else if (type == "med")
             {
-               
+
                 var tempansvalue = "";
                 if (multians.Length >= 8 )
                 {
 
-                    
+
                     tempansvalue = tmed.Replace("#c#", cssclass).Replace("#q#", qid.ToString()).Replace("#i#", i.ToString()).Replace("#si1#", multians[0]).Replace("#si2#", multians[1]).Replace("#si4#", multians[2]).Replace("#si5#", multians[3]).Replace("#si6#", multians[7]).Replace("'" + multians[4] + "'", "'" + multians[4] + "' selected='selected'").Replace("'" + multians[5] + "'", "'" + multians[5] + "' selected='selected'").Replace("'" + multians[6] + "'", "'" + multians[6] + "' selected='selected'");
-                    if (multians[4] == "other") { tempansvalue = tempansvalue.Replace("none", "block"); } 
+                    if (multians[4] == "other") { tempansvalue = tempansvalue.Replace("none", "block"); }
                 }
                 else
                 {

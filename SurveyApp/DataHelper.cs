@@ -393,6 +393,7 @@ namespace SurveyApp
                 string EventCategory,
                 string EventName,
                 string EventDate,
+                string EventEndDate,
                 string DateSubmitted,
                 int ChildID,
                 int UserID)
@@ -401,7 +402,8 @@ namespace SurveyApp
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add("@EventCategory", SqlDbType.NVarChar); 
             cmd.Parameters.Add("@EventName", SqlDbType.NVarChar); 
-            cmd.Parameters.Add("@EventDate", SqlDbType.DateTime); 
+            cmd.Parameters.Add("@EventDate", SqlDbType.DateTime);
+            cmd.Parameters.Add("@EventEndDate", SqlDbType.DateTime);
             cmd.Parameters.Add("@DateSubmitted", SqlDbType.DateTime); 
             cmd.Parameters.Add("@ChildID", SqlDbType.Int);
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
@@ -409,6 +411,7 @@ namespace SurveyApp
             cmd.Parameters["@EventCategory"].Value =IfDBNULL(EventCategory);
             cmd.Parameters["@EventName"].Value     =IfDBNULL(EventName);
             cmd.Parameters["@EventDate"].Value     =IfDBNULL(EventDate);
+            cmd.Parameters["@EventEndDate"].Value = IfDBNULL(EventEndDate);
             cmd.Parameters["@DateSubmitted"].Value = DateTime.Now;
             cmd.Parameters["@ChildID"].Value       =ChildID ;
             cmd.Parameters["@UserID"].Value = UserID;
