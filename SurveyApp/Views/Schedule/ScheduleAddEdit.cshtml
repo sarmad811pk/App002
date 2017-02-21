@@ -72,7 +72,7 @@
         <div class="col-sm-8">
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "1", new { name = "optradio", onclick = "$('#divDays').hide();$('#DaysToRepeat').removeClass('inerror');" })Once</label></div>
             <div class="radio-inline"><label>@Html.RadioButtonFor(m => m.Frequency, "2", new { name = "optradio", onclick = "$('#divDays').show();" })Repeat</label></div>
-        </div>
+        </div>        
     </div>
 
     <div id="divDays" class="_panel form-group" style="display:none;">
@@ -96,18 +96,28 @@
         <label class="control-label col-sm-4">Specify Period:*</label>
         <div class="col-sm-8">
             <div class="specify" data-toggle="tooltip" title="Please note this selection will be applicable for the future dates.">
-                <table cellpadding="0" cellspacing="0" style="width:100%;">                    
+                <table cellpadding="0" cellspacing="0" style="width:100%;">                                        
                     <tr>
                         <td>
                             <div class="monthly">                                
-                                @Html.DropDownListFor(m => m.Day, new SelectList(ScheduleDay.GetScheduleDays(), "Id", "Value"), "Select Day", new { id = "ddlDays", @class = "form-control", style = "width: 49%;display: inline-block;", onchange = "setPeriodSpecification(1);" })                                
-                                @Html.DropDownListFor(m => m.Month, new SelectList(ScheduleMonth.GetScheduleMonths(), "Id", "Month"), "Select Month", new { id = "ddlMonths", @class = "form-control", style = "width: 49%;display: inline-block;", onchange = "setPeriodSpecification(1);" })
+                                @Html.DropDownListFor(m => m.Day, new SelectList(ScheduleDay.GetScheduleDays(), "Id", "Value"), "Select Day", new { id = "ddlDays", @class = "form-control ddlperiod", style = "width: 49%;display: inline-block;", onchange = "setPeriodSpecification(1);" })                                
+                                @Html.DropDownListFor(m => m.Month, new SelectList(ScheduleMonth.GetScheduleMonths(), "Id", "Month"), "Select Month", new { id = "ddlMonths", @class = "form-control ddlperiod", style = "width: 49%;display: inline-block;", onchange = "setPeriodSpecification(1);" })
                             </div>
                         </td>
                         <td style="text-align:center;"><b>&nbsp;OR&nbsp;</b></td>
                         <td>
                             <div class="weekly">
-                                @Html.DropDownListFor(m => m.Weekday, new SelectList(ScheduleWeekday.GetScheduleWeekdays(), "Id", "Weekday"), "Select Weekday", new { id = "ddlWeekdays", @class = "form-control", onchange = "setPeriodSpecification(2);" })
+                                @Html.DropDownListFor(m => m.Weekday, new SelectList(ScheduleWeekday.GetScheduleWeekdays(), "Id", "Weekday"), "Select Weekday", new { id = "ddlWeekdays", @class = "form-control ddlperiod", onchange = "setPeriodSpecification(2);" })
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div style="margin-top: 10px;border-top: solid 1px #CCC;padding-top: 10px;">
+                                <label class="control-label col-sm-4">Starting Year:*</label>
+                                <div class="col-sm-8">
+                                    @Html.DropDownListFor(m => m.StartingYear, new SelectList(ScheduleYear.GetScheduleYears(), "Id", "Year", Model.StartingYear), "Select Year", new { id = "ddlStartingYear", @class = "form-control ddlperiod", style = "width: 50%;display: inline-block;" })
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -157,6 +167,9 @@
         });
 
         $("input[type=text]").keyup(function () {
+            $(this).removeClass("inerror");
+        });
+        $(".ddlperiod").change(function () {
             $(this).removeClass("inerror");
         });
 
@@ -251,11 +264,29 @@
     }
 
     function validateSchedule() {
-        /* SCHEDULE VALIDATION */
+        /* SCHEDULE VALIDATION */        
         var errors = "";
         if ($("#Title").val() == "") {            
             $("#Title").addClass("inerror");
             errors += "<li>Please enter title.</li>";
+        }
+        if ($("#divSpecify").is(":visible")) {
+            if ($("#ddlStartingYear").val() == "") {
+                $("#ddlStartingYear").addClass("inerror");
+                errors += "<li>Please select a starting year for the schedule.</li>";
+            }
+
+            if ($("#ddlWeekdays").val() == "") {
+                if ($("#ddlDays").val() == "") {
+                    $("#ddlDays").addClass("inerror");
+                    errors += "<li>Please select a day for the schedule.</li>";
+                }
+                if ($("#ddlMonths").val() == "") {
+                    $("#ddlMonths").addClass("inerror");
+                    errors += "<li>Please select a month year for the schedule.</li>";
+                }
+            }
+            
         }
 
         if (document.getElementsByName("Frequency")[0].checked == false && document.getElementsByName("Frequency")[1].checked == false) {

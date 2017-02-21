@@ -38,7 +38,8 @@ namespace SurveyApp.Models
         [Required(ErrorMessage = "Please enter no. of days for reminder frequency")]
         public int ReminderFrequency { get; set; }
         [Required(ErrorMessage = "Please enter no. of days for last reminder")]
-        public int LastReminder { get; set; }
+        public int LastReminder { get; set; }        
+        public int? StartingYear { get; set; }
     }
 
     public class ScheduleDay
@@ -161,6 +162,23 @@ namespace SurveyApp.Models
             if (weekday == 7) { return "Sunday"; }            
 
             return "";
+        }
+    }
+
+    public class ScheduleYear
+    {
+        public int Id { get; set; }
+        public int Year { get; set; }
+
+        public static List<ScheduleYear> GetScheduleYears()
+        {
+            List<ScheduleYear> lstYears = new List<ScheduleYear>();
+            for (int i = 2016; i <= DateTime.Now.Year + 4; i++)
+            {
+                lstYears.Add(new ScheduleYear { Id = i, Year = i });
+            }
+
+            return lstYears;
         }
     }
 

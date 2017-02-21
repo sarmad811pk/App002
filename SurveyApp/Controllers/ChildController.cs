@@ -148,11 +148,11 @@ namespace SurveyApp.Controllers
                     objChild.ParentId = childModel.ParentId;
                     objChild.SchoolId = childModel.SchoolId;
                     objChild.StatusId = childModel.StatusId;
-                    if(childModel.StatusId == 1 && objChild.EnrollmentDate == null)
+                    if (childModel.StatusId == 1 && objChild.EnrollmentDate == null)
                     {
-                        objChild.EnrollmentDate = DateTime.Now;                        
+                        objChild.EnrollmentDate = DateTime.Now;
                     }
-                    if(childModel.Id <= 0)
+                    if (childModel.Id <= 0)
                     { 
                         if (childModel.StatusId != 1)
                         { 
@@ -363,8 +363,12 @@ namespace SurveyApp.Controllers
 
                                             string weekday = collection["ddlWeekdays_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
                                             objCSS.Weekday = String.IsNullOrEmpty(weekday) ? 0 : Convert.ToInt32(weekday);
+
+                                            string startingYear = collection["ddlStartingYear_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                            objCSS.StartingYear = String.IsNullOrEmpty(startingYear) ? 0 : Convert.ToInt32(startingYear);
                                         }
 
+                                        cCSS.Children_Studies_Schedules.RemoveRange(cCSS.Children_Studies_Schedules.Where(css => css.ChildId == objCSS.ChildId && css.StudyId == objCSS.StudyId && css.ScheduleId == objCSS.ScheduleId));
                                         cCSS.Children_Studies_Schedules.Add(objCSS);                                        
                                     }
                                 }
@@ -507,13 +511,13 @@ namespace SurveyApp.Controllers
                                             DateTime specificWeekday = DateTime.MinValue;
                                             if (objSchedule.Weekday > 0)
                                             {
-                                                specificWeekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                specificWeekday = new DateTime(objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year, DateTime.Now.Month, 1);
                                                 while (specificWeekday.DayOfWeek != (DayOfWeek)(objSchedule.Weekday - 1))
                                                 {
                                                     specificWeekday = specificWeekday.AddDays(1);
                                                 }
                                             }
-                                            DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
+                                            DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
 
                                             DateTime endDate = DateTime.MinValue;
 
@@ -529,25 +533,32 @@ namespace SurveyApp.Controllers
                                                 int activeOn = objSchedule.ActiveOn;
                                                 using (var cCSS = new Child_Study_ScheduleContext())
                                                 {
-                                                    Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
-                                                    foreach (Child_Study_Schedule css in cStudySchedules)
+                                                    Child_Study_Schedule objChild_Study_Schedule = cCSS.Children_Studies_Schedules.FirstOrDefault(css => css.ChildId == childModel.Id);
+                                                    if (objChild_Study_Schedule != null)
                                                     {
-                                                        if (css.StudyId == studyId && css.ScheduleId == objSSS.ScheduleIdParent)
+                                                        Child_Study_Schedule[] cStudySchedules = cCSS.Children_Studies_Schedules.Where(cs => cs.ChildId == childModel.Id).ToArray();
+                                                        if (cStudySchedules.Length > 0)
                                                         {
-                                                            DateTime weekday = DateTime.MinValue;
-                                                            if (css.Weekday > 0)
+                                                            foreach (Child_Study_Schedule css in cStudySchedules)
                                                             {
-                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                                                                while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                if (css.StudyId == studyId && css.ScheduleId == objSSS.ScheduleIdParent)
                                                                 {
-                                                                    weekday = weekday.AddDays(1);
+                                                                    DateTime weekday = DateTime.MinValue;
+                                                                    if (css.Weekday > 0)
+                                                                    {
+                                                                        weekday = new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), DateTime.Now.Month, 1);
+                                                                        while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
+                                                                        {
+                                                                            weekday = weekday.AddDays(1);
+                                                                        }
+                                                                    }
+
+                                                                    activeOn = css.ActiveOn;
+                                                                    specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
                                                                 }
                                                             }
-
-                                                            activeOn = css.ActiveOn;
-                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
                                                         }
-                                                    }
+                                                    }                                                                                                        
                                                 }
 
                                                 if (activeOn == 1)
@@ -612,7 +623,7 @@ namespace SurveyApp.Controllers
                                                             DateTime weekday = DateTime.MinValue;
                                                             if (css.Weekday > 0)
                                                             {
-                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                weekday = new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), DateTime.Now.Month, 1);
                                                                 while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
                                                                 {
                                                                     weekday = weekday.AddDays(1);
@@ -620,7 +631,7 @@ namespace SurveyApp.Controllers
                                                             }
 
                                                             activeOn = css.ActiveOn;
-                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
                                                         }
                                                     }
                                                 }
@@ -697,14 +708,14 @@ namespace SurveyApp.Controllers
                                             DateTime specificWeekday = DateTime.MinValue;
                                             if (objSchedule.Weekday > 0)
                                             {
-                                                specificWeekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                specificWeekday = new DateTime(objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year, DateTime.Now.Month, 1);
                                                 while (specificWeekday.DayOfWeek != (DayOfWeek)(objSchedule.Weekday - 1))
                                                 {
                                                     specificWeekday = specificWeekday.AddDays(1);
                                                 }
                                             }
 
-                                            DateTime specificDate = objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
+                                            DateTime specificDate = objSchedule.Month != null ? new DateTime(objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
                                             DateTime endDate = DateTime.MinValue;
 
                                             if (objSchedule.Frequency == 1)
@@ -727,7 +738,7 @@ namespace SurveyApp.Controllers
                                                             DateTime weekday = DateTime.MinValue;
                                                             if (css.Weekday > 0)
                                                             {
-                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                weekday = new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), DateTime.Now.Month, 1);
                                                                 while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
                                                                 {
                                                                     weekday = weekday.AddDays(1);
@@ -735,7 +746,7 @@ namespace SurveyApp.Controllers
                                                             }
 
                                                             activeOn = css.ActiveOn;
-                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
                                                         }
                                                     }
                                                 }
@@ -802,7 +813,7 @@ namespace SurveyApp.Controllers
                                                             DateTime weekday = DateTime.MinValue;
                                                             if (css.Weekday > 0)
                                                             {
-                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                weekday = new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), DateTime.Now.Month, 1);
                                                                 while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
                                                                 {
                                                                     weekday = weekday.AddDays(1);
@@ -810,7 +821,7 @@ namespace SurveyApp.Controllers
                                                             }
 
                                                             activeOn = css.ActiveOn;
-                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
                                                         }
                                                     }
                                                 }
@@ -887,13 +898,13 @@ namespace SurveyApp.Controllers
                                             DateTime specificWeekday = DateTime.MinValue;
                                             if (objSchedule.Weekday > 0)
                                             {
-                                                specificWeekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                specificWeekday = new DateTime(objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year, DateTime.Now.Month, 1);
                                                 while (specificWeekday.DayOfWeek != (DayOfWeek)(objSchedule.Weekday - 1))
                                                 {
                                                     specificWeekday = specificWeekday.AddDays(1);
                                                 }
                                             }
-                                            DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
+                                            DateTime specificDate = objSchedule.Day != null && objSchedule.Month != null ? new DateTime(objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year, (int)objSchedule.Month, (int)objSchedule.Day) : (objSchedule.Weekday > 0 ? specificWeekday : DateTime.MinValue);
 
                                             DateTime endDate = DateTime.MinValue;
 
@@ -918,7 +929,7 @@ namespace SurveyApp.Controllers
                                                             DateTime weekday = DateTime.MinValue;
                                                             if (css.Weekday > 0)
                                                             {
-                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                weekday = new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), DateTime.Now.Month, 1);
                                                                 while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
                                                                 {
                                                                     weekday = weekday.AddDays(1);
@@ -926,7 +937,7 @@ namespace SurveyApp.Controllers
                                                             }
 
                                                             activeOn = css.ActiveOn;
-                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
                                                         }
                                                     }
                                                 }
@@ -993,7 +1004,7 @@ namespace SurveyApp.Controllers
                                                             DateTime weekday = DateTime.MinValue;
                                                             if (css.Weekday > 0)
                                                             {
-                                                                weekday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                                                                weekday = new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), DateTime.Now.Month, 1);
                                                                 while (weekday.DayOfWeek != (DayOfWeek)(css.Weekday - 1))
                                                                 {
                                                                     weekday = weekday.AddDays(1);
@@ -1001,7 +1012,7 @@ namespace SurveyApp.Controllers
                                                             }
 
                                                             activeOn = css.ActiveOn;
-                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(DateTime.Now.Year, (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
+                                                            specificDate = css.Day > 0 && css.Month > 0 ? new DateTime(css.StartingYear > 0 ? css.StartingYear : (objSchedule.StartingYear.HasValue ? objSchedule.StartingYear.Value : DateTime.Now.Year), (int)css.Month, (int)css.Day) : (css.Weekday > 0 ? weekday : DateTime.MinValue);
                                                         }
                                                     }
                                                 }

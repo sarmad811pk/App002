@@ -128,7 +128,7 @@ namespace SurveyApp.Models
 
             lstEnroll.Add(new EnrollmentStatus() { Id = 1, Status = "Enrolled" });
             lstEnroll.Add(new EnrollmentStatus() { Id = 2, Status = "Lost Followup" });
-            lstEnroll.Add(new EnrollmentStatus() { Id = 3, Status = "With Drew Consent" });
+            lstEnroll.Add(new EnrollmentStatus() { Id = 3, Status = "Withdrew Consent" });
             lstEnroll.Add(new EnrollmentStatus() { Id = 4, Status = "No Longer at School" });
 
             return lstEnroll;
@@ -148,6 +148,7 @@ namespace SurveyApp.Models
         public int Day { get; set; }
         public int Month { get; set; }
         public int Weekday { get; set; }
+        public int StartingYear { get; set; }
     }
 
     public class Child_Study_ScheduleContext : DbContext

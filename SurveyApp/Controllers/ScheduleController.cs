@@ -111,12 +111,14 @@ namespace SurveyApp.Controllers
                     objSchedule.Month = mSchedule.Month.HasValue == true ? mSchedule.Month.Value : 0;
                     objSchedule.ReminderFrequency = mSchedule.ReminderFrequency;
                     objSchedule.Title = mSchedule.Title;
+                    objSchedule.StartingYear = mSchedule.StartingYear;
                     objSchedule.Weekday = mSchedule.Weekday.HasValue == true ? mSchedule.Weekday.Value : 0;
                     if(mSchedule.ActiveOn == 1)
                     {
                         objSchedule.Day = null;
                         objSchedule.Month = null;
                         objSchedule.Weekday = null;
+                        objSchedule.StartingYear = null;
                     }
                     else
                     {
