@@ -614,8 +614,12 @@
                                         <div indexer="@indexLE" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(indexLE > 5 ? "display:none;" : "")" class="event item">
                                             @*<div style="text-transform:capitalize;"><b>@dr["EventCategory"]</b></div>*@
                                             <div style="overflow:hidden;position:relative;@( @dr["EventName"].ToString() == "" ? "display:none;" : "") " title="@dr["EventCategory"]" data-toggle='tooltip'>
-                                                <div style="float:left;font-weight:bold;">@dr["EventName"]</div>
-                                                <div style="text-align:right;float:left;@(@dr["EventDate"].ToString() == "" ? "display:none;" : "") ">&nbsp;on @dr["EventDate"]</div>
+                                                <div style="float:left;font-weight:bold;">@dr["EventName"]</div><br />
+                                                <div style="text-align:right;float:left;text-align:left;@(@dr["EventDate"].ToString() == "" ? "display:none;" : "") ">Started: @dr["EventDate"] 
+                                                @if (dr["EventEndDate"] != DBNull.Value && string.IsNullOrEmpty(dr["EventEndDate"].ToString()) == false) {
+                                                    <span>, Ended: @dr["EventEndDate"]</span>
+                                                }
+                                                </div>
                                                 <a href="javascript:void(0);" style="color: #FFF;top:0px;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeenvent', '@dr["EventName"]');"></a>
                                             </div>
                                         </div>
