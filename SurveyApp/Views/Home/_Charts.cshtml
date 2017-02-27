@@ -23,6 +23,11 @@
 
 
     DataSet dsCharts = SurveyApp.DataHelper.DashboardGetGraphs(studyId, WebSecurity.CurrentUserId, childId);
+    
+    if(dsCharts.Tables.Count > 7 && dsCharts.Tables[7] != null)
+    {
+        dtSurveys = dsCharts.Tables[7];
+    }
 
     string dASP = "", pASP = "", tASP = "";
     string dABC = "", pABC = "", tABC = "", pSRS = "", tSRS = "";
@@ -761,6 +766,32 @@
     }
     #endregion
 
+}
+
+@functions{
+    DataTable dtSurveys;
+    public bool isSurveyAssigned(int surveyId, string roleType, string roleTypeOther = "", int? surveyIdOther = null) {
+        bool isSurveyFound = false;
+        if(dtSurveys.Rows.Count > 0)
+        {
+            foreach (DataRow dr in dtSurveys.Rows)
+            {
+                if(Convert.ToInt32(dr["SurveyId"]) == surveyId && (Convert.ToBoolean(dr["AssignedTo" + roleType]) == true || (roleTypeOther != "" && Convert.ToBoolean(dr["AssignedTo" + roleTypeOther]) == true)))
+                {
+                    isSurveyFound = true;
+                }
+                if (surveyIdOther.HasValue)
+                {
+                    if (Convert.ToInt32(dr["SurveyId"]) == surveyIdOther && (Convert.ToBoolean(dr["AssignedTo" + roleType]) == true || (roleTypeOther != "" && Convert.ToBoolean(dr["AssignedTo" + roleTypeOther]) == true)))
+                    {
+                        isSurveyFound = true;
+                    }
+                }
+            }
+        }
+
+        return isSurveyFound;
+    }
 }
 
 
@@ -2811,7 +2842,7 @@
         border-bottom: solid 1px #CCC;
         right: -1px;
     }
-    .gDetails .row{
+    .gDetails .surveygraph{
         border-bottom: solid 1px #EDEDED;
     }
 </style>
@@ -3102,23 +3133,41 @@
         <td style="width: 84%;border: solid 1px #CCC;">
             <div class="gDetails">
                 <div class="row parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6"><div class="dvABCGroup"></div></div>
-                    <div class="col-sm-6"><div class="dvSRSGroup"></div></div>
+                    @if (isSurveyAssigned(4, "Parent"))
+                    {
+                        <div class="col-sm-12"><div class="dvABCGroup surveygraph" surveyid="4"></div></div>
+                    }                    
+                    @if (isSurveyAssigned(5, "Parent"))
+                    {
+                        <div class="col-sm-12"><div class="dvSRSGroup surveygraph" surveyid="5"></div></div>
+                    }                    
                 </div>
                 @if (role != "" && role != "Parent")
                 {
                     <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                        <div class="col-sm-6"><div class="dvABCGroupTeacher"></div></div>
-                        <div class="col-sm-6"><div class="dvSRSGroupTeacher"></div></div>
+                        @if (isSurveyAssigned(4, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div class="dvABCGroupTeacher surveygraph" surveyid="4"></div></div>
+                        }                        
+                        @if (isSurveyAssigned(5, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div class="dvSRSGroupTeacher surveygraph" surveyid="5"></div></div>
+                        }                        
                     </div>
 
                     <div class="row parentteacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
-                        <div class="col-sm-6 parentteacher" style="background-color:transparent;">
-                            <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
-                        <div class="col-sm-6 parentteacher" style="background-color:transparent;">
-                            <div id="AbbreviatedSensoryProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
+                        @if (isSurveyAssigned(4, "Parent", "Teacher", 5))
+                        {
+                            <div class="col-sm-12 parentteacher" style="background-color:transparent;">
+                                <div id="ABCSRScontainer" style="min-width: 310px; height: 400px; margin: 0 auto" class="surveygraph"></div>
+                            </div>
+                        }                        
+                        @if (isSurveyAssigned(1, "Parent", "Teacher"))
+                        {
+                            <div class="col-sm-12 parentteacher" style="background-color:transparent;">
+                                <div id="AbbreviatedSensoryProfile" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="1" class="surveygraph"></div>
+                            </div>
+                        }                        
                     </div>
                 }
                 
@@ -3126,43 +3175,67 @@
                 
 
                 <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6 parent" style="background-color:transparent;">
-                        <div id="ABCSubCategoriesParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>                    
-                    <div class="col-sm-6 parent" style="background-color:transparent;">
-                        <div id="SRSSubScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
+                    @if (isSurveyAssigned(4, "Parent"))
+                    {
+                        <div class="col-sm-12 parent" style="background-color:transparent;">
+                            <div id="ABCSubCategoriesParent" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="4" class="surveygraph"></div>
+                        </div>
+                    }                    
+                    @if (isSurveyAssigned(5, "Parent"))
+                    {
+                        <div class="col-sm-12 parent" style="background-color:transparent;">
+                            <div id="SRSSubScale" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="5" class="surveygraph"></div>
+                        </div>
+                    }                    
                 </div>
 
                 @if (role != "" && role != "Parent")
                 {
                     <div class="row voffset teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                        <div class="col-sm-6 teacher" style="background-color:transparent;">
-                            <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
-                        <div class="col-sm-6 teacher" style="background-color:transparent;">
-                            <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
+                        @if (isSurveyAssigned(4, "Teacher"))
+                        {
+                            <div class="col-sm-12 teacher" style="background-color:transparent;">
+                                <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="4" class="surveygraph"></div>
+                            </div>
+                        }                        
+                        @if (isSurveyAssigned(5, "Teacher"))
+                        {
+                            <div class="col-sm-12 teacher" style="background-color:transparent;">
+                                <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="5" class="surveygraph"></div>
+                            </div>
+                        }
                         @*<div class="col-sm-6" style="background-color:transparent;">
                                 <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                             </div>*@
                     </div>
 
                     <div class="row voffset studentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
-                        <div class="col-sm-6 student" style="background-color:transparent;">
-                            <div id="PedsQLParentS" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
+                        @if (isSurveyAssigned(45, "Student"))
+                        {
+                            <div class="col-sm-12 student" style="background-color:transparent;">
+                                <div id="PedsQLParentS" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="45" class="surveygraph"></div>
+                            </div>
+                        }
+                        else {
+                            <div style="text-align: center;"><p>There is no survey assigned to students in this study</p></div>
+                        }
                     </div>
                 }
                 
 
                 <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">                    
-                    <div class="col-sm-6 parent" style="background-color:transparent;">
-                        <div id="PedsQLParent" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
-                    <div class="col-sm-6 parent" style="background-color:transparent;">
-                        <div id="CaregiverStrainQuesionaire" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
+                    @if (isSurveyAssigned(6, "Parent"))
+                    {
+                        <div class="col-sm-12 parent" style="background-color:transparent;">
+                            <div id="PedsQLParent" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="6" class="surveygraph"></div>
+                        </div>
+                    }                    
+                    @if (isSurveyAssigned(2, "Parent"))
+                    {
+                        <div class="col-sm-12 parent" style="background-color:transparent;">
+                            <div id="CaregiverStrainQuesionaire" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="2" class="surveygraph"></div>
+                        </div>
+                    }                    
                 </div>
 
                 
@@ -3174,26 +3247,38 @@
                 </div>*@
 
                 <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6 parent" style="background-color:transparent;">
-                        <div id="FamilyEmpowementScale" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
-                    <div class="col-sm-6 parent" style="background-color:transparent;">
-                        <div id="GISeverityIndex" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                    </div>
+                    @if (isSurveyAssigned(14, "Parent"))
+                    {
+                        <div class="col-sm-12 parent" style="background-color:transparent;">
+                            <div id="FamilyEmpowementScale" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="14" class="surveygraph"></div>
+                        </div>
+                    }                    
+                    @if (isSurveyAssigned(3, "Parent"))
+                    {
+                        <div class="col-sm-12 parent" style="background-color:transparent;">
+                            <div id="GISeverityIndex" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="3" class="surveygraph"></div>
+                        </div>
+                    }                    
                 </div>
 
                 @if (role != "" && role != "Parent")
                 {
                     <div class="row voffset teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                        <div class="col-sm-6 teacher" style="background-color:transparent;">
-                            <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
+                        @if (isSurveyAssigned(27, "Teacher"))
+                        {
+                            <div class="col-sm-12 teacher" style="background-color:transparent;">
+                                <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="27" class="surveygraph"></div>
+                            </div>
+                        }
                         @*<div class="col-sm-6" style="background-color:transparent;">
                                 <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                             </div>*@
-                        <div class="col-sm-6" style="background-color:transparent;">
-                            <div id="divSCQTeacher" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-                        </div>
+                        @if (isSurveyAssigned(11, "Teacher"))
+                        {
+                            <div class="col-sm-12" style="background-color:transparent;">
+                                <div id="divSCQTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="11" class="surveygraph"></div>
+                            </div>
+                        }                        
                     </div>
                 }
                 
@@ -3211,32 +3296,62 @@
                 
 
                 <div class="row parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6"><div id="pADAM"></div></div>
-                    <div class="col-sm-6"><div id="pVanderbilt"></div></div>
+                    @if (isSurveyAssigned(35, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="pADAM" surveyid="35" class="surveygraph"></div></div>
+                    }                    
+                    @if (isSurveyAssigned(34, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="pVanderbilt" surveyid="34" class="surveygraph"></div></div>
+                    }                    
                 </div>
 
                 @if (role != "" && role != "Parent")
                 {
                     <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                        <div class="col-sm-6"><div id="tADAM"></div></div>
-                        <div class="col-sm-6"><div id="tVanderbilt"></div></div>
+                        @if (isSurveyAssigned(35, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div id="tADAM" surveyid="35" class="surveygraph"></div></div>
+                        }                        
+                        @if (isSurveyAssigned(34, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div id="tVanderbilt" surveyid="34" class="surveygraph"></div></div>
+                        }                        
                     </div>
                 }
                 
 
                 <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6"><div id="divSCQ"></div></div>
-                    <div class="col-sm-6"><div id="divpSLP"></div></div>                    
+                    @if (isSurveyAssigned(11, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="divSCQ" surveyid="11" class="surveygraph"></div></div>
+                    }                    
+                    @if (isSurveyAssigned(10, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="divpSLP" surveyid="10" class="surveygraph"></div></div>
+                    }                    
                 </div>
 
                 <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6"><div id="divpInsomn"></div></div>
-                    <div class="col-sm-6"><div id="divpConnor"></div></div>
+                    @if (isSurveyAssigned(12, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="divpInsomn" surveyid="12" class="surveygraph"></div></div>
+                    }                    
+                    @if (isSurveyAssigned(13, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="divpConnor" surveyid="13" class="surveygraph"></div></div>
+                    }                    
                 </div>
 
                 <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                    <div class="col-sm-6"><div id="divpFeedback"></div></div>
-                    <div class="col-sm-6"><div id="divpPAS"></div></div>                    
+                    @if (isSurveyAssigned(15, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="divpFeedback" surveyid="15" class="surveygraph"></div></div>
+                    }                    
+                    @if (isSurveyAssigned(48, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="divpPAS" surveyid="48" class="surveygraph"></div></div>
+                    }                    
                 </div>
                 @*<div class="row voffset">
                     <div class="col-sm-6" style="background-color:transparent;">
@@ -3247,22 +3362,37 @@
                 </div>
                 </div>*@
                 <div class="row voffset parentdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
-                    <div id="divParentVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    @if (isSurveyAssigned(46, "Parent"))
+                    {
+                        <div class="col-sm-12"><div id="divParentVineland" class="surveygraph" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="46"></div></div>
+                    }                    
                 </div>
 
                 @if (role != "" && role != "Parent")
                 {                    
                     <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                        <div class="col-sm-6"><div id="divTQuerterly"></div></div>
-                        <div class="col-sm-6"><div id="divtConnor"></div></div>
+                        @if (isSurveyAssigned(49, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div id="divTQuerterly" surveyid="49" class="surveygraph"></div></div>
+                        }                        
+                        @if (isSurveyAssigned(13, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div id="divtConnor" surveyid="13" class="surveygraph"></div></div>
+                        }                        
                     </div>
 
                     <div class="row teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;">
-                        <div class="col-sm-6"><div id="divtFeedback"></div></div>                        
+                        @if (isSurveyAssigned(15, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div id="divtFeedback" surveyid="15" class="surveygraph"></div></div>
+                        }
                     </div>
 
                     <div class="row voffset teacherdiv" style="overflow:hidden;padding-top:8px;margin:0px 0px 10px 0px;border-bottom:none;">
-                        <div id="divTeacherVineland" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        @if (isSurveyAssigned(47, "Teacher"))
+                        {
+                            <div class="col-sm-12"><div id="divTeacherVineland" class="surveygraph" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="47"></div></div>
+                        }                       
                     </div>
                 }
                 
@@ -3280,7 +3410,7 @@
         $(".weeklydiv").hide();
         $(".lifeeventsdiv").hide();
     });
-    
+
     function showGraphsSection(elem, type) {
         $(".parentdiv").hide();
         $(".teacherdiv").hide();
@@ -3312,5 +3442,27 @@
         }
 
         //$(window).resize();
+    }
+
+    function setGraphsVisibility() {
+        var arr = "";
+        if (arr.length > 0) {
+            $(".surveygraph").each(function (index, obj) {
+                var surveyId = $(obj).attr("surveyid");
+                var isSurveyFound = false;
+                if (surveyId != null && surveyId != undefined) {
+                    for (var i = 0; i < arr.length; i++) {
+
+                        if (surveyId == arr[i]) {
+                            isSurveyFound = true;
+                            break;
+                        }
+                    }
+                    if (isSurveyFound == false) {
+                        $(obj).parent("div.col-sm-12").hide();
+                    }
+                }
+            });
+        }        
     }
 </script>
