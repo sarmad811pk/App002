@@ -10,7 +10,7 @@
 
     string[] roles = Roles.GetRolesForUser(User.Identity.Name);
     string role = roles.Length > 0 ? roles[0] : "";
-
+    bool isAssignedToTeacher = false;
     //string childName = "";
     //if(childId > 0)
     //{
@@ -3148,10 +3148,12 @@
                         @if (isSurveyAssigned(4, "Teacher"))
                         {
                             <div class="col-sm-12"><div class="dvABCGroupTeacher surveygraph" surveyid="4"></div></div>
+                            isAssignedToTeacher = true;
                         }                        
                         @if (isSurveyAssigned(5, "Teacher"))
                         {
                             <div class="col-sm-12"><div class="dvSRSGroupTeacher surveygraph" surveyid="5"></div></div>
+                            isAssignedToTeacher = true;
                         }                        
                     </div>
 
@@ -3197,12 +3199,14 @@
                             <div class="col-sm-12 teacher" style="background-color:transparent;">
                                 <div id="ABCSubCategoryTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="4" class="surveygraph"></div>
                             </div>
+                            isAssignedToTeacher = true;
                         }                        
                         @if (isSurveyAssigned(5, "Teacher"))
                         {
                             <div class="col-sm-12 teacher" style="background-color:transparent;">
                                 <div id="SRSSubScaleTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="5" class="surveygraph"></div>
                             </div>
+                            isAssignedToTeacher = true;
                         }
                         @*<div class="col-sm-6" style="background-color:transparent;">
                                 <div id="ShortLanguageProfile" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -3217,7 +3221,7 @@
                             </div>
                         }
                         else {
-                            <div style="text-align: center;"><p>There is no survey assigned to students in this study</p></div>
+                            <div style="text-align: center;"><p>There is no survey assigned to students in this study.</p></div>
                         }
                     </div>
                 }
@@ -3269,6 +3273,7 @@
                             <div class="col-sm-12 teacher" style="background-color:transparent;">
                                 <div id="AcademicProgressDSMLevel1" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="27" class="surveygraph"></div>
                             </div>
+                            isAssignedToTeacher = true;
                         }
                         @*<div class="col-sm-6" style="background-color:transparent;">
                                 <div id="levelchangesforChild" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
@@ -3278,6 +3283,7 @@
                             <div class="col-sm-12" style="background-color:transparent;">
                                 <div id="divSCQTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="11" class="surveygraph"></div>
                             </div>
+                            isAssignedToTeacher = true;
                         }                        
                     </div>
                 }
@@ -3312,10 +3318,12 @@
                         @if (isSurveyAssigned(35, "Teacher"))
                         {
                             <div class="col-sm-12"><div id="tADAM" surveyid="35" class="surveygraph"></div></div>
+                            isAssignedToTeacher = true;
                         }                        
                         @if (isSurveyAssigned(34, "Teacher"))
                         {
                             <div class="col-sm-12"><div id="tVanderbilt" surveyid="34" class="surveygraph"></div></div>
+                            isAssignedToTeacher = true;
                         }                        
                     </div>
                 }
@@ -3374,10 +3382,12 @@
                         @if (isSurveyAssigned(49, "Teacher"))
                         {
                             <div class="col-sm-12"><div id="divTQuerterly" surveyid="49" class="surveygraph"></div></div>
+                            isAssignedToTeacher = true;
                         }                        
                         @if (isSurveyAssigned(13, "Teacher"))
                         {
                             <div class="col-sm-12"><div id="divtConnor" surveyid="13" class="surveygraph"></div></div>
+                            isAssignedToTeacher = true;
                         }                        
                     </div>
 
@@ -3385,6 +3395,7 @@
                         @if (isSurveyAssigned(15, "Teacher"))
                         {
                             <div class="col-sm-12"><div id="divtFeedback" surveyid="15" class="surveygraph"></div></div>
+                            isAssignedToTeacher = true;
                         }
                     </div>
 
@@ -3392,7 +3403,12 @@
                         @if (isSurveyAssigned(47, "Teacher"))
                         {
                             <div class="col-sm-12"><div id="divTeacherVineland" class="surveygraph" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="47"></div></div>
-                        }                       
+                            isAssignedToTeacher = true;
+                        }     
+                        @if (isAssignedToTeacher == false)
+                        {
+                            <div style="text-align: center;"><p>There is no survey assigned to teachers in this study.</p></div>
+                        }
                     </div>
                 }
                 
