@@ -390,6 +390,11 @@
                                 {
                                     <div class="col-md-12 text-left">Vineland-3 (Teacher)@(Html.Raw(vinelandTeacher))</div>
                                 }
+                                var qTeacherReport = getPercentCompletion(50, (int)drch["ID"], url.Replace("__", "50"));
+                                if (showHideSurvey(qTeacherReport) == true)
+                                {
+                                    <div class="col-md-12 text-left">School Anxiety Scale – Teacher Report@(Html.Raw(qTeacherReport))</div>
+                                }
                             }
                             @{
                                 var abbsensoryprofile = getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
@@ -521,6 +526,11 @@
                                 if (showHideSurvey(qTeacher) == true)
                                 {
                                     <div class="col-md-12 text-left">Quarterly Teacher Academic Progress@(Html.Raw(qTeacher))</div>
+                                }
+                                var qStrengths = getPercentCompletion(51, (int)drch["ID"], url.Replace("__", "51"));
+                                if (showHideSurvey(qStrengths) == true)
+                                {
+                                    <div class="col-md-12 text-left">Strengths and Difficulties Questionnaire@(Html.Raw(qStrengths))</div>
                                 }
                             }
 
