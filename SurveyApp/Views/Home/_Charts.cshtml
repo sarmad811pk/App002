@@ -3499,26 +3499,27 @@
                         {
                             <div style="text-align: center;"><p>There is no survey assigned to teacher(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
                         }
-                    </div>
-                    <div class="parentdiv">
-                        @if (isAssignedToParent == false)
-                        {
-                            <div style="text-align: center;"><p>There is no survey assigned to parent(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
-                        }
-                    </div>
-                    <div class="studentdiv">
-                        @if(isAssignedToStudent == false) {
-                            <div style="text-align: center;"><p>There is no survey assigned to student(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
-                        }
-                    </div>
-                    <div class="parentteacherdiv">
-                        @if (isAssignedToParentTeacher == false)
-                        {
-                            <div style="text-align: center;"><p>There is no survey assigned to parent(s) or teacher(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
-                        }
-                    </div>
+                    </div>                    
                 }
-                
+                <div class="parentdiv">
+                    @if (isAssignedToParent == false)
+                    {
+                        <div style="text-align: center;"><p>There is no survey assigned to parent(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
+                    }
+                </div>
+                <div class="studentdiv">
+                    @if (isAssignedToStudent == false)
+                    {
+                        <div style="text-align: center;"><p>There is no survey assigned to student(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
+                    }
+                </div>
+                <div class="parentteacherdiv">
+                    @if (isAssignedToParentTeacher == false)
+                    {
+                        <div style="text-align: center;"><p>There is no survey assigned to parent(s) or teacher(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
+                    }
+                </div>
+
                 
             </div>
         </td>
