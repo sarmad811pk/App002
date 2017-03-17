@@ -37,8 +37,18 @@
     {
         if (dr["ID"] != DBNull.Value && (int)dr["ID"] != 21)
         {
+            string tileprefix = string.Empty;
+            if ((int)dr["ID"] == 6) { tileprefix = " for 2yrs - 4yrs"; }
+            if ((int)dr["ID"] == 7) { tileprefix = " for 5yrs - 7yrs"; }
+            if ((int)dr["ID"] == 8) { tileprefix = " for 8yrs - 12yrs"; }
+            if ((int)dr["ID"] == 9) { tileprefix = " for 13yrs - 18yrs"; }
+            if ((int)dr["ID"] == 45) { tileprefix = " for 19yrs and older"; }
+            if ((int)dr["ID"] == 51) { tileprefix = " for 4yrs - 10yrs"; }
+            if ((int)dr["ID"] == 52) { tileprefix = " for 11yrs - 17yrs"; }
+            
+            
             <a href="@Url.Action("Survey", "Survey", new { surveyID = dr["ID"].ToString() })" class="list-group-item">
-                <strong>Preview:</strong> @dr["Title"].ToString() @((int)dr["ID"] == 6 ? " for 2yrs - 4yrs" : ((int)dr["ID"] == 7 ? " for 5yrs - 7yrs" : ((int)dr["ID"] == 8 ? " for 8yrs - 12yrs" : ((int)dr["ID"] == 9 ? " for 13yrs - 18yrs" : ((int)dr["ID"] == 45 ? " for 19yrs and older" : "")))))
+                <strong>Preview:</strong> @dr["Title"].ToString() @tileprefix
             </a>
         }
     }

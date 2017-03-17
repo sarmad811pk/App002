@@ -207,7 +207,7 @@
         if ($(".dashboardDetails").hasClass("loaded") == false)
         {
             $.ajax({
-                url: "@Url.Action("_ChildrenCounts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
+                url: "@Url.Action("_ChildrenCounts", "Home")?studyId=@studyId&studyName=@Server.UrlEncode(studyName)&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     if (isSessionValid(data) == true) {
@@ -218,7 +218,7 @@
             });
 
             $.ajax({
-                url: "@Url.Action("_SurveyCompletion", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
+                url: "@Url.Action("_SurveyCompletion", "Home")?studyId=@studyId&studyName=@Server.UrlEncode(studyName)&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     if (isSessionValid(data) == true) {
@@ -229,7 +229,7 @@
             });
 
             $.ajax({
-                url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName&role=@Roles.GetRolesForUser(User.Identity.Name)[0].ToString()",
+                url: "@Url.Action("_DetailComparison", "Home")?studyId=@studyId&studyName=@Server.UrlEncode(studyName)&childIdts=@childId&child=@childName&role=@Roles.GetRolesForUser(User.Identity.Name)[0].ToString()",
                 dataType: "html",
                 success: function (data) {
                     if (isSessionValid(data) == true) {
@@ -254,7 +254,7 @@
         if ($(".graphsDetails").hasClass("loaded") == false)
         {
             $.ajax({
-                url: "@Url.Action("_Charts", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
+                url: "@Url.Action("_Charts", "Home")?studyId=@studyId&studyName=@Server.UrlEncode(studyName)&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     if (isSessionValid(data) == true) {
@@ -285,7 +285,7 @@
         if ($(".Adverse").hasClass("loaded") == false)
         {
             $.ajax({
-                url: "@Url.Action("_AdverseEvent", "Home")?studyId=@studyId&studyName=@studyName&childIdts=@childId&child=@childName",
+                url: "@Url.Action("_AdverseEvent", "Home")?studyId=@studyId&studyName=@Server.UrlEncode(studyName)&childIdts=@childId&child=@childName",
                 dataType: "html",
                 success: function (data) {
                     if (isSessionValid(data) == true) {

@@ -477,13 +477,16 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
 
-        public static DataSet getChildrenSchedulesByUserId(int userId)
+        public static DataSet getChildrenSchedulesByUserId(int userId, DateTime dtNow)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             cmd.Parameters.Add("@UserID", SqlDbType.Int);
             cmd.Parameters["@UserID"].Value = userId;
+
+            cmd.Parameters.Add("@dtNow", SqlDbType.DateTime);
+            cmd.Parameters["@dtNow"].Value = dtNow;
 
             cmd.CommandText = "User_GetChildSchedules";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
