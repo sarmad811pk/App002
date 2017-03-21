@@ -38,7 +38,7 @@
     string dCareGiver = "", pCareGiver = "";
     string dPES = "", pPES = "";
     string dGSI = "", pGSI = "";
-    string dTR = "", tTR = "";
+    string dTR = "", tTR = "", dtAnxiety = "", tsAnxiety = "", tgAnxiety = "";
     string dAPRS = "", tAPRS = "";
     string dWT = "", tWT = "";
     string dSLP = "", pSLP = "", tSLP = "", dInsom = "", pInsom = "", dConnor = "", pConnor = "", dtConnor = "", tConnor = "";
@@ -297,6 +297,22 @@
         {
             dTR += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             tTR += dr["Score"] + ",";
+        }
+
+        DataRow[] drsAnxiety = dsCharts.Tables[4].Select("QuestionGroup = 'Social Anxiety' AND SURVEYid = 50");
+        foreach (DataRow dr in drsAnxiety)
+        {
+            dtAnxiety += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tsAnxiety += dr["Score"] + ",";
+        }
+        DataRow[] drgAnxiety = dsCharts.Tables[4].Select("QuestionGroup = 'Generalized Anxiety' AND SURVEYid = 50");
+        foreach (DataRow dr in drgAnxiety)
+        {
+            if (dr["ScheduleDate"] != DBNull.Value && dtAnxiety.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            {
+                dtAnxiety += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            }
+            tgAnxiety += dr["Score"] + ",";
         }
         #endregion
 
@@ -2478,6 +2494,73 @@
 
 <script type="text/javascript">
     $(function () {
+        //-----------------------------------------School Anxiety Scale – Teacher Report ----------------------------------------
+        $('#divAnxientyGroups').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'School Anxiety Scale – Teacher Report'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: [@Html.Raw(dtAnxiety.Trim(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Social Anxiety',
+            marker: {
+                symbol: 'circle'
+            },
+            data: [@Html.Raw(tsAnxiety.Trim(','))],
+            color: '#73B3EF'
+
+        }, {
+            name: 'Generalized Anxiety',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tgAnxiety.Trim(','))],
+            color: '#67F97C'
+
+        }]
+            , yAxis: {
+
+        }
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
         //-----------------------------------------Anxiety Depression and Mood Scale--PARENT--------------------------------------
     $('#pADAM').highcharts({
         chart: {
@@ -3493,8 +3576,11 @@
                             <div class="col-sm-12 teacher" style="background-color:transparent;padding-top:8px;margin:0px 0px 10px 0px;">
                                 <div id="divTeacherReport" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="50" class="surveygraph"></div>
                             </div>
+                            <div class="col-sm-12 teacher" style="background-color:transparent;padding-top:8px;margin:0px 0px 10px 0px;">
+                                <div id="divAnxientyGroups" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="50" class="surveygraph"></div>
+                            </div>
                             isAssignedToTeacher = true;
-                        }    
+                        }
                         @if (isAssignedToTeacher == false)
                         {
                             <div style="text-align: center;"><p>There is no survey assigned to teacher(s)@(childId > 0 ? " for " + childNamets : "")@(studyId > 0 ? " in " + studyName : "").</p></div>
