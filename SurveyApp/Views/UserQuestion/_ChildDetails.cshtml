@@ -366,6 +366,11 @@
                                         <div class="col-md-12 text-left" style="background-color: #c7dbff;padding: 6px 6px;"><i class="ion-flag" style="font-size: 16px;vertical-align: middle;"></i>&nbsp;Parent Intake Form (CAS)@(Html.Raw(percentGenCAS))</div>
                                     }
                                 }
+                                var casParent = getPercentCompletion(55, (int)drch["ID"], url.Replace("__", "55"));
+                                if (showHideSurvey(casParent) == true)
+                                {
+                                    <div class="col-md-12 text-left">CAS Grit and Resilience - Parent@(Html.Raw(casParent))</div>
+                                }
                             }
                             @if (roles[0] == "Teacher")
                             {
@@ -530,12 +535,12 @@
                                 var qTeacherMath = getPercentCompletion(53, (int)drch["ID"], url.Replace("__", "53"));
                                 if (showHideSurvey(qTeacherMath) == true)
                                 {
-                                    <div class="col-md-12 text-left">CAS Academic Progress: Math@(Html.Raw(qTeacherMath))</div>
+                                    <div class="col-md-12 text-left">CAS Academic Progress: Math and Science@(Html.Raw(qTeacherMath))</div>
                                 }
                                 var qTeacherSkills = getPercentCompletion(54, (int)drch["ID"], url.Replace("__", "54"));
                                 if (showHideSurvey(qTeacherSkills) == true)
                                 {
-                                    <div class="col-md-12 text-left">CAS Academic Progress: Learning Skills and Strategies@(Html.Raw(qTeacherSkills))</div>
+                                    <div class="col-md-12 text-left">CAS Academic Progress: Other Skills@(Html.Raw(qTeacherSkills))</div>
                                 }
                                 
                                 if (age <= 10){

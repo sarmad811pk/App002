@@ -63,7 +63,15 @@
 
     /* Strengths and Difficulties Questionnaire */
     string dpSnD = "", pSnD = "", dpExIn = "", pExternalising = "", pInternalising = "", dtSnD = "", tSnD = "", dtExIn = "", tExternalising = "", tInternalising = "";
-    
+
+    /* CAS Academic Progress: Math and Science */
+    string dCASmath = "", tCASmath = "";
+
+    /* CAS Academic Progress: Other Skills */
+    string dCASskills = "", tCASskills = "";
+
+    /* CAS Grit and Resilience Scale */
+    string dpCasGrit = "", pCasGrit = "", dtCasGrit = "", tCasGrit = "";
     
     /* LIFE EVENTS */
     //List<LifeEventChart> lstABCPTLifeEvents = new List<LifeEventChart>();
@@ -795,6 +803,43 @@
         }
         #endregion
 
+
+        #region CAS Academic Progress: Math and Science
+        DataRow[] drsCASMath = dsCharts.Tables[1].Select("SurveyID = 53");
+        foreach (DataRow dr in drsCASMath)
+        {
+            dCASmath += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tCASmath += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region CAS Academic Progress: Other Skills
+        DataRow[] drsCASSkills = dsCharts.Tables[1].Select("SurveyID = 54");
+        foreach (DataRow dr in drsCASSkills)
+        {
+            dCASskills += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tCASskills += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region CAS Grit and Resilience – Parent
+        DataRow[] drsCASGritParent = dsCharts.Tables[1].Select("SurveyID = 55");
+        foreach (DataRow dr in drsCASGritParent)
+        {
+            dpCasGrit += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pCasGrit += dr["Score"] + ",";
+        }
+        #endregion
+
+        #region CAS Grit and Resilience Scale
+        DataRow[] drsCASGrit = dsCharts.Tables[1].Select("SurveyID = 42");
+        foreach (DataRow dr in drsCASGrit)
+        {
+            dtCasGrit += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            tCasGrit += dr["Score"] + ",";
+        }
+        #endregion
+        
         #region Strengths and Difficulties Questionnaire - PARENT
         DataRow[] drpSnD = dsCharts.Tables[0].Select("SurveyID = 51");
         foreach (DataRow dr in drpSnD)
@@ -1743,7 +1788,7 @@
             type: 'spline'
         },
         title: {
-            text: 'Quarterly Teacher Academic Progress'
+            text: 'CAS Academic Progress: Reading and Writing'
         },
         xAxis: {
             categories: [@Html.Raw(dQuarterly.TrimEnd(','))]
@@ -1786,7 +1831,167 @@
     });
         //-----------------------------------------End----------------------------------------
     });
+</script>    
+    
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------CAS Academic Progress: Math and Science----------------------------------------
+    $('#divCasMaths').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'CAS Academic Progress: Math and Science'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dCASmath.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tCASmath.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
 </script>
+    
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------CAS Academic Progress: Other Skills----------------------------------------
+    $('#divCasSkills').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'CAS Academic Progress: Other Skills'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dCASskills.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tCASskills.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+    
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------CAS Grit and Resilience Scale----------------------------------------
+    $('#divCasGritTeacher').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'CAS Grit and Resilience Scale'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dtCasGrit.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(tCasGrit.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+    
 
 <script type="text/javascript">
     $(function () {
@@ -2034,6 +2239,59 @@
     });
 </script>
 }
+
+<script type="text/javascript">
+    $(function () {
+        //-----------------------------------------CAS Grit and Resilience – Parent----------------------------------------
+        $('#divCasGritParent').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'CAS Grit and Resilience - Parent'
+        },
+        xAxis: {
+            categories: [@Html.Raw(dpCasGrit.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pCasGrit.TrimEnd(','))],
+            color: '#00cc00'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
 
 <script type="text/javascript">
     $(function () {
@@ -3644,6 +3902,13 @@
                         </div>
                         isAssignedToParent = true;
                     }                    
+                    @if (isSurveyAssigned(55, "Parent"))
+                    {
+                        <div class="col-sm-12 parent" style="background-color:transparent;padding-top:8px;margin:0px 0px 10px 0px;">
+                            <div id="divCasGritParent" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="55" class="surveygraph"></div>
+                        </div>
+                        isAssignedToParent = true;
+                    }                    
                 </div>
 
                 @if (role != "" && role != "Parent")
@@ -3900,6 +4165,29 @@
                                 <div id="divSnDGroupsTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="51" class="surveygraph"></div>
                             </div>
                             isAssignedToTeacher = true;
+                        }
+                        
+                        @if (isSurveyAssigned(53, "Teacher"))
+                        {
+                            <div class="col-sm-12 teacher" style="background-color:transparent;padding-top:8px;margin:0px 0px 10px 0px;">
+                                <div id="divCasMaths" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="53" class="surveygraph"></div>
+                            </div>                            
+                            isAssignedToTeacher = true;
+                        }
+                        
+                        @if (isSurveyAssigned(54, "Teacher"))
+                        {
+                            <div class="col-sm-12 teacher" style="background-color:transparent;padding-top:8px;margin:0px 0px 10px 0px;">
+                                <div id="divCasSkills" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="54" class="surveygraph"></div>
+                            </div>                            
+                            isAssignedToTeacher = true;
+                        }
+                        @if (isSurveyAssigned(42, "Teacher"))
+                        {
+                            <div class="col-sm-12 teacher" style="background-color:transparent;padding-top:8px;margin:0px 0px 10px 0px;">
+                                <div id="divCasGritTeacher" style="min-width: 310px; height: 400px; margin: 0 auto" surveyid="42" class="surveygraph"></div>
+                            </div>
+                            isAssignedToParent = true;
                         }
                         
                         
