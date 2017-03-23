@@ -823,7 +823,7 @@
         #endregion
 
         #region CAS Grit and Resilience – Parent
-        DataRow[] drsCASGritParent = dsCharts.Tables[1].Select("SurveyID = 55");
+        DataRow[] drsCASGritParent = dsCharts.Tables[0].Select("SurveyID = 55");
         foreach (DataRow dr in drsCASGritParent)
         {
             dpCasGrit += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
