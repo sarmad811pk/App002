@@ -78,6 +78,9 @@
     //int indexLE = 0;
     string tQuarterly = "", dQuarterly = "";
 
+    /*Vanderbilt ADHD Scale – Parent*/
+    string dVanderbiltADHD = "", pVanderbiltADHD = "";
+
     #region populatingGraphs
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
     {
@@ -168,6 +171,13 @@
         {
             dtVanderbilt += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
             tVanderbilt += dr["Score"] + ",";
+        }
+
+        DataRow[] drVanderbiltADHD = dsCharts.Tables[0].Select("SURVEYid = 56");
+        foreach (DataRow dr in drVanderbiltADHD)
+        {
+            dVanderbiltADHD += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            pVanderbiltADHD += dr["Score"] + ",";
         }
         #endregion
 
@@ -3231,6 +3241,62 @@
 
 <script type="text/javascript">
     $(function () {
+        //-----------------------------------------Vanderbilt ADHD Scale – Parent--------------------------------------
+        $('#divpVanderbiltADHD').highcharts({
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Vanderbilt ADHD Scale – Parent'
+        },
+        //subtitle: {
+        //    text: '*Lower is Better'
+        //},
+        xAxis: {
+            categories: [@Html.Raw(dVanderbiltADHD.TrimEnd(','))]
+        },
+        yAxis: {
+            title: {
+                text: 'Scores'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value + '';
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: 'Scores',
+            marker: {
+                symbol: 'square'
+            },
+            data: [@Html.Raw(pVanderbiltADHD.TrimEnd(','))],
+            color: '#cc0000'
+
+        }],
+    });
+        //-----------------------------------------End----------------------------------------
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
         //-----------------------------------------Short Language Profile--PARENT--------------------------------------
         $('#divpSLP').highcharts({
         chart: {
@@ -4034,6 +4100,12 @@
                         <div class="col-sm-12" style="padding-top:8px;margin:0px 0px 10px 0px;"><div id="pVanderbilt" surveyid="34" class="surveygraph"></div></div>
                         isAssignedToParent = true;
                     }                    
+                    
+                    @if (isSurveyAssigned(56, "Parent"))
+                    {
+                        <div class="col-sm-12" style="padding-top:8px;margin:0px 0px 10px 0px;"><div id="divpVanderbiltADHD" surveyid="56" class="surveygraph"></div></div>
+                        isAssignedToParent = true;
+                    } 
                 </div>
 
                 @if (role != "" && role != "Parent")

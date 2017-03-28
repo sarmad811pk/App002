@@ -515,6 +515,11 @@
                                 {
                                     <div class="col-md-12 text-left">Vanderbilt Adhd Diagnostic Teacher Rating Scale@(Html.Raw(vanderbilt))</div>
                                 }
+                                var pvanderbilt = getPercentCompletion(56, (int)drch["ID"], url.Replace("__", "56"));
+                                if (showHideSurvey(pvanderbilt) == true)
+                                {
+                                    <div class="col-md-12 text-left">Vanderbilt ADHD Scale – Parent@(Html.Raw(pvanderbilt))</div>
+                                }
 
                                 var anxiety = getPercentCompletion(35, (int)drch["ID"], url.Replace("__", "35"));
                                 if (showHideSurvey(anxiety) == true)
