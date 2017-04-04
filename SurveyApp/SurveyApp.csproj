@@ -224,6 +224,7 @@
     <Compile Include="Controllers\DataController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RequestAccountController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\ErrorLog.cs" />
     <Compile Include="Models\LifeEvent.cs" />
@@ -505,6 +506,8 @@
     <Content Include="Views\Assignment\Index.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
     <Content Include="Views\Report\AccountRequest.cshtml" />
+    <Content Include="Views\Statistics\Index.cshtml" />
+    <Content Include="Views\Statistics\_SurveyCompletionChart.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

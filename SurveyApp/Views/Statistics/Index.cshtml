@@ -1,0 +1,161 @@
+﻿@using SurveyApp.Models;
+@using System.Data;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "eBit - Respondents Statistics";
+
+    string study = string.Empty, respondent = string.Empty;
+    int studyId = 0, respondentId = 0;
+    var userId = WebSecurity.CurrentUserId;
+    System.Data.DataSet dsRespondent = SurveyApp.DataHelper.getRespondentsByStudyId(studyId, userId);
+    if (dsRespondent != null && dsRespondent.Tables.Count > 0)
+    {
+        
+    }
+}
+
+<style type="text/css">
+    .statistics .separator {
+        clear: both;
+        margin-bottom: 10px;
+    }
+    .statistics .topControls #ddlStudy,
+    .statistics .topControls #ddlRespondents {
+        float: right;
+        width: 22%;
+        background-color: #fff;
+        text-transform: capitalize;
+    }
+    .statistics .topControls #ddlStudy_chosen,
+    .statistics .topControls #ddlRespondents_chosen {
+        float: right;
+    }
+    .statistics .topControls #ddlStudy_chosen {
+        margin-right: 5px;
+    }
+    .tabs {
+        margin-bottom: 12px;
+    }
+        .tabs .current, .comparison .previous {
+            border-top: none;
+        }
+        .tabs ul {
+            height: 41px;
+            margin: 0px;
+            list-style: none;
+            padding: 0px;
+            border-bottom: solid 1px #CCC;
+        }
+        .tabs li {
+            float: left;
+        }
+            .tabs li a {
+                text-align: center;
+                margin-right: 2px;
+                border: 1px solid transparent;
+                padding: 10px 15px;
+                display: block;
+                position: relative;
+                text-shadow: none;
+                text-decoration: none;
+                color: #333;
+                min-width: 141px;
+            }
+                .tabs li a:hover {
+                    border-color: #FEFEFE;
+                    cursor: pointer;
+                }
+                .tabs li a.selected {
+                    color: #4d6b8a;
+                    background-color: #fff;
+                    border: 1px solid #B1B1B1;
+                    border-bottom-color: transparent;
+                    cursor: default;
+                }
+</style>
+
+<link href="~/Content/chosen/chosen.css" rel="stylesheet" />
+<script src="~/Content/chosen/chosen.jquery.min.js"></script>
+
+<div class="statistics">
+    <div class="topControls">
+        <select id="ddlRespondents" class="col-sm-9 form-control resprendropdown" onchange="getRespInfo(this);">
+            <option value="0">All Respondents</option>
+            @if (dsRespondent != null && dsRespondent.Tables.Count > 0)
+            {
+                foreach (DataRow drRespondent in dsRespondent.Tables[0].Rows)
+                {
+                    <option value="@drRespondent["RespondentId"]" @(respondentId == (int)drRespondent["RespondentId"] ? "selected=selected" : "")>@drRespondent["FullName"]</option>
+                }
+            }
+        </select>
+
+        <select id="ddlStudy" class="col-sm-9 form-control" style="margin-right: 5px;" onchange="getStudyInfo(this);">
+            <option value="0" @(studyId == 0 ? "selected=selected" : "")>All Studies</option>
+            @foreach (Study objStudy in Study.StudyGetAll())
+            {
+                <option value="@objStudy.Id" @(studyId == objStudy.Id ? "selected=selected" : "")>@objStudy.Name</option>
+            }
+        </select>
+    </div>
+    <div class="separator"></div>
+    <div class="completionStats">
+        <div class="tabs">
+            <ul class="tabReps">
+                <li>
+                    <a class="roleType selected" href="javascript:void(0);" onclick="showChartDiv(this, '@SurveyAppRoles.Parent');">Parents</a>
+                </li>
+                <li>
+                    <a class="roleType" href="javascript:void(0);" onclick="showChartDiv(this, '@SurveyAppRoles.Teacher');">Teachers</a>
+                </li>
+                <li>
+                    <a class="roleType" href="javascript:void(0);" onclick="showChartDiv(this, '@SurveyAppRoles.Student');">Students</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="parentStats statsChart @SurveyAppRoles.Parent">
+            @{Html.RenderPartial("~/Views/Statistics/_SurveyCompletionChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "respId", respondentId }, { "roleId", SurveyAppRoles.Parent } });}
+        </div>
+        <div class="teacherStats statsChart @SurveyAppRoles.Teacher">
+            @{Html.RenderPartial("~/Views/Statistics/_SurveyCompletionChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "respId", respondentId }, { "roleId", SurveyAppRoles.Teacher } });}
+        </div>
+        <div class="studentsStats statsChart @SurveyAppRoles.Student">
+            @{Html.RenderPartial("~/Views/Statistics/_SurveyCompletionChart.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "respId", respondentId }, { "roleId", SurveyAppRoles.Student } });}
+        </div>
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#ddlStudy").chosen();
+        $("#ddlRespondents").chosen();
+    });
+
+    $(window).load(function(){
+        $(".statsChart").hide();
+        $(".parentStats").show();
+    });
+
+    function showChartDiv(elem, roleId){
+        $(".statsChart").hide();
+        $(".statsChart." + roleId).show();
+
+        $(".tabReps a.roleType").removeClass("selected");
+        $(".tabReps").find(elem).addClass("selected");
+    }
+
+    function getStudyInfo(elem) {
+        var div = getVisibleDiv();
+        var studyId = $(elem).val();
+        location.href = "@Url.Action("Index", "Statistics")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&respId=@respondentId";
+    }
+    function getRespInfo(elem) {
+        var div = getVisibleDiv();
+        var respId = $(elem).val();
+        location.href = "@Url.Action("Index", "Statistics")" + "?studyId=" + @studyId +"&respId=" + (respId == 0 ? "" : respId);
+    }
+</script>
+

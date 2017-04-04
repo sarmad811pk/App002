@@ -1,0 +1,94 @@
+﻿@using System.Data;
+@using SurveyApp.Models;
+
+@{
+    int studyId = ViewData["studyId"] != null ? Convert.ToInt32(ViewData["studyId"]) : 0;
+    int respId = ViewData["respId"] != null ? Convert.ToInt32(ViewData["respId"]) : 0;
+    int roleId = ViewData["roleId"] != null ? Convert.ToInt32(ViewData["roleId"]) : 0;
+
+
+    DataSet dsStats = SurveyApp.DataHelper.Stats_GetRespondentsStats(studyId, respId);
+
+    string resps = string.Empty, assigned = string.Empty, initiated = string.Empty, comleted = string.Empty, partial = string.Empty;
+    string role = (roleId == (int)SurveyAppRoles.Parent ? "Parent" : (roleId == (int)SurveyAppRoles.Teacher ? "Teacher" : (roleId == (int)SurveyAppRoles.Student ? "Student" : "")));
+
+    DataRow[] drsParent = dsStats.Tables[0].Select("RoleName = '" + role + "'");
+    
+    foreach (DataRow dr in drsParent)
+    {
+        resps += "'" + dr["FullName"].ToString() + "',";
+        assigned += dr["SurveyCount"].ToString() + ",";
+        initiated += dr["InitiatedSurveyCount"].ToString() + ",";
+        comleted +=  dr["CompletedSurveyCount"].ToString() + ",";
+        partial += dr["PartiallyCompletedSurveyCount"].ToString() + ",";
+    }
+
+    resps = resps.TrimEnd(',');
+    assigned = assigned.TrimEnd(',');
+    initiated = initiated.TrimEnd(',');
+    comleted = comleted.TrimEnd(',');
+    partial = partial.TrimEnd(',');
+    
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#divCompletionStats@(role)').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Survey Completion @(role)(s)'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: [
+                    @Html.Raw(resps)
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'No. of Surveys'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.12,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: 'Assigned',
+                data: [@assigned]
+
+            }, {
+                name: 'Initiated',
+                data: [@initiated]
+
+            }, {
+                name: 'Comleted',
+                data: [@comleted]
+
+            }, {
+                name: 'Partially Comleted',
+                data: [@partial]
+
+            }]
+        });
+    });
+</script>
+
+<div id="divCompletionStats@(role)" style="min-width: 310px; height: 400px;margin: 0 auto"></div>
