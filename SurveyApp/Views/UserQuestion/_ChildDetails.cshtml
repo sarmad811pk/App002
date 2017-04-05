@@ -314,17 +314,17 @@
             margin-top: 7px;
             margin-top: 2px;
         }
-        a.redCross{
+        a.redCrossInItem{
             width: 20px;
             height: 20px;
             position: absolute;
             right: 4px;
-            top: 4px;
-            font-size: 32px;
+            top: -6px;
+            font-size: 18px;
         }
-        a.redCross:hover, a.redCross:visited{
-            font-size: 32px !important;
-        }
+            a.redCrossInItem:hover, a.redCrossInItem:visited {
+                font-size: 19px !important;
+            }
         .ui-tooltip{/*min-width:300px;*/background-color: #333;color:#FFF;}
     </style>
 
@@ -622,7 +622,7 @@
                                         <div id="ad@(indexAR)" indexer="@indexAR" style="padding:4px 4px 4px 4px;border-bottom:solid 1px rgba(0, 0, 0, 0.12);margin-bottom:5px;@(dr["DateResolved"] != DBNull.Value && Convert.ToDateTime(dr["DateResolved"]) < DateTime.Now ? "color: #111;" : "")@(indexAR > 5 ? "display:none;" : "")" class="item">
                                             <div style="overflow:hidden;position:relative;" title='@dr["AdverseReaction"] _NEWLINE_ Occured on: @dr["DateOccured"] _NEWLINE_ Resolved on: @dr["DateResolved"] _NEWLINE_ Medication: @dr["Medication"] _NEWLINE_ Started on: @dr["DateStart"] _NEWLINE_ Ended on: @dr["DateEnd"]' data-toggle='tooltip'>
                                                 <div style="float:left;text-transform:capitalize;"><b>@dr["AdverseReaction"]</b> occured on <b>@dr["DateOccured"]</b> and resolved on <b>@dr["DateResolved"]</b> by using <b>@dr["Medication"]</b></div>
-                                                <span><a href="javascript:void(0);" style="top: -2px;color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'adversereaction', '@dr["AdverseReaction"]');"></a></span>
+                                                <span><a href="javascript:void(0);" class="redCrossInItem" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'adversereaction', '@dr["AdverseReaction"]', function(){ location.reload(true); });"><i class="ion-close" style="color:#FFF;"></i></a></span>
                                             </div>
                                         </div>
                                         indexAR++;
@@ -660,7 +660,7 @@
                                                     <span>, Ended: @dr["EventEndDate"]</span>
                                                 }
                                                 </div>
-                                                <a href="javascript:void(0);" style="color: #FFF;top:0px;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeenvent', '@dr["EventName"]');"></a>
+                                                <a href="javascript:void(0);" class="redCrossInItem" onclick="event.stopPropagation();deleteListItem(this, @dr["ID"], 'lifeevent', '@dr["EventName"]', function(){ location.reload(true); });"><i class="ion-close" style="color:#FFF;"></i></a>
                                             </div>
                                         </div>
                                         indexLE++;
@@ -794,7 +794,7 @@
                                                 <div style="overflow:hidden;position: relative;@( @dr["Title"].ToString() == "" ? "display:none;" : "") " title="@dr["Title"]" data-toggle='tooltip'>
                                                     <div style="font-weight:bold;text-transform:capitalize;">@dr["Title"]</div>
                                                     <div>On @dr["StartDate"] - @dr["EndDate"]</div>
-                                                    <span><a href="javascript:void(0);" style="color: #FFF;" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'crintervention', '@dr["Title"]', function(){ location.href = location.href; });"></a></span>
+                                                    <span><a href="javascript:void(0);" class="redCrossInItem" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'crintervention', '@dr["Title"]', function(){ location.reload(true); });"><i class="ion-close" style="color:#FFF;"></i></a></span>
                                                 </div>
                                             </div>
                                             indexCRI++;

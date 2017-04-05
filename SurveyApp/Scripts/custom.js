@@ -3,12 +3,12 @@
 
     bootbox.confirm({
         message: "Do you really want to remove \"" + name + "\"?", callback: function (res) {
-            if (res == false) {
+            if (res == false) {                
                 $(elem).blur();
                 bootbox.hideAll();
                 return false;
             }
-            else {
+            else {                
                 $.ajax({
                     url: "../Home/deleteListItem",
                     data: "{'id': '" + id + "', 'type' : '" + type + "' }",
@@ -17,7 +17,7 @@
                     async: false,
                     success: function (data) {
                         if (data.success == true) {
-                            if (type == "crintervention" || type == "adversereaction" || type == "lifeenvent") {
+                            if (type == "crintervention" || type == "adversereaction" || type == "lifeevent") {
                                 $(elem).closest(".item").remove();
                             }
                             else {
@@ -25,7 +25,7 @@
                                     $(elem).closest("tr").remove();
                                 }
                             }
-                            result = true;
+                            result = true;                            
                             if (callback != null && callback != undefined && callback != "undefined") {
                                 callback();
                             }

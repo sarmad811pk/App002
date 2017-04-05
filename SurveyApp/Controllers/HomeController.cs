@@ -172,7 +172,7 @@ namespace SurveyApp.Controllers
                         }
 
                     }
-                    else if (type == "lifeenvent")
+                    else if (type == "lifeevent")
                     {
                         try
                         {

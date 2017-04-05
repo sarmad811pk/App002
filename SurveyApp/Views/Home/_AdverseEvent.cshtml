@@ -41,6 +41,8 @@
                     <td>Med. End Date</td>
                     <td>Resp.</td>
                     <td>Resp. Email</td>
+
+                    <td style="width: 50px;">Action</td>
                 </tr>
             </thead>
             <tbody>
@@ -48,7 +50,7 @@
                 {
                     foreach (DataRow dr in dsReaction.Tables[0].Rows)
                     {
-                        <tr>
+                        <tr class="item">
                             <td>@dr["Name"]</td>
                             <td>@dr["AdverseReaction"]</td>
                             <td>@dr["DateOccured"]</td>
@@ -59,6 +61,8 @@
                             <td>@dr["DateEnd"]</td>
                             <td>@dr["FullName"]</td>
                             <td>@dr["UserName"]</td>
+
+                            <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'adversereaction', '@dr["AdverseReaction"]', function(){ location.reload(true); });"><i class="ion-close"></i></a></td>
                         </tr>
                     }
                 }
@@ -79,24 +83,26 @@
                         <td>Event Date</td>
                         <td>Resp.</td>
                         <td>Resp. Email</td>
+                        <td style="width: 50px;">Action</td>
                     </tr>
                 </thead>
                 <tbody>
                     @if (dsReaction.Tables[1].Rows.Count > 0)
-                {
-                    foreach (DataRow dr in dsReaction.Tables[1].Rows)
                     {
-                <tr>
-                    <td>@dr["Name"]</td>
-                    <td>@dr["EventCategory"]</td>
-                    <td>@dr["EventName"]</td>
+                        foreach (DataRow dr in dsReaction.Tables[1].Rows)
+                        {
+                        <tr class="item">
+                            <td>@dr["Name"]</td>
+                            <td>@dr["EventCategory"]</td>
+                            <td>@dr["EventName"]</td>
 
-                    <td>@dr["EventDate"]</td>
-                    <td>@dr["FullName"]</td>
-                    <td>@dr["UserName"]</td>
-                </tr>
+                            <td>@dr["EventDate"]</td>
+                            <td>@dr["FullName"]</td>
+                            <td>@dr["UserName"]</td>
+                            <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'lifeevent', '@dr["EventName"]', function(){ location.reload(true); });"><i class="ion-close"></i></a></td>
+                        </tr>
+                        }
                     }
-                }
                 </tbody>
             </table>
         </div>
