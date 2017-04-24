@@ -2,7 +2,8 @@
 @{
     ViewBag.Title = "eBit - Questionnaire Manager";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var ds = Model;
+    System.Data.DataSet ds = SurveyApp.DataHelper.SurveyGetAll();
+    
 }
 
 <style type="text/css">

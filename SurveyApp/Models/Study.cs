@@ -39,13 +39,23 @@ namespace SurveyApp.Models
         public string Name { get; set; }
         [Required(ErrorMessage = "Please select status of study")]
         public int Status { get; set; }
+        public bool IsDeleted { get; set; }
 
         public static List<Study> StudyGetAll()
         {
+            List<Study> lst = new List<Study>();
             using (var context = new StudyContext())
             {
-                return context.Studies.ToList();
+                foreach (Study st in context.Studies.ToList())
+                {
+                    if (st.IsDeleted == false && st.Status != 2)
+                    {
+                        lst.Add(st);
+                    }
+                }
             }
+
+            return lst;
         }
     }
 

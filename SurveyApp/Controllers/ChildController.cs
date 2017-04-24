@@ -21,6 +21,7 @@ namespace SurveyApp.Controllers
             Database.SetInitializer<Child_Survey_ScheduleContext>(null);
             Database.SetInitializer<Child_Study_RespondentContext>(null);
             Database.SetInitializer<ScheduleReminderContext>(null);
+            Database.SetInitializer<ConsentContext>(null);
         }
 
         public ActionResult Index()
@@ -203,204 +204,204 @@ namespace SurveyApp.Controllers
                     }
                 }
 
-
-                #region Child_Study_Respondents
-                List<Study> lstStidues = Study.StudyGetAll();
-                List<Child_Study_Respondent> lstCSRPrevious = new List<Child_Study_Respondent>();
-                DataSet dsTeachers = Child_Teacher.Child_TeacherGetAll();
-                using (var csrConext = new Child_Study_RespondentContext())
-                {
-                    lstCSRPrevious = csrConext.Child_Study_Respondents.Where(csr => csr.ChildId == cId).ToList();
-                    csrConext.Child_Study_Respondents.RemoveRange(csrConext.Child_Study_Respondents.Where(csr => csr.ChildId == cId));
-                    csrConext.SaveChanges();
-                    csrConext.Dispose();
-                }
-
-                List<Consent> lstConsents = new List<Consent>();                
-                using (var csrConext = new Child_Study_RespondentContext())
-                {
-                    foreach (Study objStudy in lstStidues)
+                    #region Child_Study_Respondents
+                    List<Study> lstStidues = Study.StudyGetAll();
+                    List<Child_Study_Respondent> lstCSRPrevious = new List<Child_Study_Respondent>();
+                    DataSet dsTeachers = Child_Teacher.Child_TeacherGetAll();
+                    using (var csrConext = new Child_Study_RespondentContext())
                     {
-                        int conId = 0;
-                        if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id]))
-                        {
-                            using (var conContext = new ConsentContext())
-                            {
-                                lstConsents = conContext.Consents.Where(con => con.StudyId == objStudy.Id).ToList();
-                                if (lstConsents.Count > 0)
-                                {
-                                    string consentId = collection["Condition_StudyId_" + objStudy.Id].ToString();
-                                    foreach (Consent obj in lstConsents)
-                                    {
-                                        if ("Condition_" + obj.Id + "_StudyId_" + objStudy.Id == consentId)
-                                        {
-                                            conId = obj.Id;
-                                        }
-                                    }
-                                }
-                            }
-
-                            List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
-                            foreach (DataRow drTeacher in dsTeachers.Tables[0].Rows)
-                            {                                
-                                if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_TeacherId_" + drTeacher["UserId"]]))
-                                {
-                                    Child_Study_Respondent objCSR = new Child_Study_Respondent();
-                                    objCSR.ChildId = cId;
-                                    objCSR.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
-                                    objCSR.RespondentId = Convert.ToInt32(collection["StudyId_" + objStudy.Id + "_TeacherId_" + drTeacher["UserId"]]);
-                                    objCSR.ConsentId = conId;
-
-                                    if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
-                                    {
-                                        objCSR.IncludeParent = collection["StudyId_" + objStudy.Id + "_IncludeParent"] == "1" ? true : false;
-                                        if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
-                                        {
-                                            Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
-                                            objCSRParent.ChildId = cId;
-                                            objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
-                                            objCSRParent.RespondentId = objChild.ParentId;
-                                            objCSRParent.IncludeParent = true;
-                                            objCSRParent.ConsentId = conId;
-                                            Child_Study_Respondent objPreParent = lstCSRPrevious.Where(csr => csr.ChildId == objCSRParent.ChildId && csr.StudyId == objCSRParent.StudyId && csr.RespondentId == objCSRParent.RespondentId && csr.ConsentId == conId).FirstOrDefault();
-                                            if(objPreParent != null)
-                                            {
-                                                objCSRParent.Agreed = objPreParent.Agreed;
-                                                objCSRParent.AgreeDate = objPreParent.AgreeDate;
-                                            }
-                                            lstCSRs.Add(objCSRParent);
-                                        }
-                                    }
-
-                                    Child_Study_Respondent objPreTeacher = lstCSRPrevious.Where(csr => csr.ChildId == objCSR.ChildId && csr.StudyId == objCSR.StudyId && csr.RespondentId == objCSR.RespondentId && csr.ConsentId == conId).FirstOrDefault();
-                                    if (objPreTeacher != null)
-                                    {
-                                        objCSR.Agreed = objPreTeacher.Agreed;
-                                        objCSR.AgreeDate = objPreTeacher.AgreeDate;
-                                    }
-
-                                    lstCSRs.Add(objCSR);
-                                }
-                            }
-
-
-                            if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
-                            {
-                                if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
-                                {
-                                    Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
-                                    objCSRParent.ChildId = cId;
-                                    objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
-                                    objCSRParent.RespondentId = objChild.ParentId;
-                                    objCSRParent.IncludeParent = true;
-                                    objCSRParent.ConsentId = conId;
-
-                                    Child_Study_Respondent objPreParent = lstCSRPrevious.Where(csr => csr.ChildId == objCSRParent.ChildId && csr.StudyId == objCSRParent.StudyId && csr.RespondentId == objCSRParent.RespondentId && csr.ConsentId == conId).FirstOrDefault();
-                                    if (objPreParent != null)
-                                    {
-                                        objCSRParent.Agreed = objPreParent.Agreed;
-                                        objCSRParent.AgreeDate = objPreParent.AgreeDate;
-                                    }
-                                    lstCSRs.Add(objCSRParent);
-                                }
-                            }
-
-                            if(accountId > 0)
-                            {
-                                if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.RespondentId == accountId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
-                                {
-                                    Child_Study_Respondent objCSRChlid = new Child_Study_Respondent();
-                                    objCSRChlid.ChildId = cId;
-                                    objCSRChlid.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
-                                    objCSRChlid.RespondentId = accountId;
-                                    //objCSRParent.IncludeParent = true;
-                                    objCSRChlid.ConsentId = conId;
-                                    objCSRChlid.IncludeParent = collection["StudyId_" + objStudy.Id + "_IncludeParent"] == "1" ? true : false;
-
-                                    Child_Study_Respondent objPreChild = lstCSRPrevious.Where(csr => csr.ChildId == objCSRChlid.ChildId && csr.StudyId == objCSRChlid.StudyId && csr.RespondentId == objCSRChlid.RespondentId && csr.ConsentId == conId).FirstOrDefault();
-                                    if (objPreChild != null)
-                                    {
-                                        objPreChild.Agreed = objPreChild.Agreed;
-                                        objPreChild.AgreeDate = objPreChild.AgreeDate;
-                                    }
-                                    lstCSRs.Add(objCSRChlid);
-                                }
-                            }
-
-                            foreach (Child_Study_Respondent obj in lstCSRs)
-                            {
-                                csrConext.Child_Study_Respondents.Add(obj);
-                            }
-
-                        }                       
-
-                        #region deviations
-                        //save deviations
-                        DataSet dsScheduleDeviations = DataHelper.ScheduleDeviationGetSchedules(objStudy.Id);
-                        if (dsScheduleDeviations != null && dsScheduleDeviations.Tables[0].Rows.Count > 0)
-                        {
-                            using (var cCSS = new Child_Study_ScheduleContext())
-                            {
-                                foreach (DataRow dr in dsScheduleDeviations.Tables[0].Rows)
-                                {
-                                    int activeOn = String.IsNullOrEmpty(collection["ActiveOn_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()]) == false ? Convert.ToInt32(collection["ActiveOn_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()]) : 0;
-                                    if (activeOn > 0)
-                                    {
-                                        Child_Study_Schedule objCSS = new Child_Study_Schedule();
-
-                                        objCSS.ChildId = cId;
-                                        objCSS.StudyId = objStudy.Id;
-                                        objCSS.ScheduleId = (int)dr["ScheduleID"];
-                                        objCSS.ActiveOn = activeOn;
-
-                                        if (activeOn == 2)
-                                        {
-                                            string day = collection["ddlDays_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
-                                            objCSS.Day = String.IsNullOrEmpty(day) ? 0 : Convert.ToInt32(day);
-
-                                            string month = collection["ddlMonths_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
-                                            objCSS.Month = String.IsNullOrEmpty(month) ? 0 : Convert.ToInt32(month);
-
-                                            string weekday = collection["ddlWeekdays_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
-                                            objCSS.Weekday = String.IsNullOrEmpty(weekday) ? 0 : Convert.ToInt32(weekday);
-
-                                            string startingYear = collection["ddlStartingYear_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
-                                            objCSS.StartingYear = String.IsNullOrEmpty(startingYear) ? 0 : Convert.ToInt32(startingYear);
-                                        }
-
-                                        cCSS.Children_Studies_Schedules.RemoveRange(cCSS.Children_Studies_Schedules.Where(css => css.ChildId == objCSS.ChildId && css.StudyId == objCSS.StudyId && css.ScheduleId == objCSS.ScheduleId));
-                                        cCSS.Children_Studies_Schedules.Add(objCSS);                                        
-                                    }
-                                }
-                                cCSS.SaveChanges();
-                            }
-                        }
-                        #endregion
+                        lstCSRPrevious = csrConext.Child_Study_Respondents.Where(csr => csr.ChildId == cId).ToList();
+                        csrConext.Child_Study_Respondents.RemoveRange(csrConext.Child_Study_Respondents.Where(csr => csr.ChildId == cId));
+                        csrConext.SaveChanges();
+                        csrConext.Dispose();
                     }
-                    csrConext.SaveChanges();
-                }
+
+                    List<Consent> lstConsents = new List<Consent>();
+                    using (var csrConext = new Child_Study_RespondentContext())
+                    {
+                        foreach (Study objStudy in lstStidues)
+                        {
+                            int conId = 0;
+                            if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id]))
+                            {
+                                using (var conContext = new ConsentContext())
+                                {
+                                    lstConsents = conContext.Consents.Where(con => con.StudyId == objStudy.Id).ToList();
+                                    if (lstConsents.Count > 0)
+                                    {
+                                        string consentId = collection["Condition_StudyId_" + objStudy.Id].ToString();
+                                        foreach (Consent obj in lstConsents)
+                                        {
+                                            if ("Condition_" + obj.Id + "_StudyId_" + objStudy.Id == consentId)
+                                            {
+                                                conId = obj.Id;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
+                                foreach (DataRow drTeacher in dsTeachers.Tables[0].Rows)
+                                {
+                                    if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_TeacherId_" + drTeacher["UserId"]]))
+                                    {
+                                        Child_Study_Respondent objCSR = new Child_Study_Respondent();
+                                        objCSR.ChildId = cId;
+                                        objCSR.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
+                                        objCSR.RespondentId = Convert.ToInt32(collection["StudyId_" + objStudy.Id + "_TeacherId_" + drTeacher["UserId"]]);
+                                        objCSR.ConsentId = conId;
+
+                                        if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
+                                        {
+                                            objCSR.IncludeParent = collection["StudyId_" + objStudy.Id + "_IncludeParent"] == "1" ? true : false;
+                                            if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
+                                            {
+                                                Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
+                                                objCSRParent.ChildId = cId;
+                                                objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
+                                                objCSRParent.RespondentId = objChild.ParentId;
+                                                objCSRParent.IncludeParent = true;
+                                                objCSRParent.ConsentId = conId;
+                                                Child_Study_Respondent objPreParent = lstCSRPrevious.Where(csr => csr.ChildId == objCSRParent.ChildId && csr.StudyId == objCSRParent.StudyId && csr.RespondentId == objCSRParent.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                                if (objPreParent != null)
+                                                {
+                                                    objCSRParent.Agreed = objPreParent.Agreed;
+                                                    objCSRParent.AgreeDate = objPreParent.AgreeDate;
+                                                }
+                                                lstCSRs.Add(objCSRParent);
+                                            }
+                                        }
+
+                                        Child_Study_Respondent objPreTeacher = lstCSRPrevious.Where(csr => csr.ChildId == objCSR.ChildId && csr.StudyId == objCSR.StudyId && csr.RespondentId == objCSR.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                        if (objPreTeacher != null)
+                                        {
+                                            objCSR.Agreed = objPreTeacher.Agreed;
+                                            objCSR.AgreeDate = objPreTeacher.AgreeDate;
+                                        }
+
+                                        lstCSRs.Add(objCSR);
+                                    }
+                                }
 
 
-                #endregion
+                                if (!String.IsNullOrEmpty(collection["StudyId_" + objStudy.Id + "_IncludeParent"]))
+                                {
+                                    if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.IncludeParent == true && obj.RespondentId == objChild.ParentId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
+                                    {
+                                        Child_Study_Respondent objCSRParent = new Child_Study_Respondent();
+                                        objCSRParent.ChildId = cId;
+                                        objCSRParent.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
+                                        objCSRParent.RespondentId = objChild.ParentId;
+                                        objCSRParent.IncludeParent = true;
+                                        objCSRParent.ConsentId = conId;
 
-                #region Consent
-                /*
+                                        Child_Study_Respondent objPreParent = lstCSRPrevious.Where(csr => csr.ChildId == objCSRParent.ChildId && csr.StudyId == objCSRParent.StudyId && csr.RespondentId == objCSRParent.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                        if (objPreParent != null)
+                                        {
+                                            objCSRParent.Agreed = objPreParent.Agreed;
+                                            objCSRParent.AgreeDate = objPreParent.AgreeDate;
+                                        }
+                                        lstCSRs.Add(objCSRParent);
+                                    }
+                                }
+
+                                if (accountId > 0)
+                                {
+                                    if (!lstCSRs.Any(obj => obj.ChildId == cId && obj.RespondentId == accountId && obj.StudyId == Convert.ToInt32(collection["StudyId_" + objStudy.Id]) && obj.ConsentId == conId))
+                                    {
+                                        Child_Study_Respondent objCSRChlid = new Child_Study_Respondent();
+                                        objCSRChlid.ChildId = cId;
+                                        objCSRChlid.StudyId = Convert.ToInt32(collection["StudyId_" + objStudy.Id]);
+                                        objCSRChlid.RespondentId = accountId;
+                                        //objCSRParent.IncludeParent = true;
+                                        objCSRChlid.ConsentId = conId;
+                                        objCSRChlid.IncludeParent = collection["StudyId_" + objStudy.Id + "_IncludeParent"] == "1" ? true : false;
+
+                                        Child_Study_Respondent objPreChild = lstCSRPrevious.Where(csr => csr.ChildId == objCSRChlid.ChildId && csr.StudyId == objCSRChlid.StudyId && csr.RespondentId == objCSRChlid.RespondentId && csr.ConsentId == conId).FirstOrDefault();
+                                        if (objPreChild != null)
+                                        {
+                                            objPreChild.Agreed = objPreChild.Agreed;
+                                            objPreChild.AgreeDate = objPreChild.AgreeDate;
+                                        }
+                                        lstCSRs.Add(objCSRChlid);
+                                    }
+                                }
+
+                                foreach (Child_Study_Respondent obj in lstCSRs)
+                                {
+                                    csrConext.Child_Study_Respondents.Add(obj);
+                                }
+
+                            }
+
+                            #region deviations
+                            //save deviations
+                            DataSet dsScheduleDeviations = DataHelper.ScheduleDeviationGetSchedules(objStudy.Id);
+                            if (dsScheduleDeviations != null && dsScheduleDeviations.Tables[0].Rows.Count > 0)
+                            {
+                                using (var cCSS = new Child_Study_ScheduleContext())
+                                {
+                                    foreach (DataRow dr in dsScheduleDeviations.Tables[0].Rows)
+                                    {
+                                        int activeOn = String.IsNullOrEmpty(collection["ActiveOn_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()]) == false ? Convert.ToInt32(collection["ActiveOn_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()]) : 0;
+                                        if (activeOn > 0)
+                                        {
+                                            Child_Study_Schedule objCSS = new Child_Study_Schedule();
+
+                                            objCSS.ChildId = cId;
+                                            objCSS.StudyId = objStudy.Id;
+                                            objCSS.ScheduleId = (int)dr["ScheduleID"];
+                                            objCSS.ActiveOn = activeOn;
+
+                                            if (activeOn == 2)
+                                            {
+                                                string day = collection["ddlDays_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                                objCSS.Day = String.IsNullOrEmpty(day) ? 0 : Convert.ToInt32(day);
+
+                                                string month = collection["ddlMonths_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                                objCSS.Month = String.IsNullOrEmpty(month) ? 0 : Convert.ToInt32(month);
+
+                                                string weekday = collection["ddlWeekdays_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                                objCSS.Weekday = String.IsNullOrEmpty(weekday) ? 0 : Convert.ToInt32(weekday);
+
+                                                string startingYear = collection["ddlStartingYear_StudyId_" + objStudy.Id + "_ScheduleId_" + dr["ScheduleID"].ToString()];
+                                                objCSS.StartingYear = String.IsNullOrEmpty(startingYear) ? 0 : Convert.ToInt32(startingYear);
+                                            }
+
+                                            cCSS.Children_Studies_Schedules.RemoveRange(cCSS.Children_Studies_Schedules.Where(css => css.ChildId == objCSS.ChildId && css.StudyId == objCSS.StudyId && css.ScheduleId == objCSS.ScheduleId));
+                                            cCSS.Children_Studies_Schedules.Add(objCSS);
+                                        }
+                                    }
+                                    cCSS.SaveChanges();
+                                }
+                            }
+                            #endregion
+                        }
+                        csrConext.SaveChanges();
+                    }
+
+
+                    #endregion
+
+                    #region Consent
+                    /*
                 if (Convert.ToBoolean(collection["hdnSendConsentEmail"]) == true)
                 {
                     string consentPath = Server.MapPath("~/Attachments/Child_Consent.html");
                     sendConsentEmail(objChild, consentPath);
                 }
                 */
-                #endregion
+                    #endregion
 
-                bool sendEmail = true;
-                sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
+                    bool sendEmail = true;
+                    sendEmail = Convert.ToBoolean(collection["hdnSendEmail"]);
+
+                    string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
+                    bool isNewChild = childModel.Id <= 0 ? true : false;
+                    childModel.Id = cId;
+                    int studId = 0;
+                    setChildSchedules(childModel, path, sendEmail, studId, isNewChild);
                 
-                string path = Server.MapPath("~/Attachments/Survey_Assignment.html");
-                bool isNewChild = childModel.Id <= 0 ? true : false;
-                childModel.Id = cId;
-                int studId = 0;
-                setChildSchedules(childModel, path, sendEmail, studId, isNewChild);
 
                 
             }
@@ -1244,50 +1245,70 @@ namespace SurveyApp.Controllers
 
         public static bool sendConsentEmail(Child objChild, string path)
         {
-            string body = "";
-            using (System.IO.StreamReader reader = new System.IO.StreamReader(path))
-            {
-                body = reader.ReadToEnd();
-            }
-            body = body.Replace("_CONSENTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString() + "Consent/Index?cid=" + HttpUtility.UrlEncode(Encryption.Encrypt(objChild.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false)) + "&sts=0");
-            body = body.Replace("_CHILDNAME_", objChild.Name);
-
-            string studies = String.Empty;
-            List<int> lstStudies = new List<int>();
-            using (var csrConsent = new Child_Study_RespondentContext())
-            {
-                List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
-                lstCSRs = csrConsent.Child_Study_Respondents.Where(c => c.ChildId == objChild.Id).ToList();
-                
-                if(lstCSRs.Count > 0)
+            
+                string body = "";
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(path))
                 {
-                    studies += "<br/>Following studies have been assigned to you.<br/><table style='border:none;'>";
-                    int serialNumber = 1;
-                    using (var sContext = new StudyContext())
-                    {
-                        foreach (Child_Study_Respondent objCSR in lstCSRs)
-                        {
-                            if(lstStudies.Contains(objCSR.StudyId) == false)
-                            {
-                                string studyName = sContext.Studies.Find(objCSR.StudyId).Name;
-                                studies += "<tr><td>" + serialNumber + " : </td><td>" + studyName + "</td></tr>";
-                                                                
-                                serialNumber++;
-                                lstStudies.Add(objCSR.StudyId);
-                            }                            
-                        }
-                    }
-                    studies += "</table>";
+                    body = reader.ReadToEnd();
                 }
-            }
-            body = body.Replace("_STUDIES_", studies);
+                body = body.Replace("_CONSENTPATH_", System.Web.Configuration.WebConfigurationManager.AppSettings["_RootPath"].ToString() + "Consent/Index?cid=" + HttpUtility.UrlEncode(Encryption.Encrypt(objChild.Id.ToString(), System.Web.Configuration.WebConfigurationManager.AppSettings["key5"].ToString(), false)) + "&sts=0");
+                body = body.Replace("_CHILDNAME_", objChild.Name);
 
-            List<string> lstEmails = new List<string>();
-            lstEmails.Add(objChild.Email);
+                string studies = String.Empty;
+                List<int> lstStudies = new List<int>();
+                using (var csrConsent = new Child_Study_RespondentContext())
+                {
+                    List<Child_Study_Respondent> lstCSRs = new List<Child_Study_Respondent>();
+                    lstCSRs = csrConsent.Child_Study_Respondents.Where(c => c.ChildId == objChild.Id).ToList();
 
-            SMTPHelper.SendGridEmail("eBit - Consent for Study", body, lstEmails, true, null, null);
+                    if (lstCSRs.Count > 0)
+                    {
+                        studies += "<br/>Following studies have been assigned to you.<br/><table style='border:none;'>";
+                        int serialNumber = 1;
+                        using (var sContext = new StudyContext())
+                        {
+                            foreach (Child_Study_Respondent objCSR in lstCSRs)
+                            {
+                                if (lstStudies.Contains(objCSR.StudyId) == false)
+                                {
+                                    string studyName = sContext.Studies.Find(objCSR.StudyId).Name;
+                                    studies += "<tr><td>" + serialNumber + " : </td><td>" + studyName + "</td></tr>";
 
+                                    serialNumber++;
+                                    lstStudies.Add(objCSR.StudyId);
+                                }
+                            }
+                        }
+                        studies += "</table>";
+                    }
+                }
+                body = body.Replace("_STUDIES_", studies);
+
+                List<string> lstEmails = new List<string>();
+                lstEmails.Add(objChild.Email);
+
+                SMTPHelper.SendGridEmail("eBit - Consent for Study", body, lstEmails, true, null, null);
+
+            
+            
             return true;
+        }
+
+        public static string getStatusDescription(int statusId)
+        {
+            switch (statusId)
+            {
+                case 1:
+                    return "Enrolled";
+                case 2:
+                    return "Lost Followup";
+                case 3:
+                    return "Withdrew Consent";
+                case 4:
+                    return "No Longer at School";
+                default:
+                    return "Not Enrolled";
+            }
         }
     }
 }

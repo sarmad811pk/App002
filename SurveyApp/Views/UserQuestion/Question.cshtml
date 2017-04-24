@@ -19,6 +19,20 @@
     }
 
     int schId = String.IsNullOrEmpty(Request.QueryString["schid"]) == false ? Convert.ToInt32(Request.QueryString["schid"]) : 0;
+    int studyId = String.IsNullOrEmpty(Request.QueryString["stdid"]) == false ? Convert.ToInt32(Request.QueryString["stdid"]) : 0;
+    
+    if(studyId > 0){
+        using (var stdContext = new SurveyApp.Models.StudyContext())
+        {
+            SurveyApp.Models.Study objStudy = stdContext.Studies.Find(studyId);
+            if (objStudy.Status == 2 || objStudy.IsDeleted == true)
+            {
+                Response.Redirect("~/UserQuestion/Index?childIdts=" + chiildid);
+                 //Url.Action("Index", "UserQuestion", new { childId = chiildid });
+            }
+        }    
+    }
+    
 }
 
 <style type="text/css">

@@ -40,6 +40,7 @@ namespace SurveyApp.Models
         [Required(ErrorMessage = "Please enter no. of days for last reminder")]
         public int LastReminder { get; set; }        
         public int? StartingYear { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     public class ScheduleDay

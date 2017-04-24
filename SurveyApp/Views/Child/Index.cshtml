@@ -6,23 +6,6 @@
     DataSet dsChildren = SurveyApp.DataHelper.ChildGetAll();
 }
 
-@functions{
-    public string getStatusDescription(int statusId) {
-        switch (statusId)
-        {
-            case 1:
-                return "Enrolled";
-            case 2:
-                return "Lost Followup";
-            case 3:
-                return "Withdrew Consent";
-            case 4:
-                return "No Longer at School";
-            default:
-                return "Not Enrolled";
-        }
-    }
-}
 
 <style type="text/css">
     .ui-tooltip {
@@ -33,6 +16,12 @@
     }
     #tblChildren .name{
         text-transform: capitalize;
+    }
+    #tblChildren .text-success {
+        color: #33b86c;
+    }
+    #tblChildren .text-danger {
+        color: #ef5350;
     }
 </style>
 
@@ -66,26 +55,26 @@
     </thead>
     <tbody>
         @if (dsChildren != null && dsChildren.Tables.Count > 0 && dsChildren.Tables[0] != null && dsChildren.Tables[0].Rows.Count > 0)
-        {
-            foreach (DataRow dr in dsChildren.Tables[0].Rows)
-            {
-                <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = dr["Id"] })';">
-                    <td title="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "This child is self respondent" : "")" data-toggle="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "tooltip" : "")" class="name">@(dr["Name"])<label class="text-danger">@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "*" : "")</label></td>
-                    <td>@(dr["dob"] != DBNull.Value ? Convert.ToDateTime(dr["dob"]).ToString("MM/dd/yyyy") : "")</td>
-                    <td class="name">@dr["School"]</td>
-                    <td class="name">@dr["Parent"]</td>
-                    <td class="name">@dr["Teacher"]</td>
-                    <td class="name">@dr["Study"]</td>
-                    <td class="text-success">@getStatusDescription((int)dr["StatusId"])</td>
-                    @*<td style="text-align: center;vertical-align:middle;">
-                        @if(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true){
-                            <i class="ion-eye @(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye") : "")"  data-toggle='tooltip' title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Child has not given consent yet." : "Child has given the consent" + (dr["AgreeDate"] != DBNull.Value ? " on " + Convert.ToDateTime(dr["AgreeDate"]).ToString("MM/dd/yyyy") : ".")) : "") : "Consent is not required for this child.")"></i>
-                        }                        
-                    </td>*@
-                    <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]');"><i class="ion-close"></i></a></td>
-                </tr>
-            }
-        }
+{
+    foreach (DataRow dr in dsChildren.Tables[0].Rows)
+    {
+        <tr onclick="goToDetailPage(@dr["Id"], '@Html.Raw(dr["Name"])', @dr["StatusId"], '@dr["School"]');">
+            <td title="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "This child is self respondent" : "")" data-toggle="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "tooltip" : "")" class="name">@(dr["Name"])<label class="text-danger">@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "*" : "")</label></td>
+            <td>@(dr["dob"] != DBNull.Value ? Convert.ToDateTime(dr["dob"]).ToString("MM/dd/yyyy") : "")</td>
+            <td class="name">@dr["School"]</td>
+            <td class="name">@dr["Parent"]</td>
+            <td class="name">@dr["Teacher"]</td>
+            <td class="name">@dr["Study"]</td>
+            <td class="@((int)dr["StatusId"] == 1 ? "text-success" : "text-danger")">@SurveyApp.Controllers.ChildController.getStatusDescription((int)dr["StatusId"])</td>
+            @*<td style="text-align: center;vertical-align:middle;">
+                    @if(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true){
+                        <i class="ion-eye @(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye") : "")"  data-toggle='tooltip' title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Child has not given consent yet." : "Child has given the consent" + (dr["AgreeDate"] != DBNull.Value ? " on " + Convert.ToDateTime(dr["AgreeDate"]).ToString("MM/dd/yyyy") : ".")) : "") : "Consent is not required for this child.")"></i>
+                    }
+                </td>*@
+            <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'child', '@dr["Name"]', function(){ location.reload(true); });"><i class="ion-close"></i></a></td>
+        </tr>
+    }
+}
     </tbody>
 </table>
 
@@ -96,4 +85,48 @@
             return $(this).attr('title').replace(/_NEWLINE_/g, "<br/>");
         },
     });
+
+    function goToDetailPage(childId, childName, statusId, schoolName) {
+        //d
+        if (statusId == 1) {
+            location.href = '@Url.Action("ChildAddEdit", "Child")?id=' + childId;
+        }
+        else {
+            var statusText = "";
+            if (statusId == 2) {
+                statusText = " has lost Followup.";
+            }
+            else if (statusId == 3) {
+                statusText = " has withdrew Consent.";
+            }
+            else if (statusId == 4) {
+                statusText = " is no longer at " + schoolName;
+            }
+
+            bootbox.dialog({
+                message: childName + statusText + "<br/>Do you want to view the details?",
+                title: "<span style='text-transform:capitalize;'>" + childName + "</span>",
+                closeButton: false,
+                onEscape: function() {
+                    
+                },
+                buttons: {
+                    success: {
+                        label: "Yes",
+                        className: "btn-primary",
+                        callback: function() {
+                            location.href = '@Url.Action("ChildAddEdit", "Child")?id=' + childId;
+                        }
+                    },
+                    danger: {
+                        label: "No",
+                        className: "btn-default",
+                        callback: function() {
+                            
+                        }
+                    }
+                }
+            });
+        }
+    }
 </script>

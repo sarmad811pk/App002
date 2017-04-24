@@ -19,6 +19,7 @@ namespace SurveyApp.Models
         public string ParentConsent { get; set; }
         public string TeacherConsent { get; set; }
         public string ChildConsent { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     public class ConsentContext : DbContext

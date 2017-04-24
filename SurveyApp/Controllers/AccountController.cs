@@ -22,6 +22,9 @@ namespace SurveyApp.Controllers
         public AccountController()
         {
             Database.SetInitializer<UsersContext>(null);
+            Database.SetInitializer<ConsentContext>(null);
+            Database.SetInitializer<Child_Study_RespondentContext>(null);
+            Database.SetInitializer<UsersContext>(null);
         }
         //
         // GET: /Account/Login

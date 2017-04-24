@@ -50,6 +50,9 @@ namespace SurveyApp.Models
 
         [DefaultValue(false)]
         public bool Account { get; set; }
+
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
     }
 
     public class ChildContext : DbContext
@@ -221,7 +224,14 @@ namespace SurveyApp.Models
                 {
                     if(lstStudies.Contains(objCSR.StudyId) == false)
                     {
-                        lstStudies.Add(objCSR.StudyId);
+                        using (var stc = new StudyContext())
+                        {
+                            Study objStudy = stc.Studies.Find(objCSR.StudyId);
+                            if (objStudy.IsDeleted == false)
+                            {
+                                lstStudies.Add(objCSR.StudyId);
+                            }
+                        }                        
                     }                    
                 }
                 lstStudiesDistinct = lstStudies.Distinct().ToList();

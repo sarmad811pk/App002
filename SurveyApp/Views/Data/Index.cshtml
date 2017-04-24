@@ -22,7 +22,7 @@
         }
     }
 
-    string childName = "", userName = "", surveyName = "";
+    string childName = "", userName = "", surveyName = "", childStatus = string.Empty;
     if (studyId != 0)
     {
         DataSet dsDefaultDataValues = SurveyApp.DataHelper.getDefaultDataValues(studyId);
@@ -49,6 +49,7 @@
         if (drsChildren.Length > 0)
         {
             childName = drsChildren[0]["Name"].ToString();
+            childStatus = SurveyApp.Controllers.ChildController.getStatusDescription((int)drsChildren[0]["StatusId"]);
         }
 
         DataRow[] drsUsers = dtUsers.Select("UserId = " + userId);
@@ -107,6 +108,13 @@
         bottom: 20px;*/
     }
     .ui-tooltip {max-width: 400px;background-color: #333;color:#FFF;}
+    .infoDetails .text-success, .info .text-success {
+        color: #33b86c;
+    }
+
+    .infoDetails .text-danger, .info .text-danger {
+        color: #ef5350;
+    }
 </style>
 
 <script src="~/Content/chosen/chosen.jquery.min.js"></script>
@@ -178,7 +186,7 @@
 <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
     <div>
         <div>
-            <b>@(surveyName == "" ? "All questionnaires" : surveyName)</b> provided by <b>@(userName == "" ? "All respondents" : userName)</b> for <b>@(childName == "" ? "All Children" : childName)</b>
+            <b>@(surveyName == "" ? "All questionnaires" : surveyName)</b> provided by <b>@(userName == "" ? "All respondents" : userName)</b> for <b>@(childName == "" ? "All Children" : childName + " " + (childStatus != string.Empty ? "(" + childStatus + ")" : ""))</b>
             @*<span><a href="javascript:void(0);" data-toggle="tooltip" title="@(surveyId > 0 && childId > 0 && userId > 0 ? "" : "Please select a respondent, child and questionnaire first")" class="excel @(surveyId > 0 && childId > 0 && userId > 0 ? "" : "disabled")" onclick="@(surveyId > 0 && childId > 0 && userId > 0 ? "$('.infoDetails .buttons-excel').click();" : "")"><i class="fa fa-file-excel-o">&nbsp;</i>Export questionnaire details to Excel</a></span>*@
             <div class="dt-buttons">@*<a class="dt-button buttons-excel buttons-html5 exportdetails @(surveyId > 0 && childId > 0 && userId > 0 ? "" : "disabled")" href="javascript:void(0);" data-toggle="tooltip" title="@(surveyId > 0 && childId > 0 && userId > 0 ? "" : "Please select a respondent, child and questionnaire first")" onclick="@(surveyId > 0 && childId > 0 && userId > 0 ? "$('.infoDetails .buttons-excel').click();" : "")"><span>Export questionnaire details to Excel</span></a>*@</div>
         </div>
@@ -189,6 +197,7 @@
                 @if (childId <= 0)
                 {
                     <th>Child</th>
+                    <th>Status</th>
                 }
                 @if (userId <= 0)
                 {
@@ -208,6 +217,7 @@
                         @if (childId <= 0)
                         {
                             <td>@dr["Name"]</td>
+                            <td class="@((int)dr["StatusId"] == 1 ? "text-success" : "text-danger")">@SurveyApp.Controllers.ChildController.getStatusDescription((int)dr["StatusId"])</td>
                         }
                         @if (userId <= 0)
                         {
@@ -229,7 +239,7 @@
 {
     <div class="infoDetails" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;">
         <div>
-            <b>@surveyName</b> - details as provided by <b>@userName</b> for <b>@childName</b>
+            <b>@surveyName</b> - details as provided by <b>@userName</b> for <b>@childName @(childStatus != string.Empty ? "(" + childStatus + ")" : "")</b>
         </div>
         <table class="table table-striped table-hover" id="tblData">
             <thead>
@@ -239,6 +249,7 @@
                     <th>Score</th>
                     <th>Entry Date</th>
                     <th>Schedule Date</th>
+                    <th>Child Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -252,6 +263,7 @@
                             <td>@dr["Score"]</td>
                             <td>@(dr["EntryDate"] != DBNull.Value ? Convert.ToDateTime(dr["EntryDate"]).ToString("MM/dd/yyyy") : "")</td>
                             <td>@(dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "")</td>
+                            <td class="@((int)dr["StatusId"] == 1 ? "text-success" : "text-danger")">@SurveyApp.Controllers.ChildController.getStatusDescription((int)dr["StatusId"])</td>
                         </tr>
                     }
                 }

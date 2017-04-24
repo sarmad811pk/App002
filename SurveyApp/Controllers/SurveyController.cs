@@ -13,9 +13,8 @@ namespace SurveyApp.Controllers
         // GET: /Survey/
 
         public ActionResult Index()
-        {
-            System.Data.DataSet ds = SurveyApp.DataHelper.SurveyGetAll();
-            return View(ds);
+        {            
+            return View();
         }
         public ActionResult Survey(int? surveyID)
         {

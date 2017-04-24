@@ -26,13 +26,23 @@ namespace SurveyApp.Models
         public int SchoolId { get; set; }
         [Required(ErrorMessage = "Please provide school name", AllowEmptyStrings = false)]
         public string Name { get; set; }
+        public bool IsDeleted { get; set; }
 
         public static List<School> SchoolGetAll()
         {
+            List<School> lstSchools = new List<School>();
             using (var context = new SchoolContext())
             {
-                return context.Schools.ToList();
+                foreach (School objSchool in context.Schools.ToList())
+                {
+                    if (objSchool.IsDeleted == false)
+                    {
+                        lstSchools.Add(objSchool);
+                    }
+                }
             }
+
+            return lstSchools;
         }
     }
 }
