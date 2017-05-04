@@ -217,7 +217,7 @@
                         @if (childId <= 0)
                         {
                             <td>@dr["Name"]</td>
-                            <td class="@((int)dr["StatusId"] == 1 ? "text-success" : "text-danger")">@SurveyApp.Controllers.ChildController.getStatusDescription((int)dr["StatusId"])</td>
+                            <td data-toggle="tooltip" title="@(dr["StatusChangeDate"] != DBNull.Value ? "Status Changed on " + Convert.ToDateTime(dr["StatusChangeDate"]).ToShortDateString() : "")" class="@((int)dr["StatusId"] == 1 ? "text-success" : "text-danger")">@SurveyApp.Controllers.ChildController.getStatusDescription((int)dr["StatusId"])&nbsp;@(dr["StatusChangeDate"] != DBNull.Value ? "(" + Convert.ToDateTime(dr["StatusChangeDate"]).ToShortDateString() + ")" : "")</td>
                         }
                         @if (userId <= 0)
                         {
