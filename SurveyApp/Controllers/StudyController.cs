@@ -69,6 +69,11 @@ namespace SurveyApp.Controllers
                         var result = db.Studies.SingleOrDefault(s => s.Id == studyModel.Id);
                         if (result != null)
                         {
+                            if (result.Status != studyModel.Status)
+                            {
+                                DataHelper.study_updateStatus(result.Id, studyModel.Status, DateTime.Now);
+                            }
+
                             var dbSS = new Study_Survey_ScheduleContext();
 
                             dbSS.SSSs.RemoveRange(dbSS.SSSs.Where(s => s.StudyId == studyModel.Id));
@@ -86,6 +91,10 @@ namespace SurveyApp.Controllers
                         db.Studies.Add(study);
                         db.SaveChanges();
                         newStudyId = db.Studies.Max(item => item.Id);
+                        if (newStudyId > 0)
+                        {
+                            DataHelper.study_updateStatus(newStudyId, studyModel.Status, DateTime.Now);
+                        }
                     }
 
                     if (newStudyId > 0)

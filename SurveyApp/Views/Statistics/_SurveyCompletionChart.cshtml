@@ -16,7 +16,7 @@
     
     foreach (DataRow dr in drsParent)
     {
-        resps += "'" + dr["FullName"].ToString() + "',";
+        resps += "'" + dr["FullName"].ToString().Replace("'", " ").Replace("\"", " ") + "',";
         assigned += dr["SurveyCount"].ToString() + ",";
         initiated += dr["InitiatedSurveyCount"].ToString() + ",";
         comleted +=  dr["CompletedSurveyCount"].ToString() + ",";
@@ -43,6 +43,9 @@
             },
             subtitle: {
                 text: ''
+            },
+            credits: {
+                enabled : false
             },
             xAxis: {
                 categories: [

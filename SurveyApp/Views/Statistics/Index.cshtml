@@ -6,7 +6,9 @@
     ViewBag.Title = "eBit - Respondents Statistics";
 
     string study = string.Empty, respondent = string.Empty;
-    int studyId = 0, respondentId = 0;
+    
+    int studyId = string.IsNullOrEmpty(Request.QueryString["studyId"]) == false ? Convert.ToInt32(Request.QueryString["studyId"]) : 0;
+    int respondentId = string.IsNullOrEmpty(Request.QueryString["respId"]) == false ? Convert.ToInt32(Request.QueryString["respId"]) : 0;
     var userId = WebSecurity.CurrentUserId;
     System.Data.DataSet dsRespondent = SurveyApp.DataHelper.getRespondentsByStudyId(studyId, userId);
     if (dsRespondent != null && dsRespondent.Tables.Count > 0)
@@ -147,13 +149,11 @@
         $(".tabReps").find(elem).addClass("selected");
     }
 
-    function getStudyInfo(elem) {
-        var div = getVisibleDiv();
+    function getStudyInfo(elem) {        
         var studyId = $(elem).val();
-        location.href = "@Url.Action("Index", "Statistics")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&respId=@respondentId";
+        location.href = "@Url.Action("Index", "Statistics")" + "?studyId=" + (studyId == 0 ? "" : studyId) + "&respId=";
     }
-    function getRespInfo(elem) {
-        var div = getVisibleDiv();
+    function getRespInfo(elem) {        
         var respId = $(elem).val();
         location.href = "@Url.Action("Index", "Statistics")" + "?studyId=" + @studyId +"&respId=" + (respId == 0 ? "" : respId);
     }

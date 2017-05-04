@@ -135,12 +135,17 @@ namespace SurveyApp.Controllers
                 int cId = 0;
                 DateTime? dtEnrollment = null;
                 Child objChild = new Child();
-                int accountId = 0;                
+                int accountId = 0;
+                
                 using (var cContext = new ChildContext())
                 {                    
                     if (childModel.Id > 0)
                     {
                         objChild = cContext.Children.Find(childModel.Id);
+                        if (objChild.StatusId != childModel.StatusId)
+                        {
+                            DataHelper.child_updateStatus(objChild.Id, childModel.StatusId, DateTime.Now);
+                        }
                     }
 
                     objChild.Name = childModel.Name;
@@ -149,6 +154,9 @@ namespace SurveyApp.Controllers
                     objChild.ParentId = childModel.ParentId;
                     objChild.SchoolId = childModel.SchoolId;
                     objChild.StatusId = childModel.StatusId;
+
+                    
+
                     if (childModel.StatusId == 1 && objChild.EnrollmentDate == null)
                     {
                         objChild.EnrollmentDate = DateTime.Now;
@@ -185,6 +193,10 @@ namespace SurveyApp.Controllers
                     cContext.SaveChanges();
                     cId = childModel.Id > 0 ? childModel.Id : cContext.Children.Max(item => item.Id);
                     childModel.EnrollmentDate = dtEnrollment;
+                    if (childModel.Id < 0)
+                    {
+                        DataHelper.child_updateStatus(cId, objChild.StatusId, DateTime.Now);
+                    }
 
                     if(childModel.Account == true && childModel.Id <= 0)
                     {

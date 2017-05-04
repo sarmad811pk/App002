@@ -1105,5 +1105,41 @@ namespace SurveyApp
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
         #endregion
+
+        public static int child_updateStatus(int childId, int newStatusId, DateTime dtEntryDate)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@ChildID", SqlDbType.Int);
+            cmd.Parameters["@ChildID"].Value = childId;
+
+            cmd.Parameters.Add("@StatusID", SqlDbType.Int);
+            cmd.Parameters["@StatusID"].Value = newStatusId;
+
+            cmd.Parameters.Add("@EntryDate", SqlDbType.DateTime);
+            cmd.Parameters["@EntryDate"].Value = dtEntryDate;
+
+            cmd.CommandText = "Child_UpdateStatus";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+        }
+
+        public static int study_updateStatus(int studyId, int newStatusId, DateTime dtEntryDate)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@StudyID", SqlDbType.Int);
+            cmd.Parameters["@StudyID"].Value = studyId;
+
+            cmd.Parameters.Add("@StatusID", SqlDbType.Int);
+            cmd.Parameters["@StatusID"].Value = newStatusId;
+
+            cmd.Parameters.Add("@EntryDate", SqlDbType.DateTime);
+            cmd.Parameters["@EntryDate"].Value = dtEntryDate;
+
+            cmd.CommandText = "Study_UpdateStatus";
+            return DataHelper.ExecuteCommandAsNonQuery(cmd);
+        }
     }
 }
