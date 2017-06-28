@@ -144,7 +144,7 @@ namespace SurveyApp.Controllers
                         objChild = cContext.Children.Find(childModel.Id);
                         if (objChild.StatusId != childModel.StatusId)
                         {
-                            DataHelper.child_updateStatus(objChild.Id, childModel.StatusId, DateTime.Now);
+                            DataHelper.child_updateStatus(objChild.Id, childModel.StatusId, DateTime.Now, WebSecurity.CurrentUserName);
                         }
                     }
 
@@ -195,7 +195,7 @@ namespace SurveyApp.Controllers
                     childModel.EnrollmentDate = dtEnrollment;
                     if (childModel.Id < 0)
                     {
-                        DataHelper.child_updateStatus(cId, objChild.StatusId, DateTime.Now);
+                        DataHelper.child_updateStatus(cId, objChild.StatusId, DateTime.Now, WebSecurity.CurrentUserName);
                     }
 
                     if(childModel.Account == true && childModel.Id <= 0)
@@ -1321,6 +1321,11 @@ namespace SurveyApp.Controllers
                 default:
                     return "Not Enrolled";
             }
+        }
+
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
+        public ActionResult GetStatusHistory(string childId) {
+            return PartialView("_StatusHistory");
         }
     }
 }

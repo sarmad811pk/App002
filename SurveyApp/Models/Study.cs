@@ -46,7 +46,7 @@ namespace SurveyApp.Models
             List<Study> lst = new List<Study>();
             using (var context = new StudyContext())
             {
-                foreach (Study st in context.Studies.ToList())
+                foreach (Study st in context.Studies.ToList().OrderBy(s => s.Name))
                 {
                     if (st.IsDeleted == false && st.Status != 2)
                     {

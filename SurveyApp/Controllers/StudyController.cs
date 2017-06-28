@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using WebMatrix.WebData;
 
 namespace SurveyApp.Controllers
 {
@@ -71,7 +72,7 @@ namespace SurveyApp.Controllers
                         {
                             if (result.Status != studyModel.Status)
                             {
-                                DataHelper.study_updateStatus(result.Id, studyModel.Status, DateTime.Now);
+                                DataHelper.study_updateStatus(result.Id, studyModel.Status, DateTime.Now, WebSecurity.CurrentUserName);
                             }
 
                             var dbSS = new Study_Survey_ScheduleContext();
@@ -93,7 +94,7 @@ namespace SurveyApp.Controllers
                         newStudyId = db.Studies.Max(item => item.Id);
                         if (newStudyId > 0)
                         {
-                            DataHelper.study_updateStatus(newStudyId, studyModel.Status, DateTime.Now);
+                            DataHelper.study_updateStatus(newStudyId, studyModel.Status, DateTime.Now, WebSecurity.CurrentUserName);
                         }
                     }
 
@@ -231,6 +232,12 @@ namespace SurveyApp.Controllers
             }
 
             return result;
+        }
+
+        [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
+        public ActionResult GetStatusHistory(string studyId)
+        {
+            return PartialView("_StudyStatusHistory");
         }
     }
 }

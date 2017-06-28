@@ -1,0 +1,52 @@
+﻿@using SurveyApp.Models;
+@using System.Data;
+
+@{    
+    int childId = String.IsNullOrEmpty(Request.QueryString["childId"]) != true ? Convert.ToInt32(Request.QueryString["childId"]) : 0;    
+    DataSet ds = SurveyApp.DataHelper.Child_GetStatusHistory(childId);
+
+    string childName = string.Empty;
+}
+
+<style type="text/css">
+    .statusHistory .dt-buttons {
+        bottom: 10px;
+        position: relative;
+    }
+
+    #tblChildStatusHistory_wrapper {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="statusHistory">
+    <div class="info" style="border:solid 1px #CCC;padding: 6px;background-color: #FFF;max-height:350px;overflow-y:auto;">
+    @if (ds.Tables[0].Rows.Count > 0)
+    {
+        <table id="tblChildStatusHistory" cellpadding="0" cellspacing="0" style="width:100%;" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Changed On</th>
+                    <th>Changed By</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    <tr class="item">
+                        <td>@dr["Status"]</td>
+                        <td>@dr["Date"]</td>
+                        <td>@dr["UserName"]</td>
+                    </tr>
+                }                
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div style="text-align:center;">This child's status has never been changed.</div>
+    }
+    </div>    
+</div>
+

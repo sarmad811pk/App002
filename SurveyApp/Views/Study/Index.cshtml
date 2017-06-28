@@ -21,6 +21,13 @@
 <style>
     .table-hover tbody tr{cursor:pointer;}
     #tblStudies .name{text-transform:capitalize;}
+    #tblStudies .text-success {
+        color: #33b86c;
+    }
+
+    #tblStudies .text-danger {
+        color: #ef5350;
+    }
 </style>
 <table class="table table-striped table-hover" id="tblStudies">
     <thead>
@@ -43,7 +50,7 @@
                 <td>@dr["Children"]</td>
                 <td>@dr["Teachers"]</td>
                 <td>@dr["Parents"]</td>                
-                <td class="@(Convert.ToInt32(dr["Status"]) == 2 ? "text-danger" : "text-success")">@(Convert.ToInt32(dr["Status"]) == 1 ? "Active" : (Convert.ToInt32(dr["Status"]) == 2 ? "InActive" : (Convert.ToInt32(dr["Status"]) == 3 ? "Incomplete" : "-")))</td>
+                <td><a href="javascript:void(0);" onclick="event.stopPropagation();showStatusHistory(this, @dr["Id"], '@dr["Name"]');" class="@(Convert.ToInt32(dr["Status"]) == 2 ? "text-danger" : "text-success")">@(Convert.ToInt32(dr["Status"]) == 1 ? "Active" : (Convert.ToInt32(dr["Status"]) == 2 ? "InActive" : (Convert.ToInt32(dr["Status"]) == 3 ? "Incomplete" : "-")))</a></td>
                 <td style="text-align: center;vertical-align:middle;"><a href="javascript:void(0);" class="redCross" onclick="event.stopPropagation();deleteListItem(this, @dr["Id"], 'study', '@dr["Name"]');"><i class="ion-close"></i></a></td>
             </tr>
         }
@@ -51,3 +58,32 @@
 
     </tbody>
 </table>
+
+<script type="text/javascript">
+    function showStatusHistory(elem, studyId, study) {
+        $.ajax({
+            url: "@Url.Action("GetStatusHistory", "Study")?studyId=" + studyId,
+            dataType: "html",
+            success: function (data) {
+            if (isSessionValid(data) == true) {                    
+                bootbox.dialog({
+                    message: data,
+                    size: "large",
+                    closeButton: true,
+                    title: "<span style='text-transform:capitalize;'>" + study + "</span> - Status History",
+                    onEscape: function() {
+
+                    },
+                    buttons: {
+                        cancel: {
+                            label: 'Close',
+                            className: 'btn-default'
+                        }
+                    }
+                });                    
+            }
+            checkTimeout(data, 0);
+        }
+    });
+    }
+</script>

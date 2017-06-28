@@ -58,14 +58,14 @@
 {
     foreach (DataRow dr in dsChildren.Tables[0].Rows)
     {
-        <tr onclick="goToDetailPage(@dr["Id"], '@Html.Raw(dr["Name"])', @dr["StatusId"], '@dr["School"]');">
+        <tr onclick="location.href = '@Url.Action("ChildAddEdit", "Child", new { id = dr["Id"] })';">
             <td title="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "This child is self respondent" : "")" data-toggle="@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "tooltip" : "")" class="name">@(dr["Name"])<label class="text-danger">@(dr["IsSelfRespondent"] != DBNull.Value && Convert.ToBoolean(dr["IsSelfRespondent"]) == true ? "*" : "")</label></td>
             <td>@(dr["dob"] != DBNull.Value ? Convert.ToDateTime(dr["dob"]).ToString("MM/dd/yyyy") : "")</td>
             <td class="name">@dr["School"]</td>
             <td class="name">@dr["Parent"]</td>
             <td class="name">@dr["Teacher"]</td>
             <td class="name">@dr["Study"]</td>
-            <td class="@((int)dr["StatusId"] == 1 ? "text-success" : "text-danger")">@SurveyApp.Controllers.ChildController.getStatusDescription((int)dr["StatusId"])</td>
+            <td><a href="javascript:void(0);" onclick="event.stopPropagation();showStatusHistory(this, @dr["Id"], '@dr["Name"]');" class="@((int)dr["StatusId"] == 1 ? "text-success" : "text-danger")">@SurveyApp.Controllers.ChildController.getStatusDescription((int)dr["StatusId"])</a></td>
             @*<td style="text-align: center;vertical-align:middle;">
                     @if(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true){
                         <i class="ion-eye @(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "redeye" : "greeneye") : "redeye") : "")"  data-toggle='tooltip' title="@(dr["Consent"] != DBNull.Value && Convert.ToBoolean(dr["Consent"]) == true ? (dr["Agreed"] != DBNull.Value ? (Convert.ToBoolean(dr["Agreed"]) == false ? "Child has not given consent yet." : "Child has given the consent" + (dr["AgreeDate"] != DBNull.Value ? " on " + Convert.ToDateTime(dr["AgreeDate"]).ToString("MM/dd/yyyy") : ".")) : "") : "Consent is not required for this child.")"></i>
@@ -108,7 +108,7 @@
                 title: "<span style='text-transform:capitalize;'>" + childName + "</span>",
                 closeButton: false,
                 onEscape: function() {
-                    
+
                 },
                 buttons: {
                     success: {
@@ -122,11 +122,38 @@
                         label: "No",
                         className: "btn-default",
                         callback: function() {
-                            
+
                         }
                     }
                 }
             });
         }
+    }
+
+    function showStatusHistory(elem, childId, childName) {
+        $.ajax({
+            url: "@Url.Action("GetStatusHistory", "Child")?childId=" + childId,
+            dataType: "html",
+            success: function (data) {
+                if (isSessionValid(data) == true) {                    
+                    bootbox.dialog({
+                        message: data,
+                        size: "large",
+                        closeButton: true,
+                        title: "<span style='text-transform:capitalize;'>" + childName + "</span> - Status History",
+                        onEscape: function() {
+
+                        },
+                        buttons: {
+                            cancel: {
+                                label: 'Close',
+                                className: 'btn-default'
+                            }
+                        }
+                    });                    
+                }
+                checkTimeout(data, 0);
+            }
+        });
     }
 </script>

@@ -508,6 +508,8 @@
     <Content Include="Views\Report\AccountRequest.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Statistics\_SurveyCompletionChart.cshtml" />
+    <Content Include="Views\Child\_StatusHistory.cshtml" />
+    <Content Include="Views\Study\_StudyStatusHistory.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

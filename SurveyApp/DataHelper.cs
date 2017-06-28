@@ -765,7 +765,7 @@ namespace SurveyApp
         #endregion
 
         #region DataManager
-        public static DataSet getAllData(int studyId, int userId, int childId, int surveyId)
+        public static DataSet getAllData(int studyId, int userId, int childId, int surveyId, DateTime scheduleDate)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -782,6 +782,16 @@ namespace SurveyApp
             cmd.Parameters.Add("@SurveyID", SqlDbType.Int);
             cmd.Parameters["@SurveyID"].Value = surveyId;
 
+            cmd.Parameters.Add("@ScheduleDate", SqlDbType.DateTime);
+            if (scheduleDate == DateTime.MinValue)
+            {
+                cmd.Parameters["@ScheduleDate"].Value = DBNull.Value;
+            }
+            else
+            {
+                cmd.Parameters["@ScheduleDate"].Value = scheduleDate.ToShortDateString();
+            }
+            
 
             cmd.CommandText = "Data_GetAllData";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
@@ -1106,7 +1116,7 @@ namespace SurveyApp
         }
         #endregion
 
-        public static int child_updateStatus(int childId, int newStatusId, DateTime dtEntryDate)
+        public static int child_updateStatus(int childId, int newStatusId, DateTime dtEntryDate, string userName)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -1120,11 +1130,14 @@ namespace SurveyApp
             cmd.Parameters.Add("@EntryDate", SqlDbType.DateTime);
             cmd.Parameters["@EntryDate"].Value = dtEntryDate;
 
+            cmd.Parameters.Add("@UserName", SqlDbType.NVarChar);
+            cmd.Parameters["@UserName"].Value = userName;
+
             cmd.CommandText = "Child_UpdateStatus";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);
         }
 
-        public static int study_updateStatus(int studyId, int newStatusId, DateTime dtEntryDate)
+        public static int study_updateStatus(int studyId, int newStatusId, DateTime dtEntryDate, string userName)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -1138,8 +1151,36 @@ namespace SurveyApp
             cmd.Parameters.Add("@EntryDate", SqlDbType.DateTime);
             cmd.Parameters["@EntryDate"].Value = dtEntryDate;
 
+            cmd.Parameters.Add("@UserName", SqlDbType.NVarChar);
+            cmd.Parameters["@UserName"].Value = userName;
+
             cmd.CommandText = "Study_UpdateStatus";
             return DataHelper.ExecuteCommandAsNonQuery(cmd);
         }
+
+        public static DataSet Child_GetStatusHistory(int childId)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@childId", SqlDbType.Int);
+            cmd.Parameters["@childId"].Value = childId;
+
+            cmd.CommandText = "Child_GetStatusHistory";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+
+        public static DataSet Study_GetStatusHistory(int Id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("@Id", SqlDbType.Int);
+            cmd.Parameters["@Id"].Value = Id;
+
+            cmd.CommandText = "Study_GetStatusHistory";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
+        
     }
 }
