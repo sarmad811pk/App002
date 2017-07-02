@@ -320,7 +320,7 @@
         userId = type != 1 ? ($("#ddlUsers option:selected").val() == undefined || $("#ddlUsers option:selected").val() == "undefined" ? 0 : $("#ddlUsers option:selected").val()) : 0;
         childId = type != 1 ? ($("#ddlChildren option:selected").val() == undefined || $("#ddlChildren option:selected").val() == "undefined" ? 0 : $("#ddlChildren option:selected").val()) : 0;
         surveyId = type != 1 ? ($("#ddlSurveys option:selected").val() == undefined || $("#ddlSurveys option:selected").val() == "undefined" ? 0 : $("#ddlSurveys option:selected").val()) : 0;
-        scheduleDate = type != 1 ? ($("#ddlDates option:selected").val() == undefined || $("#ddlDates option:selected").val() == "undefined" ? 0 : $("#ddlDates option:selected").val()) : 0;
+        scheduleDate = $("#ddlDates option:selected").val() == undefined || $("#ddlDates option:selected").val() == "undefined" ? 0 : $("#ddlDates option:selected").val();
 
         location.href = "@Url.Action("Index", "Data")" + "?studyId=" + studyId + "&userId=" + userId + "&childId=" + childId + "&surveyId=" + surveyId + "&dt=" + scheduleDate;
     }
