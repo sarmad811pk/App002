@@ -26,7 +26,7 @@
         lstEventDates.Add(dtEventDate);
 
         string name = dr["Name"].ToString();
-        data += "{event: '" + dr["EventName"] + "',x: Date.UTC(" + dtEventDate.Year + ", " + dtEventDate.Month + ", " + dtEventDate.Day + "), y:" + (isDuplicate == true ? index + 1 : index) + " , child:'" + name + "'},";
+        data += "{event: '" + (dr["EventName"] != DBNull.Value ? dr["EventName"].ToString().Replace("'", "\\'") : dr["EventName"]) + "',x: Date.UTC(" + dtEventDate.Year + ", " + dtEventDate.Month + ", " + dtEventDate.Day + "), y:" + (isDuplicate == true ? index + 1 : index) + " , child:'" + name + "'},";
         
     }
 
@@ -85,7 +85,8 @@
                         tooltip: {
                             headerFormat: '<b>{point.key}</b> ',
                             pointFormat: '<br/>Child: {point.child} <br />Event: {point.event} ',
-                            shared: true
+                            shared: true,
+                            useHTML: true
                         },
                     }
                 },
