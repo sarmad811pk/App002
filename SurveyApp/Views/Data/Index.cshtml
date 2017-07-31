@@ -267,6 +267,10 @@
             <thead>
                 <tr>
                     <th>S#</th>
+                    @if (surveyId == 48)
+                    {
+                        <th>Area</th>
+                    }                    
                     <th>Question</th>
                     <th>Answer</th>
                     <th>Score</th>
@@ -283,8 +287,11 @@
                     {
                         <tr>
                             <td>@sn</td>
-                            <td>@dr["Question"]</td>
-                            <td>@dr["Answers"]</td>
+                            @if(dr["SurveyId"].ToString() == "48") { 
+                            <td>@dr["ScoreCategory"]</td>
+                            }
+                            <td>@Html.Raw(dr["Question"])</td>
+                            <td>@Html.Raw(dr["Answers"])</td>
                             <td>@dr["Score"]</td>
                             <td>@(dr["EntryDate"] != DBNull.Value ? Convert.ToDateTime(dr["EntryDate"]).ToString("MM/dd/yyyy") : "")</td>
                             <td>@(dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "")</td>
