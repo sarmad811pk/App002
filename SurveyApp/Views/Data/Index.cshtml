@@ -267,7 +267,7 @@
             <thead>
                 <tr>
                     <th>S#</th>
-                    @if (surveyId == 48)
+                    @if (surveyId == 48 || surveyId == 46)
                     {
                         <th>Area</th>
                     }                    
@@ -287,8 +287,8 @@
                     {
                         <tr>
                             <td>@sn</td>
-                            @if(dr["SurveyId"].ToString() == "48") { 
-                            <td>@dr["ScoreCategory"]</td>
+                            @if(dr["SurveyId"].ToString() == "48" || dr["SurveyId"].ToString() == "46") { 
+                            <td>@dr["Area"]</td>
                             }
                             <td>@Html.Raw(dr["Question"])</td>
                             <td>@Html.Raw(dr["Answers"])</td>
