@@ -406,6 +406,11 @@
                                 {
                                     <div class="col-md-12 text-left">School Anxiety Scale – Teacher Report@(Html.Raw(qTeacherReport))</div>
                                 }
+                                var qCGITeacher = getPercentCompletion(58, (int)drch["ID"], url.Replace("__", "58"));
+                                if (showHideSurvey(qCGITeacher) == true)
+                                {
+                                    <div class="col-md-12 text-left">CGI-I: Teacher Rating@(Html.Raw(qCGITeacher))</div>
+                                }
                             }
                             @{
                                 var abbsensoryprofile = getPercentCompletion(1, (int)drch["ID"], url.Replace("__", "1"));
@@ -568,6 +573,12 @@
                                         <div class="col-md-12 text-left">Strengths and Difficulties Questionnaire for 11yrs -17yrs@(Html.Raw(qStrengths1117))</div>
                                     }
                                 }
+
+                                var qCGISelf = getPercentCompletion(59, (int)drch["ID"], url.Replace("__", "59"));
+                                if (showHideSurvey(qCGISelf) == true)
+                                {
+                                    <div class="col-md-12 text-left">CGI-I: Self-Rating@(Html.Raw(qCGISelf))</div>
+                                }
                             }
 
                             @if (roles[0] != "Teacher")
@@ -587,6 +598,11 @@
                             if (showHideSurvey(vinelandParent) == true)
                             {
                                 <div class="col-md-12 text-left">Vineland-3 (Parent)@(Html.Raw(vinelandParent))</div>
+                                }
+                                var qCGIParent = getPercentCompletion(57, (int)drch["ID"], url.Replace("__", "57"));
+                                if (showHideSurvey(qCGIParent) == true)
+                                {
+                                    <div class="col-md-12 text-left">CGI-I: Caregiver Rating@(Html.Raw(qCGIParent))</div>
                                 }
                             }
     </div>
