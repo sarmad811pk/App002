@@ -579,6 +579,18 @@
                                 {
                                     <div class="col-md-12 text-left">CGI-I: Self-Rating@(Html.Raw(qCGISelf))</div>
                                 }
+
+                                var qLifeUpdate = getPercentCompletion(60, (int)drch["ID"], url.Replace("__", "60"));
+                                if (showHideSurvey(qLifeUpdate) == true)
+                                {
+                                    <div class="col-md-12 text-left">Life Update@(Html.Raw(qLifeUpdate))</div>
+                                }
+
+                                var InterventionsUpdate = getPercentCompletion(61, (int)drch["ID"], url.Replace("__", "61"));
+                                if (showHideSurvey(InterventionsUpdate) == true)
+                                {
+                                    <div class="col-md-12 text-left">Interventions Update@(Html.Raw(InterventionsUpdate))</div>
+                                }
                             }
 
                             @if (roles[0] != "Teacher")
@@ -594,10 +606,10 @@
                                 {
                                     <div class="col-md-12 text-left">Parent Follow-Up Form (OHS)@(Html.Raw(percentM))</div>
                                 }*@
-                            var vinelandParent = getPercentCompletion(46, (int)drch["ID"], url.Replace("__", "46"));
-                            if (showHideSurvey(vinelandParent) == true)
-                            {
-                                <div class="col-md-12 text-left">Vineland-3 (Parent)@(Html.Raw(vinelandParent))</div>
+                                var vinelandParent = getPercentCompletion(46, (int)drch["ID"], url.Replace("__", "46"));
+                                if (showHideSurvey(vinelandParent) == true)
+                                {
+                                    <div class="col-md-12 text-left">Vineland-3 (Parent)@(Html.Raw(vinelandParent))</div>
                                 }
                                 var qCGIParent = getPercentCompletion(57, (int)drch["ID"], url.Replace("__", "57"));
                                 if (showHideSurvey(qCGIParent) == true)

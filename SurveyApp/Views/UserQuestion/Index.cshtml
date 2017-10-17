@@ -114,7 +114,7 @@
             @if (role != "Student")
             {
             <li>
-                <a href="#2" onclick="loadCharts(this);">Visualization</a>
+                <a href="#2" onclick="loadCharts(this);">Graphs Over Time</a>
             </li>    
             }
             <li style="float:right;">
@@ -173,6 +173,7 @@
     <div class="graphsDetails __tabs" style="opacity:0;">
         <div class="separator"></div>
         <div class="col-sm-12">
+            <p style="margin-bottom: 50px;margin-top: 10px;">These graphs show student changes on eBit surveys over time</p>
             <div id="divCharts"></div>
             @*@{Html.RenderPartial("~/Views/Home/_Charts.cshtml", new ViewDataDictionary { { "studyId", studyId }, { "studyName", studyName }, { "childIdts", childIdts } });}*@
         </div>

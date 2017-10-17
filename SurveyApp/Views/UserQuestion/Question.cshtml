@@ -384,12 +384,17 @@
                 }
 
                 else {
-
-                    var oldval = $("#hdn" + $(this).attr("qid")).val();
-                    if (this.value != "") {
-                        var newval = "|" + this.value;
-                        $("#hdn" + $(this).attr("qid")).val(oldval + newval).trigger('change');
+                    if (SurveryID == 60 || SurveryID == 61) {
+                        $("#hdn" + $(this).attr("qid")).val(this.value).trigger('change');
                     }
+                    else {
+                        var oldval = $("#hdn" + $(this).attr("qid")).val();
+                        if (this.value != "") {
+                            var newval = "|" + this.value;
+                            $("#hdn" + $(this).attr("qid")).val(oldval + newval).trigger('change');
+                        }
+                    }
+                    
                 }
             });
 
@@ -452,7 +457,7 @@
 
             $("input[type=hidden]").change(function () {
 
-           var ans = this.value.length > 0 ? this.value.substr(1) : "";
+                var ans = this.value.length > 0 ? (SurveryID == 60 || SurveryID == 61 ? this.value : this.value.substr(1)) : "";
 
            var qid = $(this).attr("qid");
            var multians=ans.split('|')
