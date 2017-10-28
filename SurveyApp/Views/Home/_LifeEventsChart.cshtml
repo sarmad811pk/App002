@@ -26,7 +26,8 @@
         lstEventDates.Add(dtEventDate);
 
         string name = dr["Name"].ToString();
-        data += "{event: '" + (dr["EventName"] != DBNull.Value ? dr["EventName"].ToString().Replace("'", "\\'") : dr["EventName"]) + "',x: Date.UTC(" + dtEventDate.Year + ", " + dtEventDate.Month + ", " + dtEventDate.Day + "), y:" + (isDuplicate == true ? index + 1 : index) + " , child:'" + name + "'},";
+        data += "{event: '" + (dr["EventName"] != DBNull.Value ? dr["EventName"].ToString().Replace("'", "\\'") : dr["EventName"]) + "',x: Date.UTC(" + dtEventDate.Year + ", " + (dtEventDate.Month - 1) + ", " + dtEventDate.Day + "), y:" + (isDuplicate == true ? index + 1 : index) + " , child:'" + name + "'},";
+        //minus 1 from month because UTC.Date take months from 0-11
         
     }
 
