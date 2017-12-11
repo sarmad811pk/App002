@@ -228,6 +228,7 @@
                 <th>Questionnaire</th>                                
                 <th style="width: 120px;">Schedule End Date</th>
                 <th style="width: 130px;">Completion(%)</th>
+                <th style="width: 160px;">Submitted On</th>
             </tr>
         </thead>
         <tbody>
@@ -248,6 +249,7 @@
                         <td>@dr["Title"]</td>                        
                         <td><a href='@Url.Action("Question", "UserQuestion")?surveyID=@dr["SurveyId"]&userId=@dr["UserId"]&ChildId=@dr["ChildID"]&ChildName=@childName&perioddate=@(dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "")' target="_blank" style="text-decoration: underline;color: #337ab7;">@(dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "")</a></td>
                         <td>@dr["Percentage"]</td>
+                        <td>@dr["SubmitDate"]</td>
                     </tr>
                 }
             }

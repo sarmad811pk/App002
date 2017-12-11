@@ -85,44 +85,65 @@
     if (dsCharts != null && dsCharts.Tables != null && dsCharts.Tables.Count > 0)
     {
         #region Aberrant Behavior Checklist Social Responsiveness Scale
-        DataRow[] drABCP = dsCharts.Tables[0].Select("SURVEYid = 4");
-        foreach(DataRow dr in drABCP)
-        {
-            dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            //if(dr["EventName"] != DBNull.Value)
-            //{
-            //    //lstABCPTLifeEvents.Add(new LifeEventChart { IndexOnChart = indexLE, EventsName = dr["EventName"].ToString() });
-            //}
-            pABC += dr["Score"] + ",";
-            //indexLE++;
-        }
-        DataRow[] drABCT = dsCharts.Tables[1].Select("SURVEYid = 4");
-        foreach (DataRow dr in drABCT)
-        {
-            if(dr["ScheduleDate"] != DBNull.Value && dABC.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
-            {
-                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
-            }
-            tABC += dr["Score"] + ",";
-        }
+        DataView viewABCvsSRS = new DataView(dsCharts.Tables[8]);
+        DataTable dtDistinctDatesABCvsSRS = viewABCvsSRS.ToTable(true, "ScheduleDate");
+        DataRow[] drsDatesABCvsSRS = dtDistinctDatesABCvsSRS.Select();
 
-        DataRow[] drSRSP = dsCharts.Tables[0].Select("SURVEYid = 5");
-        foreach (DataRow dr in drSRSP)
+        foreach(DataRow drABCvsSRS in drsDatesABCvsSRS)
         {
-            if (dr["ScheduleDate"] != DBNull.Value && dABC.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            dABC += "'" + (drABCvsSRS["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(drABCvsSRS["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+            DataRow[] drABCP = dsCharts.Tables[0].Select("SURVEYid = 4 AND ScheduleDate = '" + drABCvsSRS["ScheduleDate"] + "'");
+            if(drABCP.Length > 0)
             {
-                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                foreach (DataRow dr in drABCP)
+                {
+                    pABC += dr["Score"] + ",";
+                }
             }
-            pSRS += dr["Score"] + ",";
-        }
-        DataRow[] drSRST = dsCharts.Tables[1].Select("SURVEYid = 5");
-        foreach (DataRow dr in drSRST)
-        {
-            if (dr["ScheduleDate"] != DBNull.Value && dABC.Contains(Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy")) == false)
+            else
             {
-                dABC += "'" + (dr["ScheduleDate"] != DBNull.Value ? Convert.ToDateTime(dr["ScheduleDate"]).ToString("MM/dd/yyyy") : "") + "',";
+                pABC += 0 + ",";
             }
-            tSRS += dr["Score"] + ",";
+
+            DataRow[] drABCT = dsCharts.Tables[1].Select("SURVEYid = 4 AND ScheduleDate = '" + drABCvsSRS["ScheduleDate"] + "'");
+            if(drABCT.Length > 0)
+            {
+                foreach (DataRow dr in drABCT)
+                {
+                    tABC += dr["Score"] + ",";
+                }
+            }
+            else
+            {
+                tABC += 0 + ",";
+            }
+
+
+            DataRow[] drSRSP = dsCharts.Tables[0].Select("SURVEYid = 5 AND ScheduleDate = '" + drABCvsSRS["ScheduleDate"] + "'");
+            if(drSRSP.Length > 0)
+            {
+                foreach (DataRow dr in drSRSP)
+                {
+                    pSRS += dr["Score"] + ",";
+                }
+            }
+            else
+            {
+                pSRS += 0 + ",";
+            }
+
+            DataRow[] drSRST = dsCharts.Tables[1].Select("SURVEYid = 5 AND ScheduleDate = '" + drABCvsSRS["ScheduleDate"] + "'");
+            if(drSRST.Length > 0)
+            {
+                foreach (DataRow dr in drSRST)
+                {
+                    tSRS += dr["Score"] + ",";
+                }
+            }
+            else
+            {
+                tSRS += 0 + ",";
+            }
         }
         #endregion
 
