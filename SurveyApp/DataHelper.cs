@@ -484,7 +484,15 @@ namespace SurveyApp
             cmd.CommandText = "Stats_GetRespondentsStats";
             return DataHelper.ExecuteCommandAsDataSet(cmd);
         }
-        
+
+        public static DataSet Stats_GetRespondentsCompletion()
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.CommandText = "Stats_GetRespondentsCompletion";
+            return DataHelper.ExecuteCommandAsDataSet(cmd);
+        }
 
         public static DataSet RolesGetAll()
         {

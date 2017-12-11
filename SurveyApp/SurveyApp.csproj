@@ -227,6 +227,7 @@
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Models\Consent.cs" />
     <Compile Include="Models\ErrorLog.cs" />
+    <Compile Include="Models\Generic.cs" />
     <Compile Include="Models\LifeEvent.cs" />
     <Compile Include="SMTPHelper.cs" />
     <Content Include="404.html" />
@@ -386,6 +387,7 @@
     <Content Include="Content\summernote\font\summernote.eot" />
     <Content Include="Content\summernote\font\summernote.ttf" />
     <Content Include="Content\summernote\font\summernote.woff" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\ucsfebit - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\ucsfebit - Web Deploy.pubxml" />
     <Content Include="Properties\webjobs-list.json" />
@@ -510,6 +512,7 @@
     <Content Include="Views\Statistics\_SurveyCompletionChart.cshtml" />
     <Content Include="Views\Child\_StatusHistory.cshtml" />
     <Content Include="Views\Study\_StudyStatusHistory.cshtml" />
+    <Content Include="Views\Report\Completion.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

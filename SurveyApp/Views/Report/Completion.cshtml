@@ -1,0 +1,79 @@
+﻿@using System.Data;
+@using SurveyApp.Models;
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataSet dsStats = SurveyApp.DataHelper.Stats_GetRespondentsCompletion();
+
+}
+
+
+
+<style type="text/css">
+    .table-hover tbody tr {
+        cursor: pointer;
+    }
+
+    #tblStats .name {
+        text-transform: capitalize;
+    }
+</style>
+
+<div id="divCompletionStats" style="min-width: 310px; height: 400px;margin: 0 auto"></div>
+
+
+
+    <div style="clear:both;"></div>
+    <div class="separator"></div>
+    <div id="divStats">
+        <h3>Clinicians Statistics</h3>
+        <table class="table table-striped table-hover" id="tblStats">
+            <thead>
+                <tr>
+                    <th class="name">Name</th>
+                    @*<th>Role</th>*@
+                    @*<th>Email</th>*@
+
+                    @*<th>Total Assigned Children</th>
+                        <th>Total Assigned Surveys</th>
+                        <th>Total Initiated Surveys</th>
+                        <th>Total Completed Surveys</th>
+                        <th>Total Partially Completed Surveys</th>*@
+
+                    <th>Children</th>
+                    <th>@*Surveys*@</th>
+                    <th>Completed Surveys</th>
+                    <th>Partially Completed Surveys</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (System.Data.DataRow dr in dsStats.Tables[0].Rows)
+                {
+                    <tr>
+                        <td class="name">@dr["FullName"]</td>
+                        <td>@*@dr["RoleName"]*@</td>
+                        @*<td>@dr["Email"]</td>*@
+
+                        @*<td>@dr["ChildCount"]</td>
+                            <td>@dr["SurveyCount"]</td>
+                            <td>@dr["InitiatedSurveyCount"]</td>
+                            <td>@dr["CompletedSurveyCount"]</td>
+                            <td>@dr["PartiallyCompletedSurveyCount"]</td>*@
+
+                        <td>@Html.Raw(dr["Children"])</td>
+                        <td>@*@Html.Raw(dr["Surveys"])*@</td>
+                        <td>@Html.Raw(dr["CompletedSurvey"])</td>
+                        <td>@Html.Raw(dr["PartiallyCompletedSurvey"])</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+    $(function () {
+        $("#tblStats").DataTable({ dom: 'Bfrtip', buttons: [{ extend: 'excel', text: "Export to Excel", title: 'Clinician_Statistics', exportOptions: { modifier: { search: 'none', order: 'original' } } }], "oLanguage": { "sInfo": "Displaying _START_ to _END_ of _TOTAL_ Clinicians" } });
+    });
+    </script>
+

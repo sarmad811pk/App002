@@ -16,5 +16,9 @@ namespace SurveyApp.Controllers
         {
             return View();
         }
+        public ActionResult Completion()
+        {
+            return View();
+        }
     }
 }
